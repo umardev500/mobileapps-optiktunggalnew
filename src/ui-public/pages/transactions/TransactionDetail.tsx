@@ -1,0 +1,211 @@
+import { RouteProp, useRoute } from '@react-navigation/core';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { RefreshControl, ScrollView, StyleSheet, ToastAndroid, useWindowDimensions, View } from 'react-native';
+import { colors } from '../../../lib/styles';
+import { httpService } from '../../../lib/utilities';
+import { useAppSelector } from '../../../redux/hooks';
+import { PublicNotificationStackParamList } from '../../../router/publicBottomTabs';
+import { useAppNavigation } from '../../../router/RootNavigation';
+import { Modelable, TransactionModel } from '../../../types/model';
+import { Button, Typography } from '../../../ui-shared/components';
+import { BoxLoading } from '../../../ui-shared/loadings';
+import TransactionItem from '../../components/TransactionItem';
+import TransactionPayModal from '../../components/TransactionPayModal';
+import TransactionStatusModal from '../../components/TransactionStatusModal';
+
+type OptionsState = {
+  detailModalOpen?: boolean;
+  detailModel?: null | TransactionModel;
+  payModalOpen?: boolean;
+  payModel?: null | TransactionModel;
+};
+
+function TransactionDetail() {
+  // Hooks
+  const navigation = useAppNavigation();
+  const route = useRoute<RouteProp<PublicNotificationStackParamList, 'TransactionDetail'>>();
+  const { height } = useWindowDimensions();
+  const { user } = useAppSelector(({ user }) => user);
+  const { t } = useTranslation('notification');
+
+  // States
+  const [isLoading, setIsLoading] = useState(false);
+  const [transactionId, setTransactionId] = useState<string>('');
+  const [transaction, setTransaction] = useState<Modelable<TransactionModel>>({
+    model: null,
+    modelLoaded: false,
+  });
+  const [options, setOptions] = useState<OptionsState>({
+    detailModalOpen: false,
+    detailModel: null,
+    payModalOpen: false,
+    payModel: null,
+  });
+
+  // Effects
+  useEffect(() => {
+    route.params?.transaction_id && setTransactionId(route.params.transaction_id);
+
+    console.log("ROUTE PARAMS", route.params);
+  }, [route.params]);
+
+  useEffect(() => {
+    handleRefresh();
+  }, [transactionId]);
+
+  // Vars
+  const handleRefresh = async () => {
+    setIsLoading(true);
+
+    await retrieveTransaction();
+
+    setIsLoading(false);
+  };
+
+  const retrieveTransaction = async () => {
+    setTransaction(state => ({
+      ...state,
+      modelLoaded: false,
+      model: null
+    }));
+
+    return httpService('/order/list', {
+      data: {
+        act: 'MPList',
+        dt: JSON.stringify({ comp: '001', regid: user?.id }),
+      }
+    }).then(({ status, data }) => {
+      console.log("DATA", data);
+
+      setTransaction(state => ({
+        ...state,
+        model: 200 !== status ? null : data.find((item: TransactionModel) => item.id === transactionId),
+        modelLoaded: true
+      }));
+
+      if (!user?.orderfirst && data?.length) {
+        const orderfirst = data.find((item: TransactionModel) => (
+          item.orderstatus?.toLowerCase() === 'diterima'
+        ))?.ordertgl || '';
+
+        orderfirst && httpService.setUser({
+          ...user,
+          orderfirst
+        });
+      }
+    }).catch((err) => {
+      ToastAndroid.show(t(`Transaksi belum dapat ditampilkan.`), ToastAndroid.SHORT);
+    });
+  };
+
+  const handleModalToggle = (type: string, open: null | boolean = null, args: Partial<OptionsState> = {}) => {
+    switch (type) {
+      case 'detail':
+        setOptions(state => ({
+          ...state,
+          detailModalOpen: 'boolean' === typeof open ? open : !options.detailModalOpen,
+          ...args,
+        }));
+        break;
+      case 'pay':
+        setOptions(state => ({
+          ...state,
+          payModalOpen: 'boolean' === typeof open ? open : !options.payModalOpen,
+          ...args,
+        }));
+        break;
+    }
+  };
+
+  return (
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={(
+        <RefreshControl
+          refreshing={isLoading}
+          onRefresh={handleRefresh}
+          colors={[colors.palettes.primary]}
+        />
+      )}
+    >
+      {!transaction.modelLoaded ? (
+        <View style={{ paddingTop: 8 }}>
+          <BoxLoading width={[120, 180]} height={20} />
+          <BoxLoading width={[180, 280]} height={18} style={{ marginTop: 8 }} />
+          <BoxLoading width={[180, 280]} height={18} style={{ marginTop: 4 }} />
+          <BoxLoading width={[120, 160]} height={18} style={{ marginTop: 4 }} />
+        </View>
+      ) : (
+        !transaction.model ? (
+          <View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginVertical: 8
+          }}>
+            <Typography textAlign="center">
+              {t(`Transaksi tidak dapat ditemukan`)}
+            </Typography>
+
+            <Button
+              containerStyle={{ marginTop: 12 }}
+              label={t(`Kembali`)}
+              border
+              onPress={() => navigation.navigatePath('Public', {
+                screen: 'BottomTabs.NotificationStack.TransactionList'
+              })}
+            />
+          </View>
+        ) : (
+          <TransactionItem
+            transaction={transaction.model}
+            collapse={false}
+            onDetailPress={(model) => handleModalToggle('detail', true, {
+              detailModel: model
+            })}
+            onPayPress={(model) => handleModalToggle('pay', true, {
+              payModel: model
+            })}
+          />
+        )
+      )}
+
+      {/* Transaction Status Detail */}
+      <TransactionStatusModal
+        isVisible={options.detailModalOpen}
+        swipeDirection={null}
+        onBackButtonPress={() => handleModalToggle('detail', false)}
+        onBackdropPress={() => handleModalToggle('detail', false)}
+        transaction={options.detailModel || undefined}
+        style={{ maxHeight: height * 0.75 }}
+      />
+
+      {/* Transaction Pay Modal */}
+      <TransactionPayModal
+        isVisible={options.payModalOpen}
+        onSwipeComplete={() => handleModalToggle('pay', false)}
+        onBackButtonPress={() => handleModalToggle('pay', false)}
+        onBackdropPress={() => handleModalToggle('pay', false)}
+        onSuccess={() => {
+          handleModalToggle('pay', false);
+
+          handleRefresh();
+        }}
+        transaction={options.payModel || undefined}
+      />
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    paddingHorizontal: 15,
+    paddingTop: 16,
+    paddingBottom: 24,
+    backgroundColor: colors.white,
+  },
+});
+
+export default TransactionDetail;
