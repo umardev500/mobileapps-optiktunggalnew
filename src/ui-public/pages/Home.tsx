@@ -105,7 +105,7 @@ const Home = () => {
     return httpService('/api/home', {
       data: {
         act: 'BannerList',
-        dt: JSON.stringify({ comp: '001' }),
+        dt: JSON.stringify({ param: 'listBanner' }),
       }
     }).then(({ status, data }) => {
       if (200 === status) {
@@ -148,25 +148,6 @@ const Home = () => {
     }).catch((err) => void(0));
   };
 
-  const renderCarousel = ({ item, index }: ListRenderItemInfo<BannerModel>) => {
-    const height = 300;
-
-    return (
-      <PressableBox
-        key={index}
-        containerStyle={styles.carouselItem}
-        opacity
-        onPress={() => navigation.navigatePath('Public', {
-          //screen: 'BottomTabs.WebViewStack',
-          // params: [null, null, {
-          //   category: item,
-          // }],
-        })}
-      >
-        <Image source={{ uri: item.banner_foto }} style={{ height, paddingHorizontal: 5 }} />
-      </PressableBox>
-    );
-  };
 
   const retrieveContactUs = async () => {
     return httpService(`/api/contactus/contactus`, {
@@ -191,9 +172,9 @@ const Home = () => {
         key={index}
         opacity
         containerStyle={{
-          flex: 1,
           marginHorizontal: 5,
           maxWidth: 100,
+          backgroundColor: '#FEFEFE',
           ...shadows[3]
         }}
         style={{ alignItems: 'center', backgroundColor: '#FEFEFE' }}
@@ -213,6 +194,28 @@ const Home = () => {
         )}
 
         
+      </PressableBox>
+    );
+  };
+
+  const renderCarousel = ({ item, index }: ListRenderItemInfo<BannerModel>) => {
+    const height = 300;
+
+    return (
+      <PressableBox
+        key={index}
+        containerStyle={styles.carouselItem}
+        opacity
+        
+        onPress={() => navigation.navigatePath('Public', {
+          screen: 'BannerDetail',
+          params: [null, null, {
+            banner_id: item.banner_id,
+            banner: item,
+          }],
+        })}
+      >
+        <Image source={{ uri: item.banner_foto }} style={{ height, paddingHorizontal: 5 }} />
       </PressableBox>
     );
   };
@@ -244,14 +247,14 @@ const Home = () => {
           <View style={[wrapper.row, { height: 130, width: '100%', borderRadius: 10}]}>
             <Image source={{ uri: 'https://optiktunggal.com/img/article/'+item.ArticleImage }} style={[styles.articleImage, { height }]} />
             <View style={{ borderColor: '#333', width: '55%' }}>
-              <Typography type="h4" style={{ marginTop: 5, fontSize: 14, paddingHorizontal: 10 }} numberOfLines={2}>
+              <Typography type="h4" style={{ marginTop: 5, fontSize: 12, paddingHorizontal: 10 }} numberOfLines={2}>
                 {item.ArticleName}
               </Typography>
               {!item.html ? null : (
                 <RenderHtml
                   source={{ html: item.html }}
                   tagsStyles={{
-                    p: { marginVertical: 0, height: 'auto', fontSize: 12, paddingHorizontal: 10, textAlign: 'justify' }
+                    p: { marginVertical: 0, height: 'auto', fontSize: 10, paddingHorizontal: 10, textAlign: 'justify' }
                   }}
                 />
               )}
@@ -271,10 +274,10 @@ const Home = () => {
         <Image source={{ uri: 'https://optiktunggal.com/img/store_location/'+item.StoreImage }} 
               style={{ width: '20%', height: 70 }} />
         <View style={{ marginLeft: 10, width: '65%' }}>
-          <Typography type="h4" style={{ marginTop: 10, fontSize: 14, }} numberOfLines={2}>
+          <Typography type="h4" style={{ marginTop: 10, fontSize: 12, }} numberOfLines={2}>
             {item.StoreName} | {item.StoreLocationUnit}
           </Typography>
-          <Typography style={{ marginTop: 5, fontSize: 12, textAlign: 'justify'}} numberOfLines={4}>
+          <Typography style={{ marginTop: 5, fontSize: 10, textAlign: 'justify'}} numberOfLines={4}>
             {item.StoreAddress}, Phone : { item.StorePhone }, {item.StoreNotes}
           </Typography>
         </View>
@@ -311,7 +314,7 @@ const Home = () => {
         )}
 
         <Typography size="xxs" textAlign="center" style={{ marginTop: 5, fontSize: 12 }}>
-          {item.ds} Collection's
+          {t(`${item.ds} \nCollection's`)}
         </Typography>
       </PressableBox>
     );
@@ -350,6 +353,8 @@ const Home = () => {
               renderItem={renderCarousel}
               sliderWidth={width}
               itemWidth={width}
+              autoplay={true}
+              loop={true}
               contentContainerStyle={{
                 marginHorizontal: 10,
               }}
@@ -370,19 +375,19 @@ const Home = () => {
         {/*brands*/}
         <View style={[wrapper.row, { alignItems: 'center', marginTop: 5, marginBottom: 10, paddingHorizontal: 10 }]}>
           <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 12 }}>
-            Merk
+            Brands
           </Typography>
           <Button
             containerStyle={[styles.actionBtnContainer, { marginTop: 0 }]}
             label={t('Lihat Semua', { count: 1 })}
             labelProps={{ type: 'p', size: 'sm' }}
-            labelStyle={{ textAlign: 'right', color: 'blue' }}
+            labelStyle={{ textAlign: 'right', color: 'blue', fontSize: 10 }}
             size="lg"
             right={(
-              <Ionicons name="chevron-forward" size={18} color={'blue'} />
+              <Ionicons name="chevron-forward" size={12} color={'blue'} />
             )}
             onPress={() => navigation.navigatePath('Public', {
-              screen: 'BottomTabs.ArticleStack'
+              screen: 'Brand'
             })}
           />
         </View>
@@ -478,11 +483,11 @@ const Home = () => {
               <View style={[wrapper.row, { marginTop: 10 }]}>
                 <Image source={{ uri: 'https://www.optiktunggal.com/img/home_middle_table/HC170105032019-12-16_10_25_44.jpg' }} style={styles.imgLens} />
                 <View style={{ width: '80%' }}>
-                  <Typography type="h4" color="black" style={{ paddingHorizontal: 10, fontSize: 16, textAlign: 'justify' ,marginTop: -5 }}>
+                  <Typography type="h4" color="black" style={{ paddingHorizontal: 10, fontSize: 12, textAlign: 'justify' ,marginTop: -5 }}>
                     High Quality Optical Lenses
                   </Typography>
                   <Typography style={{ paddingHorizontal: 10, fontSize: 10, textAlign: 'justify' }}>
-                    Penglihatan Anda ayak mendapatkan yang terbaik. Dengan pengalaman lebih dari 90 tahun, Optik Tunggal berkomitmen untuk memberikan Anda layanan dan produk lensa optik dengan kualitas yang terbaik.
+                    Penglihatan Anda layak mendapatkan yang terbaik. Dengan pengalaman lebih dari 90 tahun, Optik Tunggal berkomitmen untuk memberikan Anda layanan dan produk lensa optik dengan kualitas yang terbaik.
                   </Typography>
                 </View>
               </View>
@@ -497,16 +502,13 @@ const Home = () => {
               }}
               style={{ alignItems: 'center', }}
               onPress={() => navigation.navigatePath('Public', {
-                screen: 'BottomTabs.HomeStack.Search',
-                // params: [null, null, {
-                //   category: item,
-                // }],
+                screen: 'ContactLens'
               })}>
               <View style={[wrapper.row, { marginTop: 10 }]}>
-                <Image source={{ uri: 'https://www.optiktunggal.com/img/contact_lens/category/CLC191212012019-12-12_11_27_58.jpg' }} style={styles.imgLens} />
+                <Image source={{ uri: 'https://www.optiktunggal.com/img/contact_lens/category/CLC191212012019-12-12_11_27_58.jpg' }} style={styles.imgContLens} />
                 <View style={{ width: '80%' }}>
-                  <Typography type="h4" color="black" style={{ paddingHorizontal: 10, fontSize: 16, textAlign: 'justify' ,marginTop: -5 }}>
-                    Contact Lense | Schon
+                  <Typography type="h4" color="black" style={{ paddingHorizontal: 10, fontSize: 12, textAlign: 'justify' ,marginTop: -5 }}>
+                    Contact Lense
                   </Typography>
                   <Typography style={{ paddingHorizontal: 10, fontSize: 10, textAlign: 'justify' }} numberOfLines={4}>
                     Schon adalah merek softlens yang menyediakan softlens kosmetik dan juga softlens korektif.
@@ -531,10 +533,10 @@ const Home = () => {
               containerStyle={[styles.actionBtnContainer, { marginTop: 0 }]}
               label={t('Lihat Selengkapnya', { count: 1 })}
               labelProps={{ type: 'p', size: 'sm' }}
-              labelStyle={{ textAlign: 'right', color: 'blue' }}
+              labelStyle={{ textAlign: 'right', color: 'blue', fontSize: 10 }}
               size="lg"
               right={(
-                <Ionicons name="chevron-forward" size={18} color={'blue'} />
+                <Ionicons name="chevron-forward" size={12} color={'blue'} />
               )}
               onPress={() => navigation.navigatePath('Public', {
                 screen: 'BottomTabs.ArticleStack'
@@ -559,6 +561,8 @@ const Home = () => {
                   data={article.models as any[]}
                   renderItem={renderArticle}
                   sliderWidth={width}
+                  autoplay={true}
+                  loop={true}
                   itemWidth={width}
                   onSnapToItem={(activeIndex) => setSlider(state => ({
                     ...state,
@@ -571,21 +575,21 @@ const Home = () => {
 
         {/*Store*/}
         <View style={{ marginBottom: 50, marginTop: 20 }}>
-          <View style={[wrapper.row, { alignItems: 'center', marginTop: 10, paddingHorizontal: 10 }]}>
+          <View style={[wrapper.row, { alignItems: 'center', marginTop: 10, paddingHorizontal: 10, }]}>
             <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 12 }}>
               Outlet Kami
             </Typography>
             <Button
-              containerStyle={[styles.actionBtnContainer, { marginTop: -10, }]}
+              containerStyle={[styles.actionBtnContainer]}
               label={t('Lihat Semua', { count: 1 })}
               labelProps={{ type: 'p', size: 'sm' }}
-              labelStyle={{ textAlign: 'right', color: 'blue' }}
+              labelStyle={{ textAlign: 'right', color: 'blue', fontSize: 10 }}
               size="lg"
               right={(
-                <Ionicons name="chevron-forward" size={18} color={'blue'} />
+                <Ionicons name="chevron-forward" size={12} color={'blue'} />
               )}
               onPress={() => navigation.navigatePath('Public', {
-                screen: 'BottomTabs.ContactStack'
+                screen: 'Contact'
               })}
             />
           </View>
@@ -696,6 +700,10 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     resizeMode: 'contain',
+  },
+  imgContLens: {
+    width: 90,
+    height: 90,
   },
   actionBtnContainer: {
     backgroundColor: colors.white,

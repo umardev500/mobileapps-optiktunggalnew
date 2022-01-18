@@ -22,3 +22,4 @@ export { default as FigmaLock } from './security.svg';
 export { default as FigmaNews } from './news.svg';
 export { default as FigmaCatalogue } from './catalogue.svg';
 export { default as FigmaVip } from './vip.png';
+export { default as Figmawishlist } from './wish-list.svg';

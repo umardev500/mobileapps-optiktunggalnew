@@ -45,6 +45,7 @@ function PromotionDetail() {
         modelLoaded: true
       }));
     }
+    console.log('PROMOTION___'+route.params.promotion);
   }, [route.params]);
 
   useEffect(() => {
@@ -68,7 +69,17 @@ function PromotionDetail() {
     setProduct(state => ({ ...state, modelsLoaded: false }));
 
     return httpService('/api/product/product/', {
-      data: {},
+      data: {
+        act: 'PrdList',
+        dt: JSON.stringify({
+          comp: '001',
+          reccnt,
+          pg: page,
+          limit: product.perPage,
+          search: "",
+          param: "cariprd",
+        }),
+      },
       method: 'POST'
     }).then(({ status, data }) => {
       if (200 === status) {

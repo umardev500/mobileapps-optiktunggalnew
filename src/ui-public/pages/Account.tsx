@@ -183,16 +183,16 @@ function Account() {
                   <Image source={{ uri: user.foto }} style={styles.avatar} />
                 )}
                 <View style={{ flexGrow: 1 }}>
-                  <Typography style={{ color: '#333333', fontSize: 14, fontWeight: 'bold', }} >
-                    {user.nama || `${user.namadepan} ${user.namabelakang}`}
+                  <Typography style={{ color: '#333333', fontSize: 14, fontWeight: 'bold',  marginHorizontal: 15}} >
+                    {user.name || `${user.namadepan} ${user.namabelakang}`}
                   </Typography>
                   {!user.foto ? 
-                    <Typography>
+                    <Typography style={{ marginHorizontal: 15,}}>
                       <Image source={require('../../assets/icons/figma/vip.png')} style={styles.avatarVIP} />
                       Member
                     </Typography>
                   : (
-                    <Typography>
+                    <Typography style={{ marginHorizontal: 15,}}>
                       <Image source={require('../../assets/icons/figma/vip.png')} style={styles.avatarVIP} />
                       Member
                     </Typography>
@@ -206,6 +206,7 @@ function Account() {
                       >
                         <Typography
                           textAlign="left"
+                          style={{ marginHorizontal: 15, marginTop: 3}}
                           color="primary">
                           {t(`${''}Lihat Profil`)}
                         </Typography>
@@ -233,36 +234,6 @@ function Account() {
                   )}
                 </View>
               </View>
-              {/*user.type_member || null ? null : (
-                <View style={styles.cardMember}>
-                  <Typography textAlign="center" style={{ color: '#333333', fontWeight: 'bold', marginTop: 15}} >
-                    {`${user.hp}`} Member Card
-                  </Typography>
-                  <View style={{ backgroundColor: '#fff', marginTop: 10, borderColor: '#FFF', height: 2, width: '100%'}}/>
-                  <View style={{ marginTop: 25, width: '100%' }}>
-                      <Typography style={{ color: '#333333', fontSize: 17, fontWeight: 'bold', alignItems: 'center', textAlign: 'center' }} >
-                        {showPhone(user.hp, '0')}
-                      </Typography>
-                  </View>
-                  <View style={[ wrapper.row, { marginHorizontal: 20, marginVertical: 20, marginTop: 15, width: '100%' }]}>
-                      <Typography style={{ color: '#333333', fontSize: 16 }} >
-                        {user.nama || `${user.namadepan} ${user.namabelakang}`}
-                      </Typography>
-                  </View>
-                  <View style={{ marginHorizontal: 20, marginVertical: 20, marginTop: -15, width: '100%' }}>
-                      <Typography style={{ color: '#333333', fontSize: 10 }} >
-                        Member Sejak : 12/12/2021
-                      </Typography>
-                  </View>
-                  <View style={[ wrapper.row ]}>
-                    <View style={{ backgroundColor: '#fefefe', marginTop: -10, borderColor: '#FFF', height: 20, width: '100%', borderStyle: 'dotted'}}>
-                      <Typography style={{ color: '#333333', fontSize: 10, textAlign: 'center', justifyContent: 'center', textAlignVertical: 'center' }} >
-                        www.optiktunggal.com
-                      </Typography>
-                    </View>
-                  </View>
-                </View>
-              )*/}
 
               <View style={{ marginTop: 5 }}>
                 <ViewCollapse
@@ -270,7 +241,7 @@ function Account() {
                   pressableProps={{
                     containerStyle: styles.menuBtnContainer,
                   }}
-                  header={t(`${''}Pengaturan Akun`)}
+                  header={t(`${''}Transaksi`)}
                   headerProps={{
                     type: 'h',
                     style: { paddingLeft: 24 + 15 }
@@ -291,6 +262,83 @@ function Account() {
                         });
                       },
                     },
+                    {
+                      title: t(`${''}Favorit Kamu`),
+                      subtitle: t(`${''}Produk yang kamu sukai`),
+                      Icon: FigmaIcon.Figmawishlist,
+                      navigatePath: () => {
+                        navigation.navigatePath('Public', {
+                          screen: 'BottomTabs.',
+                        });
+                      },
+                    },
+                  ].map((item, index) => (
+                    <PressableBox
+                      key={index}
+                      containerStyle={{
+                        marginTop: index === 0 ? 8 : 4,
+                        borderRadius: 15,
+                        marginHorizontal: 0,
+                      }}
+                      style={styles.menuChildBtn}
+                      onPress={!item.navigatePath ? undefined : (
+                        () => {
+                          if ('function' === typeof item.navigatePath) {
+                            return item.navigatePath();
+                          }
+                          
+                          navigation.navigatePath('Public', {
+                            screen: item.navigatePath
+                          });
+                      })}
+                    >
+                      <View style={styles.menuChildIcon}>
+                        {!item.Icon ? null : (
+                          <item.Icon width={24} height={24} color={colors.gray[900]} />
+                        )}
+                      </View>
+
+                      <View style={{ flex: 1, paddingLeft: 15 }}>
+                        <Typography heading>
+                          {item.title}
+                        </Typography>
+
+                        <Typography size="sm" color={800} style={{ marginTop: 4 }}>
+                          {item.subtitle}
+                        </Typography>
+                      </View>
+                    </PressableBox>
+                  ))}
+                </ViewCollapse>
+              </View>
+
+              <View style={{ marginTop: 5 }}>
+                <ViewCollapse
+                  style={styles.menuContainer}
+                  pressableProps={{
+                    containerStyle: styles.menuBtnContainer,
+                  }}
+                  header={t(`${''}Pengaturan Akun`)}
+                  headerProps={{
+                    type: 'h',
+                    style: { paddingLeft: 24 + 15 }
+                  }}
+                  collapse
+                >
+                  {[
+                    // {
+                    //   title: t(`${''}Daftar Transaksi`),
+                    //   subtitle: t(`${''}Transaksi yang pernah anda lakukan.`),
+                    //   Icon: FigmaIcon.FigmaDownload,
+                    //   navigatePath: () => {
+                    //     navigation.navigatePath('Public', {
+                    //       screen: 'BottomTabs.NotificationStack.TransactionList',
+                    //       params: [null, {
+                    //         initial: false,
+                    //       }]
+                    //     });
+                    //   },
+                    // },
                     // {
                     //   title: t(`${''}Keranjang`),
                     //   subtitle: t(`${''}Daftar produk yg ditambahkan ke keranjang belanja`),
@@ -502,6 +550,7 @@ const styles = StyleSheet.create({
   avatarVIP: {
     width: 30,
     height: 30,
+    marginHorizontal: 15,
   },
   avatar: {
     alignSelf: 'center',

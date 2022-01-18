@@ -7,12 +7,14 @@ import ClientStack from './ClientStack';
 import { navigationRef } from './RootNavigation';
 import { SplashScreen } from '../ui-shared/pages';
 import { Walkthrough } from '../ui-public/pages';
+import { Home } from '../ui-public/pages';
 
 export type RootStackParamList = {
   SplashScreen: {};
   Walkthrough: {};
   Client: {};
   Public: {};
+  Home: {};
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -28,6 +30,7 @@ function NavigationProvider() {
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="Walkthrough" component={Walkthrough} options={{ headerShown: false }} />
+        <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Public" component={PublicStack} />
         <Stack.Screen name="Client" component={ClientStack} />
       </Stack.Navigator>

@@ -34,7 +34,7 @@ function SplashScreen() {
     navigation.reset({
       index: 0,
       routes: [{
-        name: 'Walkthrough',
+        name: 'Home',
       }],
     });
   };

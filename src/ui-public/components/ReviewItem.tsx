@@ -19,7 +19,7 @@ function ReviewItem({
   return (
     <View style={[styles.container, style]}>
       <View style={styles.user}>
-        <Typography size="md" style={{ flex: 1, marginHorizontal: -10, fontWeight: 'bold' }}>
+        <Typography size="md" style={{ flex: 1, marginHorizontal: -10, fontSize: 12, fontWeight: 'bold' }}>
           {review.nama || review.name}
         </Typography>
 
@@ -30,7 +30,7 @@ function ReviewItem({
         />
       </View>
 
-      <Typography style={{ paddingBottom: 15, textAlign: 'justify' }} numberOfLines={3}>
+      <Typography style={{ paddingBottom: 5, textAlign: 'justify', fontSize: 11 }} numberOfLines={3}>
         {review.remark || review.content}
       </Typography>
 
@@ -60,7 +60,7 @@ function ReviewItem({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
   },
   borderTop: {
     borderTopWidth: 1,
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     ...wrapper.row,
     alignItems: 'center',
     paddingVertical: 12,
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
   },
   reply: {
 

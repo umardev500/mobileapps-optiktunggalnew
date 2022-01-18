@@ -17,8 +17,8 @@ import { useTranslation } from 'react-i18next';
 
 const SORT = [
   { label: `${''}Ulasan`, value: 'review-desc' },
-  { label: `${''}Harga Tertinggi`, value: 'price-desc' },
-  { label: `${''}Harga Terendah`, value: 'price-asc' },
+  // { label: `${''}Harga Tertinggi`, value: 'price-desc' },
+  // { label: `${''}Harga Terendah`, value: 'price-asc' },
   { label: `${''}Populer`, value: 'price-asc' },
   { label: `${''}Terbaru`, value: 'price-asc' },
 ];
@@ -90,11 +90,6 @@ function Search() {
       setOptions(state => ({ ...state, prdcat: routeCategory.id }));
     }
 
-    if (routeBrand) {
-      handleFieldChange('prdcat', routeBrand.id);
-
-      setOptions(state => ({ ...state, prdcat: routeBrand.id }));
-    }
   }, [route.params]);
 
   useEffect(() => {
@@ -354,32 +349,33 @@ function Search() {
               {[
                 {
                   id: '',
-                  name: t(`${t('Semua Merk')}`),
+                  name: t(`${t('Semua Brand')}`),
                 },
                 ...(brand.models || [])
-              ].map((item, index) => {
-                const selected = item?.id === fields.prdcat;
+                ].map((item, index) => {
+                  const selected = item?.id === fields.brand;
 
-                return (
-                  <Button
-                    key={index}
-                    label={item.name}
-                    labelProps={{ type: 'p' }}
-                    containerStyle={{
-                      marginTop: index > 0 ? 4 : 0,
-                      backgroundColor: selected ? colors.transparent('palettes.primary', 0.1) : undefined,
-                    }}
-                    style={{ justifyContent: 'space-between' }}
-                    onPress={() => handleFieldChange('brand', item.id)}
-                    size="lg"
-                    right={(
-                      <Typography size="sm" color={selected ? 'blue' : 'primary'}>
-                        {selected ? `${t('Dipilih')}` : `${t('Pilih')}`}
-                      </Typography>
-                    )}
-                  />
-                );
-              })}
+                  return (
+                    <Button
+                      key={index}
+                      label={item.name}
+                      labelProps={{ type: 'p' }}
+                      containerStyle={{
+                        marginTop: index > 0 ? 4 : 0,
+                        backgroundColor: selected ? colors.transparent('palettes.primary', 0.1) : undefined,
+                      }}
+                      style={{ justifyContent: 'space-between' }}
+                      onPress={() => handleFieldChange('brand', item.id)}
+                      size="lg"
+                      right={(
+                        <Typography size="sm" color={selected ? 'blue' : 'primary'}>
+                          {selected ? `${t('Dipilih')}` : `${t('Pilih')}`}
+                        </Typography>
+                      )}
+                    />
+                  );
+                })
+              }
             </View>
           )}
 

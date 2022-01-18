@@ -180,10 +180,6 @@ function PinEdit() {
     <ScrollView contentContainerStyle={styles.container}>
       {isRegister ? null : (
         <View style={{ marginTop: 24 }}>
-          <Typography heading style={{ textAlign: 'center' }}>
-            {t(`${''}Masukan Password Baru`)}
-          </Typography>
-
           <Typography style={{ marginTop: 2, textAlign: 'center' }}>
             {t(`${''}Pastikan password memiliki kombinasi Huruf Besar, Huruf Kecil dan Angka`)}
           </Typography>

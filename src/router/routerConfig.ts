@@ -50,6 +50,12 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { title: `${''}FAQ` };
     case 'Katalog':
       return { title: `${''}Katalog` };
+    case 'Brand':
+      return { title: `${''}Brands` };
+    case 'ContactLens':
+      return { title: `${''}Contact Lens` };
+    case 'BannerDetail':
+      return { title: `${''}Banner Detail` };
 
     // Favorites
     case 'Favorite':
@@ -90,7 +96,7 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { headerShown: false };
     case 'PinEdit':
       return {
-        title: [tAcc('Masukan Password'), tAcc('Kombinasi huruf besar, kecil dan Angka')] as any
+        title: [tAcc('Masukan Password')] as any
       };
     case 'PasswordReset':
       return { title: tAcc(`${''}Keamanan Akun`) };

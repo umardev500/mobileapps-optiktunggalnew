@@ -7,6 +7,7 @@ import { Header } from '../../ui-shared/components';
 import { routeOptions } from '../routerConfig';
 
 export type PublicFavoriteStackParamList = {
+  Favorite: {};
   Login: {};
   Register: {};
   Verification: {};

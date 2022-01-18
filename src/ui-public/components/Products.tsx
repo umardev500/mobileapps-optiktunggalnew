@@ -55,6 +55,7 @@ function Products({
       screen: 'BottomTabs.HomeStack.ProductDetail',
       params: [null, null, {
         product_id: product.prd_id || 0,
+        product_ds: product.prd_ds,
         product,
       }]
     });
@@ -87,15 +88,16 @@ function Products({
               <View style={[styles.productCardImage, { minHeight }]} />
             ) : (
               <Image source={{ uri: item.prd_foto }} style={[styles.productCardImage, { minHeight }]} />
+
             )}
 
-            {!discount ? null : (
+            {/*!discount ? null : (
               <Typography style={{backgroundColor: 'red', color: '#FEFEFE', padding: 3, textAlign: 'center', borderRadius: 3, marginTop: 10}}>
                 {(`${''}Disc ${discount}%`).toUpperCase()}
               </Typography>
-            )}
+            )*/}
 
-            {!favoriteShow ? null : (
+            {/*!favoriteShow ? null : (
               <Button
                 containerStyle={{
                   position: 'absolute',
@@ -115,17 +117,18 @@ function Products({
                   style={{ marginTop: 2 }}
                 />
               </Button>
-            )}
+            )*/}
           </View>
 
           <View style={styles.productCardContent}>
-            <Typography size="sm" type="h6" numberOfLines={2}>
+            <View style={{ height: 1, backgroundColor: '#f1f1f1', marginBottom: 10 }} />
+            <Typography style={{ fontSize: 12, fontWeight: 'bold' }} numberOfLines={2}>
               {item.prd_ds}
             </Typography>
 
-            <Typography size="md" style={{ marginTop: 10, color: 'green', fontWeight: 'bold', textAlign: 'right' }}>
+            {/*<Typography size="md" style={{ marginTop: 10, color: 'green', fontWeight: 'bold', textAlign: 'right' }}>
               {`Rp${item.harga_het}`}
-            </Typography>
+            </Typography>*/}
 
             {!item.rating && !item.sales_count ? null : (
               <View style={[wrapper.row, { alignItems: 'center', marginTop: 8 }]}>
@@ -168,7 +171,7 @@ function Products({
 
 const styles = StyleSheet.create({
   container: {
-    // marginHorizontal: -6,
+    marginHorizontal: -13,
   },
 
   colItem: {
@@ -191,14 +194,12 @@ const styles = StyleSheet.create({
   },
   productCardImage: {
     width: '100%',
-    // height: 144,
-    resizeMode: 'cover',
-    backgroundColor: colors.gray[200]
+    marginTop: 15,
   },
   productCardContent: {
     paddingTop: 12,
     paddingBottom: 15,
-    paddingHorizontal: 12
+    paddingHorizontal: 10
   },
 
   badgeDiscount: {
