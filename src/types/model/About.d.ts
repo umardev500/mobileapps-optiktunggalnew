@@ -11,7 +11,6 @@ export type FAQModel = {
 
 export type ContactUsModel = {
   StoreID?: string;
-
   StoreName?: string;
   StoreLocationUnit?: string;
   StoreAddress?: string[];
@@ -20,6 +19,12 @@ export type ContactUsModel = {
   StoreNotes?: string;
   StoreLongitude?: number;
   StoreLatitude?: number;
+};
+
+export type CityStoreModel = {
+  CityID?: string;
+  CityName?: string;
+
 };
 
 export type ArticleModel = {
