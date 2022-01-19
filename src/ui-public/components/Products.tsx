@@ -55,7 +55,7 @@ function Products({
       screen: 'BottomTabs.HomeStack.ProductDetail',
       params: [null, null, {
         product_id: product.prd_id || 0,
-        product_ds: product.prd_ds,
+        product_ds: product.prd_ds || 0,
         product,
       }]
     });

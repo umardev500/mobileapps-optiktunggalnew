@@ -71,7 +71,6 @@ function ProductDetail() {
 
   useEffect(() => {
     const { product_id, product } = route.params;
-
     product && setProduct(state => ({
       ...state,
       model: product,
@@ -287,35 +286,36 @@ function ProductDetail() {
             </View>
           )}
           <View style={{ paddingTop: -20, paddingHorizontal: 5 }}>
-            <Typography type="h5" color="primary">
-              Rp {route.params.product_id}
+          <Typography type="h3" style={{color: '#333333'}}>
+              {route.params.product_ds}
             </Typography>
-            <Typography type="h5" style={{color: '#333333'}}>
+            <Typography type="h4" color="primary">
+              Rp {route.params.product.harga_het}
+            </Typography>
+            <Typography style={{color: '#333333', fontSize: 12}}>
+              Brand : {route.params.product.merk}
+            </Typography>
+            <Typography style={{color: '#333333', fontSize: 12}}>
               SKU : {route.params.product_id}
             </Typography>
-            <Typography style={{color: '#333333', marginBottom: 20, fontSize: 12}}>
-              SKU : {route.params.product_id}
-            </Typography>
-            <Typography type="h5" style={{color: '#333333'}}>
+            {/*<Typography type="h5" style={{color: '#333333'}}>
               {t('Details')}
             </Typography>
 
             <View style={styles.borderTop} />
 
             <View style={{ backgroundColor: '#f1f1f1' }}>
-              {!productModel.product_info ? null : (
-                <RenderHtml
-                  source={{ html: route.params.product_id }}
-                  tagsStyles={{
-                    p: { marginVertical: 0, height: 'auto', fontSize: 12, paddingHorizontal: 5, textAlign: 'justify' }
-                  }}
-                />
-              )}
-            </View>
+              <RenderHtml
+                source={{ html: route.params.product.product_info }}
+                tagsStyles={{
+                  p: { marginVertical: 0, height: 'auto', fontSize: 12, paddingHorizontal: 5, textAlign: 'justify' }
+                }}
+              />
+            </View>*/}
             
             {!review.modelsLoaded ? null : (
               <>
-                <Typography type="h5" style={{ marginTop: 32, color: '#333333' }}>
+                <Typography type="h5" style={{ marginTop: 20, color: '#333333' }}>
                   {t('Reviews')}
                 </Typography>
 

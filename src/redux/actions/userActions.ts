@@ -50,15 +50,13 @@ export const toggleFavorite = createAsyncThunk('shop/toggleFavorite', async (pro
 
   const productExist = oldFavorites.find((item) => item.prd_id === product.prd_id);
 
-  await httpService('/favorit/save', {
+  await httpService('/api/favorit/favorit', {
     data: {
       act: 'Favorit',
-      comp: '001',
+      param: 'save',
       dt: JSON.stringify({
         prdid: product.prd_id,
         regid: user?.id,
-        cmd: '1',
-        star: !productExist ? '1' : '0',
         remark: '',
         lat: location.lat,
         lng: location.lng,
