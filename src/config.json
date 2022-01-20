@@ -15,12 +15,12 @@
   "URL_SOCIAL_WHATSAPP": "whatsapp://send?text=Hi+dengan+Get+All+disini&phone=6281211801703",
   "URL_SOCIAL_YOUTUBE": "vnd.youtube://channel/UCPbQXwzh9CMIpfcT4mK4t6A",
   "URL_SOCIAL_FACEBOOK": "fb://page/101104102336598",
-  "URL_SOCIAL_INSTAGRAM": "instagram://user?username=moritagetall",
+  "URL_SOCIAL_INSTAGRAM": "instagram://user?username=optiktunggal",
 
-  "API_URL": "https://be60-182-253-200-165.ngrok.io/api_optiktunggal",
-  "API_GETALL_URL": "https://be60-182-253-200-165.ngrok.io/api_optiktunggal",
+  "API_URL": "http://1887-182-253-200-165.ngrok.io/api_optiktunggal",
+  "API_GETALL_URL": "http://1887-182-253-200-165.ngrok.io/api_optiktunggal",
 
-  "STORAGE_KEY": "@moritagetall",
+  "STORAGE_KEY": "@optiktunggal",
 
   "GMAPS_API_KEY": "AIzaSyChYVr4zqShAlWZpqLHn4gU3tupos93VoU"
 }

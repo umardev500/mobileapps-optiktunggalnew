@@ -153,7 +153,7 @@ const Home = () => {
     return httpService(`/api/contactus/contactus`, {
       data: {
         act: 'ContactUsList',
-        dt: JSON.stringify({ pageCountLimit: 5 })
+        dt: JSON.stringify({ pageCountLimit: 5, param: "store" })
       },
     }).then(({ status, data }) => {
       setContactUs(state => ({
@@ -210,7 +210,7 @@ const Home = () => {
         onPress={() => navigation.navigatePath('Public', {
           screen: 'BannerDetail',
           params: [null, null, {
-            banner_id: item.banner_id,
+            banner_id: item.banner_id || 0,
             banner: item,
           }],
         })}

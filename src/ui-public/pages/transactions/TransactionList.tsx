@@ -1,9 +1,9 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { colors, shadows } from '../../../lib/styles';
+import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View, Image } from 'react-native';
+import { colors, shadows, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
-import { Typography } from '../../../ui-shared/components';
+import { Typography, PressableBox, Button } from '../../../ui-shared/components';
 import { useTranslation } from 'react-i18next';
 import { Modelable, TransactionModel } from '../../../types/model';
 import TransactionItem from '../../components/TransactionItem';
@@ -11,6 +11,8 @@ import TransactionStatusModal from '../../components/TransactionStatusModal';
 import TransactionPayModal from '../../components/TransactionPayModal';
 import { httpService } from '../../../lib/utilities';
 import { useAppSelector } from '../../../redux/hooks';
+import ViewCollapse from '../../components/ViewCollapse';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type OptionsState = {
   detailModalOpen?: boolean;
@@ -23,7 +25,7 @@ function TransactionList() {
   // Hooks
   const navigation = useAppNavigation();
   const route = useRoute();
-  const { height } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const { t } = useTranslation('notification');
   const { user: { user } } = useAppSelector((state) => state);
 
@@ -61,10 +63,10 @@ function TransactionList() {
       modelsLoaded: false,
     }));
 
-    return httpService('/order/list', {
+    return httpService('/api/transaction/transaction', {
       data: {
-        act: 'MPList',
-        dt: JSON.stringify({ comp: '001', regid: user?.id })
+        act: 'TrxList',
+        // dt: JSON.stringify({ comp: '001', regid: user?.id })
       }
     }).then(({ status, data }) => {
       setTransaction(state => ({
@@ -136,6 +138,81 @@ function TransactionList() {
           />
         )}
       >
+        <Typography textAlign="center" style={{ paddingVertical: 12 }}>
+          {t(`Klik pada nama dibawah untuk melihat \ntransaksi.`)}
+        </Typography>
+
+        <View style={{ marginTop: 5, backgroundColor: '#FEFEFE', }}>
+          {[
+            {
+              title: t(`${''}Nama Customer 1`),
+              navigatePath: () => {
+                navigation.navigatePath('Public', {
+                  screen: 'Contact',
+                  params: [null, {
+                    initial: false,
+                  }]
+                });
+              },
+            },
+            {
+              title: t(`${''}Nama Customer 2`),
+              navigatePath: () => {
+                navigation.navigatePath('Public', {
+                  screen: 'BottomTabs.',
+                });
+              },
+            },
+          ].map((item, index) => (
+            <PressableBox
+              key={index}
+              containerStyle={{
+                marginHorizontal: 0,
+                marginVertical: 5,
+                borderWidth: 1, 
+                borderRadius: 5, 
+                borderColor: '#ccc'
+              }}
+              style={styles.menuChildBtn}
+              onPress={!item.navigatePath ? undefined : (
+                () => {
+                  if ('function' === typeof item.navigatePath) {
+                    return item.navigatePath();
+                  }
+                  
+                  navigation.navigatePath('Public', {
+                    screen: item.navigatePath
+                  });
+              })}
+            >
+
+              <View style={{ flex: 1,}}>
+                <View style={[wrapper.row, { flex: 1, marginTop: 10, paddingHorizontal: 10, width: '100%', }]}>
+                  <Typography style={{ fontSize: 12, fontWeight: 'bold' }}>
+                    {item.title}
+                  </Typography>
+                </View>
+
+                <View style={[wrapper.row, { marginTop: 5, paddingHorizontal: 10, width: '100%' }]}>
+                  <View style={{ width: width - 230 }}>
+                    <Image source={require('../../../assets/icons/figma/vip.png')} style={styles.avatarVIP} />
+                    <Typography style={{ textAlign: 'center', fontSize: 10 }}>
+                      VIP MEMBER
+                    </Typography>
+                  </View>
+                  <View style={{ width: 0.5, height: 50, marginVertical: 10, backgroundColor: '#333' }} />
+                  <View style={{ width: width - 230 }}>
+                    <Image source={require('../../../assets/icons/figma/coin.png')} style={styles.avatarVIP} />
+                    <Typography style={{ textAlign: 'center', fontSize: 10 }}>
+                      10.000.000
+                    </Typography>
+                  </View>
+                </View>
+              </View>
+            </PressableBox>
+          ))}
+        </View>
+
         {!transaction.modelsLoaded ? (
           <View style={{ alignItems: 'center', paddingVertical: 12 }}>
             <ActivityIndicator size={32} animating color={colors.palettes.primary} />
@@ -196,16 +273,35 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     backgroundColor: colors.white,
   },
-
+  menuBtnContainer: {
+    backgroundColor: colors.white,
+    borderBottomWidth: 1,
+  },
   actionBtnContainer: {
     ...shadows[3],
     backgroundColor: colors.white,
+    borderRadius: 5,
+    marginVertical: 5,
   },
-
   header: {
     paddingHorizontal: 15,
     paddingVertical: 8,
     backgroundColor: colors.white,
+  },
+  menuChildBtn: {
+    ...wrapper.row,
+    alignItems: 'center',
+    paddingVertical: 6,
+  },
+  menuChildIcon: {
+    width: 24,
+    alignItems: 'center',
+  },
+  avatarVIP: {
+    width: 30,
+    height: 30,
+    marginTop: 10,
+    alignSelf: 'center'
   },
 });
 

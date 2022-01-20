@@ -55,7 +55,7 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     case 'ContactLens':
       return { title: `${''}Contact Lens` };
     case 'BannerDetail':
-      return { title: `${''}Banner Detail` };
+      return { headerShown: false };
 
     // Favorites
     case 'Favorite':

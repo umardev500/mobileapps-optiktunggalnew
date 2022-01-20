@@ -1,9 +1,9 @@
 import { RouteProp, useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View, Image } from 'react-native';
-import { colors, shadows } from '../../../lib/styles';
+import { colors, shadows, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
-import { ImageAuto, Typography, RenderHtml } from '../../../ui-shared/components';
+import { ImageAuto, Typography, RenderHtml, PressableBox } from '../../../ui-shared/components';
 import { useTranslation } from 'react-i18next';
 import { Modelable, BannerModel, ModelablePaginate } from '../../../types/model';
 import { PublicArticleStackParamList } from '../../../router/publicBottomTabs';
@@ -11,6 +11,7 @@ import { BoxLoading } from '../../../ui-shared/loadings';
 import { httpService } from '../../../lib/utilities';
 import ProductsLoading from '../../loadings/ProductsLoading';
 import Products from '../../components/Products';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function BannerDetail() {
   // Hooks
@@ -67,65 +68,79 @@ function BannerDetail() {
   const { model: bannerModel } = banner;
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      refreshControl={(
-        <RefreshControl
-          refreshing={isLoading}
-          onRefresh={handleRefresh}
-          colors={[colors.palettes.primary]}
+    <View style={{ height: '100%', backgroundColor: '#FEFEFE' }}>
+      <View style={[wrapper.row]}>
+        <PressableBox
+            opacity
+            style={{ alignItems: 'center', }}
+            onPress={() => navigation.navigatePath('Public', {
+                screen: 'BottomTabs.HomeStack'
+            })}>
+            <Typography color="black" style={{ marginTop: 30, marginHorizontal: 15 }}>
+              <Ionicons name="arrow-back" size={18} color={colors.gray[900]} /> {`${''}Kembali`}
+            </Typography>
+        </PressableBox>
+      </View>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        refreshControl={(
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={handleRefresh}
+            colors={[colors.palettes.primary]}
+          />
+        )}
+      >
+        <Typography style={{ textAlign: 'center', marginTop: 250, }}>
+          bannerModel.banner_id
+        </Typography>
+        <ImageAuto
+          source={{ uri: 'https://img.freepik.com/free-vector/flat-engineering-construction-illustrated_23-2148892788.jpg?size=626&ext=jpg' }}
+          width={width - 200}
+          style={{
+            marginHorizontal: 15,
+            marginTop: 16,
+            alignSelf: 'center',
+            resizeMode: 'stretch'
+          }}
         />
-      )}
-    >
-      <Typography style={{ textAlign: 'center', marginTop: 250, }}>
-        Mohon maaf sedang dalam pengembangan
-      </Typography>
-      <ImageAuto
-        source={{ uri: 'https://img.freepik.com/free-vector/flat-engineering-construction-illustrated_23-2148892788.jpg?size=626&ext=jpg' }}
-        width={width - 300}
-        style={{
-          marginHorizontal: 15,
-          marginTop: 16,
-          alignSelf: 'center',
-          resizeMode: 'stretch'
-        }}
-      />
-      {/*!banner.modelLoaded ? (
-        <View>
-          <BoxLoading width={width} height={width * 10/16} style={styles.image} />
-
-          <BoxLoading width={[160, 200]} height={22} />
-          <BoxLoading width={width - 30} height={18} style={{ marginTop: 12 }} />
-          <BoxLoading width={width - 30} height={18} style={{ marginTop: 2 }} />
-          <BoxLoading width={width - 30} height={18} style={{ marginTop: 2 }} />
-          <BoxLoading width={[240, width - 30]} height={18} style={{ marginTop: 2 }} />
-        </View>
-      ) : (
-        !bannerModel? (
-          <Typography textAlign="center" style={{ marginVertical: 12 }}>
-            {t(`${''}Promotion not found.`)}
-          </Typography>
-        ) : (
+        {/*!banner.modelLoaded ? (
           <View>
-            {!bannerModel.banner_foto ? null : (
-              <View style={[styles.image, { maxHeight: width }]}>
-                <ImageAuto
-                  source={{ uri: 'https://optiktunggal.com/img/article/'+bannerModel.banner_foto }}
-                  width={width - 30}
-                  style={{
-                    marginHorizontal: 15,
-                    marginTop: 16,
-                    resizeMode: 'stretch'
-                  }}
-                />
-              </View>
-            )}
+            <BoxLoading width={width} height={width * 10/16} style={styles.image} />
 
-            <Typography>{bannerModel.banner_desc}</Typography>
+            <BoxLoading width={[160, 200]} height={22} />
+            <BoxLoading width={width - 30} height={18} style={{ marginTop: 12 }} />
+            <BoxLoading width={width - 30} height={18} style={{ marginTop: 2 }} />
+            <BoxLoading width={width - 30} height={18} style={{ marginTop: 2 }} />
+            <BoxLoading width={[240, width - 30]} height={18} style={{ marginTop: 2 }} />
           </View>
-        )
-      )*/}
-    </ScrollView>
+        ) : (
+          !bannerModel? (
+            <Typography textAlign="center" style={{ marginVertical: 12 }}>
+              {t(`${''}Promotion not found.`)}
+            </Typography>
+          ) : (
+            <View>
+              {!bannerModel.banner_foto ? null : (
+                <View style={[styles.image, { maxHeight: width }]}>
+                  <ImageAuto
+                    source={{ uri: 'https://optiktunggal.com/img/article/'+bannerModel.banner_foto }}
+                    width={width - 30}
+                    style={{
+                      marginHorizontal: 15,
+                      marginTop: 16,
+                      resizeMode: 'stretch'
+                    }}
+                  />
+                </View>
+              )}
+
+              <Typography>{bannerModel.banner_desc}</Typography>
+            </View>
+          )
+        )*/}
+      </ScrollView>
+    </View>
   );
 };
 

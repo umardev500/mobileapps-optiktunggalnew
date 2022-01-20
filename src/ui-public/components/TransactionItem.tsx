@@ -63,10 +63,10 @@ function TransactionItem({
   const retrieveInfo = async () => {
     setIsLoading(true);
 
-    return httpService('/order/list', {
+    return httpService('https://ws.stmorita.net/order/list', {
       data: {
-        act: 'MPInfo',
-        dt: JSON.stringify({ comp: '001', id: transaction.id }),
+        act: 'MPItemList',
+        dt: JSON.stringify({ comp: '001', id: 'R79GA6P63629971' }),
       }
     }).then(({ status, data, item, shipTo }) => {
       setIsLoading(false);
@@ -134,6 +134,7 @@ function TransactionItem({
     }
   };
 
+
   const renderHeaderShrink = () => {
     return (
       <View style={{
@@ -144,23 +145,28 @@ function TransactionItem({
           <FigmaIcon.FigmaShoppingBag width={24} height={24} color={colors.gray[900]} />
 
           <View style={{ flex: 1, marginRight: 15, marginLeft: 12 }}>
-            <Typography>
-              {t(`${''}Belanja`)}
+            <Typography style={{ fontWeight: 'bold' }}>
+              {t(`${transaction.orderno}`)}
+            </Typography>
+            <Typography style={{ fontWeight: 'bold' }}>
+              {t(`Rp. ${transaction.totalbelanja}`)}
             </Typography>
 
+          </View>
+
+          <View>
             <Typography>
               {moment(transaction.ordertgl, 'YYYYMMDD').format('D MMMM YYYY')}
             </Typography>
+            <Typography
+              heading
+              size="sm"
+              color={getStatusColor(status)}
+              style={{ alignSelf: 'flex-end' }}
+            >
+              {getStatusText(status)}
+            </Typography>
           </View>
-
-          <Typography
-            heading
-            size="sm"
-            color={getStatusColor(status)}
-            style={{ alignSelf: 'flex-end' }}
-          >
-            {getStatusText(status)}
-          </Typography>
         </View>
 
         {!cartItem?.product ? null : (
@@ -210,8 +216,11 @@ function TransactionItem({
               {getStatusText(status)}
             </Typography>
 
-            <Typography size="sm" style={{ marginTop: 4 }}>
-              {`INV ${transaction.orderno}`}
+            <Typography size="md" style={{ marginTop: 4 }}>
+              {`No. Transaksi : ${transaction.orderno}`}
+            </Typography>
+            <Typography style={{ fontWeight: 'bold' }}>
+              {t(`Rp. ${transaction.totalbelanja}`)}
             </Typography>
           </View>
 

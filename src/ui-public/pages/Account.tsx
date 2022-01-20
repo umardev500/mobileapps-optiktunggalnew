@@ -198,19 +198,18 @@ function Account() {
                     </Typography>
                   )}
                   {user.verified || 1 ?
-                      <PressableBox
-                        containerStyle={{ marginTop: 1 }}
-                        onPress={() => navigation.navigatePath('Public', {
-                          screen: 'BottomTabs.AccountStack.ProfileEdit',
-                        })}
-                      >
-                        <Typography
-                          textAlign="left"
-                          style={{ marginHorizontal: 15, marginTop: 3}}
-                          color="primary">
-                          {t(`${''}Lihat Profil`)}
-                        </Typography>
-                      </PressableBox>: (
+                    <PressableBox
+                      containerStyle={{ marginTop: 1 }}
+                      onPress={() => navigation.navigatePath('Public', {
+                        screen: 'BottomTabs.AccountStack.ProfileEdit',
+                      })}>
+                      <Typography
+                        textAlign="left"
+                        style={{ marginHorizontal: 15, marginTop: 3}}
+                        color="primary">
+                        {t(`${''}Lihat Profil`)}
+                      </Typography>
+                    </PressableBox>: (
                     <PressableBox
                       containerStyle={{ marginTop: 8 }}
                       onPress={() => navigation.navigatePath('Public', {
@@ -360,7 +359,7 @@ function Account() {
                     // },
                     {
                       title: t(`${''}Keamanan Akun`),
-                      subtitle: t(`${''}PIN & verifikasi data diri`),
+                      subtitle: t(`${''}Password & verifikasi data diri`),
                       Icon: FigmaIcon.FigmaLock,
                       navigatePath: 'BottomTabs.AccountStack.PasswordReset',
                     },
@@ -374,7 +373,7 @@ function Account() {
                       title: t(`${''}Hubungi Kami`),
                       Icon: FigmaIcon.FigmaContact,
                       subtitle: t(`${''}Kami senang melayani anda, silahkan ajukan pertanyaan.`),
-                      navigatePath: 'BottomTabs.ContactStack.Contact',
+                      navigatePath: 'Contact',
                     },
                   ].map((item, index) => (
                     <PressableBox

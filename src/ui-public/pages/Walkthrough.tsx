@@ -21,6 +21,7 @@ import axios from 'axios';
 import { getConfig } from '../../lib/config';
 import moment from 'moment';
 import { fetchFavorites } from '../../redux/actions';
+import LOGO from '../../assets/app-logo-square.png';
 
 type SlideItem = {
   title?: string;
@@ -39,20 +40,20 @@ const SLIDES: SlideItem[] = [
   //   image: WalkthroughImage.LogoCircle,
   //   // progress: true,
   // },
+  // {
+  //   // bg: require('../../assets/images/walkthrough/walk-bg-2.jpg'),
+  //   bg: 'white',
+  //   image: WalkthroughImage.Walk2,
+  //   title: 'Memenuhi kebutuhan penglihatan anda',
+  //   caption: 'Penuhi kebutuhan penglihatan keluarga anda\nbersama kami.',
+  //   color: 'white',
+  //   textColor: 'black',
+  // },
   {
-    // bg: require('../../assets/images/walkthrough/walk-bg-2.jpg'),
     bg: 'white',
-    image: WalkthroughImage.Walk2,
-    title: 'Memenuhi kebutuhan penglihatan anda',
-    caption: 'Penuhi kebutuhan penglihatan keluarga anda\nbersama kami.',
-    color: 'white',
-    textColor: 'black',
-  },
-  {
-    bg: 'white',
-    image: WalkthroughImage.Walk4,
-    title: 'Pesan kebutuhanmu Sekarang',
-    caption: 'Pesan kebutuhan penglihatan anda\n darimana saja.',
+    image: LOGO,
+    title: '',
+    caption: '',
     color: 'white',
     textColor: 'black',
   },

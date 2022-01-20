@@ -98,7 +98,6 @@ function Header({
       {/* <View style={styles.headercolor}></View> */}
       
       <View style={[styles.container, style]} {...props}>
-
         <View style={[wrapper.row, {
           marginTop: !title && !children && !hideSearch ? 8 : 0,
           minHeight: !hideSearch ? 42 : 0,
@@ -119,7 +118,7 @@ function Header({
               </Button>
             )
           )}
-
+          
           {/* Middle Column */}
           {title ? renderTitle() : (
             // Render $children
@@ -132,17 +131,17 @@ function Header({
                   style={{
                     paddingTop: Platform.OS === 'ios' ? 4 : 2,
                     paddingBottom: Platform.OS === 'ios' ? 4 : 2,
-                    height: 40,
+                    height: 35,
                   }}
-                  placeholder="Search Product.."
+                  placeholder="Cari Produk.."
                   value={search}
                   onChangeText={(value) => setSearch(value)}
                   onSubmitEditing={handleSearch}
                   returnKeyType="search"
-                  left={(
+                  right={(
                     <Ionicons
                       name="search"
-                      size={25}
+                      size={20}
                       color={colors.gray[500]}
                       style={{ paddingHorizontal: 3, }}
                     />
@@ -202,7 +201,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 100,
     height: 30,
-    alignSelf: 'center',
   }
 });
 

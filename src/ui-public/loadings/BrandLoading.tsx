@@ -20,6 +20,12 @@ function BrandLoading({
       {Array.from(Array(count)).map((item, index) => (
         <View key={index} style={styles.productCard}>
           <BoxLoading width={width / 2} height={100} />
+          <BoxLoading width={width / 2} height={100} style={{ marginTop: 10 }} />
+          <BoxLoading width={width / 2} height={100} style={{ marginTop: 10 }} />
+          <BoxLoading width={width / 2} height={100} style={{ marginTop: 10 }} />
+          <BoxLoading width={width / 2} height={100} style={{ marginTop: 10 }} />
+          <BoxLoading width={width / 2} height={100} style={{ marginTop: 10 }} />
+          <BoxLoading width={width / 2} height={100} style={{ marginTop: 10 }} />
         </View>
       ))}
     </View>
@@ -45,6 +51,7 @@ const styles = StyleSheet.create({
   productCardContent: {
     paddingTop: 12,
     paddingHorizontal: 10,
+    paddingVertical: 10,
     paddingBottom: 20,
   }
 });

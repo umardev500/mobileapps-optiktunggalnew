@@ -31,6 +31,10 @@ function ArticleDetail() {
 
   // Effects
   useEffect(() => {
+    
+  }, []);
+  
+  useEffect(() => {
     if (route.params?.article) {
       setArticle(state => ({
         ...state,
@@ -39,8 +43,6 @@ function ArticleDetail() {
       }));
     }
   }, [route.params]);
-
-  useEffect(() => {});
 
   // Vars
   const handleRefresh = async () => {
