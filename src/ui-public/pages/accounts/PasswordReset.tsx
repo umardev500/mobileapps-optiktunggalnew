@@ -25,9 +25,9 @@ function PasswordReset() {
   const handleSubmit = async () => {
     setIsLoading(true);
 
-    return httpService('/register/list', {
+    return httpService('/api/login/login', {
       data: {
-        act: 'LupaPwd',
+        act: 'GantiPwdByEmail',
         dt: JSON.stringify({
           comp: '001',
           email: user?.email,

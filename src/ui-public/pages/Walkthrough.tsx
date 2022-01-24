@@ -455,6 +455,7 @@ const styles = StyleSheet.create({
     height: '100%',
     margin: 'auto',
     resizeMode: 'cover',
+    backgroundColor: 'transparent',
   },
   carouselContent: {
     flex: 1,
