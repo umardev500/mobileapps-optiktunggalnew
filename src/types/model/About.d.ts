@@ -37,6 +37,17 @@ export type ArticleModel = {
   ArticleView?: string;
 };
 
+export type BannerModel = {
+  banner_id?: string;
+  banner_ds?: string[];
+  banner_foto?: string;
+  banner_ul?: string;
+  banner_title?: string;
+  banner_subtitle?: string;
+  banner_desc?: string;
+  banner_remark?: string;
+};
+
 export type ContactLensModel = {
   ContactLensID?: string;
   ContactLensName?: string[];

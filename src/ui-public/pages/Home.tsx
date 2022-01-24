@@ -198,6 +198,20 @@ const Home = () => {
     );
   };
 
+  const handleGoToDetailBanner = (banner: BannerModel) => {
+    if (!banner.banner_id) {
+      return void(0);
+    }
+
+    navigation.navigatePath('Public', {
+      screen: 'BottomTabs.ArticleStack.BannerDetail',
+      params: [null, null, {
+        banner_id: banner.banner_id || 0,
+        banner,
+      }]
+    });
+  };
+
   const renderCarousel = ({ item, index }: ListRenderItemInfo<BannerModel>) => {
     const height = 300;
 
@@ -206,14 +220,7 @@ const Home = () => {
         key={index}
         containerStyle={styles.carouselItem}
         opacity
-        
-        onPress={() => navigation.navigatePath('Public', {
-          screen: 'BannerDetail',
-          params: [null, null, {
-            banner_id: item.banner_id || 0,
-            banner: item,
-          }],
-        })}
+        onPress={() => handleGoToDetailBanner(item)}
       >
         <Image source={{ uri: item.banner_foto }} style={{ height, paddingHorizontal: 5 }} />
       </PressableBox>

@@ -1,16 +1,16 @@
 import { RouteProp, useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View, Image } from 'react-native';
-import { colors, shadows, wrapper } from '../../../lib/styles';
-import { useAppNavigation } from '../../../router/RootNavigation';
-import { ImageAuto, Typography, RenderHtml, PressableBox } from '../../../ui-shared/components';
+import { colors, shadows, wrapper } from '../../../../lib/styles';
+import { useAppNavigation } from '../../../../router/RootNavigation';
+import { ImageAuto, Typography, RenderHtml, PressableBox } from '../../../../ui-shared/components';
 import { useTranslation } from 'react-i18next';
-import { Modelable, BannerModel, ModelablePaginate } from '../../../types/model';
-import { PublicArticleStackParamList } from '../../../router/publicBottomTabs';
-import { BoxLoading } from '../../../ui-shared/loadings';
-import { httpService } from '../../../lib/utilities';
-import ProductsLoading from '../../loadings/ProductsLoading';
-import Products from '../../components/Products';
+import { Modelable, BannerModel, ModelablePaginate } from '../../../../types/model';
+import { PublicArticleStackParamList } from '../../../../router/publicBottomTabs';
+import { BoxLoading } from '../../../../ui-shared/loadings';
+import { httpService } from '../../../../lib/utilities';
+import ProductsLoading from '../../../loadings/ProductsLoading';
+import Products from '../../../components/Products';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function BannerDetail() {
@@ -121,24 +121,16 @@ function BannerDetail() {
             </View>
           ) : (
             <View>
-              {!bannerModel.banner_foto ? null : (
-                <View style={[styles.image, { maxHeight: width }]}>
-                  <Typography style={{ textAlign: 'center', marginTop: 250, }}>
-                     {bannerModel.banner_foto}
-                  </Typography>
-                  <ImageAuto
-                    source={{ uri: 'https://optiktunggal.com/img/article/'+bannerModel.banner_foto }}
-                    width={width - 30}
-                    style={{
-                      marginHorizontal: 15,
-                      marginTop: 16,
-                      resizeMode: 'stretch'
-                    }}
-                  />
-                </View>
-              )}
+              <ImageAuto
+                source={{ uri: bannerModel.banner_foto }}
+                width={width}
+                style={{
+                  resizeMode: 'stretch'
+                }}
 
-              <Typography>{bannerModel.banner_desc}</Typography>
+              />
+              <Typography style={{paddingHorizontal: 10, marginTop: 10, textAlign: 'justify', lineHeight: 25, fontWeight: 'bold'}}>{bannerModel.banner_title}</Typography>
+              <Typography style={{paddingHorizontal: 10, marginTop: 10, textAlign: 'justify', lineHeight: 25}}>{bannerModel.banner_desc}</Typography>
             </View>
           )
         )}
@@ -150,7 +142,6 @@ function BannerDetail() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    paddingHorizontal: 15,
     paddingBottom: 24,
     backgroundColor: colors.white,
   },

@@ -5,9 +5,9 @@ import { Article } from '../../ui-public/pages';
 import Header from '../../ui-shared/components/Header';
 
 import * as ArticleDetailPage from '../../ui-public/pages/article';
-import * as ContactLensDetailPage from '../../ui-public/pages/article';
+import * as BannerDetailPage from '../../ui-public/pages/article/banner';
 import { routeOptions } from '../routerConfig';
-import { ArticleModel, ContactLensModel } from '../../types/model';
+import { ArticleModel, ContactLensModel, BannerModel } from '../../types/model';
 
 export type PublicArticleStackParamList = {
   Article: {};
@@ -20,6 +20,9 @@ export type PublicArticleStackParamList = {
   // };
   ArticleDetail: {
     article?: ArticleModel;
+  };
+  BannerDetail: {
+    banner?: BannerModel;
   };
   [key: string]: {};
 };
@@ -63,6 +66,13 @@ function PublicArticleStack() {
         .map((name) => (
           <Stack.Screen key={name} name={name} component={ArticleDetailPage[name]} options={routeOptions(name)} />
         ))}
+
+      {/* Banner Detail */}
+      {(Object.keys(BannerDetailPage) as Array<keyof typeof BannerDetailPage>)
+        .filter((name: string) => [].indexOf(name as never) < 0) // Except
+        .map((name) => (
+          <Stack.Screen key={name} name={name} component={BannerDetailPage[name]} options={routeOptions(name)} />
+        ))}       
 
 
     </Stack.Navigator>

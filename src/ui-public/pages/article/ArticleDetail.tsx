@@ -113,11 +113,12 @@ function ArticleDetail() {
             {!articleModel.ArticleImage ? null : (
               <>
                 <View style={{ paddingTop: 5, paddingHorizontal: 5 }}>
+                  <Typography style={{textAlign: 'justify', fontWeight: 'bold'}}>{articleModel.ArticleName}</Typography>
                   {!articleModel.html ? null : (
                     <RenderHtml
                       source={{ html: articleModel.html }}
                       tagsStyles={{
-                        p: { marginVertical: 0, height: 'auto', fontSize: 12, paddingHorizontal: 5, textAlign: 'justify' }
+                        p: { marginVertical: 0, height: 'auto', fontSize: 12, marginTop: 10, paddingHorizontal: 5, textAlign: 'justify' }
                       }}
                     />
                   )}
