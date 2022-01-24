@@ -106,6 +106,7 @@ function Login() {
             screen: 'BottomTabs.AccountStack.Account',
             params: [null, null, {
               profile: fields,
+              data: data
             }],
           });
 

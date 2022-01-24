@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, ToastAndroid, useWindowDimensions, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, ToastAndroid, useWindowDimensions, View, Alert } from 'react-native';
 import { colors, shadows, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { ErrorState, ValueOf } from '../../../types/utilities';
@@ -63,7 +63,7 @@ function ProfileEdit() {
         ...state,
         namadepan: user.namadepan || namadepan,
         namabelakang: user.namabelakang || namabelakang,
-        hp: showPhone(user.hp, ''), // Remove leading 62
+        hp: showPhone(String(user.hp), ''), // Remove leading 62
         email: user.email,
       }));
     }
@@ -122,13 +122,12 @@ function ProfileEdit() {
 
     setIsSaving(true);
 
-    return httpService('/register/save', {
+    return httpService('/api/login/login', {
       data: {
-        act: 'RegUpdate',
-        comp: '001',
+        act: 'GantiProfile',
         dt: JSON.stringify({
           ...fields,
-          hp: showPhone(fields.hp, '62'),
+          hp: showPhone(String(fields.hp), '62'),
           regid: user?.id,
           ip: location.ip,
         }),
@@ -142,13 +141,15 @@ function ProfileEdit() {
         await httpService.setUser({
           ...user,
           ...restFields,
-          hp: showPhone(fields.hp, '62'),
+          hp: showPhone(String(fields.hp), '62'),
           foto: !foto ? user?.foto : foto,
         });
 
-        navigation.navigatePath('Public', {
-          screen: 'BottomTabs.AccountStack.Account',
-        });
+        Alert.alert( "Berhasil", "Profil berhasil diubah",
+          [
+            { text: "OKE", onPress: () => navigation.navigatePath('Public', { screen: 'BottomTabs.AccountStack.Account'}) }
+          ]
+        );
       } else if ('string' === typeof msg) {
         switch (msg.toLowerCase()) {
           case 'hp sudah terdaftar':
@@ -297,15 +298,15 @@ function ProfileEdit() {
         </PressableBox>
       </View>
 
-      <View style={{ marginTop: 'auto', paddingTop: 24 }}>
+      <View style={{ marginTop: 20, paddingTop: 24 }}>
         <Button
           containerStyle={{
             alignSelf: 'center',
             ...shadows[3]
           }}
-          style={{ width: 145 }}
+          style={{ width: 300 }}
           label={t(`Simpan`).toUpperCase()}
-          color="yellow"
+          color="primary"
           shadow={3}
           onPress={handleSubmit}
           loading={isSaving}

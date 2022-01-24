@@ -66,7 +66,6 @@ function Account() {
   // Vars
   const handleVersionCheck = async () => {
     let isValid = true;
-
     await httpService(`/version.json`, {
       method: 'get'
     }).then(({
@@ -184,7 +183,7 @@ function Account() {
                 )}
                 <View style={{ flexGrow: 1 }}>
                   <Typography style={{ color: '#333333', fontSize: 14, fontWeight: 'bold',  marginHorizontal: 15}} >
-                    {user.name || `${user.namadepan} ${user.namabelakang}`}
+                    {user?.nama || `${user?.namadepan} ${user?.namabelakang}`}
                   </Typography>
                   {!user.foto ? 
                     <Typography style={{ marginHorizontal: 15,}}>
