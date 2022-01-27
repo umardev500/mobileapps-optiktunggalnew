@@ -48,8 +48,6 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { title: `${''}Kontak Kami` };
     case 'FAQ':
       return { title: `${''}FAQ` };
-    case 'Katalog':
-      return { title: `${''}Katalog` };
     case 'Brand':
       return { title: `${''}Brands` };
     case 'ContactLens':
@@ -62,7 +60,7 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { title: `${''}Favorit` };
 
     case 'Article':
-      return { title: `${''}Artikel` };
+      return { title: `${''}News` };
 
     case 'ArticleDetail':
       return { title: `${''}Detail Artikel` };

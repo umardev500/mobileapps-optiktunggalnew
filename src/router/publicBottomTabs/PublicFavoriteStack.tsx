@@ -40,6 +40,13 @@ function PublicFavoriteStack() {
       }}
     >
       <Stack.Screen name="Favorite" component={Favorite} options={routeOptions('Favorite')} />
+
+      {/* Favorite */}
+      {(Object.keys(Favorite) as Array<keyof typeof Favorite>)
+        .filter((name: string) => [].indexOf(name as never) < 0) // Except
+        .map((name) => (
+          <Stack.Screen key={name} name={name} component={Favorite[name]} options={routeOptions(name)} />
+        ))}
     </Stack.Navigator>
   );
 }

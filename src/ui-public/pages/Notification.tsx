@@ -49,7 +49,7 @@ function Notification() {
           labelStyle={{ flex: 1, textAlign: 'left' }}
           size="lg"
           right={(
-            <Ionicons name="chevron-forward" size={20} color={colors.palettes.primary} />
+            <Ionicons name="chevron-forward" size={20} color='black' />
           )}
           onPress={() => navigation.navigatePath('Public', {
             screen: 'BottomTabs.NotificationStack.TransactionList'
@@ -64,7 +64,7 @@ function Notification() {
         labelStyle={{ flex: 1, textAlign: 'left' }}
         size="lg"
         right={(
-          <Ionicons name="chevron-forward" size={20} color={colors.palettes.primary} />
+          <Ionicons name="chevron-forward" size={20} color='black' />
         )}
         onPress={() => navigation.navigatePath('Public', {
           screen: 'BottomTabs.NotificationStack.PromotionList'

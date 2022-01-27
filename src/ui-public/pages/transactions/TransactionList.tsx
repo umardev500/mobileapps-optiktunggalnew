@@ -139,7 +139,7 @@ function TransactionList() {
         )}
       >
         <Typography textAlign="center" style={{ paddingVertical: 12 }}>
-          {t(`Klik pada nama dibawah untuk melihat \ntransaksi.`)}
+          {t(`Klik nama dibawah untuk melihat \n detail transaksi.`)}
         </Typography>
 
         <View style={{ marginTop: 5, backgroundColor: '#FEFEFE', }}>
@@ -148,10 +148,10 @@ function TransactionList() {
               title: t(`${''}Nama Customer 1`),
               navigatePath: () => {
                 navigation.navigatePath('Public', {
-                  screen: 'Contact',
-                  params: [null, {
-                    initial: false,
-                  }]
+                  screen: 'BottomTabs.NotificationStack.TransactionDetail',
+                  // params: [null, null, {
+                  //   transaction_id: transactionId,
+                  // }],
                 });
               },
             },
@@ -159,7 +159,10 @@ function TransactionList() {
               title: t(`${''}Nama Customer 2`),
               navigatePath: () => {
                 navigation.navigatePath('Public', {
-                  screen: 'BottomTabs.',
+                  screen: 'BottomTabs.NotificationStack.TransactionDetail',
+                  // params: [null, null, {
+                  //   transaction_id: transactionId,
+                  // }],
                 });
               },
             },
@@ -181,7 +184,10 @@ function TransactionList() {
                   }
                   
                   navigation.navigatePath('Public', {
-                    screen: item.navigatePath
+                    screen: 'BottomTabs.NotificationStack.TransactionDetail',
+                    // params: [null, null, {
+                    //   transaction_id: transactionId,
+                    // }],
                   });
               })}
             >
@@ -194,14 +200,16 @@ function TransactionList() {
                 </View>
 
                 <View style={[wrapper.row, { marginTop: 5, paddingHorizontal: 10, width: '100%' }]}>
-                  <View style={{ width: width - 230 }}>
+                  <View style={{ flex: 2 }}>
                     <Image source={require('../../../assets/icons/figma/vip.png')} style={styles.avatarVIP} />
                     <Typography style={{ textAlign: 'center', fontSize: 10 }}>
                       VIP MEMBER
                     </Typography>
                   </View>
-                  <View style={{ width: 0.5, height: 50, marginVertical: 10, backgroundColor: '#333' }} />
-                  <View style={{ width: width - 230 }}>
+                  <View style={{ flex: 1 }}>
+                      <View style={{ width: 0.5, height: 50, alignSelf: 'center', marginVertical: 10, backgroundColor: '#333' }} />
+                  </View>
+                  <View style={{ flex: 2 }}>
                     <Image source={require('../../../assets/icons/figma/coin.png')} style={styles.avatarVIP} />
                     <Typography style={{ textAlign: 'center', fontSize: 10 }}>
                       10.000.000

@@ -118,7 +118,8 @@ function ArticleDetail() {
                     <RenderHtml
                       source={{ html: articleModel.html }}
                       tagsStyles={{
-                        p: { marginVertical: 0, height: 'auto', fontSize: 12, marginTop: 10, paddingHorizontal: 5, textAlign: 'justify' }
+                        p: { marginVertical: 0, height: 'auto', fontSize: 12, marginTop: 10, textAlign: 'justify' },
+                        ul: { fontSize: 12, textAlign: 'justify' }
                       }}
                     />
                   )}

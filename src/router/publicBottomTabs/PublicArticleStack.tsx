@@ -39,11 +39,10 @@ function PublicArticleStack() {
 
           return (
             <Header
-              style={{ marginTop: 5 }}
               title={title}
               left={!!back}
               {...(!options.headerRight ? null : {
-                right: options.headerRight(navigation as any) 
+                right: options.headerRight(navigation as any)
               })}
             />
           );

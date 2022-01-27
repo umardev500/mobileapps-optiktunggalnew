@@ -146,10 +146,11 @@ function ContactLens() {
               marginHorizontal: 4,
               backgroundColor: colors.white,
               ...shadows[3],
+              fontSize: 10,
             }}
             label={item.label}
             color={tabActive !== item.tab ? 'transparent' : 'primary'}
-            rounded={10}
+            rounded={2}
             onPress={() => handleTabToggle(item.tab)}
           />
         ))}

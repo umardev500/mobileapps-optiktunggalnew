@@ -266,10 +266,16 @@ function Account() {
                       Icon: FigmaIcon.Figmawishlist,
                       navigatePath: () => {
                         navigation.navigatePath('Public', {
-                          screen: 'BottomTabs.',
+                          screen: 'BottomTabs.FavoriteStack.Favorite',
                         });
                       },
                     },
+                    // {
+                    //   title: t(`${''}Alamat Pengiriman`),
+                    //   subtitle: t(`${''}Atur alamat pengiriman`),
+                    //   Icon: FigmaIcon.FigmaHomeFilled,
+                    //   navigatePath: 'BottomTabs.AccountStack.AddressList',
+                    // },
                   ].map((item, index) => (
                     <PressableBox
                       key={index}
@@ -362,12 +368,7 @@ function Account() {
                       Icon: FigmaIcon.FigmaLock,
                       navigatePath: 'BottomTabs.AccountStack.PasswordReset',
                     },
-                    // {
-                    //   title: t(`${''}Alamat Pengiriman`),
-                    //   subtitle: t(`${''}Atur alamat pengiriman belanjaan`),
-                    //   Icon: FigmaIcon.FigmaHomeFilled,
-                    //   navigatePath: 'BottomTabs.AccountStack.AddressList',
-                    // },
+
                     {
                       title: t(`${''}Hubungi Kami`),
                       Icon: FigmaIcon.FigmaContact,

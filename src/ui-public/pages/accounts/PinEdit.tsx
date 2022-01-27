@@ -55,7 +55,7 @@ function PinEdit() {
       setError(state => ({
         ...state,
         fields: ['new_pin'],
-        message: `${''}Masukkan minimal 6 karakter untuk PIN Anda.`
+        message: `${''}Masukkan minimal 6 karakter untuk Password Anda.`
       }));
     }
   }, [fields.new_pin]);

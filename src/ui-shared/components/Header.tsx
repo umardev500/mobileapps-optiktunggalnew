@@ -62,8 +62,7 @@ function Header({
     return 'string' === typeof title ? (
       <View style={{ flex: 1, alignSelf: 'center', alignItems: 'center' }}>
         <Typography
-          type="h4"
-          color={900}
+          style={{marginTop: -20, color: '#FFFFFF'}}
           textAlign="center"
           {...titleProps}
         >{title}</Typography>
@@ -108,13 +107,13 @@ function Header({
           ) : (
             (!left || !navigation.canGoBack()) ? null : (
               <Button
-                containerStyle={{ marginRight: 12, alignSelf: 'flex-start' }}
+                containerStyle={{ marginRight: 12, alignSelf: 'flex-start', marginTop: -10 }}
                 size={42}
                 color="transparent"
                 onPress={() => navigation.goBack()}
                 {...leftProps}
               >
-                <Ionicons name="arrow-back" size={24} color={colors.gray[900]} {...leftIconProps} />
+                <Ionicons name="arrow-back" size={24} color={colors.white} {...leftIconProps} />
               </Button>
             )
           )}
@@ -127,11 +126,12 @@ function Header({
               !hideSearch ? (
                 <TextField
                   border
-                  containerStyle={{ flex: 1, backgroundColor: colors.gray[100], alignSelf: 'center', }}
+                  containerStyle={{ flex: 1, backgroundColor: colors.gray[100], alignSelf: 'center', marginTop: -40 }}
                   style={{
                     paddingTop: Platform.OS === 'ios' ? 4 : 2,
                     paddingBottom: Platform.OS === 'ios' ? 4 : 2,
                     height: 35,
+                    fontSize: 11
                   }}
                   placeholder="Cari Produk.."
                   value={search}
@@ -185,15 +185,15 @@ function Header({
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 5,
-    paddingHorizontal: 5,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
     position: 'relative',
   },
 
   headercolor: {
     width: '100%',
-    height: 65,
-    backgroundColor: "#FEFEFE",
+    height: 50,
+    backgroundColor: "#204c29",
     position: 'absolute',
     resizeMode: 'cover',
   },

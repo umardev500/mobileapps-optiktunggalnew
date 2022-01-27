@@ -7,7 +7,7 @@ export const fetchAddresses = createAsyncThunk('user/fetchAddress', async (args,
   const { user: { user } } = getState() as RootStoreState;
   let addresses: AddressModel[] = [];
 
-  await httpService('/register/list', {
+  await httpService('https://ws.stmorita.net/register/list', {
     data: {
       act: 'ShipToList',
       dt: JSON.stringify({ comp: '001', regid: user?.id })
@@ -28,7 +28,7 @@ export const fetchFavorites = createAsyncThunk('user/fetchFavorites', async (arg
   await httpService('https://ws.stmorita.net/favorit/list', {
     data: {
       act: 'FavoritList',
-      dt: JSON.stringify({ comp: '001', regid: user?.id })
+      dt: JSON.stringify({ comp: '001', regid: '3BNUWMYN9414625' })
     }
   }).then(({ status, data }) => {
     if (200 === status) {

@@ -254,14 +254,14 @@ const Home = () => {
           <View style={[wrapper.row, { height: 130, width: '100%', borderRadius: 10}]}>
             <Image source={{ uri: 'https://optiktunggal.com/img/article/'+item.ArticleImage }} style={[styles.articleImage, { height }]} />
             <View style={{ borderColor: '#333', width: '55%' }}>
-              <Typography type="h4" style={{ marginTop: 5, fontSize: 12, paddingHorizontal: 10 }} numberOfLines={2}>
+              <Typography type="h4" style={{ marginTop: 5, fontSize: 12, paddingHorizontal: 15 }} numberOfLines={2}>
                 {item.ArticleName}
               </Typography>
               {!item.html ? null : (
                 <RenderHtml
                   source={{ html: item.html }}
                   tagsStyles={{
-                    p: { marginVertical: 0, height: 'auto', fontSize: 10, paddingHorizontal: 10, textAlign: 'justify' }
+                    p: { marginVertical: 0, height: 'auto', fontSize: 10, paddingHorizontal: 15, textAlign: 'justify' }
                   }}
                 />
               )}
@@ -534,7 +534,7 @@ const Home = () => {
         <View>
           <View style={[wrapper.row, { alignItems: 'center', marginTop: -5, paddingHorizontal: 10 }]}>
             <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 12 }}>
-              Kabar Optik Tunggal
+              News
             </Typography>
             <Button
               containerStyle={[styles.actionBtnContainer, { marginTop: 0 }]}

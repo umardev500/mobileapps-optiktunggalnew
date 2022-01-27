@@ -67,7 +67,6 @@ function BannerDetail() {
   };
 
   const { model: bannerModel } = banner;
-  debugger;
   return (
     <View style={{ height: '100%', backgroundColor: '#FEFEFE' }}>
       <View style={[wrapper.row]}>
