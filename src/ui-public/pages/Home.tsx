@@ -245,7 +245,7 @@ const Home = () => {
   const renderArticle = ({ item, index }: ListRenderItemInfo<ArticleModel>) => {
     const height = 130;
     return (
-      <View style={{ width: '100%' }}>
+      <View style={{ width: '100%', }}>
         <PressableBox
           key={index}
           style={{ marginHorizontal: 10 }}

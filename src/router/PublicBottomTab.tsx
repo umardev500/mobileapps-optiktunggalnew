@@ -101,6 +101,16 @@ function PublicBottomTab() {
           }}
         />
         <Tab.Screen
+          name="FavoriteStack"
+          component={PublicFavoriteStack}
+          options={{
+            tabBarLabel: t('Favorit'),
+            tabBarIcon: (iconParams) => (
+              <FigmaIcon.FigmaFavorite {...iconProps(iconParams)} />
+            ),
+          }}
+        />
+        <Tab.Screen
           // name="FavoriteStack"
           name="ArticleStack"
           component={PublicArticleStack}

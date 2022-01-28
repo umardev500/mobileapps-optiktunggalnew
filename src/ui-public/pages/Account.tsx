@@ -253,7 +253,7 @@ function Account() {
                       Icon: FigmaIcon.FigmaDownload,
                       navigatePath: () => {
                         navigation.navigatePath('Public', {
-                          screen: 'BottomTabs.NotificationStack.TransactionList',
+                          screen: 'BottomTabs.NotificationStack.TransactionUsers',
                           params: [null, {
                             initial: false,
                           }]

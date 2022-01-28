@@ -32,6 +32,8 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     // Notifications | Transaction
     case 'Notification':
       return { title: tNotif('Notifikasi') };
+    case 'TransactionUsers':
+      return { title: tNotif('Transaksi Pelanggan') };
     case 'TransactionList':
       return { title: tNotif('Transaksi') };
     case 'TransactionDetail':
@@ -53,6 +55,8 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     case 'ContactLens':
       return { title: `${''}Contact Lens` };
     case 'BannerDetail':
+      return { headerShown: false };
+    case 'ProductDetail':
       return { headerShown: false };
 
     // Favorites
@@ -88,7 +92,7 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       };
     case 'AddressEdit':
       return {
-        title: [tAcc('Informasi Alamat'), tAcc('Akan digunakan sebagai alamat penerima.')] as any
+        title: [tAcc('Informasi Alamat'), tAcc('sebagai alamat penerima.')] as any
       };
     case 'AddressList':
       return { headerShown: false };

@@ -1,11 +1,11 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View, Image } from 'react-native';
+import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View, Image, ImageBackground } from 'react-native';
 import { colors, shadows, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { Typography, PressableBox, Button } from '../../../ui-shared/components';
 import { useTranslation } from 'react-i18next';
-import { Modelable, TransactionModel } from '../../../types/model';
+import { Modelable, TransactionModel, UserModel } from '../../../types/model';
 import TransactionItem from '../../components/TransactionItem';
 import TransactionStatusModal from '../../components/TransactionStatusModal';
 import TransactionPayModal from '../../components/TransactionPayModal';
@@ -31,6 +31,10 @@ function TransactionList() {
 
   // States
   const [isLoading, setIsLoading] = useState(false);
+  const [users, setUsers] = useState<Modelable<UserModel>>({
+    model: null,
+    modelLoaded: false,
+  });
   const [transaction, setTransaction] = useState<Modelable<TransactionModel>>({
     models: [],
     modelsLoaded: false,
@@ -42,10 +46,22 @@ function TransactionList() {
     payModel: null,
   });
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   // Effects
   useEffect(() => {
     handleRefresh();
   }, []);
+
+  useEffect(() => {
+    if (route.params?.users) {
+      setUsers(state => ({
+        ...state,
+        model: route.params.users,
+        modelLoaded: true
+      }));
+    }
+  }, [route.params]);
 
   // Vars
   const handleRefresh = async () => {
@@ -126,6 +142,8 @@ function TransactionList() {
     }
   };
 
+  const { model: usersModel } = users;
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -138,112 +156,55 @@ function TransactionList() {
           />
         )}
       >
-        <Typography textAlign="center" style={{ paddingVertical: 12 }}>
-          {t(`Klik nama dibawah untuk melihat \n detail transaksi.`)}
-        </Typography>
-
-        <View style={{ marginTop: 5, backgroundColor: '#FEFEFE', }}>
-          {[
-            {
-              title: t(`${''}Nama Customer 1`),
-              navigatePath: () => {
-                navigation.navigatePath('Public', {
-                  screen: 'BottomTabs.NotificationStack.TransactionDetail',
-                  // params: [null, null, {
-                  //   transaction_id: transactionId,
-                  // }],
-                });
-              },
-            },
-            {
-              title: t(`${''}Nama Customer 2`),
-              navigatePath: () => {
-                navigation.navigatePath('Public', {
-                  screen: 'BottomTabs.NotificationStack.TransactionDetail',
-                  // params: [null, null, {
-                  //   transaction_id: transactionId,
-                  // }],
-                });
-              },
-            },
-          ].map((item, index) => (
-            <PressableBox
-              key={index}
-              containerStyle={{
-                marginHorizontal: 0,
-                marginVertical: 5,
-                borderWidth: 1, 
-                borderRadius: 5, 
-                borderColor: '#ccc'
-              }}
-              style={styles.menuChildBtn}
-              onPress={!item.navigatePath ? undefined : (
-                () => {
-                  if ('function' === typeof item.navigatePath) {
-                    return item.navigatePath();
-                  }
-                  
-                  navigation.navigatePath('Public', {
-                    screen: 'BottomTabs.NotificationStack.TransactionDetail',
-                    // params: [null, null, {
-                    //   transaction_id: transactionId,
-                    // }],
-                  });
-              })}
-            >
-
-              <View style={{ flex: 1,}}>
-                <View style={[wrapper.row, { flex: 1, marginTop: 10, paddingHorizontal: 10, width: '100%', }]}>
-                  <Typography style={{ fontSize: 12, fontWeight: 'bold' }}>
-                    {item.title}
-                  </Typography>
-                </View>
-
-                <View style={[wrapper.row, { marginTop: 5, paddingHorizontal: 10, width: '100%' }]}>
-                  <View style={{ flex: 2 }}>
-                    <Image source={require('../../../assets/icons/figma/vip.png')} style={styles.avatarVIP} />
-                    <Typography style={{ textAlign: 'center', fontSize: 10 }}>
-                      VIP MEMBER
-                    </Typography>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                      <View style={{ width: 0.5, height: 50, alignSelf: 'center', marginVertical: 10, backgroundColor: '#333' }} />
-                  </View>
-                  <View style={{ flex: 2 }}>
-                    <Image source={require('../../../assets/icons/figma/coin.png')} style={styles.avatarVIP} />
-                    <Typography style={{ textAlign: 'center', fontSize: 10 }}>
-                      10.000.000
-                    </Typography>
-                  </View>
-                </View>
-              </View>
-            </PressableBox>
-          ))}
-        </View>
-
-        {!transaction.modelsLoaded ? (
-          <View style={{ alignItems: 'center', paddingVertical: 12 }}>
-            <ActivityIndicator size={32} animating color={colors.palettes.primary} />
-          </View>
-        ) : (
-          !transaction.models?.length ? (
-            <Typography textAlign="center" style={{ paddingVertical: 12 }}>
-              {t(`Belum ada transaksi.`)}
+        {!usersModel? ( 
+            <Typography textAlign="center" style={{ marginVertical: 12 }}>
+              {t(`${''}Tidak ada transaksi.`)}
             </Typography>
-          ) : transaction.models.map((item, index) => (
-            <TransactionItem
-              key={index}
-              transaction={item}
-              onDetailPress={(model) => handleModalToggle('detail', true, {
-                detailModel: model
-              })}
-              onPayPress={(model) => handleModalToggle('pay', true, {
-                payModel: model
-              })}
-              style={{ marginTop: index === 0 ? 0 : 12 }}
-            />
-          ))
-        )}
+          ) : ( 
+            <>
+              <ImageBackground source={require('../../../assets/icons/figma/membercard.png')} resizeMode= 'stretch' style={{width: '100%', height: 220 }}>
+                 <View style={{position: 'absolute', top: 145, left: 0, right: 0, bottom: 0}}>
+                   <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 16 }}>
+                     {usersModel.nm_lengkap}
+                    </Typography>
+                    <View style={[wrapper.row, { width: '100%', marginTop: 5 }]}>
+                       <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 13}}>
+                         {usersModel.kd_customer}
+                        </Typography>
+                        <Typography style={{ color: 'white', textAlign: 'center', fontSize: 10, flex: 1, marginLeft: 20 }}>
+                         Valid thru 12/31/2021
+                        </Typography>
+                    </View>
+                 </View>
+              </ImageBackground>
+              <Typography style={{ paddingVertical: 12, marginVertical: 10, borderBottomWidth: 1, }}>
+                {t(`List Transaksi`)}
+              </Typography>
+              {!transaction.modelsLoaded ? (
+                <View style={{ alignItems: 'center', paddingVertical: 12 }}>
+                  <ActivityIndicator size={32} animating color={colors.palettes.primary} />
+                </View>
+              ) : (
+                !transaction.models?.length ? (
+                  <Typography textAlign="center" style={{ paddingVertical: 12 }}>
+                    {t(`Belum ada transaksi.`)}
+                  </Typography>
+                ) : transaction.models.map((item, index) => (
+                  <TransactionItem
+                    key={index}
+                    transaction={item}
+                    onDetailPress={(model) => handleModalToggle('detail', true, {
+                      detailModel: model
+                    })}
+                    onPayPress={(model) => handleModalToggle('pay', true, {
+                      payModel: model
+                    })}
+                    style={{ marginTop: index === 0 ? 0 : 12 }}
+                  />
+                ))
+              )}
+            </>
+          ) }
       </ScrollView>
 
       {/* Transaction Status Detail */}
@@ -304,12 +265,6 @@ const styles = StyleSheet.create({
   menuChildIcon: {
     width: 24,
     alignItems: 'center',
-  },
-  avatarVIP: {
-    width: 30,
-    height: 30,
-    marginTop: 10,
-    alignSelf: 'center'
   },
 });
 

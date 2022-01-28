@@ -34,7 +34,8 @@ function SplashScreen() {
     navigation.reset({
       index: 0,
       routes: [{
-        name: 'Walkthrough',
+        name: 'Public',
+        params: { screen: 'BottomTabs' }
       }],
     });
   };

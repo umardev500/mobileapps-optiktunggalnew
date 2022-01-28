@@ -88,6 +88,10 @@ function Search() {
       handleFieldChange('prdcat', routeCategory.id);
 
       setOptions(state => ({ ...state, prdcat: routeCategory.id }));
+    }else if (routeBrand) {
+      handleFieldChange('brand', routeBrand.id);
+
+      setOptions(state => ({ ...state, brand: routeBrand.id }));
     }
 
   }, [route.params]);
@@ -187,6 +191,7 @@ function Search() {
     handleModalToggle('filter', false);
 
     handleFieldChange('prdcat', options.prdcat);
+    handleFieldChange('brand', options.brand);
 
     setProduct(state => ({
       ...state,
@@ -207,12 +212,12 @@ function Search() {
 
   const filterColor = filterCount ? colors.palettes.primary : colors.gray[700];
   const categoryActive = categories?.find(item => item.id === fields.prdcat);
-  const brandActive = brands?.find(item => item.id === fields.prdcat);
+  const brandActive = brands?.find(item => item.id === fields.brand);
 
   return (
     <View style={{ flex: 1 }}>
       <Header
-        left
+        // left
         search={search || undefined}
       />
 

@@ -68,7 +68,7 @@ function Header({
         >{title}</Typography>
 
         {!subtitle ? null : (
-          <Typography size="sm" textAlign="center" style={{ marginTop: 4 }}>
+          <Typography size="sm" textAlign="center" style={{ marginTop: 4, color: '#FFFFFF' }}>
             {subtitle}
           </Typography>
         )}

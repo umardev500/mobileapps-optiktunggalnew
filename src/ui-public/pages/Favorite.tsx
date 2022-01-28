@@ -61,12 +61,16 @@ function Favorite() {
       models: [],
       modelsLoaded: false
     }));
-
-    return httpService('https://ws.stmorita.net/favorit/list', {
+    return httpService('/api/product/product', {
       data: {
-        act: 'FavoritList',
-        dt: JSON.stringify({ comp: '001', regid: user?.id })
-      }
+        act: 'PrdFavorite',
+        dt: JSON.stringify({
+          param: "katalog",
+          limit: 5,
+          prdcat: "",
+          search: null,
+        }),
+      },
     }).then(({ status, data }) => {
       if (200 === status) {
         dispatch(setFavorites(data || [])).then(() => {
@@ -95,8 +99,11 @@ function Favorite() {
       favoriteShow
       ListHeaderComponent={(
         <View style={[styles.wrapper, { paddingTop: 8, paddingBottom: 12 }]}>
-          <Typography type="h5" style={{ marginVertical: 12 }}>
+          <Typography type="h5" style={{ marginVertical: 5 }}>
             {`${''}Produk Favorit`}
+          </Typography>
+          <Typography>
+            Semua produk yang kamu sukai ada disini
           </Typography>
         </View>
       )}
