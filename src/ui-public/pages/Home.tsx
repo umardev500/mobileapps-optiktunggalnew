@@ -472,7 +472,7 @@ const Home = () => {
           <View>
             <View style={[wrapper.row, { alignItems: 'center', paddingHorizontal: 10 }]}>
               <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 12 }}>
-                Lensa & Contact Lense
+                Lens & Contact Lense
               </Typography>
             </View>
             <PressableBox
@@ -485,7 +485,7 @@ const Home = () => {
               }}
               style={{ alignItems: 'center', }}
               onPress={() => navigation.navigatePath('Public', {
-                screen: 'BottomTabs.ContactLensStack'
+                screen: 'Lens'
               })}>
               <View style={[wrapper.row, { marginTop: 10 }]}>
                 <Image source={{ uri: 'https://www.optiktunggal.com/img/home_middle_table/HC170105032019-12-16_10_25_44.jpg' }} style={styles.imgLens} />
@@ -493,7 +493,7 @@ const Home = () => {
                   <Typography type="h4" color="black" style={{ paddingHorizontal: 10, fontSize: 12, textAlign: 'justify' ,marginTop: -5 }}>
                     High Quality Optical Lenses
                   </Typography>
-                  <Typography style={{ paddingHorizontal: 10, fontSize: 10, textAlign: 'justify' }}>
+                  <Typography style={{ paddingHorizontal: 10, fontSize: 10, textAlign: 'justify' }} numberOfLines={3}>
                     Penglihatan Anda layak mendapatkan yang terbaik. Dengan pengalaman lebih dari 90 tahun, Optik Tunggal berkomitmen untuk memberikan Anda layanan dan produk lensa optik dengan kualitas yang terbaik.
                   </Typography>
                 </View>
@@ -517,7 +517,7 @@ const Home = () => {
                   <Typography type="h4" color="black" style={{ paddingHorizontal: 10, fontSize: 12, textAlign: 'justify' ,marginTop: -5 }}>
                     Contact Lense
                   </Typography>
-                  <Typography style={{ paddingHorizontal: 10, fontSize: 10, textAlign: 'justify' }} numberOfLines={4}>
+                  <Typography style={{ paddingHorizontal: 10, fontSize: 10, textAlign: 'justify' }} numberOfLines={3}>
                     Schon adalah merek softlens yang menyediakan softlens kosmetik dan juga softlens korektif.
                     Softlens Schon didesain khusus untuk mata orang Indonesia yang mempunyai beragam pilihan, baik itu softlens bening dan juga yang berwarna.
                     Untuk varian softlens bening tersedia pilihan masa pakai harian dan bulanan.
@@ -706,11 +706,12 @@ const styles = StyleSheet.create({
   imgLens: {
     width: 90,
     height: 90,
-    resizeMode: 'contain',
+    borderRadius: 5
   },
   imgContLens: {
     width: 90,
     height: 90,
+    borderRadius: 5
   },
   actionBtnContainer: {
     backgroundColor: colors.white,

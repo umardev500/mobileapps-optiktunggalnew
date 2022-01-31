@@ -371,7 +371,7 @@ function Walkthrough() {
             <Button
               rounded
               containerStyle={{ alignSelf: 'center', minWidth: 300 }}
-              color="yellow"
+              color="primary"
               label="Lanjutkan"
               onPress={handleFinish}
             />

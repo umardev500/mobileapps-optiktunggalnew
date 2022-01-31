@@ -12,7 +12,7 @@ import { BoxLoading } from '../../../ui-shared/loadings';
 import { httpService } from '../../../lib/utilities';
 import moment from 'moment';
 
-function ContactLens() {
+function Lens() {
   // Hooks
   const navigation = useAppNavigation();
   const route = useRoute();
@@ -29,6 +29,9 @@ function ContactLens() {
   const [tabActive, setTabActive] = useState<number>(1);
   const handleTabToggle = (tab: number) => {
     setTabActive(tab === tabActive ? 1 : tab);
+    if(tab === 2){
+      retrieveParvaVisty();
+    }
   };
   // Effects
   useEffect(() => {
@@ -38,14 +41,14 @@ function ContactLens() {
   // Vars
   const handleRefresh = async () => {
     setIsLoading(true);
-    await retrieveArticle();
+    await retrieveZeiss();
     setIsLoading(false);
   };
 
-  const retrieveArticle = async () => {
+  const retrieveZeiss = async () => {
     return httpService(`/api/article/article`, {
       data: {
-        act: 'ArticleList',
+        act: 'ArticleLensListZeiss',
       },
     }).then(({ status, data }) => {
       setArticle(state => ({
@@ -58,7 +61,23 @@ function ContactLens() {
     });
   };
 
-  const handleGoToArticleDetail = (article: ArticleModel) => {
+  const retrieveParvaVisty = async () => {
+    return httpService(`/api/article/article`, {
+      data: {
+        act: 'ArticleLensListParvaVisty',
+      },
+    }).then(({ status, data }) => {
+      setArticle(state => ({
+        ...state,
+        models: 200 !== status ? [] : (data || []),
+        modelsLoaded: true
+      }));
+    }).catch(() => {
+      setArticle(state => ({ ...state, modelsLoaded: true }));
+    });
+  };
+
+  const handleGoToLensDetail = (article: ArticleModel) => {
     if (!article.ArticleID) {
       return void(0);
     }
@@ -72,14 +91,42 @@ function ContactLens() {
     });
   };
 
-  const renderarticles = ({ item, index }: ListRenderItemInfo<ArticleModel>) => {
+  const renderZeiss = ({ item, index }: ListRenderItemInfo<ArticleModel>) => {
     const content = item.html;
-
     return (
       <PressableBox
         key={index}
         style={styles.articleCard}
-        onPress={() => handleGoToArticleDetail(item)}>
+        onPress={() => handleGoToLensDetail(item)}>
+
+        {!item.ArticleID ? null : (
+          <Image source={{ uri: 'https://optiktunggal.com/img/article/'+item.ArticleImage }} style={styles.articleCardImage} />
+        )}
+        <View style={{ flex: 1, marginTop: 5
+         }}>
+          <View style={[wrapper.row]}>
+            <Typography style={{ flex: 1, fontSize: 12, color: '#ccc', textDecorationLine: 'underline' }}>
+              NEWS
+            </Typography>
+            <Typography style={{ fontSize: 10, color: '#ccc' }}>
+              {item.ArticlePublishDate}
+            </Typography>
+          </View>
+          <Typography heading>
+            {item.ArticleName}
+          </Typography>
+        </View>
+      </PressableBox>
+    )
+  };
+
+  const renderParvaVisty = ({ item, index }: ListRenderItemInfo<ArticleModel>) => {
+    const content = item.html;
+    return (
+      <PressableBox
+        key={index}
+        style={styles.articleCard}
+        onPress={() => handleGoToLensDetail(item)}>
 
         {!item.ArticleID ? null : (
           <Image source={{ uri: 'https://optiktunggal.com/img/article/'+item.ArticleImage }} style={styles.articleCardImage} />
@@ -106,9 +153,8 @@ function ContactLens() {
     <View style={{ flex: 1, backgroundColor: '#FEFEFE' }}>
       <View style={styles.Tabbed}>
         {[
-          { label: 'Schon', tab: 1 },
-          { label: 'Edgy', tab: 2 },
-          { label: 'Acuvue', tab: 3 },
+          { label: 'ZEISS', tab: 1 },
+          { label: 'Parva-Visty', tab: 2 },
         ].map((item, index) => (
           <Button
             key={index}
@@ -125,21 +171,30 @@ function ContactLens() {
           />
         ))}
       </View>
-      
+
       {tabActive !== 1 ? null : (
-        <ScrollView>
-          <View style={{ marginTop: 10, paddingHorizontal: 15, marginBottom: 15 }}>
+        <ScrollView 
+          refreshControl={(
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={handleRefresh}
+              colors={[colors.palettes.primary]}
+            />
+          )}>
+          <View style={{ marginTop: 10, paddingHorizontal: 15, }}>
             <View>
-              <Image source={{ uri: 'https://optiktunggal.com/img/contact_lens/category/CLC191212012019-12-12_11_27_58.jpg' }} style={{ width: '100%', height: 200, resizeMode: 'stretch', alignSelf: 'center' }} />
-              <Typography style={{ fontSize: 12, textAlign: 'justify', marginTop: 10 }}>
-                {`Schon adalah merek softlens yang menyediakan softlens kosmetik dan juga softlens korektif. Softlens Schon didesain khusus untuk mata orang Indonesia yang mempunyai beragam pilihan, baik itu softlens bening dan juga yang berwarna. Untuk varian softlens bening tersedia pilihan masa pakai harian dan bulanan. Untuk varian softlens berwarna tersedia warna-warna natural dan warna-warna menarik lainnya yang dapat membuat tampilan anda lebih memukau.\n\nDapatkan softlens Schon di semua cabang Optik Tunggal di seluruh Indonesia.`}
+              <Image source={{ uri: 'https://optiktunggal.com/img/product_lens/CP161205012018-04-04_11_05_14.jpg' }} style={styles.imgContLens} />
+              <Typography style={{ fontSize: 12, textAlign: 'justify' }}>
+                Penglihatan Anda layak mendapatkan yang terbaik. Zeiss adalah perusahaan internasional terdepan dalam dunia optikal dan ofthalmik. 
+                Zeiss telah berkontribusi dalam pengembangan teknologi optikal dan ofthalmik selama lebih dari 170 tahun. 
+                Teknologi lensa ZEISS kini tersedia di Indonesia, Carl Zeiss Vision bekerja sama dengan Optik Tunggal berkomitmen untuk memberikan Anda layanan dan produk lensa dengan kualitas yang terbaik.
               </Typography>
             </View>
           </View>
           <FlatList
             contentContainerStyle={styles.container}
             data={article.models}
-            renderItem={renderarticles}
+            renderItem={renderZeiss}
             ListEmptyComponent={!article.modelsLoaded ? (
               <View style={[styles.promoCardContainer, { marginTop: 8 }]}>
                 <View style={styles.articleCard}>
@@ -165,19 +220,42 @@ function ContactLens() {
       )}
 
       {tabActive !== 2 ? null : (
-        <View style={{ marginTop: 15 }}>
-          <Typography textAlign="center">
-            {t(`${''}List Edgy.`)}
-          </Typography>
-        </View>
-      )}
+        <ScrollView>
+          <View style={{ marginTop: 10, paddingHorizontal: 15, }}>
+            <View>
+              <Image source={{ uri: 'https://optiktunggal.com/img/product_lens/CP161205022017-03-07_12_37_03.jpg' }} style={{ width: 200, height: 50, resizeMode: 'stretch', alignSelf: 'center' }} />
+              <Typography style={{ fontSize: 12, textAlign: 'justify' }}>
+                Lensa berkualitas yang diproduksi dengan teknik free form, menggunakan desain dan teknologi dari Carl Zeiss Vision, 
+                memberikan pilihan bagi para smart shopper untuk lensa yang soft design, jernih dan coating berkualitas.
+              </Typography>
+            </View>
+          </View>
+          <FlatList
+            contentContainerStyle={styles.container}
+            data={article.models}
+            renderItem={renderParvaVisty}
+            ListEmptyComponent={!article.modelsLoaded ? (
+              <View style={[styles.promoCardContainer, { marginTop: 8 }]}>
+                <View style={styles.articleCard}>
+                  <BoxLoading width={64} height={64} rounded={8} />
 
-      {tabActive !== 3 ? null : (
-        <View style={{ marginTop: 15 }}>
-          <Typography textAlign="center">
-            {t(`${''}List Acuvue.`)}
-          </Typography>
-        </View>
+                  <View style={{ flex: 1, paddingLeft: 12 }}>
+                    <BoxLoading width={[100, 150]} height={20} />
+
+                    <BoxLoading width={[140, 200]} height={18} style={{ marginTop: 6 }} />
+                    <BoxLoading width={[100, 130]} height={18} style={{ marginTop: 2 }} />
+                  </View>
+                </View>
+              </View>
+            ) : (
+              <View style={{ marginTop: 45 }}>
+                <Typography textAlign="center">
+                  {t(`${''}Data tidak ada.`)}
+                </Typography>
+              </View>
+            )}
+          />
+        </ScrollView>
       )}
     </View>
   );
@@ -190,6 +268,11 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     backgroundColor: colors.white,
     borderColor: '#F3F3F3',
+  },
+  imgContLens: {
+    width: 90,
+    height: 90,
+    alignSelf: 'center'
   },
   Tabbed: {
     ...wrapper.row,
@@ -237,4 +320,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ContactLens;
+export default Lens;
