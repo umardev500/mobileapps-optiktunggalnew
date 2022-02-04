@@ -1,18 +1,18 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Image, ListRenderItemInfo, RefreshControl, StyleSheet, useWindowDimensions, View, Alert } from 'react-native';
-import { colors, shadows, wrapper } from '../../lib/styles';
-import { useAppNavigation } from '../../router/RootNavigation';
-import { Button, ImageAuto, PressableBox, RenderHtml, Typography } from '../../ui-shared/components';
+import { Image, ListRenderItemInfo, RefreshControl, StyleSheet, useWindowDimensions, View, Alert, ScrollView } from 'react-native';
+import { colors, shadows, wrapper } from '../../../lib/styles';
+import { useAppNavigation } from '../../../router/RootNavigation';
+import { Button, ImageAuto, PressableBox, RenderHtml, Typography } from '../../../ui-shared/components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { FlatList } from 'react-native-gesture-handler';
-import { Modelable, ArticleModel } from '../../types/model';
-import { BoxLoading } from '../../ui-shared/loadings';
-import { httpService } from '../../lib/utilities';
+import { Modelable, ArticleModel } from '../../../types/model';
+import { BoxLoading } from '../../../ui-shared/loadings';
+import { httpService } from '../../../lib/utilities';
 import moment from 'moment';
 
-function Article() {
+function ContactLensSubCategory() {
   // Hooks
   const navigation = useAppNavigation();
   const route = useRoute();
@@ -34,16 +34,15 @@ function Article() {
   // Vars
   const handleRefresh = async () => {
     setIsLoading(true);
-
-    await retrieveArticle();
-
+    await retrieveSubCategorySchon();
     setIsLoading(false);
   };
 
-  const retrieveArticle = async () => {
+  const retrieveSubCategorySchon = async () => {
     return httpService(`/api/article/article`, {
       data: {
-        act: 'ArticleList',
+        act: 'ContactLensSubCategorySchon',
+        dt: JSON.stringify({ param: "schon" })
       },
     }).then(({ status, data }) => {
       setArticle(state => ({
@@ -56,7 +55,7 @@ function Article() {
     });
   };
 
-  const handleGoToArticleDetail = (article: ArticleModel) => {
+  const handleGoToContactLensArticleDetail = (article: ArticleModel) => {
     if (!article.ArticleID) {
       return void(0);
     }
@@ -70,28 +69,27 @@ function Article() {
     });
   };
 
-  const renderarticles = ({ item, index }: ListRenderItemInfo<ArticleModel>) => {
-  const content = item.html;
-
+  const renderSubCategory = ({ item, index }: ListRenderItemInfo<ArticleModel>) => {
+    const content = item.html;
     return (
       <PressableBox
         key={index}
         style={styles.articleCard}
-        onPress={() => handleGoToArticleDetail(item)}>
+        onPress={() => handleGoToContactLensArticleDetail(item)}>
 
         {!item.ArticleID ? null : (
-          <Image source={{ uri: 'https://optiktunggal.com/img/article/'+item.ArticleImage }} style={styles.articleCardImage} />
+          <Image source={{ uri: item.ArticleImageThumb }} style={styles.articleCardImage} />
         )}
-        <View style={{
-            marginTop: 8,
-            borderTopWidth: 1,
-            borderColor: '#ccc'
-          }} />
-        <View style={{ flex: 1, marginTop: 10
+        <View style={{ flex: 1, marginTop: 5
          }}>
-          <Typography color="gray" style={{ flex: 1, fontSize: 10 }}>
-            {item.ArticlePublishDate}
-          </Typography>
+          <View style={[wrapper.row]}>
+            <Typography style={{ flex: 1, fontSize: 12, color: '#ccc', textDecorationLine: 'underline' }}>
+              NEWS
+            </Typography>
+            <Typography style={{ fontSize: 10, color: '#ccc' }}>
+              {item.ArticlePublishDate}
+            </Typography>
+          </View>
           <Typography heading>
             {item.ArticleName}
           </Typography>
@@ -101,34 +99,36 @@ function Article() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        contentContainerStyle={styles.container}
+    <View style={{ flex: 1, backgroundColor: '#FEFEFE' }}>
+      <ScrollView
         refreshControl={(
           <RefreshControl
             refreshing={isLoading}
             onRefresh={handleRefresh}
             colors={[colors.palettes.primary]}
           />
-        )}
-        data={article.models}
-        renderItem={renderarticles}
-        ListEmptyComponent={!article.modelsLoaded ? (
-          <View style={[styles.promoCardContainer, { marginTop: 8 }]}>
-            <View style={styles.articleCard}>
-              <BoxLoading width={300} height={150} rounded={8} />
-              <BoxLoading width={[50, 150]} height={20} />
-              <BoxLoading width={[200, 150]} height={20} />
+        )}>
+        <FlatList
+          contentContainerStyle={styles.container}
+          data={article.models}
+          renderItem={renderSubCategory}
+          ListEmptyComponent={!article.modelsLoaded ? (
+            <View style={[styles.promoCardContainer, { marginTop: 8 }]}>
+              <View style={styles.articleCard}>
+                <BoxLoading width={300} height={150} rounded={8} />
+                <BoxLoading width={[50, 150]} height={20} />
+                <BoxLoading width={[200, 150]} height={20} />
+              </View>
             </View>
-          </View>
-        ) : (
-          <View style={{ marginTop: 15 }}>
-            <Typography textAlign="center">
-              {t(`${''}Semua Kabar sudah ditampilkan.`)}
-            </Typography>
-          </View>
-        )}
-      />
+          ) : (
+            <View style={{ marginTop: 45 }}>
+              <Typography textAlign="center">
+                {t(`${''}Data tidak ada.`)}
+              </Typography>
+            </View>
+          )}
+        />
+      </ScrollView>
     </View>
   );
 };
@@ -141,7 +141,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderColor: '#F3F3F3',
   },
-
+  Tabbed: {
+    ...wrapper.row,
+    marginVertical: 12,
+    marginHorizontal: -4,
+    paddingHorizontal: 12,
+    backgroundColor: '#FEFEFE',
+  },
   actionBtnContainer: {
     ...shadows[3],
     backgroundColor: colors.white,
@@ -181,4 +187,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Article;
+export default ContactLensSubCategory;

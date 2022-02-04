@@ -25,12 +25,10 @@ function ContactLens() {
     models: [],
     modelsLoaded: false,
   });
-
+  
   const [tabActive, setTabActive] = useState<number>(1);
-  const handleTabToggle = (tab: number) => {
-    setTabActive(tab === tabActive ? 1 : tab);
-  };
-  // Effects
+
+// Effects
   useEffect(() => {
     handleRefresh();
   }, []);
@@ -38,14 +36,29 @@ function ContactLens() {
   // Vars
   const handleRefresh = async () => {
     setIsLoading(true);
-    await retrieveArticle();
+    await handleTabToggle(tabActive);
     setIsLoading(false);
   };
 
-  const retrieveArticle = async () => {
+  const handleTabToggle = (tab: number) => {
+    setTabActive(tab === tabActive ? 1 : tab);
+    if(tab === 1){
+      retrieveSchon();
+    }
+
+    if(tab === 2){
+      retrieveEdgy();
+    }
+
+    if(tab === 3){
+      retrieveAcuvue();
+    }
+  };
+
+  const retrieveSchon = async () => {
     return httpService(`/api/article/article`, {
       data: {
-        act: 'ArticleList',
+        act: 'ArticleContactLensSchon',
       },
     }).then(({ status, data }) => {
       setArticle(state => ({
@@ -58,13 +71,45 @@ function ContactLens() {
     });
   };
 
-  const handleGoToArticleDetail = (article: ArticleModel) => {
+  const retrieveEdgy = async () => {
+    return httpService(`/api/article/article`, {
+      data: {
+        act: 'ArticleContactLensEdgy',
+      },
+    }).then(({ status, data }) => {
+      setArticle(state => ({
+        ...state,
+        models: 200 !== status ? [] : (data || []),
+        modelsLoaded: true
+      }));
+    }).catch(() => {
+      setArticle(state => ({ ...state, modelsLoaded: true }));
+    });
+  };
+
+  const retrieveAcuvue = async () => {
+    return httpService(`/api/article/article`, {
+      data: {
+        act: 'ArticleContactLensAcuvue',
+      },
+    }).then(({ status, data }) => {
+      setArticle(state => ({
+        ...state,
+        models: 200 !== status ? [] : (data || []),
+        modelsLoaded: true
+      }));
+    }).catch(() => {
+      setArticle(state => ({ ...state, modelsLoaded: true }));
+    });
+  };
+
+  const handleGoToContactLensArticleDetail = (article: ArticleModel) => {
     if (!article.ArticleID) {
       return void(0);
     }
 
     navigation.navigatePath('Public', {
-      screen: 'BottomTabs.ArticleStack.ArticleDetail',
+      screen: 'ContactLensSubCategory',
       params: [null, null, {
         article_id: article.ArticleID || 0,
         article,
@@ -72,17 +117,16 @@ function ContactLens() {
     });
   };
 
-  const renderarticles = ({ item, index }: ListRenderItemInfo<ArticleModel>) => {
+  const renderSchon = ({ item, index }: ListRenderItemInfo<ArticleModel>) => {
     const content = item.html;
-
     return (
       <PressableBox
         key={index}
         style={styles.articleCard}
-        onPress={() => handleGoToArticleDetail(item)}>
+        onPress={() => handleGoToContactLensArticleDetail(item)}>
 
         {!item.ArticleID ? null : (
-          <Image source={{ uri: 'https://optiktunggal.com/img/article/'+item.ArticleImage }} style={styles.articleCardImage} />
+          <Image source={{ uri: item.ArticleImageThumb }} style={styles.articleCardImage} />
         )}
         <View style={{ flex: 1, marginTop: 5
          }}>
@@ -127,7 +171,14 @@ function ContactLens() {
       </View>
       
       {tabActive !== 1 ? null : (
-        <ScrollView>
+        <ScrollView
+          refreshControl={(
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={handleRefresh}
+              colors={[colors.palettes.primary]}
+            />
+          )}>
           <View style={{ marginTop: 10, paddingHorizontal: 15, marginBottom: 15 }}>
             <View>
               <Image source={{ uri: 'https://optiktunggal.com/img/contact_lens/category/CLC191212012019-12-12_11_27_58.jpg' }} style={{ width: '100%', height: 200, resizeMode: 'stretch', alignSelf: 'center' }} />
@@ -139,18 +190,13 @@ function ContactLens() {
           <FlatList
             contentContainerStyle={styles.container}
             data={article.models}
-            renderItem={renderarticles}
+            renderItem={renderSchon}
             ListEmptyComponent={!article.modelsLoaded ? (
               <View style={[styles.promoCardContainer, { marginTop: 8 }]}>
                 <View style={styles.articleCard}>
-                  <BoxLoading width={64} height={64} rounded={8} />
-
-                  <View style={{ flex: 1, paddingLeft: 12 }}>
-                    <BoxLoading width={[100, 150]} height={20} />
-
-                    <BoxLoading width={[140, 200]} height={18} style={{ marginTop: 6 }} />
-                    <BoxLoading width={[100, 130]} height={18} style={{ marginTop: 2 }} />
-                  </View>
+                  <BoxLoading width={300} height={150} rounded={8} />
+                  <BoxLoading width={[50, 150]} height={20} />
+                  <BoxLoading width={[200, 150]} height={20} />
                 </View>
               </View>
             ) : (
@@ -165,19 +211,83 @@ function ContactLens() {
       )}
 
       {tabActive !== 2 ? null : (
-        <View style={{ marginTop: 15 }}>
-          <Typography textAlign="center">
-            {t(`${''}List Edgy.`)}
-          </Typography>
-        </View>
+        <ScrollView
+          refreshControl={(
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={handleRefresh}
+              colors={[colors.palettes.primary]}
+            />
+          )}>
+          <View style={{ marginTop: 10, paddingHorizontal: 15, marginBottom: 15 }}>
+            <View>
+              <Image source={{ uri: 'https://www.optiktunggal.com/img/contact_lens/category/CLC191212022019-12-12_14_20_33.jpg' }} style={{ width: '100%', height: 200, resizeMode: 'stretch', alignSelf: 'center' }} />
+              <Typography style={{ fontSize: 12, textAlign: 'justify', marginTop: 10 }}>
+                {`Lensa ini memberikan kenyamanan dan ketajaman penglihatan pada pengguna. Desain warna 2 tone yang telah disesuaikan dengan mata orang Indonesia. Desain alami dengan lingkaran hitam yang membuat mata terlihat lebih bercahaya. Cocok digunakan untuk sehari-hari maupun untuk acara-acara tertentu.`}
+              </Typography>
+            </View>
+          </View>
+          <FlatList
+            contentContainerStyle={styles.container}
+            data={article.models}
+            renderItem={renderSchon}
+            ListEmptyComponent={!article.modelsLoaded ? (
+              <View style={[styles.promoCardContainer, { marginTop: 8 }]}>
+                <View style={styles.articleCard}>
+                  <BoxLoading width={300} height={150} rounded={8} />
+                  <BoxLoading width={[50, 150]} height={20} />
+                  <BoxLoading width={[200, 150]} height={20} />
+                </View>
+              </View>
+            ) : (
+              <View style={{ marginTop: 45 }}>
+                <Typography textAlign="center">
+                  {t(`${''}Data tidak ada.`)}
+                </Typography>
+              </View>
+            )}
+          />
+        </ScrollView>
       )}
 
       {tabActive !== 3 ? null : (
-        <View style={{ marginTop: 15 }}>
-          <Typography textAlign="center">
-            {t(`${''}List Acuvue.`)}
-          </Typography>
-        </View>
+        <ScrollView
+          refreshControl={(
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={handleRefresh}
+              colors={[colors.palettes.primary]}
+            />
+          )}>
+          <View style={{ marginTop: 10, paddingHorizontal: 15, marginBottom: 15 }}>
+            <View>
+              <Image source={{ uri: 'https://www.optiktunggal.com/img/contact_lens/category/CLC191211012019-12-11_11_03_30.jpg' }} style={{ width: '100%', height: 200, resizeMode: 'stretch', alignSelf: 'center' }} />
+              <Typography style={{ fontSize: 12, textAlign: 'justify', marginTop: 10 }}>
+                {`Selama lebih dari dua puluh tahun, Merek ACUVUE® telah didedikasikan untuk membawa keuntungan bagi perawatan mata untuk individu di seluruh dunia. Sejak transformasi Merek ACUVUE®  di tahun 1998 dengan lensa kontak lunak sekali pakai pertama di dunia, kami dengan penuh semangat berusaha mengejar teknologi-teknologi baru dan standar kualitas tertinggi.`}
+              </Typography>
+            </View>
+          </View>
+          <FlatList
+            contentContainerStyle={styles.container}
+            data={article.models}
+            renderItem={renderSchon}
+            ListEmptyComponent={!article.modelsLoaded ? (
+              <View style={[styles.promoCardContainer, { marginTop: 8 }]}>
+                <View style={styles.articleCard}>
+                  <BoxLoading width={300} height={150} rounded={8} />
+                  <BoxLoading width={[50, 150]} height={20} />
+                  <BoxLoading width={[200, 150]} height={20} />
+                </View>
+              </View>
+            ) : (
+              <View style={{ marginTop: 45 }}>
+                <Typography textAlign="center">
+                  {t(`${''}Data tidak ada.`)}
+                </Typography>
+              </View>
+            )}
+          />
+        </ScrollView>
       )}
     </View>
   );

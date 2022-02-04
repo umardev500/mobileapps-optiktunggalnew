@@ -52,7 +52,8 @@ function Notification() {
             <Ionicons name="chevron-forward" size={20} color='black' />
           )}
           onPress={() => navigation.navigatePath('Public', {
-            screen: 'BottomTabs.NotificationStack.TransactionList'
+            // screen: 'BottomTabs.NotificationStack.TransactionList'
+            screen: 'BottomTabs.NotificationStack.TransactionUsers',
           })}
         />
       )}

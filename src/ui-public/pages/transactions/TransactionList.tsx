@@ -82,7 +82,6 @@ function TransactionList() {
     return httpService('/api/transaction/transaction', {
       data: {
         act: 'TrxList',
-        // dt: JSON.stringify({ comp: '001', regid: user?.id })
       }
     }).then(({ status, data }) => {
       setTransaction(state => ({
@@ -162,21 +161,35 @@ function TransactionList() {
             </Typography>
           ) : ( 
             <>
-              <ImageBackground source={require('../../../assets/icons/figma/membercard.png')} resizeMode= 'stretch' style={{width: '100%', height: 220 }}>
-                 <View style={{position: 'absolute', top: 145, left: 0, right: 0, bottom: 0}}>
-                   <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 16 }}>
-                     {usersModel.nm_lengkap}
-                    </Typography>
-                    <View style={[wrapper.row, { width: '100%', marginTop: 5 }]}>
-                       <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 13}}>
-                         {usersModel.kd_customer}
+              {usersModel.no_card == null ? (
+                <View>
+                  <Typography style={{ textAlign: 'center', fontSize: 12, paddingHorizontal: 3, color: '#ec3a3b' }}>
+                    Anda Belum Menjadi Member
+                  </Typography>
+                  <Typography style={{ textAlign: 'center', fontSize: 12, paddingHorizontal: 3 }}>
+                    Pengguna member akan mendapatkan penawaran terbaik setiap melakukan transaksi.
+                  </Typography>
+                </View>
+              ) : (
+                <View>
+                  <ImageBackground source={require('../../../assets/icons/figma/membercard.png')} resizeMode= 'stretch' style={{width: '100%', height: 220 }}>
+                     <View style={{position: 'absolute', top: 145, left: 0, right: 0, bottom: 0}}>
+                       <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 16 }}>
+                         {usersModel.nm_lengkap}
                         </Typography>
-                        <Typography style={{ color: 'white', textAlign: 'center', fontSize: 10, flex: 1, marginLeft: 20 }}>
-                         Valid thru 12/31/2021
-                        </Typography>
-                    </View>
-                 </View>
-              </ImageBackground>
+                        <View style={[wrapper.row, { width: '100%', marginTop: 5 }]}>
+                           <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 16}}>
+                             {usersModel.no_card}
+                            </Typography>
+                            <Typography style={{ color: 'white', textAlign: 'center', fontSize: 10, flex: 1, marginLeft: 30 }}>
+                             Valid thru 12/31/2021
+                            </Typography>
+                        </View>
+                     </View>
+                  </ImageBackground>
+                </View>
+              )}
+              
               <Typography style={{ paddingVertical: 12, marginVertical: 10, borderBottomWidth: 1, }}>
                 {t(`List Transaksi`)}
               </Typography>

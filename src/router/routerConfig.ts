@@ -54,6 +54,8 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { title: `${''}Brands` };
     case 'ContactLens':
       return { title: `${''}Contact Lens` };
+    case 'ContactLensSubCategory':
+      return { title: `${''}Contact Lens Sub Category` };
     case 'Lens':
       return { title: `${''}Lens` };
     case 'BannerDetail':

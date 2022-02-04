@@ -108,7 +108,7 @@ function Contact() {
                 screen: 'BottomTabs.HomeStack'
             })}>
             <Typography color="black" style={{ marginVertical: 15, marginHorizontal: 15 }}>
-              <Ionicons name="arrow-back" size={18} color={colors.gray[900]} /> {`${''}Kembali`}
+              <Ionicons name="arrow-back" size={18} /> {`${''}Kembali`}
             </Typography>
         </PressableBox>
       </View>
@@ -191,7 +191,7 @@ function Contact() {
               opacity
               style={{ marginTop: 5, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, marginHorizontal: 5, borderRadius: 10, marginBottom: 20 }}
               onPress={() => Linking.openURL('https://www.facebook.com/optiktunggalofficial/')}  >
-              <Typography style={{ fontSize: 13 }}><Ionicons name="logo-facebook" size={16} color={'black'} /> optuktunggalofficial</Typography>
+              <Typography style={{ fontSize: 13 }}><Ionicons name="logo-facebook" size={16} color={'black'} /> optiktunggalofficial</Typography>
           </PressableBox>
         </View>
       </View>

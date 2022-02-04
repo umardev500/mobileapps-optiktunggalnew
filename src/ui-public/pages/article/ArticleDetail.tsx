@@ -99,7 +99,7 @@ function ArticleDetail() {
             {!articleModel.ArticleImage ? null : (
               <View style={[styles.image, { maxHeight: width }]}>
                 <ImageAuto
-                  source={{ uri: 'https://optiktunggal.com/img/article/'+articleModel.ArticleImage }}
+                  source={{ uri: articleModel.ArticleImage }}
                   width={width - 30}
                   style={{
                     marginHorizontal: 15,

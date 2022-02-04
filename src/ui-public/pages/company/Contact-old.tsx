@@ -263,7 +263,7 @@ function Contact() {
         </Typography>
 
         <Typography style={{ marginTop: 5, fontSize: 13, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, borderRadius: 10 }}>
-          <Ionicons name="logo-facebook" size={18} color={'black'} /> {`optuktunggalofficial`}
+          <Ionicons name="logo-facebook" size={18} color={'black'} /> {`optiktunggalofficial`}
         </Typography>
 
         <View style={{ marginTop: 20 }}><Typography style={{ textAlign: 'center', fontWeight: 'bold' }}>OUTLET KAMI</Typography></View>

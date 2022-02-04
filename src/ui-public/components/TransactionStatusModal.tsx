@@ -3,27 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, ListRenderItemInfo, StyleSheet, View } from 'react-native';
 import { colors, wrapper } from '../../lib/styles';
+import { httpService } from '../../lib/utilities';
 import { Modelable, TransactionLog, TransactionModel } from '../../types/model';
 import { BottomDrawer, BottomDrawerProps, Typography } from '../../ui-shared/components';
 import { BoxLoading } from '../../ui-shared/loadings';
 
-const LOGS: TransactionLog[] = [
-  {
-    date: '2021-10-01 15:00:00',
-    description: 'Pembayaran sudah diverifikasi\nPembayaran telah diterima'
-  },
-  {
-    date: '2021-10-02 08:00:00',
-    description: 'Pemesanan sedang diproses'
-  },
-  {
-    date: '2021-10-02 09:00:00',
-    description: 'Barang sedang dikirim'
-  },
-];
-
 type Props = BottomDrawerProps & {
-  transaction?: TransactionModel
+  transaction?: TransactionModel;
 };
 
 function TransactionStatusModal({
@@ -61,17 +47,80 @@ function TransactionStatusModal({
 
   // Vars
   const retrieveTransactionStatus = async () => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        setLog(state => ({
-          ...state,
-          models: LOGS,
-          modelsLoaded: true,
-        }));
-      }, 1000);
+    setLog(state => ({ ...state, modelsLoaded: false }));
 
-      resolve(null);
+    return httpService('/api/transaction/transaction', {
+      data: {
+        act: 'TrxListItem',
+        // dt: JSON.stringify({ comp: '001', id: transaction?.id }),
+      }
+    }).then(({ status, data, item, shipTo }) => {
+      const models: TransactionLog[] = convertToLogs(data || {});
+
+      setLog(state => ({
+        ...state,
+        modelsLoaded: true,
+        models: 200 !== status ? [] : models,
+      }));
+    }).catch(() => {
+      setLog(state => ({
+        ...state,
+        modelsLoaded: true,
+      }));
     });
+  };
+
+  const convertToLogs = (data: TransactionModel): TransactionLog[] => {
+    const logs: TransactionLog[] = [];
+
+    if (data.ordertgl) {
+      logs.push({
+        date: moment(data.ordertgl, 'YYYYMMDD').format('YYYY-MM-DD'),
+        description: t(`Pemesanan dibuat`)
+      });
+    }
+
+    if (data.buktibayartgl) {
+      logs.push({
+        date: moment(data.buktibayartgl, 'YYYYMMDD').format('YYYY-MM-DD'),
+        time: data.buktibayarjam,
+        description: t(`Bukti pembayaran dikirim`)
+      });
+    }
+
+    if (data.verifybayartgl) {
+      logs.push({
+        date: moment(data.verifybayartgl, 'YYYYMMDD').format('YYYY-MM-DD'),
+        time: data.verifybayarjam,
+        description: t(`Pembayaran sudah diverifikasi\nPembayaran sudah diterima`),
+      });
+    }
+
+    if (data.dotgl) {
+      logs.push({
+        date: moment(data.dotgl, 'YYYYMMDD').format('YYYY-MM-DD'),
+        time: data.dojam,
+        description: t(`Barang sedang dikirim`),
+      });
+    }
+
+    if (data.kirimtgl) {
+      logs.push({
+        date: moment(data.kirimjam, 'YYYYMMDD').format('YYYY-MM-DD'),
+        time: data.kirimjam,
+        description: t(`Barang sampai di tujuan`)
+      });
+    }
+
+    if (data.terimatgl) {
+      logs.push({
+        date: moment(data.terimatgl, 'YYYYMMDD').format('YYYY-MM-DD'),
+        time: data.terimajam,
+        description: t(`Barang diterima`)
+      });
+    }
+
+    return logs;
   };
 
   const renderLogs = ({ item, index }: ListRenderItemInfo<TransactionLog>) => {
@@ -98,8 +147,8 @@ function TransactionStatusModal({
           </Typography>
         </View>
 
-        <Typography size="sm" textAlign="right" style={{ paddingVertical: 4 }}>
-          {date.format('HH:mm')}
+        <Typography size="sm" textAlign="right" style={{ paddingVertical: 4, minWidth: 48 }}>
+          {item.time}
         </Typography>
       </View>
     );
@@ -108,7 +157,7 @@ function TransactionStatusModal({
   return (
     <BottomDrawer
       isVisible={isVisible}
-      title={t(`${''}Detail Status Pemesanan`)}
+      title={t(`Detail Status Pemesanan`)}
       titleProps={{ textAlign: 'center', color: 'primary' }}
       {...props}
     >
@@ -131,7 +180,7 @@ function TransactionStatusModal({
           </View>
         ) : (
           <Typography textAlign="center" style={{ paddingVertical: 12 }}>
-            {t(`${''}Belum ada riwayat status pemesanan.`)}
+            {t(`Belum ada riwayat status pemesanan.`)}
           </Typography>
         )}
       />

@@ -101,26 +101,33 @@ function TransactionUsers() {
           <View style={{ flex: 1,}}>
             <View style={[wrapper.row, { flex: 1, paddingHorizontal: 10, width: '100%', }]}>
               <Typography style={{ fontSize: 12, fontWeight: 'bold' }}>
-                {item.nm_lengkap}
+                {item.nm_customer}
               </Typography>
             </View>
-
             <View style={[wrapper.row, { marginTop: 5, paddingHorizontal: 10, width: '100%' }]}>
-              <View style={{ flex: 2 }}>
-                <Image source={require('../../../assets/icons/figma/membercard.png')} style={styles.avatarVIP} />
-                <Typography style={{ textAlign: 'center', fontSize: 10 }}>
-                  VIP MEMBER
+              {!item.no_card == null ? (
+                <Typography style={{ textAlign: 'center', fontSize: 10, paddingHorizontal: 3, color: '#ec3a3b' }}>
+                  BELUM MENJADI MEMBER
                 </Typography>
-              </View>
-              <View style={{ flex: 1 }}>
+              ) : (
+                <>
+                  <View style={{ flex: 2 }}>
+                    <Image source={require('../../../assets/icons/figma/membercard.png')} style={styles.avatarVIP} />
+                    <Typography style={{ textAlign: 'center', fontSize: 12 }}>
+                      VIP MEMBER
+                    </Typography>
+                  </View>
+                  <View style={{ flex: 1 }}>
                   <View style={{ width: 0.5, height: 50, alignSelf: 'center', marginVertical: 10, backgroundColor: '#333' }} />
-              </View>
-              <View style={{ flex: 2 }}>
-                <Image source={require('../../../assets/icons/figma/coin.png')} style={styles.avatarCoin} />
-                <Typography style={{ textAlign: 'center', fontSize: 10 }}>
-                  10.000.000
-                </Typography>
-              </View>
+                  </View>
+                  <View style={{ flex: 2 }}>
+                    <Image source={require('../../../assets/icons/figma/coin.png')} style={styles.avatarCoin} />
+                    <Typography style={{ textAlign: 'center', fontSize: 12, fontWeight: 'bold' }}>
+                      {item.saldo}
+                    </Typography>
+                  </View>
+                </>
+              )}
             </View>
           </View>
         </PressableBox>

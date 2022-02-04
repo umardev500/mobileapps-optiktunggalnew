@@ -29,6 +29,10 @@ function Lens() {
   const [tabActive, setTabActive] = useState<number>(1);
   const handleTabToggle = (tab: number) => {
     setTabActive(tab === tabActive ? 1 : tab);
+    if(tab === 1){
+      retrieveZeiss();
+    }
+
     if(tab === 2){
       retrieveParvaVisty();
     }
@@ -100,7 +104,7 @@ function Lens() {
         onPress={() => handleGoToLensDetail(item)}>
 
         {!item.ArticleID ? null : (
-          <Image source={{ uri: 'https://optiktunggal.com/img/article/'+item.ArticleImage }} style={styles.articleCardImage} />
+          <Image source={{ uri: item.ArticleImage }} style={styles.articleCardImage} />
         )}
         <View style={{ flex: 1, marginTop: 5
          }}>
@@ -198,14 +202,9 @@ function Lens() {
             ListEmptyComponent={!article.modelsLoaded ? (
               <View style={[styles.promoCardContainer, { marginTop: 8 }]}>
                 <View style={styles.articleCard}>
-                  <BoxLoading width={64} height={64} rounded={8} />
-
-                  <View style={{ flex: 1, paddingLeft: 12 }}>
-                    <BoxLoading width={[100, 150]} height={20} />
-
-                    <BoxLoading width={[140, 200]} height={18} style={{ marginTop: 6 }} />
-                    <BoxLoading width={[100, 130]} height={18} style={{ marginTop: 2 }} />
-                  </View>
+                  <BoxLoading width={300} height={150} rounded={8} />
+                  <BoxLoading width={[50, 150]} height={20} />
+                  <BoxLoading width={[200, 150]} height={20} />
                 </View>
               </View>
             ) : (
