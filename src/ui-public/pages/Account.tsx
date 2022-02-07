@@ -66,7 +66,10 @@ function Account() {
   // Vars
   const handleVersionCheck = async () => {
     let isValid = true;
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/Develop
     await httpService(`/version.json`, {
       method: 'get'
     }).then(({
@@ -183,21 +186,34 @@ function Account() {
                   <Image source={{ uri: user.foto }} style={styles.avatar} />
                 )}
                 <View style={{ flexGrow: 1 }}>
+<<<<<<< HEAD
                   <Typography style={{ color: '#333333', fontSize: 14, fontWeight: 'bold', }} >
                     {user.nama || `${user.namadepan} ${user.namabelakang}`}
                   </Typography>
                   {!user.foto ? 
                     <Typography>
+=======
+                  <Typography style={{ color: '#333333', fontSize: 14, fontWeight: 'bold',  marginHorizontal: 15}} >
+                    {user?.nama || `${user?.namadepan} ${user?.namabelakang}`}
+                  </Typography>
+                  {!user.foto ? 
+                    <Typography style={{ marginHorizontal: 15,}}>
+>>>>>>> origin/Develop
                       <Image source={require('../../assets/icons/figma/vip.png')} style={styles.avatarVIP} />
                       Member
                     </Typography>
                   : (
+<<<<<<< HEAD
                     <Typography>
+=======
+                    <Typography style={{ marginHorizontal: 15,}}>
+>>>>>>> origin/Develop
                       <Image source={require('../../assets/icons/figma/vip.png')} style={styles.avatarVIP} />
                       Member
                     </Typography>
                   )}
                   {user.verified || 1 ?
+<<<<<<< HEAD
                       <PressableBox
                         containerStyle={{ marginTop: 1 }}
                         onPress={() => navigation.navigatePath('Public', {
@@ -210,6 +226,20 @@ function Account() {
                           {t(`${''}Lihat Profil`)}
                         </Typography>
                       </PressableBox>: (
+=======
+                    <PressableBox
+                      containerStyle={{ marginTop: 1 }}
+                      onPress={() => navigation.navigatePath('Public', {
+                        screen: 'BottomTabs.AccountStack.ProfileEdit',
+                      })}>
+                      <Typography
+                        textAlign="left"
+                        style={{ marginHorizontal: 15, marginTop: 3}}
+                        color="primary">
+                        {t(`${''}Lihat Profil`)}
+                      </Typography>
+                    </PressableBox>: (
+>>>>>>> origin/Develop
                     <PressableBox
                       containerStyle={{ marginTop: 8 }}
                       onPress={() => navigation.navigatePath('Public', {
@@ -233,6 +263,7 @@ function Account() {
                   )}
                 </View>
               </View>
+<<<<<<< HEAD
               {/*user.type_member || null ? null : (
                 <View style={styles.cardMember}>
                   <Typography textAlign="center" style={{ color: '#333333', fontWeight: 'bold', marginTop: 15}} >
@@ -263,6 +294,91 @@ function Account() {
                   </View>
                 </View>
               )*/}
+=======
+
+              <View style={{ marginTop: 5 }}>
+                <ViewCollapse
+                  style={styles.menuContainer}
+                  pressableProps={{
+                    containerStyle: styles.menuBtnContainer,
+                  }}
+                  header={t(`${''}Transaksi`)}
+                  headerProps={{
+                    type: 'h',
+                    style: { paddingLeft: 24 + 15 }
+                  }}
+                  collapse
+                >
+                  {[
+                    {
+                      title: t(`${''}Daftar Transaksi`),
+                      subtitle: t(`${''}Transaksi yang pernah anda lakukan.`),
+                      Icon: FigmaIcon.FigmaDownload,
+                      navigatePath: () => {
+                        navigation.navigatePath('Public', {
+                          screen: 'BottomTabs.NotificationStack.TransactionUsers',
+                          params: [null, {
+                            initial: false,
+                          }]
+                        });
+                      },
+                    },
+                    {
+                      title: t(`${''}Favorit Kamu`),
+                      subtitle: t(`${''}Produk yang kamu sukai`),
+                      Icon: FigmaIcon.Figmawishlist,
+                      navigatePath: () => {
+                        navigation.navigatePath('Public', {
+                          screen: 'BottomTabs.FavoriteStack.Favorite',
+                        });
+                      },
+                    },
+                    // {
+                    //   title: t(`${''}Alamat Pengiriman`),
+                    //   subtitle: t(`${''}Atur alamat pengiriman`),
+                    //   Icon: FigmaIcon.FigmaHomeFilled,
+                    //   navigatePath: 'BottomTabs.AccountStack.AddressList',
+                    // },
+                  ].map((item, index) => (
+                    <PressableBox
+                      key={index}
+                      containerStyle={{
+                        marginTop: index === 0 ? 8 : 4,
+                        borderRadius: 15,
+                        marginHorizontal: 0,
+                      }}
+                      style={styles.menuChildBtn}
+                      onPress={!item.navigatePath ? undefined : (
+                        () => {
+                          if ('function' === typeof item.navigatePath) {
+                            return item.navigatePath();
+                          }
+                          
+                          navigation.navigatePath('Public', {
+                            screen: item.navigatePath
+                          });
+                      })}
+                    >
+                      <View style={styles.menuChildIcon}>
+                        {!item.Icon ? null : (
+                          <item.Icon width={24} height={24} color={colors.gray[900]} />
+                        )}
+                      </View>
+
+                      <View style={{ flex: 1, paddingLeft: 15 }}>
+                        <Typography heading>
+                          {item.title}
+                        </Typography>
+
+                        <Typography size="sm" color={800} style={{ marginTop: 4 }}>
+                          {item.subtitle}
+                        </Typography>
+                      </View>
+                    </PressableBox>
+                  ))}
+                </ViewCollapse>
+              </View>
+>>>>>>> origin/Develop
 
               <View style={{ marginTop: 5 }}>
                 <ViewCollapse
@@ -278,6 +394,7 @@ function Account() {
                   collapse
                 >
                   {[
+<<<<<<< HEAD
                     {
                       title: t(`${''}Daftar Transaksi`),
                       subtitle: t(`${''}Transaksi yang pernah anda lakukan.`),
@@ -291,6 +408,21 @@ function Account() {
                         });
                       },
                     },
+=======
+                    // {
+                    //   title: t(`${''}Daftar Transaksi`),
+                    //   subtitle: t(`${''}Transaksi yang pernah anda lakukan.`),
+                    //   Icon: FigmaIcon.FigmaDownload,
+                    //   navigatePath: () => {
+                    //     navigation.navigatePath('Public', {
+                    //       screen: 'BottomTabs.NotificationStack.TransactionList',
+                    //       params: [null, {
+                    //         initial: false,
+                    //       }]
+                    //     });
+                    //   },
+                    // },
+>>>>>>> origin/Develop
                     // {
                     //   title: t(`${''}Keranjang`),
                     //   subtitle: t(`${''}Daftar produk yg ditambahkan ke keranjang belanja`),
@@ -312,6 +444,7 @@ function Account() {
                     // },
                     {
                       title: t(`${''}Keamanan Akun`),
+<<<<<<< HEAD
                       subtitle: t(`${''}PIN & verifikasi data diri`),
                       Icon: FigmaIcon.FigmaLock,
                       navigatePath: 'BottomTabs.AccountStack.PasswordReset',
@@ -322,11 +455,22 @@ function Account() {
                     //   Icon: FigmaIcon.FigmaHomeFilled,
                     //   navigatePath: 'BottomTabs.AccountStack.AddressList',
                     // },
+=======
+                      subtitle: t(`${''}Password & verifikasi data diri`),
+                      Icon: FigmaIcon.FigmaLock,
+                      navigatePath: 'BottomTabs.AccountStack.PasswordReset',
+                    },
+
+>>>>>>> origin/Develop
                     {
                       title: t(`${''}Hubungi Kami`),
                       Icon: FigmaIcon.FigmaContact,
                       subtitle: t(`${''}Kami senang melayani anda, silahkan ajukan pertanyaan.`),
+<<<<<<< HEAD
                       navigatePath: 'BottomTabs.ContactStack',
+=======
+                      navigatePath: 'Contact',
+>>>>>>> origin/Develop
                     },
                   ].map((item, index) => (
                     <PressableBox
@@ -502,6 +646,10 @@ const styles = StyleSheet.create({
   avatarVIP: {
     width: 30,
     height: 30,
+<<<<<<< HEAD
+=======
+    marginHorizontal: 15,
+>>>>>>> origin/Develop
   },
   avatar: {
     alignSelf: 'center',

@@ -21,4 +21,9 @@ export { default as FigmaHomeFilled } from './location.svg';
 export { default as FigmaLock } from './security.svg';
 export { default as FigmaNews } from './news.svg';
 export { default as FigmaCatalogue } from './catalogue.svg';
+<<<<<<< HEAD
 export { default as FigmaVip } from './vip.png';
+=======
+export { default as FigmaVip } from './vip.png';
+export { default as Figmawishlist } from './wish-list.svg';
+>>>>>>> origin/Develop

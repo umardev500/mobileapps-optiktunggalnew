@@ -146,10 +146,16 @@ function AddressEdit() {
       villagesLoaded: false,
     }));
 
+<<<<<<< HEAD
     return await httpService('http://ws.stmorita.net/zonasi/list', {
       data: {
         act: 'PropList',
         dt: JSON.stringify({ comp: '001' })
+=======
+    return await httpService('/api/zonasi/zonasi', {
+      data: {
+        act: 'Provinsi',
+>>>>>>> origin/Develop
       }
     }).then(({ status, data }) => {
       if (status === 200) {
@@ -171,10 +177,17 @@ function AddressEdit() {
       villagesLoaded: false,
     }));
 
+<<<<<<< HEAD
     return await httpService('http://ws.stmorita.net/zonasi/list', {
       data: {
         act: 'KabList',
         dt: JSON.stringify({ comp: '001', prop: id })
+=======
+    return await httpService('/api/zonasi/zonasi', {
+      data: {
+        act: 'Kota',
+        dt: JSON.stringify({ prop: id })
+>>>>>>> origin/Develop
       }
     }).then(({ status, data }) => {
       if (status === 200) {
@@ -194,10 +207,17 @@ function AddressEdit() {
       villagesLoaded: false,
     }));
 
+<<<<<<< HEAD
     return await httpService('http://ws.stmorita.net/zonasi/list', {
       data: {
         act: 'KecList',
         dt: JSON.stringify({ comp: '001', kab: id })
+=======
+    return await httpService('/api/zonasi/zonasi', {
+      data: {
+        act: 'Kecamatan',
+        dt: JSON.stringify({ kab: id })
+>>>>>>> origin/Develop
       }
     }).then(({ status, data }) => {
       if (status === 200) {
@@ -211,10 +231,17 @@ function AddressEdit() {
   };
 
   const retrieveVillages = async (id: string) => {
+<<<<<<< HEAD
     return await httpService('http://ws.stmorita.net/zonasi/list', {
       data: {
         act: 'KelList',
         dt: JSON.stringify({ comp: '001', kec: id })
+=======
+    return await httpService('/api/zonasi/zonasi', {
+      data: {
+        act: 'Kelurahan',
+        dt: JSON.stringify({ kec: id })
+>>>>>>> origin/Develop
       }
     }).then(({ status, data }) => {
       if (status === 200) {

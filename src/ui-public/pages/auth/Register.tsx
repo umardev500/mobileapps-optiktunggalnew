@@ -34,9 +34,15 @@ function Register() {
   const navigation = useAppNavigation();
   const route = useRoute();
   const { width } = useWindowDimensions();
+<<<<<<< HEAD
   const { t } = useTranslation('account');
 
   const [tabIndex, setTabIndex] = React.useState();
+=======
+  const { t } = useTranslation('notification');
+
+  // const [tabIndex, setTabIndex] = React.useState();
+>>>>>>> origin/Develop
   // const handleTabsChange = index => {
   //   setTabIndex(index);
   //   console.log('Current state unit: ', setTabIndex(index));

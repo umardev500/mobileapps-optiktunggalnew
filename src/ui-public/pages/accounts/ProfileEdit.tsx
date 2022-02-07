@@ -1,6 +1,10 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
+<<<<<<< HEAD
 import { Image, ScrollView, StyleSheet, ToastAndroid, useWindowDimensions, View } from 'react-native';
+=======
+import { Image, ScrollView, StyleSheet, ToastAndroid, useWindowDimensions, View, Alert } from 'react-native';
+>>>>>>> origin/Develop
 import { colors, shadows, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { ErrorState, ValueOf } from '../../../types/utilities';
@@ -63,7 +67,11 @@ function ProfileEdit() {
         ...state,
         namadepan: user.namadepan || namadepan,
         namabelakang: user.namabelakang || namabelakang,
+<<<<<<< HEAD
         hp: showPhone(user.hp, ''), // Remove leading 62
+=======
+        hp: showPhone(String(user.hp), ''), // Remove leading 62
+>>>>>>> origin/Develop
         email: user.email,
       }));
     }
@@ -122,6 +130,7 @@ function ProfileEdit() {
 
     setIsSaving(true);
 
+<<<<<<< HEAD
     return httpService('/register/save', {
       data: {
         act: 'RegUpdate',
@@ -129,6 +138,14 @@ function ProfileEdit() {
         dt: JSON.stringify({
           ...fields,
           hp: showPhone(fields.hp, '62'),
+=======
+    return httpService('/api/login/login', {
+      data: {
+        act: 'GantiProfile',
+        dt: JSON.stringify({
+          ...fields,
+          hp: showPhone(String(fields.hp), '62'),
+>>>>>>> origin/Develop
           regid: user?.id,
           ip: location.ip,
         }),
@@ -142,6 +159,7 @@ function ProfileEdit() {
         await httpService.setUser({
           ...user,
           ...restFields,
+<<<<<<< HEAD
           hp: showPhone(fields.hp, '62'),
           foto: !foto ? user?.foto : foto,
         });
@@ -149,6 +167,17 @@ function ProfileEdit() {
         navigation.navigatePath('Public', {
           screen: 'BottomTabs.AccountStack.Account',
         });
+=======
+          hp: showPhone(String(fields.hp), '62'),
+          foto: !foto ? user?.foto : foto,
+        });
+
+        Alert.alert( "Berhasil", "Profil berhasil diubah",
+          [
+            { text: "OKE", onPress: () => navigation.navigatePath('Public', { screen: 'BottomTabs.AccountStack.Account'}) }
+          ]
+        );
+>>>>>>> origin/Develop
       } else if ('string' === typeof msg) {
         switch (msg.toLowerCase()) {
           case 'hp sudah terdaftar':
@@ -297,15 +326,25 @@ function ProfileEdit() {
         </PressableBox>
       </View>
 
+<<<<<<< HEAD
       <View style={{ marginTop: 'auto', paddingTop: 24 }}>
+=======
+      <View style={{ marginTop: 20, paddingTop: 24 }}>
+>>>>>>> origin/Develop
         <Button
           containerStyle={{
             alignSelf: 'center',
             ...shadows[3]
           }}
+<<<<<<< HEAD
           style={{ width: 145 }}
           label={t(`Simpan`).toUpperCase()}
           color="yellow"
+=======
+          style={{ width: 300 }}
+          label={t(`Simpan`).toUpperCase()}
+          color="primary"
+>>>>>>> origin/Develop
           shadow={3}
           onPress={handleSubmit}
           loading={isSaving}

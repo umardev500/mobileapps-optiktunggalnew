@@ -21,6 +21,17 @@ import { default as _omit } from 'lodash/omit';
 import { getConfig } from '../../../lib/config';
 import { toggleFavorite } from '../../../redux/actions';
 import { useTranslation } from 'react-i18next';
+<<<<<<< HEAD
+=======
+import Products from '../../components/Products';
+import ProductsLoading from '../../loadings/ProductsLoading';
+
+type Fields = {
+  sort?: string;
+  prdcat?: string;
+  brand?: string;
+};
+>>>>>>> origin/Develop
 
 function ProductDetail() {
   // Hooks
@@ -50,6 +61,7 @@ function ProductDetail() {
     imageIndex: 0,
   });
 
+<<<<<<< HEAD
   // Effects
   useEffect(() => {
     navnav.setOptions({
@@ -57,11 +69,25 @@ function ProductDetail() {
         <ButtonCart />
       ),
     });
+=======
+  const [fields, setFields] = useState<Fields>({
+    sort: '',
+    prdcat: '',
+    brand: '',
+  });
+
+  // Effects
+  useEffect(() => {
+    
+>>>>>>> origin/Develop
   }, []);
 
   useEffect(() => {
     const { product_id, product } = route.params;
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/Develop
     product && setProduct(state => ({
       ...state,
       model: product,
@@ -81,6 +107,41 @@ function ProductDetail() {
     // 
   }, [favorites]);
 
+<<<<<<< HEAD
+=======
+
+  const retrieveProductsList = async (page: number = 1) => {
+  const reccnt = 4 * (page <= 1 ? 0 : page);
+
+    setProduct(state => ({ ...state, modelsLoaded: false }));
+
+    return httpService('/api/product/product', {
+      data: {
+        act: 'PrdSerupa',
+        dt: JSON.stringify({
+          reccnt,
+          pg: page,
+          param: "katalog",
+          limit: 4,
+          prdcat: "",
+          search: null,
+        }),
+      },
+    }).then(({ status, data }) => {
+      if (200 === status) {
+        setProduct(state => ({
+          ...state,
+          models: [...(state.models || []), ...data],
+          modelsLoaded: true,
+          isPageEnd: !data?.length,
+        }));
+      }
+    }).catch(err => {
+      setProduct(state => ({ ...state, modelsLoaded: true }));
+    });
+  };
+
+>>>>>>> origin/Develop
   // Vars
   const handleRefresh = async () => {
     setIsLoading(true);
@@ -93,31 +154,49 @@ function ProductDetail() {
   const retrieveProduct = async (product_id: string) => {
     return httpService('/api/product/product/', {
       data: {
+<<<<<<< HEAD
         dt: JSON.stringify({ comp: '001', prd_id: product_id }),
         act: 'PrdInfo'
       },
       method: 'POST'
+=======
+        dt: JSON.stringify({ prd_id: product_id }),
+        act: 'PrdInfo'
+      },
+>>>>>>> origin/Develop
     }).then(({ status, data, foto }) => {
       if (status === 200) {
         setProduct(state => ({
           ...state,
           model: {
             ...data,
+<<<<<<< HEAD
             harga_refill: parseFloat(data.harga_refill || 0),
             harga_retail: parseFloat(data.harga_retail || 0),
             harga_reseller: parseFloat(data.harga_reseller || 0),
             disc_retail: parseFloat(data.disc_retail || 0),
             disc_reseller: parseFloat(data.disc_reseller || 0),
+=======
+            harga_refill: data.harga_refill,
+>>>>>>> origin/Develop
             images: foto
           },
           modelLoaded: true
         }));
+<<<<<<< HEAD
+=======
+        retrieveProductsList();
+>>>>>>> origin/Develop
       }
     });
   };
 
   const retrieveReviews = async () => {
+<<<<<<< HEAD
     return httpService('/api/review/review/prd_id/AAGB1023HS3FMF', {
+=======
+    return httpService('/api/review/review/prd_id/'+product.model?.prd_id, {
+>>>>>>> origin/Develop
       data: {
         act: 'UlasanList',
         dt: JSON.stringify({ comp: '001', id: product.model?.prd_id })
@@ -148,6 +227,7 @@ function ProductDetail() {
     }
   };
 
+<<<<<<< HEAD
   const handleCartAdd = async () => {
 
 
@@ -160,6 +240,8 @@ function ProductDetail() {
     });
   };
 
+=======
+>>>>>>> origin/Develop
   const handleFavoriteToggle = async () => {
     if (!user) {
       return navigation.navigatePath('Public', {
@@ -193,17 +275,27 @@ function ProductDetail() {
   };
 
   const { ...productModel } = product.model || {};
+<<<<<<< HEAD
   const discount = user?.reseller === '1' ? productModel.disc_reseller : productModel.disc_retail;
+=======
+>>>>>>> origin/Develop
   const productImages: ImageSource[] = [productModel.prd_foto, ...(productModel.images || [])]
     .filter((item) => ('string' === typeof item) || item?.prd_foto)
     .map((item) => ({
       uri: 'string' === typeof item ? item : item?.prd_foto,
     }));
    
+<<<<<<< HEAD
   let canAddToCart = false;
 
   const favorite = favorites.find((item) => item.prd_id === product.model?.prd_id);
   let retails: ProductRetail[] = [];
+=======
+  // let canAddToCart = false;
+
+  const favorite = favorites.find((item) => item.prd_id === product.model?.prd_id);
+  // let retails: ProductRetail[] = [];
+>>>>>>> origin/Develop
 
   return (
     <ScrollView
@@ -239,6 +331,7 @@ function ProductDetail() {
                 inactiveSlideScale={1}
               />
 
+<<<<<<< HEAD
               {!discount ? undefined : (
                 <BadgeDiscount
                   containerStyle={styles.badgeDiscount}
@@ -247,6 +340,8 @@ function ProductDetail() {
                 />
               )}
 
+=======
+>>>>>>> origin/Develop
               <Button
                 containerStyle={{
                   position: 'absolute',
@@ -269,6 +364,7 @@ function ProductDetail() {
               
             </View>
           )}
+<<<<<<< HEAD
           <View style={{ paddingTop: 5, paddingHorizontal: 5 }}>
             <Typography type="h4" style={{color: '#204c29'}}>{productModel.prd_ds}</Typography>
             <Typography type="h3" style={{color: '#204c29', marginTop: 5}}>{productModel.harga_retail}</Typography>
@@ -295,11 +391,28 @@ function ProductDetail() {
           </View>
           <View style={{ paddingTop: 12, paddingHorizontal: 5 }}>
             <Typography type="h5" style={{color: '#333333'}}>
+=======
+          <View style={{ paddingTop: -20, paddingHorizontal: 5 }}>
+          <Typography type="h3" style={{color: '#333333'}}>
+              {route.params.product_ds}
+            </Typography>
+            <Typography type="h4" color="primary">
+              Rp {route.params.product.harga_het}
+            </Typography>
+            <Typography style={{color: '#333333', fontSize: 12}}>
+              Brand : {route.params.product.merk}
+            </Typography>
+            <Typography style={{color: '#333333', fontSize: 12}}>
+              SKU : {route.params.product_id}
+            </Typography>
+            {/*<Typography type="h5" style={{color: '#333333'}}>
+>>>>>>> origin/Develop
               {t('Details')}
             </Typography>
 
             <View style={styles.borderTop} />
 
+<<<<<<< HEAD
             <Typography style={{textAlign: 'justify', color: '#333333'}}>{productModel.prd_ds}</Typography>
 
             <Typography>{productModel.prd_no}</Typography>
@@ -324,6 +437,20 @@ function ProductDetail() {
             {!review.modelsLoaded ? null : (
               <>
                 <Typography type="h5" style={{ marginTop: 32, color: '#333333' }}>
+=======
+            <View style={{ backgroundColor: '#f1f1f1' }}>
+              <RenderHtml
+                source={{ html: route.params.product.product_info }}
+                tagsStyles={{
+                  p: { marginVertical: 0, height: 'auto', fontSize: 12, paddingHorizontal: 5, textAlign: 'justify' }
+                }}
+              />
+            </View>*/}
+            
+            {!review.modelsLoaded ? null : (
+              <>
+                <Typography type="h5" style={{ marginTop: 20, color: '#333333' }}>
+>>>>>>> origin/Develop
                   {t('Reviews')}
                 </Typography>
 
@@ -344,7 +471,11 @@ function ProductDetail() {
                         review={item}
                         style={{
                           paddingHorizontal: 24,
+<<<<<<< HEAD
                           marginHorizontal: -24
+=======
+                          marginHorizontal: -24,
+>>>>>>> origin/Develop
                         }}
                       />
                     ))}
@@ -354,6 +485,20 @@ function ProductDetail() {
             )}
           </View> 
 
+<<<<<<< HEAD
+=======
+          {/*<Typography type="h5" style={{ marginTop: 20, marginBottom: 20, color: '#333333' }}>
+            {t('Produk Serupa')}
+          </Typography>
+          <Products
+            contentContainerStyle={[styles.container, styles.wrapper]}
+            refreshing={isLoading}
+            data={product.models}
+            LoadingView={(
+              <ProductsLoading />
+            )}
+          />*/}
+>>>>>>> origin/Develop
         </View>
       )}
 
@@ -377,7 +522,14 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     backgroundColor: colors.white,
   },
+<<<<<<< HEAD
 
+=======
+  wrapper: {
+    backgroundColor: colors.white,
+    paddingHorizontal: 15,
+  },
+>>>>>>> origin/Develop
   borderTop: {
     marginVertical: 8,
     borderTopWidth: 1,

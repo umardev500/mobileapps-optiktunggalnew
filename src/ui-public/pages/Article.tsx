@@ -89,6 +89,7 @@ function Article() {
           }} />
         <View style={{ flex: 1, marginTop: 10
          }}>
+<<<<<<< HEAD
           <Typography heading>
             {item.ArticleName}
           </Typography>
@@ -124,6 +125,14 @@ function Article() {
               />
             </View>
           )*/}
+=======
+          <Typography color="gray" style={{ flex: 1, fontSize: 10 }}>
+            {item.ArticlePublishDate}
+          </Typography>
+          <Typography heading>
+            {item.ArticleName}
+          </Typography>
+>>>>>>> origin/Develop
         </View>
       </PressableBox>
     )
@@ -145,6 +154,7 @@ function Article() {
         ListEmptyComponent={!article.modelsLoaded ? (
           <View style={[styles.promoCardContainer, { marginTop: 8 }]}>
             <View style={styles.articleCard}>
+<<<<<<< HEAD
               <BoxLoading width={64} height={64} rounded={8} />
 
               <View style={{ flex: 1, paddingLeft: 12 }}>
@@ -153,6 +163,11 @@ function Article() {
                 <BoxLoading width={[140, 200]} height={18} style={{ marginTop: 6 }} />
                 <BoxLoading width={[100, 130]} height={18} style={{ marginTop: 2 }} />
               </View>
+=======
+              <BoxLoading width={300} height={150} rounded={8} />
+              <BoxLoading width={[50, 150]} height={20} />
+              <BoxLoading width={[200, 150]} height={20} />
+>>>>>>> origin/Develop
             </View>
           </View>
         ) : (

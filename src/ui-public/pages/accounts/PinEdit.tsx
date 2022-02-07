@@ -55,7 +55,11 @@ function PinEdit() {
       setError(state => ({
         ...state,
         fields: ['new_pin'],
+<<<<<<< HEAD
         message: `${''}Masukkan minimal 6 karakter untuk PIN Anda.`
+=======
+        message: `${''}Masukkan minimal 6 karakter untuk Password Anda.`
+>>>>>>> origin/Develop
       }));
     }
   }, [fields.new_pin]);
@@ -180,10 +184,13 @@ function PinEdit() {
     <ScrollView contentContainerStyle={styles.container}>
       {isRegister ? null : (
         <View style={{ marginTop: 24 }}>
+<<<<<<< HEAD
           <Typography heading style={{ textAlign: 'center' }}>
             {t(`${''}Masukan Password Baru`)}
           </Typography>
 
+=======
+>>>>>>> origin/Develop
           <Typography style={{ marginTop: 2, textAlign: 'center' }}>
             {t(`${''}Pastikan password memiliki kombinasi Huruf Besar, Huruf Kecil dan Angka`)}
           </Typography>

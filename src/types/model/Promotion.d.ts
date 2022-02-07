@@ -28,6 +28,7 @@ export type PopupActionType = {
   image?: string;
   url?: string;
 };
+<<<<<<< HEAD
 
 export type BannerModel = {
   banner_id?: string;
@@ -36,3 +37,5 @@ export type BannerModel = {
   banner_ul?: string;
   banner_remark?: string;
 };
+=======
+>>>>>>> origin/Develop

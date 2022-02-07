@@ -5,9 +5,15 @@ import { Article } from '../../ui-public/pages';
 import Header from '../../ui-shared/components/Header';
 
 import * as ArticleDetailPage from '../../ui-public/pages/article';
+<<<<<<< HEAD
 import * as ContactLensDetailPage from '../../ui-public/pages/article';
 import { routeOptions } from '../routerConfig';
 import { ArticleModel, ContactLensModel } from '../../types/model';
+=======
+import * as BannerDetailPage from '../../ui-public/pages/article/banner';
+import { routeOptions } from '../routerConfig';
+import { ArticleModel, ContactLensModel, BannerModel } from '../../types/model';
+>>>>>>> origin/Develop
 
 export type PublicArticleStackParamList = {
   Article: {};
@@ -21,6 +27,12 @@ export type PublicArticleStackParamList = {
   ArticleDetail: {
     article?: ArticleModel;
   };
+<<<<<<< HEAD
+=======
+  BannerDetail: {
+    banner?: BannerModel;
+  };
+>>>>>>> origin/Develop
   [key: string]: {};
 };
 
@@ -36,11 +48,18 @@ function PublicArticleStack() {
 
           return (
             <Header
+<<<<<<< HEAD
               style={{ marginTop: 5 }}
               title={title}
               left={!!back}
               {...(!options.headerRight ? null : {
                 right: options.headerRight(navigation as any) 
+=======
+              title={title}
+              left={!!back}
+              {...(!options.headerRight ? null : {
+                right: options.headerRight(navigation as any)
+>>>>>>> origin/Develop
               })}
             />
           );
@@ -64,6 +83,16 @@ function PublicArticleStack() {
           <Stack.Screen key={name} name={name} component={ArticleDetailPage[name]} options={routeOptions(name)} />
         ))}
 
+<<<<<<< HEAD
+=======
+      {/* Banner Detail */}
+      {(Object.keys(BannerDetailPage) as Array<keyof typeof BannerDetailPage>)
+        .filter((name: string) => [].indexOf(name as never) < 0) // Except
+        .map((name) => (
+          <Stack.Screen key={name} name={name} component={BannerDetailPage[name]} options={routeOptions(name)} />
+        ))}       
+
+>>>>>>> origin/Develop
 
     </Stack.Navigator>
   );

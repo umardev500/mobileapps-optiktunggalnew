@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, View, ViewProps } from 'react-native';
 import { Button, ButtonProps, PressableBox, Typography } from '../../ui-shared/components';
+<<<<<<< HEAD
 import { colors, wrapper } from '../../lib/styles';
+=======
+import { colors, wrapper, shadows } from '../../lib/styles';
+>>>>>>> origin/Develop
 import * as Animatable from 'react-native-animatable';
 import { AddressModel, CartModel, Modelable, PaymentMethodType, ProductModel, TransactionModel, TransactionStatus } from '../../types/model';
 import { FigmaIcon } from '../../assets/icons';
@@ -63,10 +67,17 @@ function TransactionItem({
   const retrieveInfo = async () => {
     setIsLoading(true);
 
+<<<<<<< HEAD
     return httpService('/order/list', {
       data: {
         act: 'MPInfo',
         dt: JSON.stringify({ comp: '001', id: transaction.id }),
+=======
+    return httpService('/api/transaction/transaction/', {
+      data: {
+        act: 'TrxListItem',
+        // dt: JSON.stringify({ comp: '001', id: 'R79GA6P63629971' }),
+>>>>>>> origin/Develop
       }
     }).then(({ status, data, item, shipTo }) => {
       setIsLoading(false);
@@ -134,16 +145,27 @@ function TransactionItem({
     }
   };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Develop
   const renderHeaderShrink = () => {
     return (
       <View style={{
         paddingVertical: 8,
         paddingHorizontal: 15,
+<<<<<<< HEAD
+=======
+        borderColor: '#cccccc',
+        borderRadius: 5, 
+        borderWidth: 1
+>>>>>>> origin/Develop
       }}>
         <View style={[wrapper.row, { alignItems: 'center' }]}>
           <FigmaIcon.FigmaShoppingBag width={24} height={24} color={colors.gray[900]} />
 
           <View style={{ flex: 1, marginRight: 15, marginLeft: 12 }}>
+<<<<<<< HEAD
             <Typography>
               {t(`${''}Belanja`)}
             </Typography>
@@ -163,6 +185,30 @@ function TransactionItem({
           </Typography>
         </View>
 
+=======
+            <Typography style={{ fontWeight: 'bold' }}>
+              {t(`${transaction.orderno}`)}
+            </Typography>
+            <Typography>
+              {t(`Rp. ${transaction.totalbelanja}`)}
+            </Typography>
+          </View>
+
+          <View>
+            <Typography style={{ textAlign: 'right' }}>
+              {moment(transaction.ordertgl, 'YYYYMMDD').format('D MMMM YYYY')}
+            </Typography>
+            <Typography
+              heading
+              size="sm"
+              color={getStatusColor(status)}
+              style={{ alignSelf: 'flex-end' }}
+            >
+              {getStatusText(status)}
+            </Typography>
+          </View>
+        </View>
+>>>>>>> origin/Develop
         {!cartItem?.product ? null : (
           <View style={[styles.headerCart, { marginTop: 8 }]}>
             <View style={[wrapper.row]}>
@@ -210,8 +256,16 @@ function TransactionItem({
               {getStatusText(status)}
             </Typography>
 
+<<<<<<< HEAD
             <Typography size="sm" style={{ marginTop: 4 }}>
               {`INV ${transaction.orderno}`}
+=======
+            <Typography size="md" style={{ marginTop: 4 }}>
+              {`No. Transaksi : ${transaction.orderno}`}
+            </Typography>
+            <Typography style={{ fontWeight: 'bold' }}>
+              {t(`Rp. ${transaction.totalbelanja}`)}
+>>>>>>> origin/Develop
             </Typography>
           </View>
 
@@ -235,7 +289,11 @@ function TransactionItem({
           </View>
         </View>
 
+<<<<<<< HEAD
         {!cart_items?.length ? null : (
+=======
+        {/*!cart_items?.length ? null : (
+>>>>>>> origin/Develop
           <View style={[styles.headerCart, { marginTop: 8 }]}>
             <Typography heading>
               {t(`${''}Detail Produk`)}
@@ -275,7 +333,11 @@ function TransactionItem({
               );
             })}
           </View>
+<<<<<<< HEAD
         )}
+=======
+        )*/}
+>>>>>>> origin/Develop
       </View>
     );
   };
@@ -357,10 +419,18 @@ function TransactionItem({
         style={{ paddingHorizontal: 0 }}
         onPress={() => setCollapse(!collapse)}
       >
+<<<<<<< HEAD
         {!collapse ? renderHeaderShrink() : renderHeaderExpand()}
       </PressableBox>
 
       <Animatable.View
+=======
+        {renderHeaderShrink()}
+        {/*!collapse ? renderHeaderShrink() : renderHeaderExpand()*/}
+      </PressableBox>
+
+      {/*<Animatable.View
+>>>>>>> origin/Develop
         style={[
           styles.contentWrapper,
           { height: !collapse ? 0 : contentHi },
@@ -427,11 +497,19 @@ function TransactionItem({
                   </Typography>
 
                   <View style={[wrapper.row, { marginTop: 6 }]}>
+<<<<<<< HEAD
                     <Typography style={{ width: 140 }}>
                       {t(`${''}Metode Pembayaran`)}
                     </Typography>
 
                     <Typography style={{ flex: 1 }}>
+=======
+                    <Typography style={{ width: 140, flex: 2 }}>
+                      {t(`${''}Metode Pembayaran`)}
+                    </Typography>
+
+                    <Typography style={{ flex: 1, textAlign: 'right' }}>
+>>>>>>> origin/Develop
                       {paymentMethod.nama}
                     </Typography>
                   </View>
@@ -441,31 +519,55 @@ function TransactionItem({
               {!price.total ? null : (
                 <View style={[styles.contentSection, { marginTop: 12 }]}>
                   <View style={[wrapper.row, { marginTop: 0 }]}>
+<<<<<<< HEAD
                     <Typography style={{ width: 140 }}>
                       {`${t(`${''}Total Harga`)}\n(${cart_items?.length} ${t(`${''}Barang)`)}`}
                     </Typography>
 
                     <Typography style={{ flex: 1 }}>
+=======
+                    <Typography style={{ width: 140, flex: 2 }}>
+                      {`${t(`${''}Total Harga`)}\n(${cart_items?.length} ${t(`${''}Barang)`)}`}
+                    </Typography>
+
+                    <Typography style={{ flex: 1, textAlign: 'right' }}>
+>>>>>>> origin/Develop
                       {numeral(price.total).format()}
                     </Typography>
                   </View>
 
                   <View style={[wrapper.row, { marginTop: 6 }]}>
+<<<<<<< HEAD
                     <Typography style={{ width: 140 }}>
                       {`${t(`${''}Total Ongkos Kirim`)}`}
                     </Typography>
 
                     <Typography style={{ flex: 1 }}>
+=======
+                    <Typography style={{ width: 140, flex: 2 }}>
+                      {`${t(`${''}Total Ongkos Kirim`)}`}
+                    </Typography>
+
+                    <Typography style={{ flex: 1, textAlign: 'right' }}>
+>>>>>>> origin/Develop
                       {!price.courier ? t(`${''}Gratis`) : numeral(price.courier).format()}
                     </Typography>
                   </View>
 
                   <View style={[wrapper.row, { alignItems: 'flex-end', marginTop: 12 }]}>
+<<<<<<< HEAD
                     <Typography heading style={{ width: 140 }}>
                       {`${t(`${''}Total Bayar`)}`}
                     </Typography>
 
                     <Typography type="h5" style={{ flex: 1 }}>
+=======
+                    <Typography heading style={{ width: 140, flex: 2 }}>
+                      {`${t(`${''}Total Bayar`)}`}
+                    </Typography>
+
+                    <Typography type="h5" style={{ flex: 1, textAlign: 'right' }}>
+>>>>>>> origin/Develop
                       {numeral(price.total + price.courier).format()}
                     </Typography>
                   </View>
@@ -476,7 +578,11 @@ function TransactionItem({
             </>
           )}
         </View>
+<<<<<<< HEAD
       </Animatable.View>
+=======
+      </Animatable.View>*/}
+>>>>>>> origin/Develop
     </View>
   )
 };
@@ -494,10 +600,18 @@ const styles = StyleSheet.create({
     borderTopColor: colors.transparent('palettes.primary', 0.5),
   },
   headerCartImage: {
+<<<<<<< HEAD
     width: 64,
     height: 64,
     borderRadius: 10,
     marginRight: 12,
+=======
+    width: 50,
+    height: 50,
+    borderRadius: 10,
+    marginRight: 12,
+    resizeMode: 'stretch',
+>>>>>>> origin/Develop
   },
 
   contentWrapper: {

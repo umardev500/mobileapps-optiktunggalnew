@@ -43,4 +43,8 @@ function PublicFavoriteStack() {
   );
 }
 
+<<<<<<< HEAD
 export default PublicFavoriteStack;
+=======
+export default PublicFavoriteStack;
+>>>>>>> origin/Develop

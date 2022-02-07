@@ -15,6 +15,10 @@ export function routeOptions(fileName: string): StackNavigationOptions {
   const { t: tContact } = useTranslation('contact');
   const { t: tFav } = useTranslation('favorite');
   const { t: tAcc } = useTranslation('account');
+<<<<<<< HEAD
+=======
+  const { t: tKata } = useTranslation('katalog');
+>>>>>>> origin/Develop
 
   switch (fileName) {
     // Home | Product | Order | Payment
@@ -31,6 +35,11 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     // Notifications | Transaction
     case 'Notification':
       return { title: tNotif('Notifikasi') };
+<<<<<<< HEAD
+=======
+    case 'TransactionUsers':
+      return { title: tNotif('Transaksi Pelanggan') };
+>>>>>>> origin/Develop
     case 'TransactionList':
       return { title: tNotif('Transaksi') };
     case 'TransactionDetail':
@@ -43,15 +52,38 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     // Contact | About
     case 'Contact':
       return { headerShown: false };
+<<<<<<< HEAD
     case 'FAQ':
       return { title: `${''}FAQ` };
+=======
+    case 'OurContact':
+      return { title: `${''}Kontak Kami` };
+    case 'FAQ':
+      return { title: `${''}FAQ` };
+    case 'Brand':
+      return { title: `${''}Brands` };
+    case 'ContactLens':
+      return { title: `${''}Contact Lens` };
+    case 'ContactLensSubCategory':
+      return { title: `${''}Contact Lens Sub Category` };
+    case 'Lens':
+      return { title: `${''}Lens` };
+    case 'BannerDetail':
+      return { headerShown: false };
+    case 'ProductDetail':
+      return { headerShown: false };
+>>>>>>> origin/Develop
 
     // Favorites
     case 'Favorite':
       return { title: `${''}Favorit` };
 
     case 'Article':
+<<<<<<< HEAD
       return { title: `${''}Artikel` };
+=======
+      return { title: `${''}News` };
+>>>>>>> origin/Develop
 
     case 'ArticleDetail':
       return { title: `${''}Detail Artikel` };
@@ -79,13 +111,21 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       };
     case 'AddressEdit':
       return {
+<<<<<<< HEAD
         title: [tAcc('Informasi Alamat'), tAcc('Akan digunakan sebagai alamat penerima.')] as any
+=======
+        title: [tAcc('Informasi Alamat'), tAcc('sebagai alamat penerima.')] as any
+>>>>>>> origin/Develop
       };
     case 'AddressList':
       return { headerShown: false };
     case 'PinEdit':
       return {
+<<<<<<< HEAD
         title: [tAcc('Masukan Password'), tAcc('Kombinasi huruf besar, kecil dan Angka')] as any
+=======
+        title: [tAcc('Masukan Password')] as any
+>>>>>>> origin/Develop
       };
     case 'PasswordReset':
       return { title: tAcc(`${''}Keamanan Akun`) };

@@ -7,7 +7,11 @@ export const fetchAddresses = createAsyncThunk('user/fetchAddress', async (args,
   const { user: { user } } = getState() as RootStoreState;
   let addresses: AddressModel[] = [];
 
+<<<<<<< HEAD
   await httpService('/register/list', {
+=======
+  await httpService('https://ws.stmorita.net/register/list', {
+>>>>>>> origin/Develop
     data: {
       act: 'ShipToList',
       dt: JSON.stringify({ comp: '001', regid: user?.id })
@@ -28,7 +32,11 @@ export const fetchFavorites = createAsyncThunk('user/fetchFavorites', async (arg
   await httpService('https://ws.stmorita.net/favorit/list', {
     data: {
       act: 'FavoritList',
+<<<<<<< HEAD
       dt: JSON.stringify({ comp: '001', regid: user?.id })
+=======
+      dt: JSON.stringify({ comp: '001', regid: '3BNUWMYN9414625' })
+>>>>>>> origin/Develop
     }
   }).then(({ status, data }) => {
     if (200 === status) {
@@ -50,6 +58,7 @@ export const toggleFavorite = createAsyncThunk('shop/toggleFavorite', async (pro
 
   const productExist = oldFavorites.find((item) => item.prd_id === product.prd_id);
 
+<<<<<<< HEAD
   await httpService('/favorit/save', {
     data: {
       act: 'Favorit',
@@ -59,6 +68,15 @@ export const toggleFavorite = createAsyncThunk('shop/toggleFavorite', async (pro
         regid: user?.id,
         cmd: '1',
         star: !productExist ? '1' : '0',
+=======
+  await httpService('/api/favorit/favorit', {
+    data: {
+      act: 'Favorit',
+      param: 'save',
+      dt: JSON.stringify({
+        prdid: product.prd_id,
+        regid: user?.id,
+>>>>>>> origin/Develop
         remark: '',
         lat: location.lat,
         lng: location.lng,
