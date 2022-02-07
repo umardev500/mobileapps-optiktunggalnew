@@ -281,31 +281,6 @@ function AddressEdit() {
     return fields.indexOf(field) < 0 ? null : error.message;
   };
 
-  // const getdataExist = async () => {
-  //   return httpService('/api/login/login', {
-  //     data: {
-  //       act: 'CekEmailExist',
-  //       dt: JSON.stringify({
-  //         email: 'nrntwhd@gmail.com',
-  //         hp: '0812563400463',
-  //       }),
-  //     }
-  //   }).then(({ status, data }) => {
-  //     setIsSaving(false);
-  //     if (status === 200) {
-  //       Alert.alert( "Pemberitahuan", "Email atau No. Handphone sudah terdaftar."+data.kd_customer,
-  //         [
-  //           {text: "Cancel",onPress: () => console.log("Cancel Pressed"),style: "cancel"},
-  //           { text: "OK", onPress: () => console.log("OK Pressed") }
-  //         ]
-  //       );
-  //     }
-  //   }).catch((err) => {
-  //     setIsSaving(false);
-  //   });
-    
-  // };
-
   const sendRegister = async () => {
     const { ktp, foto, ...restProfile } = profile || {};    
     return httpService('/api/login/login', {

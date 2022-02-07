@@ -4,7 +4,8 @@ import { Platform, RefreshControl, ScrollView, StyleSheet, ToastAndroid, useWind
 import { colors, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { ErrorState, ValueOf } from '../../../types/utilities';
-import { Button, PressableBox, TextField, Typography, SegmentedControl } from '../../../ui-shared/components';
+import { httpService } from '../../../lib/utilities';
+import { Button, PressableBox, TextField, Typography } from '../../../ui-shared/components';
 import validator from 'validator';
 import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
 import moment from 'moment';
@@ -41,7 +42,7 @@ function Register() {
   //   setTabIndex(index);
   //   console.log('Current state unit: ', setTabIndex(index));
   // };
-    
+  const [isSaving, setIsSaving] = useState(false);
   // States
   const [isLoading, setIsLoading] = useState(false);
   const [fields, setFields] = useState<Fields>({
@@ -67,6 +68,32 @@ function Register() {
     // 
   }, []);
 
+  // const getdataExist = async () => {
+  //   return httpService('/api/login/login', {
+  //     data: {
+  //       act: 'CekEmailExist',
+  //       dt: JSON.stringify({
+  //         email: 'nrntwhd@gmail.com',
+  //         hp: '0812563400463',
+  //       }),
+  //     }
+  //   }).then(({ status, data }) => {
+  //     setIsSaving(false);
+  //     if (status === 201) {
+  //       Alert.alert( "Pemberitahuan", "Email atau No. Handphone sudah terdaftar. "+data.kd_customer,
+  //         [
+  //           { text: "OK", onPress: () => console.log("OK Pressed") }
+  //         ]
+  //       );
+  //     }else{
+
+  //     }
+  //   }).catch((err) => {
+  //     setIsSaving(false);
+  //   });
+    
+  // };
+
   // Vars
   const handleFieldChange = (field: keyof Fields, value: ValueOf<Fields>) => {
     const { fields = [] } = error;
@@ -84,6 +111,29 @@ function Register() {
       fields: [],
       message: undefined,
     });
+  };
+
+  const kirimPassword = async () => {
+    return httpService('/api/login/login', {
+      data: {
+        act: 'KirimPasswordUserTerdaftar',
+        dt: JSON.stringify({
+          email: 'nuryantowahyudi8@gmail.com',
+        }),
+      }
+    }).then(({ status, data }) => {
+      setIsSaving(false);
+      if (status === 200) {
+        Alert.alert( "Pemberitahuan", "Password sudah kami kirimkan ke email nrntwhd@gmail.com.",
+          [
+            { text: "OK", onPress: () => { navigation.navigatePath('Public', { screen: 'BottomTabs.AccountStack.Login',}); }}
+          ]
+        );
+      }
+    }).catch((err) => {
+      setIsSaving(false);
+    });
+    
   };
 
   const handleErrorShow = (fields: keyof Fields | Array<keyof Fields>, message: string) => {
@@ -116,16 +166,37 @@ function Register() {
     } else if (!fields.ktp) {
       return handleErrorShow('namaktp', t('Please select your KTP/NPWP photo file.'));
     }*/
-    
-    navigation.navigatePath('Public', {
-      screen: 'BottomTabs.AccountStack.AddressEdit',
-      params: [null, null, {
-        profile: {
-          ...fields,
-          // hp: `62${fields.hp}`,
-          hp: showPhone(fields.hp, '62'),
-        },
-      }],
+
+    return httpService('/api/login/login', {
+      data: {
+        act: 'CekEmailExist',
+        dt: JSON.stringify({
+          email: 'nrntwhd@gmail.com',
+          hp: '0812563400463',
+        }),
+      }
+    }).then(({ status, data }) => {
+      setIsSaving(false);
+      if (status === 201) {
+        Alert.alert( "Pemberitahuan", "Sepertinya anda sudah pernah melakukan transaksi di OPTIK TUNGGAL. Silahkan klik tombol minta password untuk mengakses apps ini dan anda tidak perlu daftar akun baru. Terima Kasih",
+          [
+            { text: "Minta Password", onPress: () => kirimPassword() }
+          ]
+        );
+      }else if(status === 200){
+        navigation.navigatePath('Public', {
+          screen: 'BottomTabs.AccountStack.AddressEdit',
+          params: [null, null, {
+            profile: {
+              ...fields,
+              // hp: `62${fields.hp}`,
+              hp: showPhone(fields.hp, '62'),
+            },
+          }],
+        });
+      }
+    }).catch((err) => {
+      setIsSaving(false);
     });
   };
 
@@ -239,7 +310,7 @@ function Register() {
 
       <TextField
         containerStyle={{ marginTop: 20 }}
-        placeholder={t('Phone Number')}
+        placeholder={t('contoh : 8123456789')}
         value={fields.hp}
         onChangeText={(value) => handleFieldChange('hp', value)}
         keyboardType="phone-pad"
