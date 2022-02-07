@@ -31,10 +31,13 @@ function ArticleDetail() {
 
   // Effects
   useEffect(() => {
+<<<<<<< HEAD
+=======
     
   }, []);
   
   useEffect(() => {
+>>>>>>> origin/Develop
     if (route.params?.article) {
       setArticle(state => ({
         ...state,
@@ -44,6 +47,11 @@ function ArticleDetail() {
     }
   }, [route.params]);
 
+<<<<<<< HEAD
+  useEffect(() => {});
+
+=======
+>>>>>>> origin/Develop
   // Vars
   const handleRefresh = async () => {
     setIsLoading(true);
@@ -99,7 +107,11 @@ function ArticleDetail() {
             {!articleModel.ArticleImage ? null : (
               <View style={[styles.image, { maxHeight: width }]}>
                 <ImageAuto
+<<<<<<< HEAD
+                  source={{ uri: 'https://optiktunggal.com/img/article/'+articleModel.ArticleImage }}
+=======
                   source={{ uri: articleModel.ArticleImage }}
+>>>>>>> origin/Develop
                   width={width - 30}
                   style={{
                     marginHorizontal: 15,
@@ -113,13 +125,20 @@ function ArticleDetail() {
             {!articleModel.ArticleImage ? null : (
               <>
                 <View style={{ paddingTop: 5, paddingHorizontal: 5 }}>
+<<<<<<< HEAD
+=======
                   <Typography style={{textAlign: 'justify', fontWeight: 'bold'}}>{articleModel.ArticleName}</Typography>
+>>>>>>> origin/Develop
                   {!articleModel.html ? null : (
                     <RenderHtml
                       source={{ html: articleModel.html }}
                       tagsStyles={{
+<<<<<<< HEAD
+                        p: { marginVertical: 0, height: 'auto', fontSize: 12, paddingHorizontal: 5, textAlign: 'justify' }
+=======
                         p: { marginVertical: 0, height: 'auto', fontSize: 12, marginTop: 10, textAlign: 'justify' },
                         ul: { fontSize: 12, textAlign: 'justify' }
+>>>>>>> origin/Develop
                       }}
                     />
                   )}

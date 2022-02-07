@@ -15,7 +15,11 @@ export type TransactionModel = {
   grand_total?: number;
   payment_picture?: any;
   logs?: TransactionLog[];
+<<<<<<< HEAD
+
+=======
   totalbelanja?: number;
+>>>>>>> origin/Develop
   orderno?: string;
   orderstatus?: TransactionStatus;
   ordertgl?: string;

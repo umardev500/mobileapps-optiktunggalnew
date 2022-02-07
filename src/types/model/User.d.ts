@@ -1,6 +1,10 @@
 export type UserModel = null | {
   api_token?: string;
+<<<<<<< HEAD
+  id?: number;
+=======
   id?: string;
+>>>>>>> origin/Develop
 
   name?: string;
   email?: string;
@@ -20,6 +24,12 @@ export type UserModel = null | {
   rw?: string;
   jl?: string;
 
+<<<<<<< HEAD
+  lat?: string | number;
+  lng?: string | number;
+
+=======
+>>>>>>> origin/Develop
   foto?: string;
   reseller?: string;
   gender?: string;

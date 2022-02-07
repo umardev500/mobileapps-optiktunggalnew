@@ -81,12 +81,20 @@ function Login() {
     }
 
     setIsSaving(true);
+<<<<<<< HEAD
+
+    return httpService('/api/login/login', {
+      data: {
+        act: 'Login',
+        dt: JSON.stringify({
+=======
     return httpService('/api/login/login', {
     // return httpService('https://ws.stmorita.net/register/list', {
       data: {
         act: 'Login',
         dt: JSON.stringify({
           comp: '001',
+>>>>>>> origin/Develop
           LoginID: fields.email,
           LoginPwd: fields.password,
         }),
@@ -96,17 +104,28 @@ function Login() {
 
       setIsSaving(false);
 
+<<<<<<< HEAD
+      if (status) {
+        httpService.setUser({
+          ...data,
+          ...(!token ? null : { token }),
+          reseller: '1',
+=======
       if (status == 200) {
         httpService.setUser({
           ...data,
           ...(!token ? null : { token }),
           status: '1',
+>>>>>>> origin/Develop
         }).then(() => {
           navigation.navigatePath('Public', {
             screen: 'BottomTabs.AccountStack.Account',
             params: [null, null, {
               profile: fields,
+<<<<<<< HEAD
+=======
               data: data
+>>>>>>> origin/Develop
             }],
           });
 
@@ -118,10 +137,17 @@ function Login() {
             }
           }, 250);
         });
+<<<<<<< HEAD
+      }
+    }).catch((err) => {
+      console.log("LOGIN ERROR", err);
+
+=======
       }else{
         handleErrorShow('password', `${''}Email atau password salah.`);
       }
     }).catch((err) => {
+>>>>>>> origin/Develop
       setIsSaving(false);
 
       handleErrorShow('password', `${''}Email atau password salah.`);

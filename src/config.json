@@ -7,20 +7,34 @@
   "app_version_ios": 1.000,
   "app_version_ios_text": "1.0.0",
 
+<<<<<<< HEAD
+  "URL_APP_UPDATE": "https://getall.co.id/download/android",
+  "URL_APP_UPDATE_IOS": "https://getall.co.id/download/ios",
+=======
   "URL_APP_UPDATE": "https://optiktunggal.com/download/android",
   "URL_APP_UPDATE_IOS": "https://optiktunggal.com/download/ios",
+>>>>>>> origin/Develop
 
   "URL_WEBSITE": "https://optiktunggal.com",
   "URL_RESELLER": "https://optiktunggal.com",
   "URL_SOCIAL_WHATSAPP": "whatsapp://send?text=Hi+dengan+Get+All+disini&phone=6281211801703",
   "URL_SOCIAL_YOUTUBE": "vnd.youtube://channel/UCPbQXwzh9CMIpfcT4mK4t6A",
   "URL_SOCIAL_FACEBOOK": "fb://page/101104102336598",
+<<<<<<< HEAD
+  "URL_SOCIAL_INSTAGRAM": "instagram://user?username=moritagetall",
+
+  "API_URL": "http://6e70-182-253-200-165.ngrok.io/api_optiktunggal",
+  "API_GETALL_URL": "http://6e70-182-253-200-165.ngrok.io/api_optiktunggal",
+
+  "STORAGE_KEY": "@moritagetall",
+=======
   "URL_SOCIAL_INSTAGRAM": "instagram://user?username=optiktunggal",
 
   "API_URL": "https://0790-182-253-200-165.ngrok.io/api_optiktunggal",
   "API_GETALL_URL": "https://0790-182-253-200-165.ngrok.io/api_optiktunggal",
 
   "STORAGE_KEY": "@optiktunggal",
+>>>>>>> origin/Develop
 
   "GMAPS_API_KEY": "AIzaSyChYVr4zqShAlWZpqLHn4gU3tupos93VoU"
 }

@@ -62,13 +62,22 @@ function Header({
     return 'string' === typeof title ? (
       <View style={{ flex: 1, alignSelf: 'center', alignItems: 'center' }}>
         <Typography
+<<<<<<< HEAD
+          type="h4"
+          color={900}
+=======
           style={{marginTop: -20, color: '#FFFFFF'}}
+>>>>>>> origin/Develop
           textAlign="center"
           {...titleProps}
         >{title}</Typography>
 
         {!subtitle ? null : (
+<<<<<<< HEAD
+          <Typography size="sm" textAlign="center" style={{ marginTop: 4 }}>
+=======
           <Typography size="sm" textAlign="center" style={{ marginTop: 4, color: '#FFFFFF' }}>
+>>>>>>> origin/Develop
             {subtitle}
           </Typography>
         )}
@@ -97,6 +106,10 @@ function Header({
       {/* <View style={styles.headercolor}></View> */}
       
       <View style={[styles.container, style]} {...props}>
+<<<<<<< HEAD
+
+=======
+>>>>>>> origin/Develop
         <View style={[wrapper.row, {
           marginTop: !title && !children && !hideSearch ? 8 : 0,
           minHeight: !hideSearch ? 42 : 0,
@@ -107,17 +120,29 @@ function Header({
           ) : (
             (!left || !navigation.canGoBack()) ? null : (
               <Button
+<<<<<<< HEAD
+                containerStyle={{ marginRight: 12, alignSelf: 'flex-start' }}
+=======
                 containerStyle={{ marginRight: 12, alignSelf: 'flex-start', marginTop: -10 }}
+>>>>>>> origin/Develop
                 size={42}
                 color="transparent"
                 onPress={() => navigation.goBack()}
                 {...leftProps}
               >
+<<<<<<< HEAD
+                <Ionicons name="arrow-back" size={24} color={colors.gray[900]} {...leftIconProps} />
+              </Button>
+            )
+          )}
+
+=======
                 <Ionicons name="arrow-back" size={24} color={colors.white} {...leftIconProps} />
               </Button>
             )
           )}
           
+>>>>>>> origin/Develop
           {/* Middle Column */}
           {title ? renderTitle() : (
             // Render $children
@@ -126,6 +151,15 @@ function Header({
               !hideSearch ? (
                 <TextField
                   border
+<<<<<<< HEAD
+                  containerStyle={{ flex: 1, backgroundColor: colors.gray[100], alignSelf: 'center', }}
+                  style={{
+                    paddingTop: Platform.OS === 'ios' ? 4 : 2,
+                    paddingBottom: Platform.OS === 'ios' ? 4 : 2,
+                    height: 40,
+                  }}
+                  placeholder="Search Product.."
+=======
                   containerStyle={{ flex: 1, backgroundColor: colors.gray[100], alignSelf: 'center', marginTop: -40 }}
                   style={{
                     paddingTop: Platform.OS === 'ios' ? 4 : 2,
@@ -134,14 +168,22 @@ function Header({
                     fontSize: 11
                   }}
                   placeholder="Cari Produk.."
+>>>>>>> origin/Develop
                   value={search}
                   onChangeText={(value) => setSearch(value)}
                   onSubmitEditing={handleSearch}
                   returnKeyType="search"
+<<<<<<< HEAD
+                  left={(
+                    <Ionicons
+                      name="search"
+                      size={25}
+=======
                   right={(
                     <Ionicons
                       name="search"
                       size={20}
+>>>>>>> origin/Develop
                       color={colors.gray[500]}
                       style={{ paddingHorizontal: 3, }}
                     />
@@ -185,15 +227,25 @@ function Header({
 
 const styles = StyleSheet.create({
   container: {
+<<<<<<< HEAD
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+=======
     paddingVertical: 15,
     paddingHorizontal: 15,
+>>>>>>> origin/Develop
     position: 'relative',
   },
 
   headercolor: {
     width: '100%',
+<<<<<<< HEAD
+    height: 65,
+    backgroundColor: "#FEFEFE",
+=======
     height: 50,
     backgroundColor: "#204c29",
+>>>>>>> origin/Develop
     position: 'absolute',
     resizeMode: 'cover',
   },
@@ -201,6 +253,10 @@ const styles = StyleSheet.create({
   logo: {
     width: 100,
     height: 30,
+<<<<<<< HEAD
+    alignSelf: 'center',
+=======
+>>>>>>> origin/Develop
   }
 });
 

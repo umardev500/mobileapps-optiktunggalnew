@@ -70,9 +70,16 @@ function TransactionDetail() {
       model: null
     }));
 
+<<<<<<< HEAD
+    return httpService('/order/list', {
+      data: {
+        act: 'MPList',
+        dt: JSON.stringify({ comp: '001', regid: user?.id }),
+=======
     return httpService('/api/transaction/transaction', {
       data: {
         act: 'TrxList',
+>>>>>>> origin/Develop
       }
     }).then(({ status, data }) => {
       console.log("DATA", data);
