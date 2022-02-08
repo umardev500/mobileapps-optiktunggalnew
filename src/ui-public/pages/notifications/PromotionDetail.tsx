@@ -45,10 +45,7 @@ function PromotionDetail() {
         modelLoaded: true
       }));
     }
-<<<<<<< HEAD
-=======
     console.log('PROMOTION___'+route.params.promotion);
->>>>>>> origin/Develop
   }, [route.params]);
 
   useEffect(() => {
@@ -72,9 +69,6 @@ function PromotionDetail() {
     setProduct(state => ({ ...state, modelsLoaded: false }));
 
     return httpService('/api/product/product/', {
-<<<<<<< HEAD
-      data: {},
-=======
       data: {
         act: 'PrdList',
         dt: JSON.stringify({
@@ -86,7 +80,6 @@ function PromotionDetail() {
           param: "cariprd",
         }),
       },
->>>>>>> origin/Develop
       method: 'POST'
     }).then(({ status, data }) => {
       if (200 === status) {

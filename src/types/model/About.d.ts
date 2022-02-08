@@ -11,10 +11,6 @@ export type FAQModel = {
 
 export type ContactUsModel = {
   StoreID?: string;
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/Develop
   StoreName?: string;
   StoreLocationUnit?: string;
   StoreAddress?: string[];
@@ -25,15 +21,12 @@ export type ContactUsModel = {
   StoreLatitude?: number;
 };
 
-<<<<<<< HEAD
-=======
 export type CityStoreModel = {
   CityID?: string;
   CityName?: string;
 
 };
 
->>>>>>> origin/Develop
 export type ArticleModel = {
   ArticleID?: string;
   ArticleName?: string[];
@@ -44,8 +37,6 @@ export type ArticleModel = {
   ArticleView?: string;
 };
 
-<<<<<<< HEAD
-=======
 export type BannerModel = {
   banner_id?: string;
   banner_ds?: string[];
@@ -57,7 +48,6 @@ export type BannerModel = {
   banner_remark?: string;
 };
 
->>>>>>> origin/Develop
 export type ContactLensModel = {
   ContactLensID?: string;
   ContactLensName?: string[];
@@ -67,7 +57,4 @@ export type ContactLensModel = {
   ContactLensPublishDate?: string;
   ContactLensView?: string;
 };
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/Develop

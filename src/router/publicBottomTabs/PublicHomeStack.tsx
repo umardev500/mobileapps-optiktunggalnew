@@ -7,27 +7,17 @@ import Header from '../../ui-shared/components/Header';
 import * as Orders from '../../ui-public/pages/orders';
 import * as Products from '../../ui-public/pages/products';
 import { routeOptions } from '../routerConfig';
-<<<<<<< HEAD
-import { AddressModel, CartModel, CategoryModel, PaymentMethodType, ProductModel, TransactionModel } from '../../types/model';
-=======
 import { AddressModel, CartModel, CategoryModel, PaymentMethodType, ProductModel, TransactionModel, BrandModel, ContactLensModel, ContactUsModel, LensModel } from '../../types/model';
->>>>>>> origin/Develop
 
 export type PublicHomeStackParamList = {
   Home: {};
   Search: {
     search?: string;
     category?: CategoryModel;
-<<<<<<< HEAD
-  };
-  ProductDetail: {
-    product_id: number;
-=======
     brand?: BrandModel[];
   };
   ProductDetail: {
     product_id: string;
->>>>>>> origin/Develop
     product?: Partial<ProductModel>;
   };
   Cart: {};

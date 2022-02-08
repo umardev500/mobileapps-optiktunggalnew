@@ -3,36 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, ListRenderItemInfo, StyleSheet, View } from 'react-native';
 import { colors, wrapper } from '../../lib/styles';
-<<<<<<< HEAD
-=======
 import { httpService } from '../../lib/utilities';
->>>>>>> origin/Develop
 import { Modelable, TransactionLog, TransactionModel } from '../../types/model';
 import { BottomDrawer, BottomDrawerProps, Typography } from '../../ui-shared/components';
 import { BoxLoading } from '../../ui-shared/loadings';
 
-<<<<<<< HEAD
-const LOGS: TransactionLog[] = [
-  {
-    date: '2021-10-01 15:00:00',
-    description: 'Pembayaran sudah diverifikasi\nPembayaran telah diterima'
-  },
-  {
-    date: '2021-10-02 08:00:00',
-    description: 'Pemesanan sedang diproses'
-  },
-  {
-    date: '2021-10-02 09:00:00',
-    description: 'Barang sedang dikirim'
-  },
-];
-
-type Props = BottomDrawerProps & {
-  transaction?: TransactionModel
-=======
 type Props = BottomDrawerProps & {
   transaction?: TransactionModel;
->>>>>>> origin/Develop
 };
 
 function TransactionStatusModal({
@@ -70,21 +47,6 @@ function TransactionStatusModal({
 
   // Vars
   const retrieveTransactionStatus = async () => {
-<<<<<<< HEAD
-    return new Promise(resolve => {
-      setTimeout(() => {
-        setLog(state => ({
-          ...state,
-          models: LOGS,
-          modelsLoaded: true,
-        }));
-      }, 1000);
-
-      resolve(null);
-    });
-  };
-
-=======
     setLog(state => ({ ...state, modelsLoaded: false }));
 
     return httpService('/api/transaction/transaction', {
@@ -161,7 +123,6 @@ function TransactionStatusModal({
     return logs;
   };
 
->>>>>>> origin/Develop
   const renderLogs = ({ item, index }: ListRenderItemInfo<TransactionLog>) => {
     const date = moment(item.date);
     const isCurrent = index + 1 === log.models?.length;
@@ -186,13 +147,8 @@ function TransactionStatusModal({
           </Typography>
         </View>
 
-<<<<<<< HEAD
-        <Typography size="sm" textAlign="right" style={{ paddingVertical: 4 }}>
-          {date.format('HH:mm')}
-=======
         <Typography size="sm" textAlign="right" style={{ paddingVertical: 4, minWidth: 48 }}>
           {item.time}
->>>>>>> origin/Develop
         </Typography>
       </View>
     );
@@ -201,11 +157,7 @@ function TransactionStatusModal({
   return (
     <BottomDrawer
       isVisible={isVisible}
-<<<<<<< HEAD
-      title={t(`${''}Detail Status Pemesanan`)}
-=======
       title={t(`Detail Status Pemesanan`)}
->>>>>>> origin/Develop
       titleProps={{ textAlign: 'center', color: 'primary' }}
       {...props}
     >
@@ -228,11 +180,7 @@ function TransactionStatusModal({
           </View>
         ) : (
           <Typography textAlign="center" style={{ paddingVertical: 12 }}>
-<<<<<<< HEAD
-            {t(`${''}Belum ada riwayat status pemesanan.`)}
-=======
             {t(`Belum ada riwayat status pemesanan.`)}
->>>>>>> origin/Develop
           </Typography>
         )}
       />

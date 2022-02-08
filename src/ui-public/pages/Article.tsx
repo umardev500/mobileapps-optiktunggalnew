@@ -89,50 +89,12 @@ function Article() {
           }} />
         <View style={{ flex: 1, marginTop: 10
          }}>
-<<<<<<< HEAD
-          <Typography heading>
-            {item.ArticleName}
-          </Typography>
-          <View style={{ height: 1, backgroundColor: '#ccc', marginVertical: 10 }}></View>
-          <View style={[wrapper.row, { alignItems: 'center', paddingHorizontal: 5}]}>
-            <Typography color="black" style={{ flex: 1, fontSize: 13 }}>
-              {item.ArticlePublishDate}    <Ionicons name="eye-outline" size={16} color={'black'} /> {item.ArticleView}
-            </Typography>
-            <Button
-              containerStyle={[styles.btnShare]}
-              label={t('Bagikan', { count: 1 })}
-              labelProps={{ type: 'p', size: 'sm' }}
-              labelStyle={{ textAlign: 'center' }}
-              size="lg"
-              right={(
-                <Ionicons name="share-social-outline" size={18} color={'black'} />
-              )}
-              // onPress={() => navigation.navigatePath('Public', {
-              //   screen: 'BottomTabs.NotificationStack.PromotionList'
-              // })}
-              onPress={() => Alert.alert( "Pemberitahuan", "Fitur ini sedang dikembangkan!",
-                            [{text: "Cancel",onPress: () => console.log("Cancel Pressed"),style: "cancel"},
-                              { text: "OK", onPress: () => console.log("OK Pressed") }
-                            ]
-              )}
-            />
-          </View>
-          {/*!content ? null : (
-            <View style={{ marginTop: 4, maxHeight: 50 }}>
-              <RenderHtml
-                contentWidth={width - 30 - (!item.html ? 0 : 76)}
-                source={{ html: content }}
-              />
-            </View>
-          )*/}
-=======
           <Typography color="gray" style={{ flex: 1, fontSize: 10 }}>
             {item.ArticlePublishDate}
           </Typography>
           <Typography heading>
             {item.ArticleName}
           </Typography>
->>>>>>> origin/Develop
         </View>
       </PressableBox>
     )
@@ -154,20 +116,9 @@ function Article() {
         ListEmptyComponent={!article.modelsLoaded ? (
           <View style={[styles.promoCardContainer, { marginTop: 8 }]}>
             <View style={styles.articleCard}>
-<<<<<<< HEAD
-              <BoxLoading width={64} height={64} rounded={8} />
-
-              <View style={{ flex: 1, paddingLeft: 12 }}>
-                <BoxLoading width={[100, 150]} height={20} />
-
-                <BoxLoading width={[140, 200]} height={18} style={{ marginTop: 6 }} />
-                <BoxLoading width={[100, 130]} height={18} style={{ marginTop: 2 }} />
-              </View>
-=======
               <BoxLoading width={300} height={150} rounded={8} />
               <BoxLoading width={[50, 150]} height={20} />
               <BoxLoading width={[200, 150]} height={20} />
->>>>>>> origin/Develop
             </View>
           </View>
         ) : (

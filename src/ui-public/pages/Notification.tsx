@@ -49,18 +49,11 @@ function Notification() {
           labelStyle={{ flex: 1, textAlign: 'left' }}
           size="lg"
           right={(
-<<<<<<< HEAD
-            <Ionicons name="chevron-forward" size={20} color={colors.palettes.primary} />
-          )}
-          onPress={() => navigation.navigatePath('Public', {
-            screen: 'BottomTabs.NotificationStack.TransactionList'
-=======
             <Ionicons name="chevron-forward" size={20} color='black' />
           )}
           onPress={() => navigation.navigatePath('Public', {
             // screen: 'BottomTabs.NotificationStack.TransactionList'
             screen: 'BottomTabs.NotificationStack.TransactionUsers',
->>>>>>> origin/Develop
           })}
         />
       )}
@@ -72,11 +65,7 @@ function Notification() {
         labelStyle={{ flex: 1, textAlign: 'left' }}
         size="lg"
         right={(
-<<<<<<< HEAD
-          <Ionicons name="chevron-forward" size={20} color={colors.palettes.primary} />
-=======
           <Ionicons name="chevron-forward" size={20} color='black' />
->>>>>>> origin/Develop
         )}
         onPress={() => navigation.navigatePath('Public', {
           screen: 'BottomTabs.NotificationStack.PromotionList'

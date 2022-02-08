@@ -1,11 +1,7 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { colors } from '../../lib/styles';
-<<<<<<< HEAD
-import { Contact, FAQ } from '../../ui-public/pages';
-=======
 import { Contact } from '../../ui-public/pages';
->>>>>>> origin/Develop
 import { getHeaderTitle } from '@react-navigation/elements';
 import { Header } from '../../ui-shared/components';
 import { routeOptions } from '../routerConfig';
@@ -13,10 +9,7 @@ import * as Contacts from '../../ui-public/pages/contacts';
 
 export type PublicContactStackParamList = {
   Contact: {};
-<<<<<<< HEAD
-=======
   OurContact: {};
->>>>>>> origin/Develop
   [key: string]: {};
 };
 
@@ -51,10 +44,7 @@ function PublicContactStack() {
         .map((name) => (
           <Stack.Screen key={name} name={name} component={Contacts[name]} options={routeOptions(name)} />
         ))}
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/Develop
     </Stack.Navigator>
   );
 }

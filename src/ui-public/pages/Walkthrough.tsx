@@ -21,10 +21,7 @@ import axios from 'axios';
 import { getConfig } from '../../lib/config';
 import moment from 'moment';
 import { fetchFavorites } from '../../redux/actions';
-<<<<<<< HEAD
-=======
 import LOGO from '../../assets/app-logo-square.png';
->>>>>>> origin/Develop
 
 type SlideItem = {
   title?: string;
@@ -43,22 +40,6 @@ const SLIDES: SlideItem[] = [
   //   image: WalkthroughImage.LogoCircle,
   //   // progress: true,
   // },
-<<<<<<< HEAD
-  {
-    // bg: require('../../assets/images/walkthrough/walk-bg-2.jpg'),
-    bg: 'white',
-    image: WalkthroughImage.Walk2,
-    title: 'Memenuhi kebutuhan penglihatan anda',
-    caption: 'Penuhi kebutuhan penglihatan keluarga anda\nbersama kami.',
-    color: 'white',
-    textColor: 'black',
-  },
-  {
-    bg: 'white',
-    image: WalkthroughImage.Walk4,
-    title: 'Pesan kebutuhanmu Sekarang',
-    caption: 'Pesan kebutuhan penglihatan anda\n darimana saja.',
-=======
   // {
   //   // bg: require('../../assets/images/walkthrough/walk-bg-2.jpg'),
   //   bg: 'white',
@@ -73,7 +54,6 @@ const SLIDES: SlideItem[] = [
     image: LOGO,
     title: '',
     caption: '',
->>>>>>> origin/Develop
     color: 'white',
     textColor: 'black',
   },
@@ -391,11 +371,7 @@ function Walkthrough() {
             <Button
               rounded
               containerStyle={{ alignSelf: 'center', minWidth: 300 }}
-<<<<<<< HEAD
-              color="yellow"
-=======
               color="primary"
->>>>>>> origin/Develop
               label="Lanjutkan"
               onPress={handleFinish}
             />
@@ -479,10 +455,7 @@ const styles = StyleSheet.create({
     height: '100%',
     margin: 'auto',
     resizeMode: 'cover',
-<<<<<<< HEAD
-=======
     backgroundColor: 'transparent',
->>>>>>> origin/Develop
   },
   carouselContent: {
     flex: 1,

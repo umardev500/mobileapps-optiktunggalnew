@@ -4,10 +4,7 @@ export * from './Transaction';
 export * from './Promotion';
 export * from './Region';
 export * from './About';
-<<<<<<< HEAD
-=======
 export * from './Others';
->>>>>>> origin/Develop
 // export * from './TypesShare';
 
 export type Modelable<T> = {

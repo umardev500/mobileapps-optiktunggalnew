@@ -5,11 +5,7 @@ import { View } from 'react-native-animatable';
 import { colors, wrapper } from '../../../lib/styles';
 import { PublicHomeStackParamList } from '../../../router/publicBottomTabs';
 import { useAppNavigation } from '../../../router/RootNavigation';
-<<<<<<< HEAD
-import { BrandModel, Modelable, ModelablePaginate, ProductModel } from '../../../types/model';
-=======
 import { Modelable, ModelablePaginate, ProductModel, BrandModel } from '../../../types/model';
->>>>>>> origin/Develop
 import { Badge, BottomDrawer, Button, Header, Typography } from '../../../ui-shared/components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ProductsLoading from '../../loadings/ProductsLoading';
@@ -21,15 +17,10 @@ import { useTranslation } from 'react-i18next';
 
 const SORT = [
   { label: `${''}Ulasan`, value: 'review-desc' },
-<<<<<<< HEAD
-  { label: `${''}Harga Tertinggi`, value: 'price-desc' },
-  { label: `${''}Harga Terendah`, value: 'price-asc' },
-=======
   // { label: `${''}Harga Tertinggi`, value: 'price-desc' },
   // { label: `${''}Harga Terendah`, value: 'price-asc' },
   { label: `${''}Populer`, value: 'price-asc' },
   { label: `${''}Terbaru`, value: 'price-asc' },
->>>>>>> origin/Develop
 ];
 
 type Fields = {
@@ -50,10 +41,7 @@ function Search() {
   const route = useRoute<RouteProp<PublicHomeStackParamList, 'Search'>>();
   const { width, height } = useWindowDimensions();
   const { categories } = useAppSelector(({ shop }) => shop);
-<<<<<<< HEAD
-=======
   const { brands } = useAppSelector(({ shop }) => shop);
->>>>>>> origin/Develop
   const { t } = useTranslation('home');
 
   // States
@@ -92,11 +80,7 @@ function Search() {
   }, []);
 
   useEffect(() => {
-<<<<<<< HEAD
-    const { search: routeSearch, category: routeCategory } = route.params;
-=======
     const { search: routeSearch, category: routeCategory, brand: routeBrand } = route.params;
->>>>>>> origin/Develop
 
     routeSearch && setSearch(routeSearch);
 
@@ -104,16 +88,12 @@ function Search() {
       handleFieldChange('prdcat', routeCategory.id);
 
       setOptions(state => ({ ...state, prdcat: routeCategory.id }));
-<<<<<<< HEAD
-    }
-=======
     }else if (routeBrand) {
       handleFieldChange('brand', routeBrand.id);
 
       setOptions(state => ({ ...state, brand: routeBrand.id }));
     }
 
->>>>>>> origin/Develop
   }, [route.params]);
 
   useEffect(() => {
@@ -143,21 +123,14 @@ function Search() {
 
     return httpService('/api/product/product', {
       data: {
-<<<<<<< HEAD
-        act: 'SearchPrd',
-=======
         act: 'PrdList',
->>>>>>> origin/Develop
         dt: JSON.stringify({
           comp: '001',
           reccnt,
           pg: page,
           limit: product.perPage,
           search: search,
-<<<<<<< HEAD
-=======
           param: "cariprd",
->>>>>>> origin/Develop
           ...fields
         }),
       },
@@ -218,10 +191,7 @@ function Search() {
     handleModalToggle('filter', false);
 
     handleFieldChange('prdcat', options.prdcat);
-<<<<<<< HEAD
-=======
     handleFieldChange('brand', options.brand);
->>>>>>> origin/Develop
 
     setProduct(state => ({
       ...state,
@@ -242,19 +212,12 @@ function Search() {
 
   const filterColor = filterCount ? colors.palettes.primary : colors.gray[700];
   const categoryActive = categories?.find(item => item.id === fields.prdcat);
-<<<<<<< HEAD
-=======
   const brandActive = brands?.find(item => item.id === fields.brand);
->>>>>>> origin/Develop
 
   return (
     <View style={{ flex: 1 }}>
       <Header
-<<<<<<< HEAD
-        left
-=======
         // left
->>>>>>> origin/Develop
         search={search || undefined}
       />
 
@@ -294,8 +257,6 @@ function Search() {
               )}
             />
           )}
-<<<<<<< HEAD
-=======
 
           {!brandActive ? null : (
             <Badge
@@ -304,7 +265,6 @@ function Search() {
               labelProps={{ size: 'sm' }}
             />
           )}
->>>>>>> origin/Develop
         </View>
       </View>
 
@@ -394,34 +354,6 @@ function Search() {
               {[
                 {
                   id: '',
-<<<<<<< HEAD
-                  ds: t(`${t('All Brands')}`),
-                },
-                ...(brand.models || [])
-              ].map((item, index) => {
-                const selected = item?.id === fields.brand;
-
-                return (
-                  <Button
-                    key={index}
-                    label={item.name}
-                    labelProps={{ type: 'p' }}
-                    containerStyle={{
-                      marginTop: index > 0 ? 4 : 0,
-                      backgroundColor: selected ? colors.transparent('palettes.primary', 0.1) : undefined,
-                    }}
-                    style={{ justifyContent: 'space-between' }}
-                    onPress={() => handleFieldChange('brand', item.id)}
-                    size="lg"
-                    right={(
-                      <Typography size="sm" color={selected ? 'blue' : 'primary'}>
-                        {selected ? `${t('Dipilih')}` : `${t('Pilih')}`}
-                      </Typography>
-                    )}
-                  />
-                );
-              })}
-=======
                   name: t(`${t('Semua Brand')}`),
                 },
                 ...(brand.models || [])
@@ -449,7 +381,6 @@ function Search() {
                   );
                 })
               }
->>>>>>> origin/Develop
             </View>
           )}
 

@@ -35,15 +35,9 @@ function Register() {
   const navigation = useAppNavigation();
   const route = useRoute();
   const { width } = useWindowDimensions();
-<<<<<<< HEAD
-  const { t } = useTranslation('account');
-
-  const [tabIndex, setTabIndex] = React.useState();
-=======
   const { t } = useTranslation('notification');
 
   // const [tabIndex, setTabIndex] = React.useState();
->>>>>>> origin/Develop
   // const handleTabsChange = index => {
   //   setTabIndex(index);
   //   console.log('Current state unit: ', setTabIndex(index));
@@ -124,7 +118,9 @@ function Register() {
       data: {
         act: 'KirimPasswordUserTerdaftar',
         dt: JSON.stringify({
-          email: 'nuryantowahyudi8@gmail.com',
+          email: fields.email,
+          nama: fields.namadepan+' '+fields.namabelakang,
+          hp: fields.hp
         }),
       }
     }).then(({ status, data }) => {
@@ -177,19 +173,19 @@ function Register() {
       data: {
         act: 'CekEmailExist',
         dt: JSON.stringify({
-          email: 'nrntwhd@gmail.com',
-          hp: '0812563400463',
+          email: fields.email,
+          hp: fields.hp,
         }),
       }
     }).then(({ status, data }) => {
       setIsSaving(false);
-      if (status === 201) {
+      if (status === 200) {
         Alert.alert( "Pemberitahuan", "Sepertinya anda sudah pernah melakukan transaksi di OPTIK TUNGGAL. Silahkan klik tombol minta password untuk mengakses apps ini dan anda tidak perlu daftar akun baru. Terima Kasih",
           [
             { text: "Minta Password", onPress: () => kirimPassword() }
           ]
         );
-      }else if(status === 200){
+      }else if(status === 201){
         navigation.navigatePath('Public', {
           screen: 'BottomTabs.AccountStack.AddressEdit',
           params: [null, null, {

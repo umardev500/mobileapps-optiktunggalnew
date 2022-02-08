@@ -66,10 +66,6 @@ function Account() {
   // Vars
   const handleVersionCheck = async () => {
     let isValid = true;
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/Develop
     await httpService(`/version.json`, {
       method: 'get'
     }).then(({
@@ -186,47 +182,21 @@ function Account() {
                   <Image source={{ uri: user.foto }} style={styles.avatar} />
                 )}
                 <View style={{ flexGrow: 1 }}>
-<<<<<<< HEAD
-                  <Typography style={{ color: '#333333', fontSize: 14, fontWeight: 'bold', }} >
-                    {user.nama || `${user.namadepan} ${user.namabelakang}`}
-                  </Typography>
-                  {!user.foto ? 
-                    <Typography>
-=======
                   <Typography style={{ color: '#333333', fontSize: 14, fontWeight: 'bold',  marginHorizontal: 15}} >
                     {user?.nama || `${user?.namadepan} ${user?.namabelakang}`}
                   </Typography>
                   {!user.foto ? 
                     <Typography style={{ marginHorizontal: 15,}}>
->>>>>>> origin/Develop
                       <Image source={require('../../assets/icons/figma/vip.png')} style={styles.avatarVIP} />
                       Member
                     </Typography>
                   : (
-<<<<<<< HEAD
-                    <Typography>
-=======
                     <Typography style={{ marginHorizontal: 15,}}>
->>>>>>> origin/Develop
                       <Image source={require('../../assets/icons/figma/vip.png')} style={styles.avatarVIP} />
                       Member
                     </Typography>
                   )}
                   {user.verified || 1 ?
-<<<<<<< HEAD
-                      <PressableBox
-                        containerStyle={{ marginTop: 1 }}
-                        onPress={() => navigation.navigatePath('Public', {
-                          screen: 'BottomTabs.AccountStack.ProfileEdit',
-                        })}
-                      >
-                        <Typography
-                          textAlign="left"
-                          color="primary">
-                          {t(`${''}Lihat Profil`)}
-                        </Typography>
-                      </PressableBox>: (
-=======
                     <PressableBox
                       containerStyle={{ marginTop: 1 }}
                       onPress={() => navigation.navigatePath('Public', {
@@ -239,7 +209,6 @@ function Account() {
                         {t(`${''}Lihat Profil`)}
                       </Typography>
                     </PressableBox>: (
->>>>>>> origin/Develop
                     <PressableBox
                       containerStyle={{ marginTop: 8 }}
                       onPress={() => navigation.navigatePath('Public', {
@@ -263,38 +232,6 @@ function Account() {
                   )}
                 </View>
               </View>
-<<<<<<< HEAD
-              {/*user.type_member || null ? null : (
-                <View style={styles.cardMember}>
-                  <Typography textAlign="center" style={{ color: '#333333', fontWeight: 'bold', marginTop: 15}} >
-                    {`${user.hp}`} Member Card
-                  </Typography>
-                  <View style={{ backgroundColor: '#fff', marginTop: 10, borderColor: '#FFF', height: 2, width: '100%'}}/>
-                  <View style={{ marginTop: 25, width: '100%' }}>
-                      <Typography style={{ color: '#333333', fontSize: 17, fontWeight: 'bold', alignItems: 'center', textAlign: 'center' }} >
-                        {showPhone(user.hp, '0')}
-                      </Typography>
-                  </View>
-                  <View style={[ wrapper.row, { marginHorizontal: 20, marginVertical: 20, marginTop: 15, width: '100%' }]}>
-                      <Typography style={{ color: '#333333', fontSize: 16 }} >
-                        {user.nama || `${user.namadepan} ${user.namabelakang}`}
-                      </Typography>
-                  </View>
-                  <View style={{ marginHorizontal: 20, marginVertical: 20, marginTop: -15, width: '100%' }}>
-                      <Typography style={{ color: '#333333', fontSize: 10 }} >
-                        Member Sejak : 12/12/2021
-                      </Typography>
-                  </View>
-                  <View style={[ wrapper.row ]}>
-                    <View style={{ backgroundColor: '#fefefe', marginTop: -10, borderColor: '#FFF', height: 20, width: '100%', borderStyle: 'dotted'}}>
-                      <Typography style={{ color: '#333333', fontSize: 10, textAlign: 'center', justifyContent: 'center', textAlignVertical: 'center' }} >
-                        www.optiktunggal.com
-                      </Typography>
-                    </View>
-                  </View>
-                </View>
-              )*/}
-=======
 
               <View style={{ marginTop: 5 }}>
                 <ViewCollapse
@@ -378,7 +315,6 @@ function Account() {
                   ))}
                 </ViewCollapse>
               </View>
->>>>>>> origin/Develop
 
               <View style={{ marginTop: 5 }}>
                 <ViewCollapse
@@ -394,21 +330,6 @@ function Account() {
                   collapse
                 >
                   {[
-<<<<<<< HEAD
-                    {
-                      title: t(`${''}Daftar Transaksi`),
-                      subtitle: t(`${''}Transaksi yang pernah anda lakukan.`),
-                      Icon: FigmaIcon.FigmaDownload,
-                      navigatePath: () => {
-                        navigation.navigatePath('Public', {
-                          screen: 'BottomTabs.NotificationStack.TransactionList',
-                          params: [null, {
-                            initial: false,
-                          }]
-                        });
-                      },
-                    },
-=======
                     // {
                     //   title: t(`${''}Daftar Transaksi`),
                     //   subtitle: t(`${''}Transaksi yang pernah anda lakukan.`),
@@ -422,7 +343,6 @@ function Account() {
                     //     });
                     //   },
                     // },
->>>>>>> origin/Develop
                     // {
                     //   title: t(`${''}Keranjang`),
                     //   subtitle: t(`${''}Daftar produk yg ditambahkan ke keranjang belanja`),
@@ -444,33 +364,16 @@ function Account() {
                     // },
                     {
                       title: t(`${''}Keamanan Akun`),
-<<<<<<< HEAD
-                      subtitle: t(`${''}PIN & verifikasi data diri`),
-                      Icon: FigmaIcon.FigmaLock,
-                      navigatePath: 'BottomTabs.AccountStack.PasswordReset',
-                    },
-                    // {
-                    //   title: t(`${''}Alamat Pengiriman`),
-                    //   subtitle: t(`${''}Atur alamat pengiriman belanjaan`),
-                    //   Icon: FigmaIcon.FigmaHomeFilled,
-                    //   navigatePath: 'BottomTabs.AccountStack.AddressList',
-                    // },
-=======
                       subtitle: t(`${''}Password & verifikasi data diri`),
                       Icon: FigmaIcon.FigmaLock,
                       navigatePath: 'BottomTabs.AccountStack.PasswordReset',
                     },
 
->>>>>>> origin/Develop
                     {
                       title: t(`${''}Hubungi Kami`),
                       Icon: FigmaIcon.FigmaContact,
                       subtitle: t(`${''}Kami senang melayani anda, silahkan ajukan pertanyaan.`),
-<<<<<<< HEAD
-                      navigatePath: 'BottomTabs.ContactStack',
-=======
                       navigatePath: 'Contact',
->>>>>>> origin/Develop
                     },
                   ].map((item, index) => (
                     <PressableBox
@@ -646,10 +549,7 @@ const styles = StyleSheet.create({
   avatarVIP: {
     width: 30,
     height: 30,
-<<<<<<< HEAD
-=======
     marginHorizontal: 15,
->>>>>>> origin/Develop
   },
   avatar: {
     alignSelf: 'center',

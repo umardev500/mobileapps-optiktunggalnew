@@ -61,14 +61,6 @@ function Favorite() {
       models: [],
       modelsLoaded: false
     }));
-<<<<<<< HEAD
-
-    return httpService('https://ws.stmorita.net/favorit/list', {
-      data: {
-        act: 'FavoritList',
-        dt: JSON.stringify({ comp: '001', regid: user?.id })
-      }
-=======
     return httpService('/api/product/product', {
       data: {
         act: 'PrdFavorite',
@@ -79,7 +71,6 @@ function Favorite() {
           search: null,
         }),
       },
->>>>>>> origin/Develop
     }).then(({ status, data }) => {
       if (200 === status) {
         dispatch(setFavorites(data || [])).then(() => {
@@ -108,18 +99,12 @@ function Favorite() {
       favoriteShow
       ListHeaderComponent={(
         <View style={[styles.wrapper, { paddingTop: 8, paddingBottom: 12 }]}>
-<<<<<<< HEAD
-          <Typography type="h5" style={{ marginVertical: 12 }}>
-            {`${''}Produk Favorit`}
-          </Typography>
-=======
           <Typography type="h5" style={{ marginVertical: 5 }}>
             {`${''}Produk Favorit`}
           </Typography>
           <Typography>
             Semua produk yang kamu sukai ada disini
           </Typography>
->>>>>>> origin/Develop
         </View>
       )}
       LoadingView={(

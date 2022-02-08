@@ -13,10 +13,7 @@ import {
   PublicArticleStack,
   PublicContactStack,
   PublicFavoriteStack,
-<<<<<<< HEAD
-=======
   PublicOtherStack,
->>>>>>> origin/Develop
 } from './publicBottomTabs';
 import { useTranslation } from 'react-i18next';
 import { FocusAwareStatusBar } from '../ui-shared/components';
@@ -28,10 +25,7 @@ export type PublicBottomTabParamList = {
   FavoriteStack: {};
   AccountStack: {};
   ArticleStack: {};
-<<<<<<< HEAD
-=======
   OtherStack: {};
->>>>>>> origin/Develop
 };
 
 const Tab = createBottomTabNavigator<PublicBottomTabParamList>();
@@ -97,13 +91,8 @@ function PublicBottomTab() {
           }}
         />
         <Tab.Screen
-<<<<<<< HEAD
-          name="ContactStack"
-          component={PublicContactStack}
-=======
           name="OtherStack"
           component={PublicOtherStack}
->>>>>>> origin/Develop
           options={{
             tabBarLabel: t('Katalog'),
             tabBarIcon: (iconParams) => (
@@ -112,8 +101,6 @@ function PublicBottomTab() {
           }}
         />
         <Tab.Screen
-<<<<<<< HEAD
-=======
           name="FavoriteStack"
           component={PublicFavoriteStack}
           options={{
@@ -124,7 +111,6 @@ function PublicBottomTab() {
           }}
         />
         <Tab.Screen
->>>>>>> origin/Develop
           // name="FavoriteStack"
           name="ArticleStack"
           component={PublicArticleStack}
@@ -139,11 +125,7 @@ function PublicBottomTab() {
           name="AccountStack"
           component={PublicAccountStack}
           options={{
-<<<<<<< HEAD
-            tabBarLabel: t('Akun'),
-=======
             tabBarLabel: t('Pengaturan'),
->>>>>>> origin/Develop
             tabBarIcon: (iconParams) => (!user?.foto || true) ? (
               <FigmaIcon.FigmaAccount {...iconProps(iconParams)} />
             ) : (

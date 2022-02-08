@@ -40,11 +40,7 @@ function AccountBanner() {
           color="yellow"
           shadow={3}
           onPress={() => navigation.navigatePath('Public', {
-<<<<<<< HEAD
-            screen: 'BottomTabs.AccountStack.Register'
-=======
             screen: 'Register'
->>>>>>> origin/Develop
           })}
         />
 

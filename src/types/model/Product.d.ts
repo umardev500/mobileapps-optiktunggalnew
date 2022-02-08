@@ -19,10 +19,7 @@ export type ProductModel = {
   sales_count?: number;
 
   categories?: CategoryModel[];
-<<<<<<< HEAD
-=======
   brands?: BrandModel[];
->>>>>>> origin/Develop
 
   favorite?: boolean;
 
@@ -86,13 +83,8 @@ export type BrandModel = {
   name?: string;
   fotobrand?: string;
   codebrand?: string;
-<<<<<<< HEAD
-  imgbrand?: string;
-  imgbrandbg?: string;
-=======
   imgbrand?: any;
   imgbrandbg?: any;
->>>>>>> origin/Develop
 };
 
 export type ReviewModel = {
