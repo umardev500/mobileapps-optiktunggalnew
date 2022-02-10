@@ -53,7 +53,7 @@ function AccountBanner() {
           color="yellow"
           shadow={1}
           onPress={() => navigation.navigatePath('Public', {
-            screen: 'BottomTabs.AccountStack.Register'
+            screen: 'Register'
           })}
         />
       </View>

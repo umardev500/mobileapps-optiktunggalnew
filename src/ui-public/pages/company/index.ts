@@ -6,3 +6,6 @@ export {default as ContactLensSubCategory} from './ContactLensSubCategory';
 export {default as Lens} from './Lens';
 export {default as Contact} from './Contact';
 export {default as BannerDetail} from './BannerDetail';
+export {default as Register} from './Register';
+export {default as AddressEdit} from './AddressEdit';
+export {default as Verification} from './Verification';

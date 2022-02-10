@@ -87,9 +87,7 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     case 'ForgotPassword':
       return { title: tAcc('Lupa Password') };
     case 'Register':
-      return {
-        title: [tAcc('Buat Akun'), tAcc('')] as any
-      };
+      return { title: tAcc('Buat Akun') };
     case 'Verification':
       return {
         title: tAcc(`${''}Verifikasi Akun`)
