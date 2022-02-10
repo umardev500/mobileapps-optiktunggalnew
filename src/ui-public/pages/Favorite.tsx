@@ -5,7 +5,7 @@ import { View } from 'react-native-animatable';
 import { colors } from '../../lib/styles';
 import { useAppNavigation } from '../../router/RootNavigation';
 import { ModelablePaginate, ProductModel } from '../../types/model';
-import { Typography } from '../../ui-shared/components';
+import { Typography, Header } from '../../ui-shared/components';
 import ProductsLoading from '../loadings/ProductsLoading';
 import Products from '../components/Products';
 import { httpService, Storage } from '../../lib/utilities';
@@ -13,7 +13,9 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch } from 'react-redux';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { setFavorites } from '../../redux/actions';
+import AccountBanner from '../components/AccountBanner';
 
 function Favorite() {
   // Hooks
@@ -22,6 +24,7 @@ function Favorite() {
   const { width, height } = useWindowDimensions();
   const { user, favorites } = useAppSelector(({ user }) => user);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation('favorite');
 
   // States
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +35,6 @@ function Favorite() {
     perPage: 12,
     isPageEnd: false,
   });
-  const { t } = useTranslation('favorite');
 
   // Effects
   useEffect(() => {
@@ -49,11 +51,15 @@ function Favorite() {
   // Vars
   const handleRefresh = async () => {
     setIsLoading(true);
-
-    await retrieveProducts();
-
+    retrieveProducts();
     setIsLoading(false);
   };
+
+  if(user?.id == undefined){
+    const idcust = '0';
+  }else{
+    const idcust = user?.id;
+  }
 
   const retrieveProducts = async () => {
     setProduct(state => ({
@@ -61,15 +67,11 @@ function Favorite() {
       models: [],
       modelsLoaded: false
     }));
+
     return httpService('/api/product/product', {
       data: {
         act: 'PrdFavorite',
-        dt: JSON.stringify({
-          param: "katalog",
-          limit: 5,
-          prdcat: "",
-          search: null,
-        }),
+        dt: JSON.stringify({ regid: user?.id === undefined ? '0' : (user?.id) }),
       },
     }).then(({ status, data }) => {
       if (200 === status) {
@@ -80,58 +82,79 @@ function Favorite() {
     }).catch(() => void(0))
   };
 
-  return (
-    <Products
-      contentContainerStyle={[styles.container, styles.wrapper]}
-      refreshing={isLoading}
-      onRefresh={handleRefresh}
-      loading={!product.modelsLoaded && !product.isPageEnd}
-      onEndReached={() => {
-        if (product.modelsLoaded && false) {
-          setProduct(state => ({
-            ...state,
-            page: state.page + 1,
-            modelsLoaded: false,
-          }));
-        }
-      }}
-      data={product.models}
-      favoriteShow
-      ListHeaderComponent={(
-        <View style={[styles.wrapper, { paddingTop: 8, paddingBottom: 12 }]}>
-          <Typography type="h5" style={{ marginVertical: 5 }}>
-            {`${''}Produk Favorit`}
-          </Typography>
-          <Typography>
-            Semua produk yang kamu sukai ada disini
-          </Typography>
-        </View>
-      )}
-      LoadingView={(
-        <ProductsLoading />
-      )}
-      ListEmptyComponent={!product.modelsLoaded ? (
-        <ProductsLoading />
-      ) : product.models?.length ? null : (
-        <View style={{ flex: 1, marginVertical: 24, alignItems: 'center' }}>
-          <Ionicons
-            name={'heart-outline'}
-            size={40}
-            color={colors.gray[600]}
-            style={{ marginTop: 2 }}
-          />
+  const renderUnauthenticated = () => {
+    return (
+      <View style={{ flex: 1, position: 'relative' }}>
 
-          <Typography textAlign="center" style={{ marginTop: 12 }}>
-            {t(`${''}Belum ada produk favorit`)}
-          </Typography>
-        </View>
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={styles.wrappersss}>
+            <AccountBanner />
+          </View>
+        </SafeAreaView>
+      </View>
+    );
+  };
+
+  return (
+    <>
+      {!user ? renderUnauthenticated() : (
+        <Products
+          contentContainerStyle={[styles.container, styles.wrapper]}
+          refreshing={isLoading}
+          onRefresh={handleRefresh}
+          loading={!product.modelsLoaded && !product.isPageEnd}
+          onEndReached={() => {
+            if (product.modelsLoaded && false) {
+              setProduct(state => ({
+                ...state,
+                page: state.page + 1,
+                modelsLoaded: false,
+              }));
+            }
+          }}
+          data={product.models}
+          favoriteShow
+          ListHeaderComponent={(
+            <View style={[styles.wrapper, { paddingTop: 8, paddingBottom: 12, paddingHorizontal: -10 }]}>
+              <Typography type="h5" style={{ marginVertical: 5 }}>
+                {`${''}Produk Favorit`}
+              </Typography>
+              <Typography>
+                Semua produk yang kamu sukai ada disini
+              </Typography>
+            </View>
+          )}
+          LoadingView={(
+            <View style={{ marginHorizontal: 10 }}>
+              <ProductsLoading />
+            </View>
+          )}
+          ListEmptyComponent={!product.modelsLoaded ? (
+            <View style={{ marginHorizontal: 10 }}>
+              <ProductsLoading />
+            </View>
+          ) : product.models?.length ? null : (
+            <View style={{ flex: 1, marginVertical: 24, alignItems: 'center' }}>
+              <Ionicons
+                name={'heart-outline'}
+                size={40}
+                color={colors.gray[600]}
+                style={{ marginTop: 2 }}
+              />
+
+              <Typography textAlign="center" style={{ marginTop: 12 }}>
+                {t(`${''}Belum ada produk favorit`)}
+              </Typography>
+            </View>
+          )}
+          ListFooterComponent={!product.isPageEnd ? null : (
+            <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
+              {t(`${''}Sudah menampilkan semua produk`)}
+            </Typography>
+          )}
+        />
       )}
-      ListFooterComponent={!product.isPageEnd ? null : (
-        <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
-          {t(`${''}Sudah menampilkan semua produk`)}
-        </Typography>
-      )}
-    />
+    </>  
   );
 };
 
@@ -139,6 +162,10 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     paddingBottom: 24,
+    marginHorizontal: 10
+  },
+  wrappersss: {
+    flexGrow: 1,
   },
   wrapper: {
     backgroundColor: colors.white,

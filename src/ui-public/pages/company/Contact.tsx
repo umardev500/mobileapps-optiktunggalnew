@@ -72,6 +72,9 @@ function Contact() {
       <>
         <View style={styles.container}>
           <MapboxGL.MapView style={styles.container}>
+            <MapboxGL.UserLocation/>
+            <MapboxGL.Light />
+            <MapboxGL.Images />
             <MapboxGL.Camera zoomLevel={10} centerCoordinate={coordinates} />
             <MapboxGL.MarkerView id={"marker"} coordinate={coordinates}>
               <View>

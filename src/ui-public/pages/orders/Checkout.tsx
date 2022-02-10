@@ -106,7 +106,7 @@ function Checkout() {
 
     cart.models?.forEach(({ qty = 1, ...item }, index) => {
       const { product: itemProduct } = item;
-      const discount = user?.reseller === '1' ? itemProduct?.disc_reseller : itemProduct?.disc_retail;
+      const discount = user?.reseller === '1' ? 0 : itemProduct?.diskon;
       const subtotalOriginal = ((item.harga || 0) * 100 / (100 - parseFloat(discount || '0'))) * qty;
       const subtotal = (item.harga || 0) * qty;
 

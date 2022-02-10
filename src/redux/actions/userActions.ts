@@ -25,10 +25,10 @@ export const fetchFavorites = createAsyncThunk('user/fetchFavorites', async (arg
   const { user: { user } } = getState() as RootStoreState;
   let favorites: ProductModel[] = [];
 
-  await httpService('https://ws.stmorita.net/favorit/list', {
+  await httpService('/api/product/product', {
     data: {
       act: 'FavoritList',
-      dt: JSON.stringify({ comp: '001', regid: '3BNUWMYN9414625' })
+      dt: JSON.stringify({ regid: user?.id })
     }
   }).then(({ status, data }) => {
     if (200 === status) {
@@ -49,18 +49,13 @@ export const toggleFavorite = createAsyncThunk('shop/toggleFavorite', async (pro
   let shouldPush = false;
 
   const productExist = oldFavorites.find((item) => item.prd_id === product.prd_id);
-
-  await httpService('/api/favorit/favorit', {
+  console.log('DATA PRODUK__ '+product?.prd_id);
+  await httpService('/api/product/product', {
     data: {
       act: 'Favorit',
-      param: 'save',
       dt: JSON.stringify({
         prdid: product.prd_id,
-        regid: user?.id,
-        remark: '',
-        lat: location.lat,
-        lng: location.lng,
-        ip: location.ip,
+        regid: user?.id
       }),
     }
   }).then(({ status, data }) => {

@@ -29,7 +29,6 @@ function PasswordReset() {
       data: {
         act: 'GantiPwdByEmail',
         dt: JSON.stringify({
-          comp: '001',
           email: user?.email,
           lat: location.lat,
           lng: location.lng,

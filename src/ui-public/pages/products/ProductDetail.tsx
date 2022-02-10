@@ -143,7 +143,9 @@ function ProductDetail() {
           ...state,
           model: {
             ...data,
-            harga_refill: data.harga_refill,
+            harga: parseFloat(data.harga || 0),
+            harga_promo: parseFloat(data.harga_promo || 0),
+            diskon: parseFloat(data.diskon || 0),
             images: foto
           },
           modelLoaded: true
@@ -170,10 +172,6 @@ function ProductDetail() {
     }).catch(() => void(0));
   };
 
-  const handleTabToggle = (tab: number) => {
-    setTabActive(tab === tabActive ? 0 : tab);
-  };
-
   const handleModalToggle = (type: string, open: boolean | null = null) => {
     switch (type) {
       case 'image':
@@ -191,7 +189,7 @@ function ProductDetail() {
         screen: 'BottomTabs.AccountStack.Account',
       });
     }
-
+    
     return !product.model ? void(0) : dispatch(toggleFavorite(product.model));
   };
 
@@ -266,6 +264,26 @@ function ProductDetail() {
               <Button
                 containerStyle={{
                   position: 'absolute',
+                  marginHorizontal: 10,
+                  marginVertical: 10,
+                  backgroundColor: colors.white,
+                }}
+                size={40}
+                rounded={40}
+                onPress={() => navigation.navigatePath('Public', {
+                  screen: 'BottomTabs.OtherStack.Katalog'
+                })}
+              >
+                <Ionicons
+                  name="arrow-back"
+                  size={28}
+                  style={{ marginTop: 2 }}
+                />
+              </Button>
+
+              <Button
+                containerStyle={{
+                  position: 'absolute',
                   top: 15,
                   right: 15,
                   backgroundColor: colors.white,
@@ -286,18 +304,50 @@ function ProductDetail() {
             </View>
           )}
           <View style={{ paddingTop: -20, paddingHorizontal: 5 }}>
-          <Typography type="h3" style={{color: '#333333'}}>
+            <Typography type="h3" style={{color: '#333333'}}>
               {route.params.product_ds}
             </Typography>
-            <Typography type="h4" color="primary">
-              Rp {route.params.product.harga_het}
-            </Typography>
+            
+            {route.params.product.harga_promo !== null ? 
+              (<>
+                <Typography type="h4" color="red" style={{ textDecorationLine: 'line-through' }}>
+                  Rp {route.params.product.harga}
+                </Typography>
+                <Typography type="h4" color="primary">
+                  Rp {route.params.product.harga_promo}
+                </Typography>
+               </>) : (
+                <Typography type="h4" color="primary">
+                  Rp {route.params.product.harga}
+                </Typography>
+            )}
+            
             <Typography style={{color: '#333333', fontSize: 12}}>
               Brand : {route.params.product.merk}
             </Typography>
             <Typography style={{color: '#333333', fontSize: 12}}>
               SKU : {route.params.product_id}
             </Typography>
+
+            {route.params.product.description === null ? (
+              <View></View>
+            ) : (
+              <>
+                <Typography type="h6" style={{ marginTop: 20, color: '#333333' }}>
+                  {t('Ketentuan')}
+                </Typography>
+                <View style={[styles.borderTop, {
+                  borderColor: colors.gray[400],
+                  marginVertical: 8,
+                }]} />
+                <Typography style={{color: '#333333', fontSize: 12, textAlign: 'justify'}}>
+                  {route.params.product.description}
+                </Typography>
+                <Typography style={{color: '#333333', fontSize: 12, textAlign: 'justify'}}>
+                  {route.params.product.longdesc}
+                </Typography>
+              </>
+            )}
             {/*<Typography type="h5" style={{color: '#333333'}}>
               {t('Details')}
             </Typography>

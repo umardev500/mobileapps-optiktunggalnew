@@ -59,6 +59,7 @@ function Products({
         product,
       }]
     });
+    console.log(product);
   };
 
   const handleFavoriteToggle = async (item: ProductModel, index: number) => {
@@ -72,7 +73,7 @@ function Products({
   };
 
   const renderProducts = (item: ProductModel, index: number) => {
-    const discount = parseFloat(item.disc_retail || '0');
+    const discount = parseFloat(item.diskon || '0');
     const minHeight = (width - 30 - 12) / 3;
     const favorite = favorites.find((productItem) => item.prd_id === productItem.prd_id);
 
@@ -127,7 +128,7 @@ function Products({
             </Typography>
 
             {/*<Typography size="md" style={{ marginTop: 10, color: 'green', fontWeight: 'bold', textAlign: 'right' }}>
-              {`Rp${item.harga_het}`}
+              {`Rp${item.harga}`}
             </Typography>*/}
 
             {!item.rating && !item.sales_count ? null : (

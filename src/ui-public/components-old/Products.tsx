@@ -73,7 +73,7 @@ function Products({
   };
 
   const renderProducts = (item: ProductModel, index: number) => {
-    const discount = parseFloat(item.disc_retail || '0');
+    const discount = parseFloat(item.diskon || '0');
     const minHeight = (width - 30 - 12) / 2;
     const favorite = favorites.find((productItem) => item.prd_id === productItem.prd_id);
     const rating = item.rating || item.prd_star || item.star;

@@ -33,6 +33,8 @@ type Fields = {
   nama?: string;
   title?: string;
   hp?: string;
+  kodepos?: string;
+  nama_alamat?: string;
 };
 
 type OptionsState = {
@@ -78,6 +80,8 @@ function AddressEdit() {
     nama: '',
     hp: '',
     email: '',
+    kodepos: '',
+    nama_alamat: '',
   });
   const [profile, setProfile] = useState<RegisterFields | null>(null);
   const [action, setAction] = useState('');
@@ -374,6 +378,8 @@ function AddressEdit() {
       kota_kab: `${options.regencies?.find(item => item.id === fields.kab)?.id || '-'}`,
       kecamatan: `${options.districts?.find(item => item.id === fields.kec)?.id || '-'}`,
       kelurahan: `${options.villages?.find(item => item.id === fields.kel)?.id || '-'}`,
+      kodepos : `${options.villages?.find(item => item.id === fields.kodepos)?.kodepos || '-'}`,
+      nama_alamat : `${options.villages?.find(item => item.id === fields.kodepos)?.nama_alamat || '-'}`,
       handphone: showPhone(phone, '62'),
       latitude: fields.lat,
       longitude: fields.lng,
@@ -629,7 +635,7 @@ function AddressEdit() {
         containerStyle={{ marginTop: 12 }}
         style={{ height: 120, paddingTop: 8 }}
         placeholder={`${''}Alamat Lengkap (Beserta patokan alamat)`}
-        value={fields.jl}
+        value={options.villages?.find(({ id }) => id === fields.nama_alamat)?.nama_alamat}
         onChangeText={(value) => handleFieldChange('jl', value)}
         multiline
         textAlignVertical="top"

@@ -7,6 +7,7 @@ export type ProductModel = {
   sku?: string;
   merk?: string;
 
+  longdesc?: string;
   description?: string;
   tested?: string;
   certificate?: string;
@@ -34,19 +35,15 @@ export type ProductModel = {
 
   prd_favorit?: '0' | '1';
 
-  setifikat?: string;
-  marketplace?: string;
-
   faktor_refill?: string;
   unit_refill?: string;
 
-  harga_het?: number;
-  harga_retail?: number;
-  harga_reseller?: number;
-  harga_refill?: number;
+  harga?: number;
+  harga_promo?: number;
+  // harga_reseller?: number;
+  // harga_refill?: number;
 
-  disc_retail?: string;
-  disc_reseller?: string;
+  diskon?: string;
 
   [key: string]: any;
 };

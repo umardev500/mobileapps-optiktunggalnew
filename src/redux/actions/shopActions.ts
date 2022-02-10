@@ -50,17 +50,17 @@ export const pushCartItem = createAsyncThunk('shop/pushCartItem', async (item: C
   let shouldPush = true;
   item.harga = 0;
 
-  switch (item.type) {
-    case 'reseller':
-      item.harga = product?.harga_reseller;
-      break;
-    case 'retail':
-      item.harga = product?.harga_retail;
-      break;
-    case 'refill':
-      item.harga = product?.harga_refill;
-      break;
-  }
+  // switch (item.type) {
+  //   case 'reseller':
+  //     item.harga = product?.harga_reseller;
+  //     break;
+  //   case 'retail':
+  //     item.harga = product?.harga_retail;
+  //     break;
+  //   case 'refill':
+  //     item.harga = product?.harga_refill;
+  //     break;
+  // }
 
   const newCartItems: CartModel[] = [...cart_items].map((cartItem) => {
     if (cartItem.prd_id === product?.prd_id && item.type === cartItem.type) {
