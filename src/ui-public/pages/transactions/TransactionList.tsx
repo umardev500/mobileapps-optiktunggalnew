@@ -161,7 +161,7 @@ function TransactionList() {
             </Typography>
           ) : ( 
             <>
-              {usersModel.no_card == null ? (
+              {usersModel.no_card == '' ? (
                 <View>
                   <Typography style={{ textAlign: 'center', fontSize: 12, paddingHorizontal: 3, color: '#ec3a3b' }}>
                     Anda Belum Menjadi Member
@@ -187,6 +187,41 @@ function TransactionList() {
                         </View>
                      </View>
                   </ImageBackground>
+
+                  <View style={[wrapper.row, { borderRadius: 5, borderColor: '#ccc', borderWidth: 1, marginTop: 10}]}>
+                    <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, paddingHorizontal: 10 }}>
+                      Poin Redeem :
+                    </Typography>
+                    <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, fontWeight: 'bold' }}>
+                      {usersModel.saldo}
+                    </Typography>
+                    {/*usersModel.saldo == 0 ? null : (
+                      <Button
+                        containerStyle={{ alignSelf: 'center' }}
+                        style={{ width: 'auto', fontSize: 10 }}
+                        label={`${''}Redeem Sekarang`}
+                        color="primary"
+                        shadow={3}
+                      />
+                    )*/}
+                  </View>
+
+                  <View style={[wrapper.row, { borderRadius: 5, borderColor: '#ccc', borderWidth: 1, marginTop: 10}]}>
+                    <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, paddingHorizontal: 10 }}>
+                      Password Redeem :
+                    </Typography>
+                    <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, fontWeight: 'bold' }}>
+                      {usersModel.password}
+                    </Typography>
+                  </View>
+
+                  {usersModel.saldo == 0 ? (
+                      <>
+                        <Typography style={{ color: 'red', fontSize: 11, textAlign: 'justify' }}>
+                          Ayo tingkatkan transaksi untuk mendapatkan poin dan banyak keuntungannya
+                        </Typography>
+                      </>
+                    ) : null }
                 </View>
               )}
               

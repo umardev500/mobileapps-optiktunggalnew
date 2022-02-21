@@ -1,9 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, View, StyleSheet } from 'react-native';
-import { wrapper } from '../../lib/styles';
+import { wrapper, colors } from '../../lib/styles';
 import { useAppNavigation } from '../../router/RootNavigation';
 import { Button, PressableBox, Typography } from '../../ui-shared/components';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function AccountBanner() {
   // Hooks
@@ -12,6 +13,25 @@ function AccountBanner() {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FEFEFE' }}>
+      <Button
+        containerStyle={{
+          position: 'absolute',
+          marginHorizontal: 10,
+          marginVertical: 10,
+          backgroundColor: colors.white,
+        }}
+        size={40}
+        rounded={40}
+        onPress={() => navigation.navigatePath('Public', {
+          screen: 'BottomTabs.HomeStack.Home'
+        })}
+      >
+        <Ionicons
+          name="arrow-back"
+          size={28}
+          style={{ marginTop: 2 }}
+        />
+      </Button>
       <View style={{
         flex: 1,
         justifyContent: 'center',

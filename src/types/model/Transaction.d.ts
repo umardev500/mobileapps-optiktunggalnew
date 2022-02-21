@@ -22,9 +22,10 @@ export type TransactionModel = {
   methodid?: string;
   methodds?: string;
   currds?: string;
+  password?: string;
 };
 
-type TransactionStatus = 'pending' | 'accept' | 'paid' | 'unpaid' | 'progress' | 'finish' | 'cancel' | 'open' | 'batal' | 'bukti bayar' | 'confirm' | 'do' | 'diterima' | 'revisi' | 'invoice';
+type TransactionStatus = 'nklunas' | 'nplunas' | 'npfullpay' | 'npnotpay' | 'open' | 'confirm' | 'do';
 
 type TransactionPaymentStatus = 'pending' | 'unpaid' | 'paid' | 'reject';
 

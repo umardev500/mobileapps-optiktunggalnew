@@ -100,12 +100,15 @@ function TransactionUsers() {
 
           <View style={{ flex: 1,}}>
             <View style={[wrapper.row, { flex: 1, paddingHorizontal: 10, width: '100%', }]}>
-              <Typography style={{ fontSize: 12, fontWeight: 'bold' }}>
+              <Typography style={{ fontSize: 12, flex: 2, fontWeight: 'bold' }}>
                 {item.nm_customer}
+              </Typography>
+              <Typography style={{ fontSize: 10, color: '#333' }}>
+                Lihat transaksi <Ionicons name="chevron-forward" size={10} color={'black'} />
               </Typography>
             </View>
             <View style={[wrapper.row, { marginTop: 5, paddingHorizontal: 10, width: '100%' }]}>
-              {!item.no_card == null ? (
+              {item.no_card == "" ? (
                 <Typography style={{ textAlign: 'center', fontSize: 10, paddingHorizontal: 3, color: '#ec3a3b' }}>
                   BELUM MENJADI MEMBER
                 </Typography>

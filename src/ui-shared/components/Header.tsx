@@ -107,7 +107,7 @@ function Header({
           ) : (
             (!left || !navigation.canGoBack()) ? null : (
               <Button
-                containerStyle={{ marginRight: 12, alignSelf: 'flex-start', marginTop: -10 }}
+                containerStyle={{ marginRight: 12, alignSelf: 'flex-start', marginTop: -20 }}
                 size={42}
                 color="transparent"
                 onPress={() => navigation.goBack()}

@@ -23,14 +23,12 @@ function NavigationProvider() {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        initialRouteName="Walkthrough"
+        initialRouteName="Home"
         screenOptions={{
           headerShown: false
         }}
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen name="Walkthrough" component={Walkthrough} options={{ headerShown: false }} />
-        <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Public" component={PublicStack} />
         <Stack.Screen name="Client" component={ClientStack} />
       </Stack.Navigator>
