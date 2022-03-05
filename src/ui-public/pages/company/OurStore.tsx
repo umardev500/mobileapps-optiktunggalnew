@@ -30,7 +30,8 @@ function OurStore() {
     modelsLoaded: false,
   });
 
-  const [coordinates] = useState([106.82150309838204, -6.19540649567783]);
+  const [coordinates, setCoordinates] = useState([106.82150309838204, -6.19540649567783]);
+  const [selected, setSelected] = useState<ContactUsModel>({});
 
   MapboxGL.setAccessToken(
     "pk.eyJ1Ijoib3B0aWt0dW5nZ2FsIiwiYSI6ImNreWptY2N6ODF1NHkyd3FoZG1taXN5cWgifQ.G06xjHOeLJrk9JiKUQDYCg"
@@ -58,7 +59,7 @@ function OurStore() {
     }).then(({ status, data }) => {
       setContactUs(state => ({
         ...state,
-        models: 200 !== status ? [] : (data || []),
+        models: 200 !== status ? [] : (data || []).splice(0, 10),
         modelsLoaded: true
       }));
     }).catch(() => {
@@ -67,11 +68,21 @@ function OurStore() {
   };
 
   const renderStore = ({ item, index }: ListRenderItemInfo<ContactUsModel>) => {
-    const lat = item.StoreLatitude;
-    const long = item.StoreLongitude;
+    const lat = Number(item.StoreLatitude);
+    const long = Number(item.StoreLongitude);
     return (
       <>
-      <View style={[wrapper.row, { alignItems: 'center', marginHorizontal: 10 }]}>
+      <PressableBox
+        containerStyle={{ paddingHorizontal: 10 }}
+        style={[wrapper.row, { alignItems: 'center', paddingVertical: 6 }]}
+        onPress={() => {
+          setSelected(item);
+
+          (lat && long) && setCoordinates([lat, long]);
+
+          console.log("LAT LN SLEECT", lat, long);
+        }}
+      >
         <Image source={{ uri: 'https://optiktunggal.com/img/store_location/'+item.StoreImage }} 
               style={{ width: '20%', height: 70 }} />
         <View style={{ marginLeft: 10, width: '65%' }}>
@@ -82,8 +93,8 @@ function OurStore() {
             {item.StoreAddress}, Phone : { item.StorePhone }, {item.StoreNotes}
           </Typography>
         </View>
-      </View>
-      <View style={{ height: 1, backgroundColor: '#ccc', marginTop: 10, marginHorizontal: 10 }}></View>
+      </PressableBox>
+      <View style={{ height: 1, backgroundColor: '#ccc', marginTop: 6, marginHorizontal: 10 }}></View>
       </>
     )
   };
@@ -137,26 +148,37 @@ function OurStore() {
             <MapboxGL.Light />
             <MapboxGL.Images />
             <MapboxGL.Camera zoomLevel={15} centerCoordinate={coordinates} />
-            <MapboxGL.MarkerView id={"marker"} coordinate={coordinates}>
-              <View>
-                <View style={styles.markerContainer}>
-                  <View style={styles.TypographyContainer}>
-                    <Typography style={styles.Typography}>
-                      {`${''}Nama Outlet`} | {`${''}Alamat Outlet`}
-                    </Typography>
+
+            {!selected.StoreID ? null : (
+              <MapboxGL.MarkerView id={"marker"} coordinate={coordinates}>
+                <View>
+                  <View style={styles.markerContainer}>
+                    <View style={styles.TypographyContainer}>
+                      <Typography style={styles.Typography}>
+                        {selected.StoreName} | {selected.StoreLocationUnit}
+
+                        {!selected.StoreAddress ? null : (
+                          <Typography style={[styles.Typography, { fontWeight: 'normal' }]} numberOfLines={2}>
+                            {`\n${selected.StoreAddress}`}
+                          </Typography>
+                        )}
+                      </Typography>
+                    </View>
+                    <Image
+                      source={{ uri: 'https://optiktunggal.com/img/store_location/' + selected.StoreImage }}
+                      style={{
+                        marginTop: 4,
+                        width: 40,
+                        height: 40,
+                        borderRadius: 40,
+                        backgroundColor: "transparent",
+                        resizeMode: "cover",
+                      }}
+                    />
                   </View>
-                  <Image
-                    source={{ uri: 'https://api.surewin.co.id/data/client/logo/20190514142545uljsqb.png' }}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      backgroundColor: "transparent",
-                      resizeMode: "cover",
-                    }}
-                  />
                 </View>
-              </View>
-            </MapboxGL.MarkerView>
+              </MapboxGL.MarkerView>
+            )}
           </MapboxGL.MapView>
         </View>
       </View>
@@ -243,11 +265,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     width: '100%',
-    height: 50
+    minHeight: 50
   },
   Typography: {
     paddingHorizontal: 5,
-    flex: 1,
+    flexGrow: 1,
     fontSize: 10,
     fontWeight: 'bold'
   },
