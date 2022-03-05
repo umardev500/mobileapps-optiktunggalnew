@@ -12,7 +12,7 @@ import MapsLocationSelect from '../../components/MapsLocationSelect';
 import { default as _startCase } from 'lodash/startCase';
 import { BoxLoading } from '../../../ui-shared/loadings';
 import { useTranslation } from 'react-i18next';
-import { RegisterFields } from '..';
+import { RegisterFields } from '../auth/Register';
 import { useAppSelector } from '../../../redux/hooks';
 
 type Fields = {
@@ -131,6 +131,8 @@ function AddressEdit() {
       }));
       setIsEdit(true);
     }
+
+    console.log("ROUTE PARMAS", route.params);
   }, [route.params]);
 
   useEffect(() => {
@@ -286,26 +288,22 @@ function AddressEdit() {
   };
 
   const sendRegister = async () => {
-    const { ktp, foto, ...restProfile } = profile || {};    
+    const data = {
+      ...profile,
+      hp: showPhone(profile?.hp || fields.hp, '62')
+    };
+
     return httpService('/api/login/login', {
       data: {
         act: 'Register',
-        dt: JSON.stringify({
-          ...restProfile,
-          ...fields,
-          email: fields.email || restProfile.email,
-          hp: showPhone(fields.hp || profile?.hp, '62')
-        }),
+        dt: JSON.stringify(data),
       }
     }).then(async ({ status, msg, id = 1 }) => {
-      // console.log('STATUS_ '+status);
+      console.log('REGISTER___', status, msg, id);
       if (status === 200) {
         await httpService.setUser({
           ...(!id ? null : { id }),
-          ...restProfile,
-          foto,
-          ...fields,
-          hp: showPhone(fields.hp || profile?.hp, '62'),
+          ...data,
         });
 
         return id;
@@ -346,6 +344,8 @@ function AddressEdit() {
       return handleErrorShow(['lat', 'lng'], `${''}Mohon pilih posisi Anda pada peta.`);
     }*/
 
+    console.log("SUBMIT__", fields, profile);
+
     setIsSaving(true);
 
     const userId = !profile ? user?.id : await sendRegister();
@@ -356,19 +356,12 @@ function AddressEdit() {
       return setIsSaving(false);
     }
 
-    let name = fields.nama;
-    let phone = fields.hp;
-    let email = fields.email;
-
-    if (profile) {
-      name = fields.nama || `${profile.namadepan} ${profile.namabelakang}`;
-      phone = fields.hp || profile.hp;
-      email = fields.email || profile.email;
-    }
+    let email = fields.email || profile?.email;
 
     const addressField = {
+      kdcust: userId,
       penerima: fields.nama,
-      email: email,
+      email: fields.email || profile?.email,
       shipto: isEdit ? fields.jl : `${fields.jl}. Kel. ${options.villages?.find(item => item.id === fields.kel)?.nama || '-'
         }, Kec. ${options.districts?.find(item => item.id === fields.kec)?.nama || '-'
         }, ${options.regencies?.find(item => item.id === fields.kab)?.nama || '-'
@@ -378,9 +371,9 @@ function AddressEdit() {
       kota_kab: `${options.regencies?.find(item => item.id === fields.kab)?.id || '-'}`,
       kecamatan: `${options.districts?.find(item => item.id === fields.kec)?.id || '-'}`,
       kelurahan: `${options.villages?.find(item => item.id === fields.kel)?.id || '-'}`,
-      kodepos : `${options.villages?.find(item => item.id === fields.kodepos)?.kodepos || '-'}`,
-      nama_alamat : `${options.villages?.find(item => item.id === fields.kodepos)?.nama_alamat || '-'}`,
-      handphone: showPhone(phone, '62'),
+      kodepos: `${options.villages?.find(item => item.id === fields.kel)?.kodepos || '-'}`,
+      nama_alamat : `${fields.nama_alamat || '-'}`,
+      handphone: showPhone(fields.hp, '62'),
       latitude: fields.lat,
       longitude: fields.lng,
       label: 'Rumah',
@@ -502,42 +495,38 @@ function AddressEdit() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {profile ? null : (
-        <View style={{ marginTop: 24 }}>
-          <Typography type="h4" style={{ marginBottom: 8 }}>
-            {`${''}Informasi Alamat pengiriman`}
-          </Typography>
-
-          <TextField
-            placeholder={`${''}Nama Penerima`}
-            value={fields.nama}
-            onChangeText={(value) => handleFieldChange('nama', value)}
-            error={!!getFieldError('nama')}
-            message={error.message}
-          />
-
-          <TextField
-            containerStyle={{ marginTop: 12 }}
-            placeholder={t('Nomor Telepon')}
-            value={fields.hp}
-            onChangeText={(value) => handleFieldChange('hp', value)}
-            keyboardType="phone-pad"
-            left={(
-              <View style={{ ...wrapper.row, alignItems: 'center' }}>
-                <Typography color={950} style={{ marginLeft: 6 }}>+62</Typography>
-              </View>
-            )}
-            error={!!getFieldError('hp')}
-            message={error.message}
-          />
-        </View>
-      )}
-
-      {profile ? null : (
-        <Typography type="h4" style={{ marginTop: 24 }}>
-          {`${''}Detail Alamat`}
+      <View style={{ marginTop: 24 }}>
+        <Typography type="h4" style={{ marginBottom: 8 }}>
+          {`${''}Informasi Alamat pengiriman`}
         </Typography>
-      )}
+
+        <TextField
+          placeholder={`${''}Nama Penerima`}
+          value={fields.nama}
+          onChangeText={(value) => handleFieldChange('nama', value)}
+          error={!!getFieldError('nama')}
+          message={error.message}
+        />
+
+        <TextField
+          containerStyle={{ marginTop: 12 }}
+          placeholder={t('Nomor Telepon')}
+          value={fields.hp}
+          onChangeText={(value) => handleFieldChange('hp', value)}
+          keyboardType="phone-pad"
+          left={(
+            <View style={{ ...wrapper.row, alignItems: 'center' }}>
+              <Typography color={950} style={{ marginLeft: 6 }}>+62</Typography>
+            </View>
+          )}
+          error={!!getFieldError('hp')}
+          message={error.message}
+        />
+      </View>
+
+      <Typography type="h4" style={{ marginTop: 24 }}>
+        {`${''}Detail Alamat`}
+      </Typography>
 
       {isEdit ? null : (
         <>
@@ -635,7 +624,7 @@ function AddressEdit() {
         containerStyle={{ marginTop: 12 }}
         style={{ height: 120, paddingTop: 8 }}
         placeholder={`${''}Alamat Lengkap (Beserta patokan alamat)`}
-        value={options.villages?.find(({ id }) => id === fields.nama_alamat)?.nama_alamat}
+        value={fields.jl}
         onChangeText={(value) => handleFieldChange('jl', value)}
         multiline
         textAlignVertical="top"

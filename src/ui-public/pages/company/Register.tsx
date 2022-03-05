@@ -188,7 +188,7 @@ function Register() {
       }else if(status === 201){
         navigation.navigatePath('Public', {
           screen: 'AddressEdit',
-          params: [null, null, {
+          params: [{
             profile: {
               ...fields,
               // hp: `62${fields.hp}`,

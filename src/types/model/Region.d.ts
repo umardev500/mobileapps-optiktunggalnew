@@ -16,5 +16,5 @@ export type DistrictModel = RegionModel & {
 };
 
 export type VillageModel = RegionModel & {
-  // 
+  kodepos?: number;
 };
