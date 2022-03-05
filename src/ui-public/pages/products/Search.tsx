@@ -216,10 +216,10 @@ function Search() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header
-        // left
+      {/*<Header
+        left
         search={search || undefined}
-      />
+      />*/}
 
       <View style={[styles.wrapper, { paddingTop: 8, paddingBottom: 12 }]}>
         {!search ? null : (

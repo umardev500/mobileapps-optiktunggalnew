@@ -10,7 +10,7 @@ import { useAppNavigation } from '../../../router/RootNavigation';
 import { Modelable, TransactionModel } from '../../../types/model';
 import { Button, Typography } from '../../../ui-shared/components';
 import { BoxLoading } from '../../../ui-shared/loadings';
-import TransactionItem from '../../components/TransactionItem';
+import TransactionItemNew from '../../components/TransactionItemNew';
 import TransactionPayModal from '../../components/TransactionPayModal';
 import TransactionStatusModal from '../../components/TransactionStatusModal';
 
@@ -58,12 +58,12 @@ function TransactionDetail() {
   const handleRefresh = async () => {
     setIsLoading(true);
 
-    await retrieveTransaction();
+    await retrieveTransactionDetail();
 
     setIsLoading(false);
   };
 
-  const retrieveTransaction = async () => {
+  const retrieveTransactionDetail = async () => {
     setTransaction(state => ({
       ...state,
       modelLoaded: false,
@@ -72,11 +72,10 @@ function TransactionDetail() {
 
     return httpService('/api/transaction/transaction', {
       data: {
-        act: 'TrxList',
+        act: 'TrxDetail',
+        dt: JSON.stringify({ idtrx : 'CZ_PIN242001162' }),
       }
     }).then(({ status, data }) => {
-      console.log("DATA", data);
-
       setTransaction(state => ({
         ...state,
         model: 200 !== status ? null : data.find((item: TransactionModel) => item.id === transactionId),
@@ -98,24 +97,24 @@ function TransactionDetail() {
     });
   };
 
-  const handleModalToggle = (type: string, open: null | boolean = null, args: Partial<OptionsState> = {}) => {
-    switch (type) {
-      case 'detail':
-        setOptions(state => ({
-          ...state,
-          detailModalOpen: 'boolean' === typeof open ? open : !options.detailModalOpen,
-          ...args,
-        }));
-        break;
-      case 'pay':
-        setOptions(state => ({
-          ...state,
-          payModalOpen: 'boolean' === typeof open ? open : !options.payModalOpen,
-          ...args,
-        }));
-        break;
-    }
-  };
+  // const handleModalToggle = (type: string, open: null | boolean = null, args: Partial<OptionsState> = {}) => {
+  //   switch (type) {
+  //     case 'detail':
+  //       setOptions(state => ({
+  //         ...state,
+  //         detailModalOpen: 'boolean' === typeof open ? open : !options.detailModalOpen,
+  //         ...args,
+  //       }));
+  //       break;
+  //     case 'pay':
+  //       setOptions(state => ({
+  //         ...state,
+  //         payModalOpen: 'boolean' === typeof open ? open : !options.payModalOpen,
+  //         ...args,
+  //       }));
+  //       break;
+  //   }
+  // };
 
   return (
     <ScrollView
@@ -157,42 +156,11 @@ function TransactionDetail() {
             />
           </View>
         ) : (
-          <TransactionItem
+          <TransactionItemNew
             transaction={transaction.model}
-            collapse={false}
-            onDetailPress={(model) => handleModalToggle('detail', true, {
-              detailModel: model
-            })}
-            onPayPress={(model) => handleModalToggle('pay', true, {
-              payModel: model
-            })}
           />
         )
       )}
-
-      {/* Transaction Status Detail */}
-      <TransactionStatusModal
-        isVisible={options.detailModalOpen}
-        swipeDirection={null}
-        onBackButtonPress={() => handleModalToggle('detail', false)}
-        onBackdropPress={() => handleModalToggle('detail', false)}
-        transaction={options.detailModel || undefined}
-        style={{ maxHeight: height * 0.75 }}
-      />
-
-      {/* Transaction Pay Modal */}
-      <TransactionPayModal
-        isVisible={options.payModalOpen}
-        onSwipeComplete={() => handleModalToggle('pay', false)}
-        onBackButtonPress={() => handleModalToggle('pay', false)}
-        onBackdropPress={() => handleModalToggle('pay', false)}
-        onSuccess={() => {
-          handleModalToggle('pay', false);
-
-          handleRefresh();
-        }}
-        transaction={options.payModel || undefined}
-      />
     </ScrollView>
   );
 };

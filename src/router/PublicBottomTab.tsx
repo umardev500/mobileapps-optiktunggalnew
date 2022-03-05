@@ -125,7 +125,7 @@ function PublicBottomTab() {
           name="AccountStack"
           component={PublicAccountStack}
           options={{
-            tabBarLabel: t('Pengaturan'),
+            tabBarLabel: t('Settings'),
             tabBarIcon: (iconParams) => (!user?.foto || true) ? (
               <FigmaIcon.FigmaAccount {...iconProps(iconParams)} />
             ) : (

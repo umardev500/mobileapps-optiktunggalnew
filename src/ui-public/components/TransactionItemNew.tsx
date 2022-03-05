@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, View, ViewProps, Alert } from 'react-native';
+import { Image, StyleSheet, View, ViewProps } from 'react-native';
 import { Button, ButtonProps, PressableBox, Typography } from '../../ui-shared/components';
 import { colors, wrapper, shadows } from '../../lib/styles';
 import * as Animatable from 'react-native-animatable';
@@ -21,7 +21,7 @@ type Props = ViewProps & {
   onInfoUpdate?: (transaction: TransactionModel) => void;
 };
 
-function TransactionItem({
+function TransactionItemNew({
   transaction,
   onDetailPress,
   onPayPress,
@@ -65,8 +65,8 @@ function TransactionItem({
 
     return httpService('/api/transaction/transaction/', {
       data: {
-        act: 'TrxListItem',
-        // dt: JSON.stringify({ comp: '001', id: 'R79GA6P63629971' }),
+        act: 'ListTransaksiUser',
+        dt: JSON.stringify({ kdcust: usersModel.kd_customer }),
       }
     }).then(({ status, data, item, shipTo }) => {
       setIsLoading(false);
@@ -173,7 +173,7 @@ function TransactionItem({
         {!cartItem?.product ? null : (
           <View style={[styles.headerCart, { marginTop: 8 }]}>
             <View style={[wrapper.row]}>
-              {!cartItemImage ? <Image source={{ uri: 'https://t3.ftcdn.net/jpg/04/34/72/82/360_F_434728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg' }} style={styles.headerCartImage} /> : (
+              {!cartItemImage ? null : (
                 <Image source={{ uri: cartItemImage }} style={styles.headerCartImage} />
               )}
 
@@ -250,47 +250,6 @@ function TransactionItem({
           </View>
         </View>
 
-        {/*!cart_items?.length ? null : (
-          <View style={[styles.headerCart, { marginTop: 8 }]}>
-            <Typography heading>
-              {t(`${''}Detail Produk`)}
-            </Typography>
-
-            {cart_items?.map((item, index) => {
-              const image = !item?.product?.images?.length ? item?.product?.prd_foto : item.product.images[0].prd_foto;
-
-              return (
-                <View key={index} style={[wrapper.row, { marginTop: 12 }]}>
-                  {!image ? null : (
-                    <Image source={{ uri: image }} style={styles.headerCartImage} />
-                  )}
-
-                  <View style={{ flex: 1, paddingTop: 2 }}>
-                    <View style={{ flex: 1 }}>
-                      <Typography>
-                        {item.product?.prd_ds}
-                      </Typography>
-
-                      <Typography style={{ marginTop: 2 }}>
-                        {`${item.qty || 0} ${t(`${''}Barang`)}`}
-                      </Typography>
-                    </View>
-
-                    <View style={[wrapper.row, { marginTop: 'auto', paddingTop: 8 }]}>
-                      <Typography style={{ flex: 1 }}>
-                        {t(`${''}Subtotal`)}
-                      </Typography>
-
-                      <Typography heading>
-                        {numeral(item.harga || 0).format()}
-                      </Typography>
-                    </View>
-                  </View>
-                </View>
-              );
-            })}
-          </View>
-        )*/}
       </View>
     );
   };
@@ -380,7 +339,6 @@ function TransactionItem({
       <PressableBox
         containerStyle={{ marginHorizontal: 0, overflow: 'visible' }}
         style={{ paddingHorizontal: 0 }}
-        // onPress={() => setCollapse(!collapse)}
         onPress={() => navigation.navigatePath('Public', {
           screen: 'BottomTabs.NotificationStack.TransactionDetail',
           params: [null, null, {
@@ -388,27 +346,6 @@ function TransactionItem({
             transaksi: transaction
           }],
         })}
-        // onPress={() => Alert.alert( "Pemberitahuan", "Fitur ini sedang dikembangkan!",
-        //               [{ text: "OK", onPress: () => console.log("OK Pressed") }]
-        // )}
-      >
-        {renderHeaderShrink()}
-        {/*!collapse ? renderHeaderShrink() : renderHeaderExpand()*/}
-      </PressableBox>
-
-      <PressableBox
-        containerStyle={{ marginHorizontal: 0, overflow: 'visible' }}
-        style={{ paddingHorizontal: 0 }}
-        // onPress={() => navigation.navigatePath('Public', {
-        //   screen: 'BottomTabs.NotificationStack.TransactionDetail',
-        //   params: [null, null, {
-        //     transaction_id: transaction.id,
-        //     transaksi: transaction
-        //   }],
-        // })}
-        onPress={() => Alert.alert( "Pemberitahuan", "Fitur ini sedang dikembangkan!",
-                      [{ text: "OK", onPress: () => console.log("OK Pressed") }]
-        )}
       >
         {renderHeaderShrink()}
         {/*!collapse ? renderHeaderShrink() : renderHeaderExpand()*/}
@@ -575,4 +512,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default TransactionItem;
+export default TransactionItemNew;

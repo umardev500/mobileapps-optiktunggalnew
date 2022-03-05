@@ -38,72 +38,8 @@ function Contact() {
 
   const [action, setAction] = useState('');
 
-  useEffect(() => {
-    retrieveContactUs();
-  }, []);
-
-  // Vars
-  const handleRefresh = async () => {
-    setIsLoading(true);
-    retrieveContactUs();
-    setIsLoading(false);
-  };
-
-  const retrieveContactUs = async () => {
-    return httpService(`/api/contactus/contactus`, {
-      data: {
-        act: 'ContactUsList',
-        dt: JSON.stringify({ pageCountLimit: 0, param: "store" })
-      },
-    }).then(({ status, data }) => {
-      setContactUs(state => ({
-        ...state,
-        models: 200 !== status ? [] : (data || []),
-        modelsLoaded: true
-      }));
-    }).catch(() => {
-      setContactUs(state => ({ ...state, modelsLoaded: true }));
-    });
-  };
-
-  const renderStoreOnMaps = ({ item, index }: ListRenderItemInfo<ContactUsModel>) => {
-    const [coordinates] = useState([106.82150309838204, -6.19540649567783]);
-    return (
-      <>
-        <View style={styles.container}>
-          <MapboxGL.MapView style={styles.container}>
-            <MapboxGL.UserLocation/>
-            <MapboxGL.Light />
-            <MapboxGL.Images />
-            <MapboxGL.Camera zoomLevel={10} centerCoordinate={coordinates} />
-            <MapboxGL.MarkerView id={"marker"} coordinate={coordinates}>
-              <View>
-                <View style={styles.markerContainer}>
-                  <View style={styles.TypographyContainer}>
-                    <Typography style={styles.Typography}>
-                      { item.StoreName }
-                    </Typography>
-                  </View>
-                  <Image
-                    source={{ uri: 'https://api.surewin.co.id/data/client/logo/20190514142545uljsqb.png' }}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      backgroundColor: "transparent",
-                      resizeMode: "cover",
-                    }}
-                  />
-                </View>
-              </View>
-            </MapboxGL.MarkerView>
-          </MapboxGL.MapView>
-        </View>
-      </>
-    )
-  };
-
   return (
-    <>
+    <View style={{ backgroundColor: '#FEFEFE', flex: 1, }}>
       <View style={[wrapper.row]}>
         <PressableBox
             opacity
@@ -114,36 +50,6 @@ function Contact() {
               <Ionicons name="arrow-back" size={18} /> {`${''}Kembali`}
             </Typography>
         </PressableBox>
-      </View>
-      <View style={styles.page}>
-        <View style={styles.container}>
-          <MapboxGL.MapView style={styles.container}>
-            <MapboxGL.UserLocation/>
-            <MapboxGL.Light />
-            <MapboxGL.Images />
-            <MapboxGL.Camera zoomLevel={15} centerCoordinate={coordinates} />
-            <MapboxGL.MarkerView id={"marker"} coordinate={coordinates}>
-              <View>
-                <View style={styles.markerContainer}>
-                  <View style={styles.TypographyContainer}>
-                    <Typography style={styles.Typography}>
-                      {`Nama Store \n Alamat Store`}
-                    </Typography>
-                  </View>
-                  <Image
-                    source={{ uri: 'https://api.surewin.co.id/data/client/logo/20190514142545uljsqb.png' }}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      backgroundColor: "transparent",
-                      resizeMode: "cover",
-                    }}
-                  />
-                </View>
-              </View>
-            </MapboxGL.MarkerView>
-          </MapboxGL.MapView>
-        </View>
       </View>
       <View style={{backgroundColor: '#FFFFFF', borderRadius: 10}}>
         <View style={styles.cardLocation}>
@@ -198,7 +104,7 @@ function Contact() {
           </PressableBox>
         </View>
       </View>
-    </>
+    </View>
   );
 };
 
@@ -207,7 +113,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cardLocation: {
-    backgroundColor: '#FEFEFE',
     marginHorizontal: 20,
   },
   container: {

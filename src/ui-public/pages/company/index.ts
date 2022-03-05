@@ -5,6 +5,7 @@ export {default as ContactLens} from './ContactLens';
 export {default as ContactLensSubCategory} from './ContactLensSubCategory';
 export {default as Lens} from './Lens';
 export {default as Contact} from './Contact';
+export {default as OurStore} from './OurStore';
 export {default as BannerDetail} from './BannerDetail';
 export {default as Register} from './Register';
 export {default as AddressEdit} from './AddressEdit';

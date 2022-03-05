@@ -22,8 +22,8 @@ export const PAYMENT_METHODS = [
   {
     method: 'transfer',
     bankName: 'Mandiri',
-    bankNo: '166-000-3456-803',
-    bankAccount: 'PT MORITA MITRA BERSAMA',
+    bankNo: '123-456-789-0',
+    bankAccount: 'PT OPTIK TUNGGAL SEMPURNA',
   }
 ];
 

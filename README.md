@@ -1,6 +1,6 @@
-# Morita Getall ♥ React Native
+# Optik Tunggal
 
-Mobile application for Morita Getall.
+Mobile application for Optik Tunggal.
 
 ### React Native
 

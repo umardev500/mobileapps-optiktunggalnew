@@ -6,7 +6,7 @@ import { useAppNavigation } from '../../../router/RootNavigation';
 import { Typography, PressableBox, Button } from '../../../ui-shared/components';
 import { useTranslation } from 'react-i18next';
 import { Modelable, TransactionModel, UserModel } from '../../../types/model';
-import TransactionItem from '../../components/TransactionItem';
+import TransactionItemNew from '../../components/TransactionItemNew';
 import TransactionStatusModal from '../../components/TransactionStatusModal';
 import TransactionPayModal from '../../components/TransactionPayModal';
 import { httpService } from '../../../lib/utilities';
@@ -82,6 +82,7 @@ function TransactionList() {
     return httpService('/api/transaction/transaction', {
       data: {
         act: 'TrxList',
+        dt: JSON.stringify({ kdcust : usersModel.kd_customer }),
       }
     }).then(({ status, data }) => {
       setTransaction(state => ({
@@ -161,7 +162,7 @@ function TransactionList() {
             </Typography>
           ) : ( 
             <>
-              {usersModel.no_card == null ? (
+              {usersModel.no_card == '' ? (
                 <View>
                   <Typography style={{ textAlign: 'center', fontSize: 12, paddingHorizontal: 3, color: '#ec3a3b' }}>
                     Anda Belum Menjadi Member
@@ -172,7 +173,11 @@ function TransactionList() {
                 </View>
               ) : (
                 <View>
-                  <ImageBackground source={require('../../../assets/icons/figma/membercard.png')} resizeMode= 'stretch' style={{width: '100%', height: 220 }}>
+                  <Typography style={{ flex: 1, textAlign: 'center', color: '#7e7e7e' }}>
+                    <Ionicons name="arrow-down" size={14} color={colors.gray[600]} />
+                    Tarik kebawah untuk refresh
+                  </Typography>
+                  <ImageBackground source={require('../../../assets/icons/figma/membercard.png')} resizeMode= 'stretch' style={{width: '100%', height: 220, marginTop: 10 }}>
                      <View style={{position: 'absolute', top: 145, left: 0, right: 0, bottom: 0}}>
                        <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 16 }}>
                          {usersModel.nm_lengkap}
@@ -187,6 +192,41 @@ function TransactionList() {
                         </View>
                      </View>
                   </ImageBackground>
+
+                  <View style={[wrapper.row, { borderRadius: 5, borderColor: '#ccc', borderWidth: 1, marginTop: 10}]}>
+                    <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, paddingHorizontal: 10 }}>
+                      Poin Redeem :
+                    </Typography>
+                    <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, fontWeight: 'bold' }}>
+                      {usersModel.saldo}
+                    </Typography>
+                    {/*usersModel.saldo == 0 ? null : (
+                      <Button
+                        containerStyle={{ alignSelf: 'center' }}
+                        style={{ width: 'auto', fontSize: 10 }}
+                        label={`${''}Redeem Sekarang`}
+                        color="primary"
+                        shadow={3}
+                      />
+                    )*/}
+                  </View>
+
+                  <View style={[wrapper.row, { borderRadius: 5, borderColor: '#ccc', borderWidth: 1, marginTop: 10}]}>
+                    <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, paddingHorizontal: 10 }}>
+                      Password Redeem :
+                    </Typography>
+                    <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, fontWeight: 'bold' }}>
+                      {usersModel.password}
+                    </Typography>
+                  </View>
+
+                  {usersModel.saldo == 0 ? (
+                      <>
+                        <Typography style={{ color: 'red', fontSize: 11, textAlign: 'justify' }}>
+                          Ayo tingkatkan transaksi untuk mendapatkan poin dan banyak keuntungannya
+                        </Typography>
+                      </>
+                    ) : null }
                 </View>
               )}
               
@@ -203,7 +243,7 @@ function TransactionList() {
                     {t(`Belum ada transaksi.`)}
                   </Typography>
                 ) : transaction.models.map((item, index) => (
-                  <TransactionItem
+                  <TransactionItemNew
                     key={index}
                     transaction={item}
                     onDetailPress={(model) => handleModalToggle('detail', true, {

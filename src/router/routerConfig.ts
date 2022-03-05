@@ -46,6 +46,8 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     // Contact | About
     case 'Contact':
       return { headerShown: false };
+    case 'OurStore':
+      return { headerShown: false };
     case 'OurContact':
       return { title: `${''}Kontak Kami` };
     case 'FAQ':

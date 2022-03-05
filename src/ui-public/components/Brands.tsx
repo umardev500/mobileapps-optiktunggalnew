@@ -51,9 +51,10 @@ function Brands({
     }
 
     navigation.navigatePath('Public', {
-      screen: 'BottomTabs.HomeStack.ProductDetail',
+      screen: 'BottomTabs.HomeStack.Search',
       params: [null, null, {
-        product_id: brand.id || 0,
+        // product_id: brand.id || 0,
+        brand,
       }]
     });
   };

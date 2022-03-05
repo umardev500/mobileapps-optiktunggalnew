@@ -153,8 +153,6 @@ function Account() {
       <View style={{ flex: 1, position: 'relative' }}>
 
         <SafeAreaView style={{ flex: 1 }}>
-          <Header hideSearch hideBg />
-
           <View style={styles.wrapper}>
             <AccountBanner />
           </View>
@@ -168,7 +166,7 @@ function Account() {
       {!user ? renderUnauthenticated() : (
         <View style={{ flex: 1 }}>
           <Header
-            title={t(`${''}Pengaturan`)}
+            title={t(`${''}Settings`)}
             left
             // right={renderLangBtn()}
           />

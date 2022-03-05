@@ -24,6 +24,7 @@ function TransactionUsers() {
   const { t } = useTranslation('notification');
   // States
   const [isLoading, setIsLoading] = useState(false);
+  const { user: { user } } = useAppSelector((state) => state);
   const [users, setUsers] = useState<Modelable<UserModel>>({
     model: null,
     modelsLoaded: false,
@@ -42,11 +43,11 @@ function TransactionUsers() {
     setIsLoading(false);
   };
 
-  const retrieveCustomerTransaction = async () => {
+  const retrieveCustomerTransaction = async (users: UserModel) => {
     return httpService(`/api/transaction/transaction`, {
       data: {
         act: 'TrxUsers',
-        dt: JSON.stringify({ email: 'test@gmail.com' }),
+        dt: JSON.stringify({ email: user?.email }),
       },
     }).then(({ status, data }) => {
       setUsers(state => ({
@@ -67,7 +68,7 @@ function TransactionUsers() {
     navigation.navigatePath('Public', {
       screen: 'BottomTabs.NotificationStack.TransactionList',
       params: [null, null, {
-        userID: users.kd_customer || 0,
+        userID: users.kd_customer,
         users,
       }]
     });
@@ -100,12 +101,15 @@ function TransactionUsers() {
 
           <View style={{ flex: 1,}}>
             <View style={[wrapper.row, { flex: 1, paddingHorizontal: 10, width: '100%', }]}>
-              <Typography style={{ fontSize: 12, fontWeight: 'bold' }}>
+              <Typography style={{ fontSize: 12, flex: 2, fontWeight: 'bold' }}>
                 {item.nm_customer}
+              </Typography>
+              <Typography style={{ fontSize: 10, color: '#333' }}>
+                Lihat transaksi <Ionicons name="chevron-forward" size={10} color={'black'} />
               </Typography>
             </View>
             <View style={[wrapper.row, { marginTop: 5, paddingHorizontal: 10, width: '100%' }]}>
-              {!item.no_card == null ? (
+              {item.no_card == "" ? (
                 <Typography style={{ textAlign: 'center', fontSize: 10, paddingHorizontal: 3, color: '#ec3a3b' }}>
                   BELUM MENJADI MEMBER
                 </Typography>

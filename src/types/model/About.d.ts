@@ -17,8 +17,9 @@ export type ContactUsModel = {
   StoreImage?: string,
   StorePhone?: string;
   StoreNotes?: string;
-  StoreLongitude?: number;
-  StoreLatitude?: number;
+  StoreLongitude?: string;
+  StoreLatitude?: string;
+  koordinat?: string;
 };
 
 export type CityStoreModel = {

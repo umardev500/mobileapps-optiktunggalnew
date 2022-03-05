@@ -596,7 +596,7 @@ const Home = () => {
                 <Ionicons name="chevron-forward" size={12} color={'blue'} />
               )}
               onPress={() => navigation.navigatePath('Public', {
-                screen: 'Contact'
+                screen: 'OurStore'
               })}
             />
           </View>

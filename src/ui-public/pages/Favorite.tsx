@@ -84,7 +84,7 @@ function Favorite() {
 
   const renderUnauthenticated = () => {
     return (
-      <View style={{ flex: 1, position: 'relative' }}>
+      <View style={{ flex: 1, position: 'relative', marginVertical: -15 }}>
 
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.wrappersss}>
