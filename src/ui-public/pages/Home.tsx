@@ -252,13 +252,14 @@ const Home = () => {
           opacity
           onPress={() => handleGoToArticleDetail(item)}>
           <View style={[wrapper.row, { height: 130, width: '100%', borderRadius: 10}]}>
-            <Image source={{ uri: 'https://optiktunggal.com/img/article/'+item.ArticleImage }} style={[styles.articleImage, { height }]} />
+            <Image source={{ uri: item.ArticleImage }} style={[styles.articleImage, { height }]} />
             <View style={{ borderColor: '#333', width: '55%' }}>
               <Typography type="h4" style={{ marginTop: 5, fontSize: 12, paddingHorizontal: 15 }} numberOfLines={2}>
                 {item.ArticleName}
               </Typography>
               {!item.html ? null : (
                 <RenderHtml
+                  contentWidth={width}
                   source={{ html: item.html }}
                   tagsStyles={{
                     p: { marginVertical: 0, height: 'auto', fontSize: 10, paddingHorizontal: 15, textAlign: 'justify' }

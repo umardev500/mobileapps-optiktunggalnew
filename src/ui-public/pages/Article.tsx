@@ -80,7 +80,7 @@ function Article() {
         onPress={() => handleGoToArticleDetail(item)}>
 
         {!item.ArticleID ? null : (
-          <Image source={{ uri: 'https://optiktunggal.com/img/article/'+item.ArticleImage }} style={styles.articleCardImage} />
+          <Image source={{ uri: item.ArticleImage }} style={styles.articleCardImage} />
         )}
         <View style={{
             marginTop: 8,
