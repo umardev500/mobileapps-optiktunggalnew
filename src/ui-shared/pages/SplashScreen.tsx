@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Image, View } from 'react-native';
 import { colors } from '../../lib/styles';
 import LOGO from '../../assets/app-logo-square.png';
-import { Storage } from '../../lib/utilities';
+import { httpService, Storage } from '../../lib/utilities';
 import { default as RNSplashScreen } from 'react-native-splash-screen';
 import { useAppNavigation } from '../../router/RootNavigation';
 import { useTranslation } from 'react-i18next';
@@ -24,9 +24,14 @@ function SplashScreen() {
   // Vars
   const authenticateUser = async () => {
     const lang = await Storage.getData('lang');
+    const user = await httpService.getUser();
 
     if (lang) {
       await handleLangChange(lang);
+    }
+
+    if (user) {
+      httpService.setUser(user);
     }
 
     RNSplashScreen.hide();
