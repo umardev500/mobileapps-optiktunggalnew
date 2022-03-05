@@ -137,7 +137,7 @@ function ProductDetail() {
         dt: JSON.stringify({ prd_id: product_id }),
         act: 'PrdInfo'
       },
-    }).then(({ status, data, foto }) => {
+    }).then(({ status, data: [data], foto }) => {
       if (status === 200) {
         setProduct(state => ({
           ...state,
