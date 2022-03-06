@@ -16,15 +16,23 @@ import { ErrorState, ValueOf } from '../../../types/utilities';
 // import { WebView } from 'react-native-webview';
 import MapboxGL from "@react-native-mapbox-gl/maps";
 
+type Fields = {
+  search?: string;
+};
+
 function OurStore() {
   const navigation = useAppNavigation();
   const route = useRoute();
   const { width, height } = useWindowDimensions();
   const { t } = useTranslation('ourstore');
   const carouselRef = useRef<any>();
+
   // States
   const [isLoading, setIsLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [fields, setFields] = useState({
+    search: '',
+  });
   const [contactUs, setContactUs] = useState<Modelable<ContactUsModel>>({
     models: [],
     modelsLoaded: false,
@@ -46,7 +54,10 @@ function OurStore() {
   // Vars
   const handleRefresh = async () => {
     setIsLoading(true);
-    retrieveContactUs();
+
+    setContactUs(state => ({ ...state, modelsLoaded: false }));
+    await retrieveContactUs();
+
     setIsLoading(false);
   };
 
@@ -54,12 +65,16 @@ function OurStore() {
     return httpService(`/api/contactus/contactus`, {
       data: {
         act: 'ContactUsList',
-        dt: JSON.stringify({ pageCountLimit: 0, param: "store" })
+        dt: JSON.stringify({
+          pageCountLimit: 0,
+          param: "store",
+          ...(!fields.search ? null : { search: fields.search }),
+        })
       },
     }).then(({ status, data }) => {
       setContactUs(state => ({
         ...state,
-        models: 200 !== status ? [] : (data || []).splice(0, 10),
+        models: 200 !== status ? [] : (data || []),
         modelsLoaded: true
       }));
     }).catch(() => {
@@ -187,16 +202,22 @@ function OurStore() {
           {`${''}OUTLET KAMI`}
         </Typography>
       </View>
-      <View>
+      <View style={{ marginHorizontal: 8 }}>
         <TextField
-          containerStyle={{ paddingHorizontal: 8, ...shadows[3], marginTop: 10 }}
-          style={{
-            textAlignVertical: 'top',
-            paddingVertical: 8,
-            marginHorizontal: 10,
-          }}
+          containerStyle={{ ...shadows[3], marginTop: 10 }}
           border={false}
           placeholder={t(`Cari outlet`)}
+          onChangeText={(value) => setFields(state => ({ ...state, search: value }))}
+          returnKeyType="search"
+          onSubmitEditing={handleRefresh}
+          right={(
+            <Button
+              size={24}
+              onPress={handleRefresh}
+            >
+              <Ionicons name="search" size={16} color={colors.gray[900]} />
+            </Button>
+          )}
         />
       </View>
       <ScrollView style={{ flexBasis: '10%', backgroundColor: '#FEFEFE'}} 
