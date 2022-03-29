@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface MoritaGetallTests : XCTestCase
+@interface OptikTunggalTests : XCTestCase
 
 @end
 
-@implementation MoritaGetallTests
+@implementation OptikTunggalTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL(^)(UIView *view))test
 {

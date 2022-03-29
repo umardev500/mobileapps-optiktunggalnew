@@ -1,11 +1,11 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions, ToastAndroid } from 'react-native';
 import { View } from 'react-native-animatable';
 import { colors } from '../../lib/styles';
 import { useAppNavigation } from '../../router/RootNavigation';
 import { ModelablePaginate, ProductModel } from '../../types/model';
-import { Typography, Header } from '../../ui-shared/components';
+import { Typography, Header, PressableBox } from '../../ui-shared/components';
 import ProductsLoading from '../loadings/ProductsLoading';
 import Products from '../components/Products';
 import { httpService, Storage } from '../../lib/utilities';
@@ -124,27 +124,38 @@ function Favorite() {
               </Typography>
             </View>
           )}
-          LoadingView={(
-            <View style={{ marginHorizontal: 10 }}>
-              <ProductsLoading />
-            </View>
-          )}
           ListEmptyComponent={!product.modelsLoaded ? (
-            <View style={{ marginHorizontal: 10 }}>
-              <ProductsLoading />
-            </View>
-          ) : product.models?.length ? null : (
-            <View style={{ flex: 1, marginVertical: 24, alignItems: 'center' }}>
-              <Ionicons
+            <View style={{ flex: 1, marginVertical: 150, alignItems: 'center' }}>
+              {/*<Ionicons
                 name={'heart-outline'}
                 size={40}
                 color={colors.gray[600]}
                 style={{ marginTop: 2 }}
-              />
+              />*/}
 
-              <Typography textAlign="center" style={{ marginTop: 12 }}>
-                {t(`${''}Belum ada produk favorit`)}
+              <Typography textAlign="center" style={{ marginTop: 10 }}>
+                {t(`${''}Belum ada produk yang kamu sukai`)}
               </Typography>
+              <PressableBox
+                containerStyle={{
+                  position: 'absolute',
+                  marginTop: 50,
+                  width: 250,
+                  backgroundColor: '#dbdbdb',
+                }}
+                onPress={() => navigation.navigatePath('Public', {
+                  // screen: 'BottomTabs.OtherStack.Katalog'
+                  screen: 'BottomTabs.HomeStack.Search',
+                })}
+              >
+                <Typography textAlign="center" style={{ paddingVertical: 10}}>
+                  {t(`${''}Lihat Produk`)}
+                </Typography>
+              </PressableBox>
+            </View>
+          ) : product.models?.length ? null : (
+            <View style={{ marginHorizontal: 10 }}>
+              <ProductsLoading />
             </View>
           )}
           ListFooterComponent={!product.isPageEnd ? null : (

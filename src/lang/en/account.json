@@ -30,7 +30,7 @@
     "Daftar transaksi produk yg sudah dibeli": "List of purchases made by you",
     "Keranjang": "Shopping Cart",
     "Daftar produk yg ditambahkan ke keranjang belanja": "List of products you've been added to cart",
-    "Seputar Getall": "About Getall",
+    "Seputar Kami": "About Us",
     "Ulas Aplikasi ini": "Rate Our Application",
     "Keluar Akun": "Logout",
 
@@ -53,7 +53,7 @@
 
     // Forgot Password
     "Masukkan Alamat Email": "Enter Email Address",
-    "Morita akan mengirim password baru\nmenuju alamat email Anda.": "Morita will send a new password to your email address.",
+    "Optik Tunggal akan mengirim password baru\nke alamat email Anda.": "Optik Tunggal will send a new password to your email address.",
     "Reset PIN": "Reset PIN",
 
     // Login

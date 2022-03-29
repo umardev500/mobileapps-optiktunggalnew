@@ -30,6 +30,10 @@ function ReviewItem({
         />
       </View>
 
+      <Typography style={{ paddingBottom: 5, textAlign: 'justify', fontSize: 12 }}>
+        {review.tgl}
+      </Typography>
+
       <Typography style={{ paddingBottom: 5, textAlign: 'justify', fontSize: 11 }} numberOfLines={3}>
         {review.remark || review.content}
       </Typography>
@@ -69,7 +73,7 @@ const styles = StyleSheet.create({
   user: {
     ...wrapper.row,
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 3,
     paddingHorizontal: 10,
   },
   reply: {

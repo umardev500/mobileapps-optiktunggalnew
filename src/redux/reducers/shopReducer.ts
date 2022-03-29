@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, SliceCaseReducers } from '@reduxjs/toolkit'
-import { CartModel, CategoryModel, BrandModel } from '../../types/model';
+import { CartModel, CategoryModel, BrandModel, GenderModel, ModelKacamata } from '../../types/model';
 import { ShopRootState } from '../../types/redux/ShopReducer';
-import { fetchCategories, fetchBrand, pushCartItem, setCartItems } from '../actions/shopActions';
+import { fetchCategories, fetchBrand, pushCartItem, setCartItems, fetchGender, fetchModelKacamata } from '../actions/shopActions';
 
 export const shopSlice = createSlice<ShopRootState, SliceCaseReducers<ShopRootState>, 'shop'>({
   name: 'shop',
@@ -36,6 +36,18 @@ export const shopSlice = createSlice<ShopRootState, SliceCaseReducers<ShopRootSt
         return {
           ...state,
           categories: action.payload,
+        };
+      })
+      .addCase(fetchGender.fulfilled, (state, action) => {
+        return {
+          ...state,
+          genders: action.payload,
+        };
+      })
+      .addCase(fetchModelKacamata.fulfilled, (state, action) => {
+        return {
+          ...state,
+          modelkacamata: action.payload,
         };
       })
       .addCase(fetchBrand.fulfilled, (state, action) => {

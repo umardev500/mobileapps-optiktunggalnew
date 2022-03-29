@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Image, Linking, Platform, StatusBar, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Image, Linking, Platform, StatusBar, StyleSheet, useWindowDimensions, View, Alert, RefreshControl } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { colors, shadows, wrapper } from '../../lib/styles';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -25,6 +25,7 @@ function Account() {
   const { t } = useTranslation('account');
   const { height } = useWindowDimensions();
   const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   // States
   const [options, setOptions] = useState({
@@ -39,8 +40,9 @@ function Account() {
   // Effects
   useEffect(() => {
     handleVersionCheck();
+    renderLogin();
   }, []);
-
+  
   useEffect(() => {
     const unsubscribeFocus = navigation.addListener('focus' as any, () => {
       handleModalToggle('auth', !user);
@@ -54,7 +56,7 @@ function Account() {
       unsubscribeFocus();
       unsubscribeBlur();
     }
-
+    
     handleModalToggle('auth', !user);
 
     return () => {
@@ -62,6 +64,28 @@ function Account() {
       unsubscribeBlur();
     };
   }, [user]);
+
+  const renderLogin = () => {
+    setIsLoading(true);
+    return httpService('/api/login/login', {
+      data: {
+        act: 'Login',
+        dt: JSON.stringify({
+          LoginID: user?.email,
+          LoginPwd: null,
+        }),
+      }
+    }).then(({ status, data, token }) => {
+      setIsLoading(false);
+      if (status == 200) {
+        httpService.setUser({
+          ...data,
+          ...(!token ? null : { token }),
+          status: '1',
+        });
+      }
+    })
+  }
 
   // Vars
   const handleVersionCheck = async () => {
@@ -167,8 +191,6 @@ function Account() {
         <View style={{ flex: 1 }}>
           <Header
             title={t(`${''}Settings`)}
-            left
-            // right={renderLangBtn()}
           />
 
           <ScrollView
@@ -183,22 +205,20 @@ function Account() {
                   <Typography style={{ color: '#333333', fontSize: 14, fontWeight: 'bold',  marginHorizontal: 15}} >
                     {user?.nama || `${user?.namadepan} ${user?.namabelakang}`}
                   </Typography>
-                  {!user.foto ? 
-                    <Typography style={{ marginHorizontal: 15,}}>
-                      <Image source={require('../../assets/icons/figma/vip.png')} style={styles.avatarVIP} />
-                      Member
-                    </Typography>
-                  : (
-                    <Typography style={{ marginHorizontal: 15,}}>
-                      <Image source={require('../../assets/icons/figma/vip.png')} style={styles.avatarVIP} />
-                      Member
-                    </Typography>
-                  )}
+                  <Typography style={{ color: '#333333', fontSize: 14, fontWeight: 'bold',  marginHorizontal: 15}} >
+                    {user?.id}
+                  </Typography>
+                  <Typography style={{ color: '#333333', fontSize: 14, marginHorizontal: 15, marginTop: 3}} >
+                    {showPhone(String(user.hp), '0')}
+                  </Typography>
                   {user.verified || 1 ?
                     <PressableBox
                       containerStyle={{ marginTop: 1 }}
                       onPress={() => navigation.navigatePath('Public', {
                         screen: 'BottomTabs.AccountStack.ProfileEdit',
+                        params: [null, null, {
+                          email: user.email,
+                        }]
                       })}>
                       <Typography
                         textAlign="left"
@@ -246,7 +266,7 @@ function Account() {
                 >
                   {[
                     {
-                      title: t(`${''}Daftar Transaksi`),
+                      title: t(`${''}Transaksi Anda`),
                       subtitle: t(`${''}Transaksi yang pernah anda lakukan.`),
                       Icon: FigmaIcon.FigmaDownload,
                       navigatePath: () => {
@@ -268,12 +288,6 @@ function Account() {
                         });
                       },
                     },
-                    // {
-                    //   title: t(`${''}Alamat Pengiriman`),
-                    //   subtitle: t(`${''}Atur alamat pengiriman`),
-                    //   Icon: FigmaIcon.FigmaHomeFilled,
-                    //   navigatePath: 'BottomTabs.AccountStack.AddressList',
-                    // },
                   ].map((item, index) => (
                     <PressableBox
                       key={index}
@@ -360,9 +374,15 @@ function Account() {
                     //   Icon: FigmaIcon.FigmaDocument,
                     //   navigatePath: 'BottomTabs.AccountStack.ReviewList',
                     // },
+                    // {
+                    //   title: t(`${''}Alamat Pengiriman`),
+                    //   subtitle: t(`${''}Atur alamat pengiriman`),
+                    //   Icon: FigmaIcon.FigmaHomeFilled,
+                    //   navigatePath: 'BottomTabs.AccountStack.AddressList',
+                    // },
                     {
                       title: t(`${''}Keamanan Akun`),
-                      subtitle: t(`${''}Password & verifikasi data diri`),
+                      subtitle: t(`${''}Jangan beritahukan kata sandi anda kepada siapapun`),
                       Icon: FigmaIcon.FigmaLock,
                       navigatePath: 'BottomTabs.AccountStack.PasswordReset',
                     },
@@ -491,7 +511,19 @@ function Account() {
                       <Ionicons name="arrow-up" size={18} color='red' />
                     </View>
                   )}
-                  onPress={handleLogout}
+                  onPress={() => Alert.alert(
+                    `${t('Keluar')}`,
+                    `${t('Yakin mau keluar aplikasi?')}`,
+                    [
+                      {
+                        text: `${t('Batal')}`,
+                      },
+                      {
+                        text: `${t('Ya')}`,
+                        onPress: () => handleLogout(),
+                      }
+                    ]
+                  )}
                 />
               </View>
             </View>

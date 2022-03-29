@@ -1,12 +1,12 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View, Image, ImageBackground } from 'react-native';
+import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View, Image, ImageBackground, Alert } from 'react-native';
 import { colors, shadows, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { Typography, PressableBox, Button } from '../../../ui-shared/components';
 import { useTranslation } from 'react-i18next';
 import { Modelable, TransactionModel, UserModel } from '../../../types/model';
-import TransactionItemNew from '../../components/TransactionItemNew';
+import TransactionItem from '../../components/TransactionItem';
 import TransactionStatusModal from '../../components/TransactionStatusModal';
 import TransactionPayModal from '../../components/TransactionPayModal';
 import { httpService } from '../../../lib/utilities';
@@ -63,16 +63,14 @@ function TransactionList() {
     }
   }, [route.params]);
 
-  // Vars
   const handleRefresh = async () => {
     setIsLoading(true);
-
     await retrieveTransactions();
-
     setIsLoading(false);
   };
 
   const retrieveTransactions = async () => {
+    setIsLoading(true);
     setTransaction(state => ({
       ...state,
       models: [],
@@ -152,7 +150,7 @@ function TransactionList() {
           <RefreshControl
             refreshing={false}
             onRefresh={handleRefresh}
-            colors={[colors.palettes.primary]}
+            colors={[colors.palettes.black]}
           />
         )}
       >
@@ -173,60 +171,51 @@ function TransactionList() {
                 </View>
               ) : (
                 <View>
-                  <Typography style={{ flex: 1, textAlign: 'center', color: '#7e7e7e' }}>
+                  <Typography style={{ flex: 1, textAlign: 'center', color: '#7e7e7e', marginTop: -13, fontSize: 10 }}>
                     <Ionicons name="arrow-down" size={14} color={colors.gray[600]} />
                     Tarik kebawah untuk refresh
                   </Typography>
-                  <ImageBackground source={require('../../../assets/icons/figma/membercard.png')} resizeMode= 'stretch' style={{width: '100%', height: 220, marginTop: 10 }}>
-                     <View style={{position: 'absolute', top: 145, left: 0, right: 0, bottom: 0}}>
-                       <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 16 }}>
-                         {usersModel.nm_lengkap}
-                        </Typography>
-                        <View style={[wrapper.row, { width: '100%', marginTop: 5 }]}>
-                           <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 16}}>
-                             {usersModel.no_card}
-                            </Typography>
-                            <Typography style={{ color: 'white', textAlign: 'center', fontSize: 10, flex: 1, marginLeft: 30 }}>
-                             Valid thru 12/31/2021
-                            </Typography>
-                        </View>
-                     </View>
-                  </ImageBackground>
-
-                  <View style={[wrapper.row, { borderRadius: 5, borderColor: '#ccc', borderWidth: 1, marginTop: 10}]}>
-                    <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, paddingHorizontal: 10 }}>
-                      Poin Redeem :
-                    </Typography>
-                    <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, fontWeight: 'bold' }}>
-                      {usersModel.saldo}
-                    </Typography>
-                    {/*usersModel.saldo == 0 ? null : (
-                      <Button
-                        containerStyle={{ alignSelf: 'center' }}
-                        style={{ width: 'auto', fontSize: 10 }}
-                        label={`${''}Redeem Sekarang`}
-                        color="primary"
-                        shadow={3}
-                      />
-                    )*/}
-                  </View>
-
-                  <View style={[wrapper.row, { borderRadius: 5, borderColor: '#ccc', borderWidth: 1, marginTop: 10}]}>
-                    <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, paddingHorizontal: 10 }}>
-                      Password Redeem :
-                    </Typography>
-                    <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, fontWeight: 'bold' }}>
-                      {usersModel.password}
-                    </Typography>
-                  </View>
-
-                  {usersModel.saldo == 0 ? (
-                      <>
+                  {route.params.users.no_card == null ? null : (
+                    <>
+                    <ImageBackground source={require('../../../assets/icons/figma/membercard.png')} resizeMode= 'stretch' style={{width: '100%', height: 220, marginTop: 10 }}>
+                      <View style={{position: 'absolute', top: 145, left: 0, right: 0, bottom: 0}}>
+                        <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 16 }}>
+                          {usersModel.nm_lengkap}
+                          </Typography>
+                          <View style={[wrapper.row, { width: '100%', marginTop: 5 }]}>
+                            <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 16}}>
+                              {usersModel.no_card}
+                              </Typography>
+                              <Typography style={{ color: 'white', textAlign: 'center', fontSize: 10, flex: 1, marginLeft: 30 }}>
+                              Valid thru 12/31/2021
+                              </Typography>
+                          </View>
+                      </View>
+                    </ImageBackground>
+                    <View style={[wrapper.row, { borderRadius: 5, borderColor: '#ccc', borderWidth: 1, marginTop: 10}]}>
+                      <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, paddingHorizontal: 10 }}>
+                        Poin Redeem :
+                      </Typography>
+                      <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, fontWeight: 'bold' }}>
+                        {usersModel.saldo}
+                      </Typography>
+                    </View>
+                  
+                    <View style={[wrapper.row, { borderRadius: 5, borderColor: '#ccc', borderWidth: 1, marginTop: 10}]}>
+                      <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, paddingHorizontal: 10 }}>
+                        Password Redeem :
+                      </Typography>
+                      <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, fontWeight: 'bold' }}>
+                        {usersModel.password}
+                      </Typography>
+                    </View>
+                    {usersModel.saldo == 0 ? (
                         <Typography style={{ color: 'red', fontSize: 11, textAlign: 'justify' }}>
                           Ayo tingkatkan transaksi untuk mendapatkan poin dan banyak keuntungannya
                         </Typography>
-                      </>
-                    ) : null }
+                      ) : null }
+                    </>
+                  )}
                 </View>
               )}
               
@@ -243,7 +232,7 @@ function TransactionList() {
                     {t(`Belum ada transaksi.`)}
                   </Typography>
                 ) : transaction.models.map((item, index) => (
-                  <TransactionItemNew
+                  <TransactionItem
                     key={index}
                     transaction={item}
                     onDetailPress={(model) => handleModalToggle('detail', true, {
@@ -261,17 +250,17 @@ function TransactionList() {
       </ScrollView>
 
       {/* Transaction Status Detail */}
-      <TransactionStatusModal
+      {/* <TransactionStatusModal
         isVisible={options.detailModalOpen}
         swipeDirection={null}
         onBackButtonPress={() => handleModalToggle('detail', false)}
         onBackdropPress={() => handleModalToggle('detail', false)}
         transaction={options.detailModel || undefined}
         style={{ maxHeight: height * 0.75 }}
-      />
+      /> */}
 
       {/* Transaction Pay Modal */}
-      <TransactionPayModal
+      {/* <TransactionPayModal
         isVisible={options.payModalOpen}
         onSwipeComplete={() => handleModalToggle('pay', false)}
         onBackButtonPress={() => handleModalToggle('pay', false)}
@@ -282,7 +271,7 @@ function TransactionList() {
           handleRefresh();
         }}
         transaction={options.payModel || undefined}
-      />
+      /> */}
     </View>
   );
 };

@@ -148,7 +148,7 @@ function TransactionItem({
         paddingVertical: 8,
         paddingHorizontal: 15,
       }}>
-        <View style={[wrapper.row, { alignItems: 'center' }]}>
+        <View style={[wrapper.row, { alignItems: 'center', }]}>
           <FigmaIcon.FigmaShoppingBag width={24} height={24} color={colors.gray[900]} />
 
           <View style={{ flex: 1, marginRight: 15, marginLeft: 12 }}>

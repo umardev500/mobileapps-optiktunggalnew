@@ -1,6 +1,7 @@
 import numeral from 'numeral';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Image, Linking, ListRenderItemInfo, RefreshControl, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Alert, Image, Linking, ListRenderItemInfo, RefreshControl, ScrollView, 
+         StyleSheet, Text, useWindowDimensions, View, FlatList } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { colors, ColorVariant, shadows, wrapper } from '../../../lib/styles';
 import { CartItemType, Modelable, ProductModel, ProductPhoto, ProductRetail, ProductType, ReviewModel } from '../../../types/model';
@@ -23,6 +24,7 @@ import { toggleFavorite } from '../../../redux/actions';
 import { useTranslation } from 'react-i18next';
 import Products from '../../components/Products';
 import ProductsLoading from '../../loadings/ProductsLoading';
+import { WebView } from 'react-native-webview';
 
 type Fields = {
   sort?: string;
@@ -78,49 +80,18 @@ function ProductDetail() {
     }));
 
     undefined !== product_id && retrieveProduct(product_id);
+    // retrieveReviews(product_id);
   }, [route.params]);
 
   useEffect(() => {
     if (product.modelLoaded && !review.modelsLoaded) {
-      retrieveReviews();
+      // retrieveReviews();
     }
   }, [product.modelLoaded]);
 
   useEffect(() => {
     // 
   }, [favorites]);
-
-
-  const retrieveProductsList = async (page: number = 1) => {
-  const reccnt = 4 * (page <= 1 ? 0 : page);
-
-    setProduct(state => ({ ...state, modelsLoaded: false }));
-
-    return httpService('/api/product/product', {
-      data: {
-        act: 'PrdSerupa',
-        dt: JSON.stringify({
-          reccnt,
-          pg: page,
-          param: "katalog",
-          limit: 4,
-          prdcat: "",
-          search: null,
-        }),
-      },
-    }).then(({ status, data }) => {
-      if (200 === status) {
-        setProduct(state => ({
-          ...state,
-          models: [...(state.models || []), ...data],
-          modelsLoaded: true,
-          isPageEnd: !data?.length,
-        }));
-      }
-    }).catch(err => {
-      setProduct(state => ({ ...state, modelsLoaded: true }));
-    });
-  };
 
   // Vars
   const handleRefresh = async () => {
@@ -129,6 +100,30 @@ function ProductDetail() {
     route.params?.product_id && await retrieveProduct(route.params.product_id);
 
     setIsLoading(false);
+  };
+
+  const renderPrdSerupa = ({ item, index }: ListRenderItemInfo<ProductModel>) => {
+    return (
+      <PressableBox
+        key={index}
+        opacity
+        containerStyle={{
+          marginHorizontal: 5,
+          maxWidth: 190,
+          backgroundColor: '#FEFEFE',
+          ...shadows[3]
+        }}
+        style={{ alignItems: 'center', backgroundColor: '#FEFEFE' }}
+        // onPress={() => navigation.navigatePath('Public', {
+        //   screen: 'BottomTabs.HomeStack.Search',
+        //   params: [null, null, {
+        //     brand: item,
+        //   }],
+        // })}
+      >
+        <Image source={{ uri: item.prd_foto }} style={styles.brandImage} />
+      </PressableBox>
+    );
   };
 
   const retrieveProduct = async (product_id: string) => {
@@ -143,23 +138,23 @@ function ProductDetail() {
           ...state,
           model: {
             ...data,
-            harga: parseFloat(data.harga || 0),
-            harga_promo: parseFloat(data.harga_promo || 0),
-            diskon: parseFloat(data.diskon || 0),
+            // harga: parseFloat(data.harga || 0),
+            // harga_promo: parseFloat(data.harga_promo || 0),
+            // diskon: parseFloat(data.diskon || 0),
             images: foto
           },
           modelLoaded: true
         }));
-        retrieveProductsList();
+        retrieveReviews(product_id);
       }
     });
   };
 
-  const retrieveReviews = async () => {
-    return httpService('/api/review/review/prd_id/'+product.model?.prd_id, {
+  const retrieveReviews = async (product_id: string) => {
+    return httpService('/api/review/review/', {
       data: {
         act: 'UlasanList',
-        dt: JSON.stringify({ comp: '001', id: product.model?.prd_id })
+        dt: JSON.stringify({ comp: '001', idprd: product_id, limit: 2 })
       }
     }).then(({ status, data }) => {
       if (200 === status) {
@@ -271,7 +266,8 @@ function ProductDetail() {
                 size={40}
                 rounded={40}
                 onPress={() => navigation.navigatePath('Public', {
-                  screen: 'BottomTabs.OtherStack.Katalog'
+                  // screen: 'BottomTabs.OtherStack.Katalog'
+                  screen: 'BottomTabs.HomeStack.Search'
                 })}
               >
                 <Ionicons
@@ -300,61 +296,63 @@ function ProductDetail() {
                   style={{ marginTop: 2 }}
                 />
               </Button>
+
+              <Typography
+                style={styles.totalImages}>{productModel.images.length} Images</Typography>
               
             </View>
           )}
           <View style={{ paddingTop: -20, paddingHorizontal: 5 }}>
             <Typography type="h3" style={{color: '#333333'}}>
-              {route.params.product_ds}
+              {productModel.prd_ds}
             </Typography>
             
-            {route.params.product.harga_promo !== null ? 
+            {productModel.harga_promo == 0 ? 
               (<>
-                <Typography type="h4" color="red" style={{ textDecorationLine: 'line-through' }}>
-                  Rp {route.params.product.harga}
-                </Typography>
                 <Typography type="h4" color="primary">
-                  Rp {route.params.product.harga_promo}
+                  Rp {productModel.harga}
                 </Typography>
                </>) : (
-                <Typography type="h4" color="primary">
-                  Rp {route.params.product.harga}
-                </Typography>
+                <>
+                  <Typography type="h4" color="red" style={{ textDecorationLine: 'line-through' }}>
+                    Rp {productModel.harga}
+                  </Typography>
+                  <Typography type="h4" color="primary">
+                    Rp {productModel.harga_promo}
+                  </Typography>
+                </>
             )}
             
             <Typography style={{color: '#333333', fontSize: 12}}>
-              Brand : {route.params.product.merk}
+              Brand : {productModel.merk}
             </Typography>
             <Typography style={{color: '#333333', fontSize: 12}}>
               SKU : {route.params.product_id}
             </Typography>
-
-            {route.params.product.description === null ? (
+            {/* <WebView
+              originWhitelist={['*']}
+              source={{ html: productModel.product_info.replace('\r\n', '') }}
+            /> */}
+            {/*{route.params.product.harga_promo == 0 ? (
               <View></View>
-            ) : (
-              <>
-                <Typography type="h6" style={{ marginTop: 20, color: '#333333' }}>
-                  {t('Ketentuan')}
-                </Typography>
-                <View style={[styles.borderTop, {
-                  borderColor: colors.gray[400],
-                  marginVertical: 8,
-                }]} />
-                <Typography style={{color: '#333333', fontSize: 12, textAlign: 'justify'}}>
-                  {route.params.product.description}
-                </Typography>
-                <Typography style={{color: '#333333', fontSize: 12, textAlign: 'justify'}}>
-                  {route.params.product.longdesc}
-                </Typography>
-              </>
-            )}
+             ) : (
+               <View style={{ marginTop: 10 }}>
+                 <Typography type="h6" style={{ color: '#333333' }}>
+                    {t('Ketentuan')}
+                  </Typography>
+                  <View style={[styles.borderTop, {
+                    borderColor: colors.gray[400],
+                  }]} />
+               </View>
+             )}*/}
+
             {/*<Typography type="h5" style={{color: '#333333'}}>
               {t('Details')}
             </Typography>
 
             <View style={styles.borderTop} />
 
-            <View style={{ backgroundColor: '#f1f1f1' }}>
+            <View>
               <RenderHtml
                 source={{ html: route.params.product.product_info }}
                 tagsStyles={{
@@ -363,9 +361,9 @@ function ProductDetail() {
               />
             </View>*/}
             
-            {!review.modelsLoaded ? null : (
+            {/* {!review.modelsLoaded ? null : (
               <>
-                <Typography type="h5" style={{ marginTop: 20, color: '#333333' }}>
+                <Typography type="h5" style={{ marginTop: 10, color: '#333333' }}>
                   {t('Reviews')}
                 </Typography>
 
@@ -376,7 +374,7 @@ function ProductDetail() {
 
                 {!review.models?.length ? (
                   <Typography style={{ textAlign: 'center' }}>
-                    {t('No ratings yet!')}
+                    {t('Ulasan masih kosong')}
                   </Typography>
                 ) : (
                   <View>
@@ -390,23 +388,28 @@ function ProductDetail() {
                         }}
                       />
                     ))}
+                    <PressableBox
+                      containerStyle={{ marginTop: 10, marginBottom: 30, backgroundColor: '#f9f9f9' }}
+                      onPress={() => navigation.navigatePath('Public', {
+                        screen: 'ReviewAll',
+                        params: [{ 
+                          product_id: route.params.product_id || 0,
+                          product,
+                        }]
+                      })}
+                      >
+                      <Typography
+                        textAlign="center"
+                        style={{ marginHorizontal: 15, paddingVertical: 10, fontSize: 12 }}
+                        color="primary">
+                        {t(`${''}Lihat Review lainnya...`)}
+                      </Typography>
+                    </PressableBox>
                   </View>
                 )}
               </>
-            )}
+            )} */}
           </View> 
-
-          {/*<Typography type="h5" style={{ marginTop: 20, marginBottom: 20, color: '#333333' }}>
-            {t('Produk Serupa')}
-          </Typography>
-          <Products
-            contentContainerStyle={[styles.container, styles.wrapper]}
-            refreshing={isLoading}
-            data={product.models}
-            LoadingView={(
-              <ProductsLoading />
-            )}
-          />*/}
         </View>
       )}
 
@@ -437,7 +440,7 @@ const styles = StyleSheet.create({
   borderTop: {
     marginVertical: 8,
     borderTopWidth: 1,
-    borderColor: '#333333',
+    borderColor: '#c1c1c1',
   },
 
   carouselItem: {
@@ -463,6 +466,21 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     backgroundColor: '#f44336'
+  },
+  brandImage: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+  },
+  totalImages: {
+    position: 'absolute',
+    top: 295,
+    right: 15,
+    fontSize: 11,
+    backgroundColor: '#ededed',
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    borderRadius: 10
   }
 });
 

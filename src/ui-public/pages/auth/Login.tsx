@@ -82,7 +82,6 @@ function Login() {
 
     setIsSaving(true);
     return httpService('/api/login/login', {
-    // return httpService('https://ws.stmorita.net/register/list', {
       data: {
         act: 'Login',
         dt: JSON.stringify({
@@ -183,7 +182,7 @@ function Login() {
 
         <Button
           containerStyle={{ alignSelf: 'center', borderRadius: 5, backgroundColor: '#CCC',  marginTop: 30}}
-          style={{ width: 340, height: 40,  }}
+          style={{ width: 300, height: 40,  }}
           label={`${''}Login`.toUpperCase()}
           shadow={3}
           onPress={handleSubmit}
@@ -211,7 +210,7 @@ function Login() {
             containerStyle={{ marginTop: 40, alignSelf: 'center', padding: 10 }}
             opacity
             onPress={() => navigation.navigatePath('Public', {
-              screen: 'BottomTabs.AccountStack.Register'
+              screen: 'Register'
             })}
           >
             <Typography heading size="sm" color="primary" style={{}}>

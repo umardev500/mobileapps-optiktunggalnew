@@ -7,10 +7,10 @@ export const fetchAddresses = createAsyncThunk('user/fetchAddress', async (args,
   const { user: { user } } = getState() as RootStoreState;
   let addresses: AddressModel[] = [];
 
-  await httpService('https://ws.stmorita.net/register/list', {
+  await httpService('/api/login/login', {
     data: {
-      act: 'ShipToList',
-      dt: JSON.stringify({ comp: '001', regid: user?.id })
+      act: 'ShipList',
+      dt: JSON.stringify({ regid: user?.id }),
     }
   }).then(({ status, data }) => {
     if (200 === status) {
@@ -49,7 +49,7 @@ export const toggleFavorite = createAsyncThunk('shop/toggleFavorite', async (pro
   let shouldPush = false;
 
   const productExist = oldFavorites.find((item) => item.prd_id === product.prd_id);
-  console.log('DATA PRODUK__ '+productExist);
+  // console.log('DATA PRODUK__ '+productExist);
   await httpService('/api/product/product', {
     data: {
       act: 'Favorit',

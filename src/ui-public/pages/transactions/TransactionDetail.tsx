@@ -10,7 +10,7 @@ import { useAppNavigation } from '../../../router/RootNavigation';
 import { Modelable, TransactionModel } from '../../../types/model';
 import { Button, Typography } from '../../../ui-shared/components';
 import { BoxLoading } from '../../../ui-shared/loadings';
-import TransactionItemNew from '../../components/TransactionItemNew';
+import TransactionItem from '../../components/TransactionItem';
 import TransactionPayModal from '../../components/TransactionPayModal';
 import TransactionStatusModal from '../../components/TransactionStatusModal';
 
@@ -73,7 +73,7 @@ function TransactionDetail() {
     return httpService('/api/transaction/transaction', {
       data: {
         act: 'TrxDetail',
-        dt: JSON.stringify({ idtrx : 'CZ_PIN242001162' }),
+        dt: JSON.stringify({ idtrx : route.params.transaksi.orderno }),
       }
     }).then(({ status, data }) => {
       setTransaction(state => ({
@@ -96,25 +96,6 @@ function TransactionDetail() {
       ToastAndroid.show(t(`Transaksi belum dapat ditampilkan.`), ToastAndroid.SHORT);
     });
   };
-
-  // const handleModalToggle = (type: string, open: null | boolean = null, args: Partial<OptionsState> = {}) => {
-  //   switch (type) {
-  //     case 'detail':
-  //       setOptions(state => ({
-  //         ...state,
-  //         detailModalOpen: 'boolean' === typeof open ? open : !options.detailModalOpen,
-  //         ...args,
-  //       }));
-  //       break;
-  //     case 'pay':
-  //       setOptions(state => ({
-  //         ...state,
-  //         payModalOpen: 'boolean' === typeof open ? open : !options.payModalOpen,
-  //         ...args,
-  //       }));
-  //       break;
-  //   }
-  // };
 
   return (
     <ScrollView
@@ -156,7 +137,7 @@ function TransactionDetail() {
             />
           </View>
         ) : (
-          <TransactionItemNew
+          <TransactionItem
             transaction={transaction.model}
           />
         )

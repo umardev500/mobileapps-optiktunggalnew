@@ -142,7 +142,7 @@ function TransactionItemNew({
         paddingHorizontal: 15,
         borderColor: '#cccccc',
         borderRadius: 5, 
-        borderWidth: 1
+        borderWidth: 1,
       }}>
         <View style={[wrapper.row, { alignItems: 'center' }]}>
           <FigmaIcon.FigmaShoppingBag width={24} height={24} color={colors.gray[900]} />
@@ -343,6 +343,7 @@ function TransactionItemNew({
           screen: 'BottomTabs.NotificationStack.TransactionDetail',
           params: [null, null, {
             transaction_id: transaction.id,
+            nomororder: transaction.orderno,
             transaksi: transaction
           }],
         })}

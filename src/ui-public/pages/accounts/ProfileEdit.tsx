@@ -15,6 +15,7 @@ import { launchCamera } from 'react-native-image-picker';
 import imageManager, { ImageManagerParams } from '../../../lib/utilities/imageManager';
 
 type Fields = {
+  kodecust?: string;
   namadepan?: string;
   namabelakang?: string;
   hp?: string;
@@ -40,6 +41,7 @@ function ProfileEdit() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState<Fields>({
+    kodecust: '',
     namadepan: '',
     namabelakang: '',
     hp: '',
@@ -61,10 +63,11 @@ function ProfileEdit() {
 
       setFields(state => ({
         ...state,
+        kodecust: user.id,
         namadepan: user.namadepan || namadepan,
         namabelakang: user.namabelakang || namabelakang,
         hp: showPhone(String(user.hp), ''), // Remove leading 62
-        email: user.email,
+        email: user?.email,
       }));
     }
   }, [user]);
@@ -103,6 +106,18 @@ function ProfileEdit() {
     return fields.indexOf(field) < 0 ? null : error.message;
   };
 
+  const handleLogout = async () => {
+    await httpService.logout();
+
+    navigation.reset({
+      index: 0,
+      routes: [{
+        name: 'Public',
+        params: { screen: 'BottomTabs.AccountStack.Login' }
+      }],
+    });
+  };
+
   const handleSubmit = () => {
     if (!fields.namadepan || !fields.namabelakang) {
       return handleErrorShow('namadepan', t('Mohon masukkan nama Anda secara lengkap.'));
@@ -116,6 +131,8 @@ function ProfileEdit() {
       // return handleErrorShow('namafoto', t('Mohon pilih file untuk foto profil Anda.'));
     } else if (!fields.ktp) {
       // return handleErrorShow('namaktp', t('Mohon pilih file foto KTP/NPWP Anda.'));
+    }else if(!fields.kodecust){
+      return handleErrorShow('kodecust', t('Mohon masukan kode customer'));
     }
 
     const { ktp, foto, ...restFields } = fields;
@@ -145,9 +162,14 @@ function ProfileEdit() {
           foto: !foto ? user?.foto : foto,
         });
 
-        Alert.alert( "Berhasil", "Profil berhasil diubah",
+        Alert.alert( "Berhasil", "Profil berhasil diubah. silahkan login kembali!",
           [
-            { text: "OKE", onPress: () => navigation.navigatePath('Public', { screen: 'BottomTabs.AccountStack.Account'}) }
+            { text: "OKE", onPress: () => 
+              handleLogout()
+              // navigation.navigatePath('Public', { 
+              //   screen: 'BottomTabs.AccountStack.Account'
+              // }) 
+            }
           ]
         );
       } else if ('string' === typeof msg) {
@@ -217,10 +239,20 @@ function ProfileEdit() {
     <ScrollView contentContainerStyle={styles.container}>
       <TextField
         containerStyle={{ marginTop: 12 }}
+        placeholder={t('Kode Customer')}
+        value={fields.kodecust}
+        onChangeText={(value) => handleFieldChange('kodecust', value)}
+        error={!!getFieldError('kodecust')}
+        editable={false}
+        message={error.message}
+      />
+      <TextField
+        containerStyle={{ marginTop: 12 }}
         placeholder={t('Nama Depan')}
         value={fields.namadepan}
         onChangeText={(value) => handleFieldChange('namadepan', value)}
         error={!!getFieldError('namadepan')}
+        editable={true}
         message={error.message}
       />
 
@@ -230,6 +262,7 @@ function ProfileEdit() {
         value={fields.namabelakang}
         onChangeText={(value) => handleFieldChange('namabelakang', value)}
         error={!!getFieldError('namabelakang')}
+        editable={true}
         message={error.message}
       />
 
@@ -238,6 +271,7 @@ function ProfileEdit() {
         placeholder={t('Nomor Telepon')}
         value={fields.hp}
         onChangeText={(value) => handleFieldChange('hp', value)}
+        editable={false}
         keyboardType="phone-pad"
         left={(
           <View style={{ ...wrapper.row, alignItems: 'center' }}>
@@ -248,18 +282,19 @@ function ProfileEdit() {
         message={error.message}
       />
 
-      <TextField
+      {<TextField
         containerStyle={{ marginTop: 12 }}
         placeholder={t('Email')}
         value={fields.email}
         onChangeText={(value) => handleFieldChange('email', value)}
         keyboardType="email-address"
+        editable={false}
         autoCapitalize="none"
         error={!!getFieldError('email')}
         message={error.message}
-      />
+      />}
 
-      <View style={[wrapper.row, { marginTop: 12, alignItems: 'center' }]}>
+      {/*<View style={[wrapper.row, { marginTop: 12, alignItems: 'center' }]}>
         {!fields.foto ? (
           !user?.foto ? (
             <View style={[styles.image, { backgroundColor: colors.gray[200] }]} />
@@ -296,7 +331,7 @@ function ProfileEdit() {
             {t(`Biarkan kosong jika tidak merubah foto.`)}
           </Typography>
         </PressableBox>
-      </View>
+      </View>*/}
 
       <View style={{ marginTop: 20, paddingTop: 24 }}>
         <Button

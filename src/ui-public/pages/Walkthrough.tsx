@@ -204,7 +204,6 @@ function Walkthrough() {
 
   const handleVersionCheck = async () => {
     let isValid = true;
-    // console.log('HASIL : '+'https://api.websetia.com/morita/mobile/version.json?time='+moment().unix());
     await httpService(`/version.json`, {
       method: 'get'
     }).then(({

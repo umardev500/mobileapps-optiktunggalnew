@@ -1,6 +1,6 @@
 import { RouteProp, useRoute } from '@react-navigation/core';
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, ScrollView, StyleSheet, ToastAndroid, useWindowDimensions, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, ToastAndroid, useWindowDimensions, View, Alert } from 'react-native';
 import { colors } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { ErrorState, ValueOf } from '../../../types/utilities';
@@ -20,7 +20,7 @@ type Fields = {
 function PinEdit() {
   // Hooks
   const navigation = useAppNavigation();
-  const route = useRoute<RouteProp<PublicAccountStackParamList, 'PinEdit'>>();
+  const route = useRoute();
   const { width, height } = useWindowDimensions();
   const { t } = useTranslation('account');
   const reduxState = useAppSelector(({ user, shop }) => ({ user, shop }));
@@ -91,7 +91,6 @@ function PinEdit() {
   };
 
   const handleSubmit = async () => {
-    // ToastAndroid.show(`${''}Email `+user?.email, ToastAndroid.LONG);
     let errorMessage = '';
 
     if (fields.new_pin && fields.new_pin.length < 6) {
@@ -113,8 +112,9 @@ function PinEdit() {
       data: {
         act: 'GantiPwd',
         dt: JSON.stringify({
-          email: user?.email,
+          email: route.params.email,
           pwd: fields.new_pin,
+          nama: !route?.params.nama ? null : (route.params.nama)
         }),
       }
     }).then(({ status, data }) => {
@@ -125,10 +125,21 @@ function PinEdit() {
           ...user,
           verified: 1
         });
-        ToastAndroid.show(`${''}Password berhasil diubah.`, ToastAndroid.SHORT);
-        navigation.navigatePath('Public', {
-          screen: 'BottomTabs.AccountStack.PasswordReset'
-        });
+        // ToastAndroid.show(`${''}Password berhasil dibuat.`, ToastAndroid.SHORT);
+        // navigation.navigatePath('Public', {
+        //   screen: 'BottomTabs.AccountStack.PasswordReset',
+        //   params: [{email: route.params.email}],
+        // });
+
+        Alert.alert( "Selamat", "Anda berhasil melakukan pendaftaran akun.",
+                    [{ 
+                      text: "Login", onPress: () => 
+                        navigation.navigatePath('Public', { 
+                          screen: 'BottomTabs.AccountStack.Login',
+                          param: [{aksi : 'ubah'}]
+                        })
+                    }]);
+
         // redirectTO.current = setTimeout(() => {
         //   handleWelcomeToggle(false, true);
         // }, 1000);
@@ -187,7 +198,7 @@ function PinEdit() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {isRegister ? null : (
+      {/*{isRegister ? null : (
         <View style={{ marginTop: 24 }}>
           <Typography style={{ marginTop: 2, textAlign: 'center' }}>
             {t(`${''}Pastikan password memiliki kombinasi Huruf Besar, Huruf Kecil dan Angka`)}
@@ -197,7 +208,17 @@ function PinEdit() {
             Email anda {user?.email}
           </Typography>
         </View>
-      )}
+      )}*/}
+
+      <View style={{ marginTop: 24 }}>
+        <Typography style={{ marginTop: 2, textAlign: 'center' }}>
+          {t(`${''}Pastikan password memiliki kombinasi Huruf Besar, Huruf Kecil dan Angka`)}
+        </Typography>
+
+        <Typography style={{ marginTop: 2, textAlign: 'center' }}>
+          Email anda {route.params.email}
+        </Typography>
+      </View>
 
       <TextField
         containerStyle={{ marginTop: 50 }}

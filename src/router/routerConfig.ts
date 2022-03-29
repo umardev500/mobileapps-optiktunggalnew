@@ -33,9 +33,9 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     case 'Notification':
       return { title: tNotif('Notifikasi') };
     case 'TransactionUsers':
-      return { title: tNotif('Transaksi Pelanggan') };
+      return { headerShown: false };
     case 'TransactionList':
-      return { title: tNotif('Transaksi') };
+      return { title: tNotif('Transaksi Anda') };
     case 'TransactionDetail':
       return { title: tNotif('Detail Transaksi') };
     case 'PromotionList':
@@ -64,13 +64,14 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { headerShown: false };
     case 'ProductDetail':
       return { headerShown: false };
-
+    case 'ReviewAll':
+      return { headerShown: false};
     // Favorites
     case 'Favorite':
       return { title: `${''}Favorit` };
 
     case 'Article':
-      return { title: `${''}News` };
+      return { title: `${''}Kabar dari kami` };
 
     case 'ArticleDetail':
       return { title: `${''}Detail Artikel` };
@@ -90,6 +91,8 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { title: tAcc('Lupa Password') };
     case 'Register':
       return { title: tAcc('Buat Akun') };
+    case 'SelectUsers':
+        return { title: tAcc('Buat Akun') };  
     case 'Verification':
       return {
         title: tAcc(`${''}Verifikasi Akun`)
@@ -109,7 +112,7 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     case 'ReviewList':
       return { title: tAcc(`${''}Ulasan`) };
     case 'ProfileEdit':
-      return { title: tAcc(`${''}Ubah Profile`) };
+      return { title: tAcc(`${'Profile'}`) };
 
     // Company
     case 'Terms':

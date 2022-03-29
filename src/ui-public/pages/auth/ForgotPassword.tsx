@@ -76,7 +76,7 @@ function ForgotPassword() {
 
     setIsSaving(true);
 
-    return httpService('/register/list', {
+    return httpService('/api/login/login', {
       data: {
         act: 'LupaPwd',
         dt: JSON.stringify({
@@ -98,12 +98,12 @@ function ForgotPassword() {
           }]
         });
       } else {
-        return handleErrorShow('email', `${''}Email address not registered.`);
+        return handleErrorShow('email', `${''}Alamat email tidak terdaftar.`);
       }
     }).catch((err) => {
       setIsSaving(false);
 
-      return handleErrorShow('email', `${''}Email address not registered.`);
+      return handleErrorShow('email', `${''}Alamat email tidak terdaftar.`);
     });
   };
 

@@ -1,7 +1,8 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { Linking, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, View, ListRenderItemInfo, Image, FlatList, ToastAndroid } from 'react-native';
+import { Linking, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, 
+         View, ListRenderItemInfo, Image, FlatList, ToastAndroid, Alert } from 'react-native';
 import { FigmaIcon } from '../../../assets/icons';
 import { getConfig } from '../../../lib/config';
 import { colors, wrapper, shadows } from '../../../lib/styles';
@@ -68,7 +69,7 @@ function OurStore() {
         dt: JSON.stringify({
           pageCountLimit: 0,
           param: "store",
-          ...(!fields.search ? null : { search: fields.search }),
+          search: fields.search,
         })
       },
     }).then(({ status, data }) => {
@@ -101,11 +102,14 @@ function OurStore() {
         <Image source={{ uri: 'https://optiktunggal.com/img/store_location/'+item.StoreImage }} 
               style={{ width: '20%', height: 70 }} />
         <View style={{ marginLeft: 10, width: '65%' }}>
-          <Typography type="h4" style={{ marginTop: 10, fontSize: 12, }} numberOfLines={2}>
+          <Typography type="h4" style={{ fontSize: 11, }} numberOfLines={2}>
             {item.StoreName} | {item.StoreLocationUnit}
           </Typography>
-          <Typography style={{ marginTop: 5, fontSize: 10, textAlign: 'justify'}} numberOfLines={4}>
-            {item.StoreAddress}, Phone : { item.StorePhone }, {item.StoreNotes}
+          <Typography style={{ fontSize: 12, textAlign: 'justify'}} numberOfLines={2}>
+            {item.StoreAddress}
+          </Typography>
+          <Typography style={{ fontSize: 12, textAlign: 'justify'}}>
+            Phone : { item.StorePhone }, {item.StoreNotes}
           </Typography>
         </View>
       </PressableBox>
@@ -143,6 +147,24 @@ function OurStore() {
     )
   };
 
+  // const renderAnnotations = () => {
+  //   return (
+  //     <MapboxGL.PointAnnotation
+  //       key="pointAnnotation"
+  //       id="pointAnnotation"
+  //       coordinate={[3.3362400, 6.5790100]}>
+  //       <View style={{
+  //                 height: 30, 
+  //                 width: 30, 
+  //                 backgroundColor: '#00cccc', 
+  //                 borderRadius: 50, 
+  //                 borderColor: '#fff', 
+  //                 borderWidth: 3
+  //               }} />
+  //     </MapboxGL.PointAnnotation>
+  //   );
+  // }
+
   return (
     <>
       <View style={[wrapper.row]}>
@@ -156,13 +178,17 @@ function OurStore() {
             </Typography>
         </PressableBox>
       </View>
+
       <View style={styles.page}>
         <View style={styles.container}>
           <MapboxGL.MapView style={styles.container}>
             <MapboxGL.UserLocation/>
             <MapboxGL.Light />
             <MapboxGL.Images />
-            <MapboxGL.Camera zoomLevel={15} centerCoordinate={coordinates} />
+            <MapboxGL.Camera 
+              zoomLevel={7} 
+              centerCoordinate={coordinates}/>
+            {/*{renderAnnotations()}*/}
 
             {!selected.StoreID ? null : (
               <MapboxGL.MarkerView id={"marker"} coordinate={coordinates}>
@@ -194,6 +220,9 @@ function OurStore() {
                 </View>
               </MapboxGL.MarkerView>
             )}
+            <View style={{ marginBottom: 50 }}>
+              <FlatList data={contactUs.models} renderItem={renderStore} style={styles.flatList} />
+            </View>
           </MapboxGL.MapView>
         </View>
       </View>

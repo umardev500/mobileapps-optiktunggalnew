@@ -126,7 +126,7 @@ function Register() {
     }).then(({ status, data }) => {
       setIsSaving(false);
       if (status === 200) {
-        Alert.alert( "Pemberitahuan", "Password sudah kami kirimkan ke email nrntwhd@gmail.com.",
+        Alert.alert( "Pemberitahuan", "Password sudah kami kirimkan ke email anda.",
           [
             { text: "OK", onPress: () => { navigation.navigatePath('Public', { screen: 'BottomTabs.AccountStack.Login',}); }}
           ]

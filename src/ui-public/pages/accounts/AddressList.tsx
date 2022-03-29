@@ -14,6 +14,7 @@ import { useAppSelector } from '../../../redux/hooks';
 import { fetchAddresses } from '../../../redux/actions';
 import { useTranslation } from 'react-i18next';
 import { httpService, showPhone } from '../../../lib/utilities';
+import { Image } from 'react-native-animatable';
 
 type ActionScreenState = {
   rootScreen?: keyof RootStackParamList;
@@ -132,15 +133,9 @@ function AddressList() {
   const handleDelete = async (addressItem: AddressModel) => {
     return httpService('/register/save', {
       data: {
-        act: 'ShipTo',
-        comp: '001',
+        act: 'DeleteShipList',
         dt: JSON.stringify({
-          regid: user?.id,
-          id: addressItem.id,
-          cmd: '3',
-          lat: location.lat,
-          lng: location.lng,
-          ip: location.ip,
+          regid: user?.id
         }),
       }
     }).then(async ({ status, id = 1 }) => {
@@ -158,30 +153,30 @@ function AddressList() {
     <View style={{ flex: 1 }}>
       <Header
         left
-        title={[
-          t(`Alamat Pengiriman`),
-          <PressableBox
-            onPress={() => navigation.navigatePath('Public', {
-              screen: 'BottomTabs.AccountStack.AddressEdit',
-            })}
-          >
-            <Typography style={{
-              textDecorationLine: 'underline',
-              textDecorationStyle: 'solid'
-            }}>
-              {t(`Tambah Alamat`)}
-            </Typography>
-          </PressableBox>
-        ]}
+        title={t(`Alamat Pengiriman`)}
       />
 
-      {!actionScreen.rootScreen ? null : (
+      {/* {!actionScreen.rootScreen ? null : ( */}
         <View style={[styles.wrapper, { paddingVertical: 12 }]}>
-          <Typography type="h4" style={{ marginTop: 12 }}>
+          <Typography type="h6" style={{ marginTop: 12 }}>
             {t(`Pilih salah satu alamat`)}
           </Typography>
+            <PressableBox
+              style={{ backgroundColor: '#6495ED', borderRadius: 5, marginTop: 10 }}
+              onPress={() => navigation.navigatePath('Public', {
+                screen: 'BottomTabs.AccountStack.AddressEdit',
+              })}
+            >
+              <Typography style={{
+                color: 'white',
+                alignSelf: 'center',
+                paddingVertical: 10
+              }}>
+                {t(`Tambah Alamat`)}
+              </Typography>
+            </PressableBox>
         </View>
-      )}
+      {/* )} */}
 
       <FlatList
         contentContainerStyle={[styles.container, styles.wrapper]}
@@ -296,7 +291,8 @@ function AddressList() {
             <BoxLoading width={[180, 240]} height={18} style={{ marginTop: 4 }} />
           </View>
         ) : (
-          <View style={{ paddingVertical: 12 }}>
+          <View style={{ paddingVertical:  10}}>
+            <Image source={{ uri: 'https://png.pngtree.com/png-vector/20190723/ourlarge/pngtree-map-location-web-icon-flat-line-filled-gray-icon-vector-png-image_1569637.jpg' }} style={styles.sorry} />
             <Typography textAlign="center">
               {t(`Belum ada alamat yang disimpan.`)}
             </Typography>
@@ -337,7 +333,13 @@ const styles = StyleSheet.create({
     top: '100%',
     marginTop: -16
   },
-
+  sorry: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginTop: 120
+  },
   action: {
     marginTop: 'auto',
     paddingVertical: 12,

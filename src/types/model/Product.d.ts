@@ -21,6 +21,8 @@ export type ProductModel = {
 
   categories?: CategoryModel[];
   brands?: BrandModel[];
+  genders?: GenderModel[];
+  modelkacamatas?: ModelKacamata[];
 
   favorite?: boolean;
 
@@ -48,6 +50,15 @@ export type ProductModel = {
   [key: string]: any;
 };
 
+// export type UserExistModel = {
+//   id?: string;
+//   nama_lengkap?: string;
+//   namadepan?: string;
+//   namabelakang?: string;
+//   hp?: string;
+//   jl?: string;
+// };
+
 export type ProductType = {
   name: string;
   price: number;
@@ -73,6 +84,18 @@ export type CategoryModel = {
   ds?: string;
   image?: any;
   foto?: string;
+};
+
+export type GenderModel = {
+  id?: string;
+  name?: string;
+  ds?: string;
+};
+
+export type ModelKacamata = {
+  id?: string;
+  name?: string;
+  ds?: string;
 };
 
 export type BrandModel = {

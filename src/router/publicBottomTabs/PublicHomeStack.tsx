@@ -55,7 +55,7 @@ function PublicHomeStack() {
               title={title}
               left={!!back}
               {...(!options.headerRight ? null : {
-                right: options.headerRight(navigation as any) 
+                right: options.headerRight(navigation as any)
               })}
             />
           );

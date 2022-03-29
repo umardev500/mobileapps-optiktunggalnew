@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, Platform, StyleSheet, View, ViewProps } from 'react-native';
+import { Image, Platform, StyleSheet, View, ViewProps, Dimensions } from 'react-native';
 import Typography, { TypographyProps } from './Typography';
 import TextField from './TextField';
 import Button, { ButtonProps } from './Button';
@@ -48,7 +48,6 @@ function Header({
 }: Props) {
   // Hooks
   const navigation = useAppNavigation();
-
   // State
   const [search, setSearch] = useState(searchValue);
 
@@ -62,7 +61,7 @@ function Header({
     return 'string' === typeof title ? (
       <View style={{ flex: 1, alignSelf: 'center', alignItems: 'center' }}>
         <Typography
-          style={{marginTop: -20, color: '#FFFFFF'}}
+          style={{marginTop: -20, color: '#333333'}}
           textAlign="center"
           {...titleProps}
         >{title}</Typography>
@@ -99,7 +98,7 @@ function Header({
       <View style={[styles.container, style]} {...props}>
         <View style={[wrapper.row, {
           marginTop: !title && !children && !hideSearch ? 8 : 0,
-          minHeight: !hideSearch ? 42 : 0,
+          minHeight: !hideSearch ? 30 : 0,
         }]}>
           {/* Left Column */}
           {'boolean' !== typeof left ? (
@@ -107,13 +106,13 @@ function Header({
           ) : (
             (!left || !navigation.canGoBack()) ? null : (
               <Button
-                containerStyle={{ marginRight: 12, alignSelf: 'flex-start', marginTop: -10 }}
-                size={42}
+                containerStyle={{ marginRight: 12, alignSelf: 'flex-start', paddingVertical: -15, marginTop: -15 }}
+                size={38}
                 color="transparent"
                 onPress={() => navigation.goBack()}
                 {...leftProps}
               >
-                <Ionicons name="arrow-back" size={24} color={colors.white} {...leftIconProps} />
+                <Ionicons name="arrow-back" size={24} color={colors.gray[700]} {...leftIconProps} />
               </Button>
             )
           )}
@@ -126,11 +125,11 @@ function Header({
               !hideSearch ? (
                 <TextField
                   border
-                  containerStyle={{ flex: 1, backgroundColor: colors.gray[100], alignSelf: 'center', marginTop: -40 }}
+                  containerStyle={{ flex: 1, backgroundColor: colors.gray[100], alignSelf: 'center', marginTop: -25, marginBottom: -5 }}
                   style={{
                     paddingTop: Platform.OS === 'ios' ? 4 : 2,
                     paddingBottom: Platform.OS === 'ios' ? 4 : 2,
-                    height: 35,
+                    height: 38,
                     fontSize: 11
                   }}
                   placeholder="Cari Produk.."
@@ -162,7 +161,7 @@ function Header({
           ) : (
             !right ? (
               title && left ? (
-                <View style={{ width: 42, marginLeft: 12 }} />
+                <View style={{ marginLeft: 45 }} />
               ) : null
             ) : (
               <Button
@@ -186,14 +185,15 @@ function Header({
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 15,
-    paddingHorizontal: 15,
+    paddingHorizontal: 5,
     position: 'relative',
   },
 
   headercolor: {
-    width: '100%',
+    width: Dimensions.get('window').width,
     height: 50,
-    backgroundColor: "#204c29",
+    // backgroundColor: "#204c29",
+    backgroundColor: "#FEFEFE",
     position: 'absolute',
     resizeMode: 'cover',
   },

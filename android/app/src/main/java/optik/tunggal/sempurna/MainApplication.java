@@ -1,4 +1,4 @@
-package com.moritagetall.app;
+package optik.tunggal.sempurna;
 
 import android.app.Application;
 import android.content.Context;
@@ -65,7 +65,7 @@ public class MainApplication extends Application implements ReactApplication {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.moritagetall.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("optik.tunggal.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);

@@ -285,7 +285,7 @@ function Katalog() {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={[wrapper.row, { alignItems: 'center', marginTop: 5, marginBottom: 5, paddingHorizontal: 10, backgroundColor: '#FEFEFE' }]}>
+      <View style={[wrapper.row, { alignItems: 'center', marginBottom: 5, paddingHorizontal: 10, backgroundColor: '#FEFEFE' }]}>
         <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 12 }}>
           Brands
         </Typography>
@@ -297,6 +297,7 @@ function Katalog() {
               <View style={[wrapper.row, {
                 justifyContent: 'center',
                 paddingVertical: 8,
+                marginHorizontal: 15, 
                 backgroundColor: '#FEFEFE',
               }]}>
                 {Array.from(Array(5)).map((item, index) => (
@@ -341,9 +342,12 @@ function Katalog() {
         ListEmptyComponent={!product.modelsLoaded ? (
           <ProductsLoading />
         ) : product.models?.length ? null : (
-          <Typography textAlign="center" style={{ marginVertical: 12 }}>
-            {t(`${t('Tidak ada produk')}`)}
-          </Typography>
+          <View style={[styles.container, styles.wrapper]}>
+            <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
+            <Typography textAlign="center" style={{ marginVertical: 12 }}>
+              {t(`${t('Produk tidak ditemukan')}`)}
+            </Typography>
+          </View>
         )}
         ListFooterComponent={!product.isPageEnd ? null : (
           <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
@@ -374,7 +378,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     backgroundColor: colors.white,
-    paddingHorizontal: 15,
+    paddingHorizontal: 20,
   },
 
   header: {
@@ -385,6 +389,13 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     marginRight: -20,
     color: 'blue'
+  },
+  sorry: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginTop: 120
   },
   filterItem: {
     backgroundColor: colors.transparent('palettes.primary', 0.1),

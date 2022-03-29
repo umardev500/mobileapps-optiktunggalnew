@@ -49,15 +49,15 @@ function PasswordReset() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Typography heading>
-        {t(`Ubah Kata Sandi`)}
+        {t(`Ubah password`)}
       </Typography>
 
       <Typography style={{ marginTop: 4 }}>
-        {t(`Kode Verifikasi Akan Dikirimkan Lewat Email`)}
+        {t(`Jangan beritahukan password anda kepada orang lain.`)}
       </Typography>
 
       <View style={{ marginTop: 24 }}>
-        <Button
+        {/*<Button
           containerStyle={[styles.resetBtnContainer, { marginBottom: 12 }]}
           rounded={15}
           left={(
@@ -85,12 +85,12 @@ function PasswordReset() {
               {`${mailName.substr(0, mailName.length - 3).replace(/./g, '*')}${mailName.substr(-3)}@${mailDomain}`}
             </Typography>
           </View>
-        </Button>
+        </Button>*/}
 
         <Button
           containerStyle={styles.resetBtnContainer}
           style={{ justifyContent: 'flex-start' }}
-          label={t(`Buat Sandi Baru`)}
+          label={t(`Ubah Password`)}
           labelProps={{ textAlign: 'left', type: 'p' }}
           rounded={15}
           left={(

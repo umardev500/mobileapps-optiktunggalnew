@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "MoritaGetall.app"
-               BlueprintName = "MoritaGetall"
-               ReferencedContainer = "container:MoritaGetall.xcodeproj">
+               BuildableName = "OptikTunggal.app"
+               BlueprintName = "OptikTunggal"
+               ReferencedContainer = "container:OptikTunggal.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "MoritaGetallTests.xctest"
-               BlueprintName = "MoritaGetallTests"
-               ReferencedContainer = "container:MoritaGetall.xcodeproj">
+               BuildableName = "OptikTunggalTests.xctest"
+               BlueprintName = "OptikTunggalTests"
+               ReferencedContainer = "container:OptikTunggal.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "MoritaGetall.app"
-            BlueprintName = "MoritaGetall"
-            ReferencedContainer = "container:MoritaGetall.xcodeproj">
+            BuildableName = "OptikTunggal.app"
+            BlueprintName = "OptikTunggal"
+            ReferencedContainer = "container:OptikTunggal.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "MoritaGetall.app"
-            BlueprintName = "MoritaGetall"
-            ReferencedContainer = "container:MoritaGetall.xcodeproj">
+            BuildableName = "OptikTunggal.app"
+            BlueprintName = "OptikTunggal"
+            ReferencedContainer = "container:OptikTunggal.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

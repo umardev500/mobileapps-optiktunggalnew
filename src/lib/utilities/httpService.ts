@@ -17,10 +17,10 @@ const httpService = async (url: string, args: AxiosRequestConfig = {}): Promise<
   const isExternal = url.indexOf('http') === 0;
   let domain = getConfig('API_URL');
 
-  if (url.indexOf('getall:') === 0) {
-    domain = getConfig('API_GETALL_URL');
+  if (url.indexOf('optiktunggal:') === 0) {
+    domain = getConfig('API_OT_URL');
 
-    url = url.substr('getall:'.length);
+    url = url.substr('optiktunggal:'.length);
   }
 
   if (!method) {

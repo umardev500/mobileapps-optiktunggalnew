@@ -44,6 +44,7 @@ function Verification() {
 
   // Effects
   useEffect(() => {
+    console.log('Data email '+user?.email || fields.email);
     if (route.params?.profile) {
       setProfile(route.params.profile);
     }
@@ -122,13 +123,15 @@ function Verification() {
           verified: 1,
         }).then(() => {
           navigation.navigatePath('Public', {
-            screen: 'BottomTabs.AccountStack.PinEdit',
-            params: [null, null, !profile ? null : {
+            screen: 'PinEdit',
+            params: [{
               action: 'register',
               email: user?.email || fields.email,
             }],
           });
         });
+      }else{
+        Alert.alert( "Pemberitahuan", "Kode OTP yang anda masukan salah.",[{ text: "Oke", onPress: () => console.log("OK Pressed") }]);
       }
     }).catch(({ msg }) => {
       setIsSaving(false);
@@ -144,12 +147,12 @@ function Verification() {
   };
 
   const handleVerificationResend = () => {
-    Alert.alert( "Pemberitahuan", "Sedang dalam pengembangan.",
-              [
-                {text: "Cancel",onPress: () => console.log("Cancel Pressed"),style: "cancel"},
-                { text: "OK", onPress: () => console.log("OK Pressed") }
-              ]
-    );
+    // Alert.alert( "Pemberitahuan", "Sedang dalam pengembangan.",
+    //           [
+    //             {text: "Cancel",onPress: () => console.log("Cancel Pressed"),style: "cancel"},
+    //             { text: "OK", onPress: () => console.log("OK Pressed") }
+    //           ]
+    // );
     const email = !profile ? fields.email : profile.email;
 
     if (!email) {
@@ -160,9 +163,9 @@ function Verification() {
 
     setIsSaving(true);
 
-    return httpService('/register/list', {
+    return httpService('/api/login/login', {
       data: {
-        act: 'LupaPwd',
+        act: 'KirimUlangOTP',
         dt: JSON.stringify({
           comp: '001',
           email: fields.email,
@@ -177,7 +180,7 @@ function Verification() {
       if (200 === status) {
         setTimer(120);
 
-        ToastAndroid.show(t(`Kode Verifikasi Dikirimkan Lewat Email`), ToastAndroid.SHORT);
+        ToastAndroid.show(t(`Kode verifikasi dikirimkan ke email anda.`), ToastAndroid.SHORT);
       }
     }).catch((err) => {
       setIsSaving(false);
@@ -242,7 +245,7 @@ function Verification() {
         <View style={{ marginTop: 50, paddingTop: 24 }}>
           <Button
             containerStyle={{ alignSelf: 'center' }}
-            style={{ width: 350, height: 40 }}
+            style={{ width: 320, height: 40 }}
             label={`${''}Kirim`.toUpperCase()}
             color="primary"
             shadow={3}

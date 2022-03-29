@@ -16,6 +16,7 @@ export type UserModel = null | {
   kab?: string;
   kec?: string;
   kel?: string;
+  kodepos?: string;
   rt?: string;
   rw?: string;
   jl?: string;

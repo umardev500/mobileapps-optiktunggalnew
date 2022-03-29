@@ -44,7 +44,7 @@ function Notification() {
       {!user ? null : (
         <Button
           containerStyle={styles.actionBtnContainer}
-          label={t('Transaction', { count: 2 })}
+          label={t('Transaksi', { count: 2 })}
           labelProps={{ type: 'p', size: 'md' }}
           labelStyle={{ flex: 1, textAlign: 'left' }}
           size="lg"
@@ -60,7 +60,7 @@ function Notification() {
 
       <Button
         containerStyle={[styles.actionBtnContainer, { marginTop: 0 }]}
-        label={t('Promotion', { count: 2 })}
+        label={t('Promosi', { count: 2 })}
         labelProps={{ type: 'p', size: 'md' }}
         labelStyle={{ flex: 1, textAlign: 'left' }}
         size="lg"

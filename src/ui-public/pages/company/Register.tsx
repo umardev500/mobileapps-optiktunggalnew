@@ -1,5 +1,5 @@
 import { useRoute } from '@react-navigation/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Platform, RefreshControl, ScrollView, StyleSheet, ToastAndroid, useWindowDimensions, View, Alert, Image, useColorScheme } from 'react-native';
 import { colors, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
@@ -14,6 +14,8 @@ import RNFS from 'react-native-fs';
 import { launchCamera } from 'react-native-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { showPhone } from '../../../lib/utilities';
+import PhoneInput from "react-native-phone-number-input";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 type Fields = {
   namadepan?: string,
@@ -36,7 +38,8 @@ function Register() {
   const route = useRoute();
   const { width } = useWindowDimensions();
   const { t } = useTranslation('notification');
-
+  const phoneInput = useRef<PhoneInput>(null);
+  const [phone, setPhone] = useState("");
   // const [tabIndex, setTabIndex] = React.useState();
   // const handleTabsChange = index => {
   //   setTabIndex(index);
@@ -114,19 +117,20 @@ function Register() {
   };
 
   const kirimPassword = async () => {
+    setIsSaving(true);
     return httpService('/api/login/login', {
       data: {
         act: 'KirimPasswordUserTerdaftar',
         dt: JSON.stringify({
           email: fields.email,
           nama: fields.namadepan+' '+fields.namabelakang,
-          hp: fields.hp
+          hp: phone.replace('+', ''), //+fields.hp
         }),
       }
     }).then(({ status, data }) => {
       setIsSaving(false);
       if (status === 200) {
-        Alert.alert( "Pemberitahuan", "Password sudah kami kirimkan ke email nrntwhd@gmail.com.",
+        Alert.alert( "Pemberitahuan", "Password sudah kami kirimkan ke email anda.",
           [
             { text: "OK", onPress: () => { navigation.navigatePath('Public', { screen: 'BottomTabs.AccountStack.Login',}); }}
           ]
@@ -168,23 +172,30 @@ function Register() {
     } else if (!fields.ktp) {
       return handleErrorShow('namaktp', t('Please select your KTP/NPWP photo file.'));
     }*/
-
+    setIsLoading(true);
     return httpService('/api/login/login', {
       data: {
         act: 'CekEmailExist',
         dt: JSON.stringify({
           email: fields.email,
-          hp: fields.hp,
+          hp: phone.replace('+', ''),
         }),
       }
     }).then(({ status, data }) => {
+      setIsLoading(false);
       setIsSaving(false);
       if (status === 200) {
-        Alert.alert( "Pemberitahuan", "Sepertinya anda sudah pernah melakukan transaksi di OPTIK TUNGGAL. Silahkan klik tombol minta password untuk mengakses apps ini dan anda tidak perlu daftar akun baru. Terima Kasih",
-          [
-            { text: "Minta Password", onPress: () => kirimPassword() }
-          ]
-        );
+        // Alert.alert( "Pemberitahuan", "Sepertinya anda sudah pernah melakukan transaksi di OPTIK TUNGGAL. Silahkan klik tombol minta password untuk mengakses apps ini dan anda tidak perlu daftar akun baru. Terima Kasih",
+        //   [
+        //     { text: "Minta Password", onPress: () => kirimPassword() }
+        //   ]
+        // );
+        navigation.navigatePath('Public', {
+          screen: 'SelectUsers',
+          params: [{
+            email : fields.email
+          }],
+        });
       }else if(status === 201){
         navigation.navigatePath('Public', {
           screen: 'AddressEdit',
@@ -192,7 +203,7 @@ function Register() {
             profile: {
               ...fields,
               // hp: `62${fields.hp}`,
-              hp: showPhone(fields.hp, '62'),
+              hp: phone.replace('+', ''), //showPhone(fields.hp, '62'),
             },
           }],
         });
@@ -310,7 +321,24 @@ function Register() {
         />
       </View>*/}
 
-      <TextField
+      <PhoneInput
+        containerStyle={{ marginTop: 20, width: 330 }}
+        textContainerStyle={{ height: 50, borderColor: '#f1f1f1', borderWidth: 1, borderRadius: 5, backgroundColor: '#FEFEFE' }}
+        textInputStyle={{ height: 50, fontSize: 15 }}
+        codeTextStyle={{ fontSize: 16 }}
+        ref={phoneInput}
+        defaultValue={phone}
+        defaultCode="ID"
+        layout="first"
+        value={fields.hp}
+        placeholder="Phone Number"
+        onChangeText={(value) => handleFieldChange('hp', value)}
+        onChangeFormattedText={text => {
+          setPhone(text);
+        }}
+        autoFocus/>
+
+      {/* <TextField
         containerStyle={{ marginTop: 20 }}
         placeholder={t('contoh : 8123456789')}
         value={fields.hp}
@@ -323,7 +351,7 @@ function Register() {
         )}
         error={!!getFieldError('hp')}
         message={error.message}
-      />
+      /> */}
 
       <TextField
         containerStyle={{ marginTop: 12 }}
@@ -385,14 +413,13 @@ function Register() {
         />
       </PressableBox>*/}
 
-      <View style={{ marginTop: 30, paddingTop: 24 }}>
-        <Button
-          containerStyle={{ alignSelf: 'center', borderRadius: 5, backgroundColor: '#CCC', }}
-          style={{ width: 360, height: 40,  }}
-          label={t('Submit').toUpperCase()}
-          shadow={3}
-          onPress={handleSubmit}
-        />
+      <View style={{ marginTop: 60, paddingTop: 24 }}> 
+        <Button 
+          containerStyle={{ alignSelf: 'center', borderRadius: 5, backgroundColor: '#CCC', }} 
+          style={{ width: 300, height: 40,  }} 
+          label={t('Submit').toUpperCase()} 
+          shadow={3} 
+          onPress={handleSubmit} />
         {/*Typography style={{ textAlign: 'center', marginTop: 20 }}>
           - OR -
         </Typography>

@@ -355,7 +355,7 @@ function PaymentMerchant() {
 
                 <View style={{ flex: 1, paddingLeft: 8 }}>
                   <Typography>
-                    {`${t('Silahkan transfer menuju rekening resmi Morita yang tertera di bawah ini.')}`}
+                    {`${t('Silahkan transfer ke rekening resmi OPTIK TUNGGAL yang tertera di bawah ini.')}`}
                   </Typography>
 
                   <Typography heading style={{ marginTop: 8 }}>

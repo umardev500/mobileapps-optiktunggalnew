@@ -52,12 +52,12 @@ export const showPhone = (phone?: string, leading: string = '0') => {
 
   if (!phone) {
     return '';
-  } else if (phone.substring(0, 1) === '0') {
-    result = phone.substring(1);
-  } else if (phone.substring(0, 2) === '62') {
-    result = phone.substring(2);
-  } else if (phone.substring(0, 3) === '+62') {
-    result = phone.substring(3);
+  } else if (phone.toString().substring(0, 1) === '0') {
+    result = phone.toString().substring(1);
+  } else if (phone.toString().substring(0, 2) === '62') {
+    result = phone.toString().substring(2);
+  } else if (phone.toString().substring(0, 3) === '+62') {
+    result = phone.toString().substring(3);
   }
 
   return leading + result;

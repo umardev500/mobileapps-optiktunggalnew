@@ -4,13 +4,13 @@ import { colors, shadows, wrapper } from '../../lib/styles';
 import { CarouselDots, PressableBox, Typography, Button, ButtonCart, RenderHtml } from '../../ui-shared/components';
 import Carousel from 'react-native-snap-carousel';
 import { BoxLoading } from '../../ui-shared/loadings';
-import { BannerModel, CategoryModel, Modelable, ModelablePaginate, BrandModel, ContactUsModel, ArticleModel } from '../../types/model';
+import { BannerModel, CategoryModel, Modelable, ModelablePaginate, BrandModel, ContactUsModel, ArticleModel, GenderModel } from '../../types/model';
 import { useAppNavigation } from '../../router/RootNavigation';
 import Products from '../components/Products';
 import ProductsLoading from '../loadings/ProductsLoading';
 import { httpService } from '../../lib/utilities';
 import { useTranslation } from 'react-i18next';
-import { fetchCategories, fetchBrand } from '../../redux/actions/shopActions';
+import { fetchCategories, fetchBrand, fetchGender, fetchModelKacamata } from '../../redux/actions/shopActions';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import PopupPromoModal from '../components/PopupPromoModal';
 import moment from 'moment';
@@ -41,6 +41,14 @@ const Home = () => {
     modelsLoaded: false,
   });
   const [brand, setBrand] = useState<Modelable<BrandModel>>({
+    models: [],
+    modelsLoaded: false,
+  });
+  const [gender, setGender] = useState<Modelable<BrandModel>>({
+    models: [],
+    modelsLoaded: false,
+  });
+  const [modelkacamatas, setModelkacamatas] = useState<Modelable<BrandModel>>({
     models: [],
     modelsLoaded: false,
   });
@@ -94,6 +102,26 @@ const Home = () => {
     }).catch(() => {
       setBrand(state => ({ ...state, modelsLoaded: true }));
     });
+
+    // dispatch(fetchGender()).unwrap().then((results) => {
+    //   setBrand(state => ({
+    //     ...state,
+    //     models: results,
+    //     modelsLoaded: true
+    //   }));
+    // }).catch(() => {
+    //   setGender(state => ({ ...state, modelsLoaded: true }));
+    // });
+
+    // dispatch(fetchModelKacamata()).unwrap().then((results) => {
+    //   setBrand(state => ({
+    //     ...state,
+    //     models: results,
+    //     modelsLoaded: true
+    //   }));
+    // }).catch(() => {
+    //   setModelkacamatas(state => ({ ...state, modelsLoaded: true }));
+    // });
 
     //await retrieveContactUs();
     // await retrievePopups();
@@ -153,7 +181,11 @@ const Home = () => {
     return httpService(`/api/contactus/contactus`, {
       data: {
         act: 'ContactUsList',
-        dt: JSON.stringify({ pageCountLimit: 5, param: "store" })
+        dt: JSON.stringify({ 
+          pageCountLimit: 5, 
+          param: "store",
+          search: ""
+        }),
       },
     }).then(({ status, data }) => {
       setContactUs(state => ({
@@ -213,7 +245,7 @@ const Home = () => {
   };
 
   const renderCarousel = ({ item, index }: ListRenderItemInfo<BannerModel>) => {
-    const height = 300;
+    const height = width * 150 / 205;
 
     return (
       <PressableBox
@@ -222,7 +254,7 @@ const Home = () => {
         opacity
         onPress={() => handleGoToDetailBanner(item)}
       >
-        <Image source={{ uri: item.banner_foto }} style={{ height, paddingHorizontal: 5 }} />
+        <Image source={{ uri: item.banner_foto }} style={{ height }} />
       </PressableBox>
     );
   };
@@ -349,10 +381,10 @@ const Home = () => {
             colors={[colors.palettes.primary]}
           />
         )}>
-        <View style={{ position: 'relative'}}>
+        <View style={{ position: 'relative' }}>
           {!slider.modelsLoaded ? (
             <View style={{ alignSelf: 'center' }}>
-              <BoxLoading width={width} height={width * 134 / 375} />
+              <BoxLoading width={width} height={width * 150 / 225} />
             </View>
           ) : (
             <Carousel
@@ -364,7 +396,7 @@ const Home = () => {
               autoplay={true}
               loop={true}
               contentContainerStyle={{
-                marginHorizontal: 10,
+                marginHorizontal: 40,
               }}
               onSnapToItem={(activeIndex) => setSlider(state => ({
                 ...state,

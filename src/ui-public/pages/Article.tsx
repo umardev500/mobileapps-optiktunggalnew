@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Image, ListRenderItemInfo, RefreshControl, StyleSheet, useWindowDimensions, View, Alert } from 'react-native';
+import { Image, ListRenderItemInfo, RefreshControl, StyleSheet, useWindowDimensions, View, Alert, ScrollView } from 'react-native';
 import { colors, shadows, wrapper } from '../../lib/styles';
 import { useAppNavigation } from '../../router/RootNavigation';
 import { Button, ImageAuto, PressableBox, RenderHtml, Typography } from '../../ui-shared/components';
@@ -79,20 +79,20 @@ function Article() {
         style={styles.articleCard}
         onPress={() => handleGoToArticleDetail(item)}>
 
-        {!item.ArticleID ? null : (
+        {/*{!item.ArticleID ? null : (
           <Image source={{ uri: item.ArticleImage }} style={styles.articleCardImage} />
         )}
         <View style={{
             marginTop: 8,
             borderTopWidth: 1,
             borderColor: '#ccc'
-          }} />
+          }} />*/}
         <View style={{ flex: 1, marginTop: 10
          }}>
           <Typography color="gray" style={{ flex: 1, fontSize: 10 }}>
             {item.ArticlePublishDate}
           </Typography>
-          <Typography heading>
+          <Typography style={{ fontSize: 13 }}>
             {item.ArticleName}
           </Typography>
         </View>
@@ -102,33 +102,43 @@ function Article() {
 
   return (
     <View style={{ flex: 1 }}>
-      <FlatList
-        contentContainerStyle={styles.container}
+      <ScrollView
         refreshControl={(
           <RefreshControl
-            refreshing={isLoading}
+            refreshing={false}
             onRefresh={handleRefresh}
             colors={[colors.palettes.primary]}
           />
         )}
-        data={article.models}
-        renderItem={renderarticles}
-        ListEmptyComponent={!article.modelsLoaded ? (
-          <View style={[styles.promoCardContainer, { marginTop: 8 }]}>
-            <View style={styles.articleCard}>
-              <BoxLoading width={300} height={150} rounded={8} />
-              <BoxLoading width={[50, 150]} height={20} />
-              <BoxLoading width={[200, 150]} height={20} />
+      >
+        <FlatList
+          contentContainerStyle={styles.container}
+          refreshControl={(
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={handleRefresh}
+              colors={[colors.palettes.primary]}
+            />
+          )}
+          data={article.models}
+          renderItem={renderarticles}
+          ListEmptyComponent={!article.modelsLoaded ? (
+            <View style={[styles.promoCardContainer, { marginTop: 8 }]}>
+              <View style={styles.articleCard}>
+                <BoxLoading width={300} height={150} rounded={8} />
+                <BoxLoading width={[50, 150]} height={20} />
+                <BoxLoading width={[200, 150]} height={20} />
+              </View>
             </View>
-          </View>
-        ) : (
-          <View style={{ marginTop: 15 }}>
-            <Typography textAlign="center">
-              {t(`${''}Semua Kabar sudah ditampilkan.`)}
-            </Typography>
-          </View>
-        )}
-      />
+          ) : (
+            <View style={{ marginTop: 15 }}>
+              <Typography textAlign="center">
+                {t(`${''}Semua Kabar sudah ditampilkan.`)}
+              </Typography>
+            </View>
+          )}
+        />
+      </ScrollView>
     </View>
   );
 };

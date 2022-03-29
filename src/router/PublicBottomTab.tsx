@@ -115,7 +115,7 @@ function PublicBottomTab() {
           name="ArticleStack"
           component={PublicArticleStack}
           options={{
-            tabBarLabel: t('News'),
+            tabBarLabel: t('Kabar'),
             tabBarIcon: (iconParams) => (
               <FigmaIcon.FigmaNews {...iconProps(iconParams)} />
             ),

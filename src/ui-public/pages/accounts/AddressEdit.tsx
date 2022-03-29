@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { RegisterFields } from '..';
 import { useAppSelector } from '../../../redux/hooks';
 
+
 type Fields = {
   // Register Fields
   prop?: string;
@@ -127,7 +128,7 @@ function AddressEdit() {
         lat: address.lat,
         lng: address.lng,
         nama: address.nama || address.vch_nama,
-        hp: showPhone(address.hp, '') // Remove leading 62
+        hp: profile.hp // Remove leading 62
       }));
       setIsEdit(true);
     }
@@ -294,7 +295,7 @@ function AddressEdit() {
           ...restProfile,
           ...fields,
           email: fields.email || restProfile.email,
-          hp: showPhone(fields.hp || profile?.hp, '62')
+          hp: profile.hp, //showPhone(profile.hp || profile?.hp, '62')
         }),
       }
     }).then(async ({ status, msg, id = 1 }) => {
@@ -305,17 +306,17 @@ function AddressEdit() {
           ...restProfile,
           foto,
           ...fields,
-          hp: showPhone(fields.hp || profile?.hp, '62'),
+          hp: profile.hp, //showPhone(profile.hp || profile?.hp, '62'),
         });
 
         return id;
-      } else if (status === 201) {
+      } /*else if (status === 201) {
         Alert.alert( "Pemberitahuan", "Email atau No. Handphone sudah terdaftar. silahkan ke menu login dan klik tombol lupa password untuk mendapatkan password anda. Terima Kasih.",
                 [
                   { text: "GANTI DATA", onPress: () => navigation.navigatePath('Public', { screen: 'BottomTabs.AccountStack.Register'}) }
                 ]
         );
-      }
+      }*/
 
       return 0;
     }).catch((err) => {
@@ -327,7 +328,7 @@ function AddressEdit() {
     if (!profile) {
       if (!fields.nama) {
         return handleErrorShow('nama', `${''}Mohon masukkan nama penerima.`);
-      } else if (!fields.hp) {
+      } else if (!profile.hp) {
         return handleErrorShow('hp', `${''}Mohon masukkan nomor telepon penerima.`);
       }
     }
@@ -357,12 +358,12 @@ function AddressEdit() {
     }
 
     let name = fields.nama;
-    let phone = fields.hp;
+    let phone = profile.hp;
     let email = fields.email;
 
     if (profile) {
       name = fields.nama || `${profile.namadepan} ${profile.namabelakang}`;
-      phone = fields.hp || profile.hp;
+      phone = profile.hp || profile.hp;
       email = fields.email || profile.email;
     }
 
@@ -379,8 +380,8 @@ function AddressEdit() {
       kecamatan: `${options.districts?.find(item => item.id === fields.kec)?.id || '-'}`,
       kelurahan: `${options.villages?.find(item => item.id === fields.kel)?.id || '-'}`,
       kodepos : `${options.villages?.find(item => item.id === fields.kodepos)?.kodepos || '-'}`,
-      nama_alamat : `${options.villages?.find(item => item.id === fields.kodepos)?.nama_alamat || '-'}`,
-      handphone: showPhone(phone, '62'),
+      // nama_alamat : `${options.villages?.find(item => item.id === fields.shipto)?.nama_alamat || '-'}`,
+      handphone: profile.hp, //showPhone(phone, '62'),
       latitude: fields.lat,
       longitude: fields.lng,
       label: 'Rumah',
@@ -519,7 +520,7 @@ function AddressEdit() {
           <TextField
             containerStyle={{ marginTop: 12 }}
             placeholder={t('Nomor Telepon')}
-            value={fields.hp}
+            value={profile.hp}
             onChangeText={(value) => handleFieldChange('hp', value)}
             keyboardType="phone-pad"
             left={(
@@ -539,7 +540,7 @@ function AddressEdit() {
         </Typography>
       )}
 
-      {isEdit ? null : (
+      {/* {isEdit ? null : ( */}
         <>
           <PressableBox
             containerStyle={{ overflow: 'visible', marginTop: 12 }}
@@ -629,7 +630,7 @@ function AddressEdit() {
             </Typography>
           )}
         </>
-      )}
+      {/* )} */}
 
       <TextField
         containerStyle={{ marginTop: 12 }}
@@ -669,7 +670,7 @@ function AddressEdit() {
         {!profile ? (
           <Button
             containerStyle={{ alignSelf: 'center' }}
-            style={{ width: 360 }}
+            style={{ width: 300 }}
             label={`${''}Simpan`.toUpperCase()}
             color="primary"
             shadow={3}
@@ -679,7 +680,7 @@ function AddressEdit() {
         ) : (
           <Button
             containerStyle={{ alignSelf: 'center' }}
-            style={{ width: 360 }}
+            style={{ width: 300 }}
             label={`${''}Lanjut`.toUpperCase()}
             color="primary"
             onPress={handleSubmit}

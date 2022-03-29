@@ -5,7 +5,7 @@ import { Modelable, ProductModel, PromotionModel } from '../../types/model';
 import { Badge, Button, PressableBox, Typography } from '../../ui-shared/components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useAppNavigation } from '../../router/RootNavigation';
-import { BadgeDiscount } from '../../ui-shared/components';
+import { BadgeDiscount, RatingStars } from '../../ui-shared/components';
 import { useAppSelector } from '../../redux/hooks';
 import MasonryList from '@react-native-seoul/masonry-list';
 import { toggleFavorite } from '../../redux/actions';
@@ -127,6 +127,17 @@ function Products({
               {item.prd_ds}
             </Typography>
 
+            {/*<View style={styles.user}>
+              <RatingStars
+                size={14}
+                value={5}
+                icons={['star', 'star-outline']}
+              />
+              <Typography style={{ fontSize: 10, fontWeight: 'bold', marginTop: 5, marginLeft: 5 }}>
+                (4.9)
+              </Typography>
+            </View>*/}
+
             {/*<Typography size="md" style={{ marginTop: 10, color: 'green', fontWeight: 'bold', textAlign: 'right' }}>
               {`Rp${item.harga}`}
             </Typography>*/}
@@ -202,7 +213,10 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     paddingHorizontal: 10
   },
-
+  user: {
+    ...wrapper.row,
+    alignItems: 'center',
+  },
   badgeDiscount: {
     position: 'absolute',
     right: 0,

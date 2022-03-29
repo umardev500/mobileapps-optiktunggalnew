@@ -1,5 +1,5 @@
 {
-  "name": "moritagetall",
+  "name": "optiktunggal",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -48,13 +48,17 @@
     "react-native-image-viewing": "^0.2.1",
     "react-native-maps": "^0.29.3",
     "react-native-modal": "^13.0.0",
+    "react-native-phone-number-input": "^2.1.0",
     "react-native-render-html": "^6.3.0",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.8.0",
+    "react-native-share": "^7.3.7",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-splash-screen": "^3.2.0",
     "react-native-svg": "^12.1.1",
     "react-native-vector-icons": "^9.0.0",
+    "react-native-webview": "^11.17.2",
+    "react-phone-number-input": "^3.1.47",
     "react-redux": "^7.2.6",
     "validator": "^13.7.0"
   },

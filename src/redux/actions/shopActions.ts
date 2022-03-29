@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { httpService, Storage } from "../../lib/utilities";
-import { CartModel, CategoryModel, BrandModel } from "../../types/model";
+import { CartModel, CategoryModel, BrandModel, GenderModel, ModelKacamata } from "../../types/model";
 import { RootStoreState } from "../store";
 
 export const fetchCategories = createAsyncThunk('shop/fetchCategories', async () => {
@@ -18,6 +18,40 @@ export const fetchCategories = createAsyncThunk('shop/fetchCategories', async ()
   });
 
   return categories;
+});
+
+export const fetchGender = createAsyncThunk('shop/fetchGender', async () => {
+  let genders: GenderModel[] = [];
+
+  await httpService('/api/category', {
+    data: {
+      act: 'PrdGenderList',
+      dt: JSON.stringify({ comp: '001' }),
+    },
+  }).then(({ status, data }) => {
+    if (status === 200) {
+      genders = data;
+    }
+  });
+
+  return genders;
+});
+
+export const fetchModelKacamata = createAsyncThunk('shop/fetchModelKacamata', async () => {
+  let modelkacamatas: ModelKacamata[] = [];
+
+  await httpService('/api/category', {
+    data: {
+      act: 'PrdModelKacamataList',
+      dt: JSON.stringify({ comp: '001' }),
+    },
+  }).then(({ status, data }) => {
+    if (status === 200) {
+      modelkacamatas = data;
+    }
+  });
+
+  return modelkacamatas;
 });
 
 export const fetchBrand = createAsyncThunk('shop/fetchBrand', async () => {

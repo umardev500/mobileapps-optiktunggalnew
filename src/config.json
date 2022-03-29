@@ -1,6 +1,6 @@
 {
-  "name": "MoritaGetall",
-  "displayName": "Morita Getall",
+  "name": "OptikTunggal",
+  "displayName": "Optik TUnggal",
 
   "app_version": 1.002,
   "app_version_text": "1.0.2",
@@ -17,8 +17,8 @@
   "URL_SOCIAL_FACEBOOK": "fb://page/101104102336598",
   "URL_SOCIAL_INSTAGRAM": "instagram://user?username=optiktunggal",
 
-  "API_URL": "https://bfa6-182-253-200-165.ngrok.io/api_optiktunggal",
-  "API_GETALL_URL": "https://bfa6-182-253-200-165.ngrok.io/api_optiktunggal",
+  "API_URL": "https://55a9-182-253-200-165.ngrok.io/api_optiktunggal",
+  "API_OT_URL": "https://55a9-182-253-200-165.ngrok.io/api_optiktunggal",
 
   "STORAGE_KEY": "@optiktunggal",
 

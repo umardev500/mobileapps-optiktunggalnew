@@ -72,10 +72,10 @@ function PopupPromoModal({
                   />
                   <Button
                     containerStyle={styles.promoClose}
-                    size={42}
+                    size={22}
                     onPress={handlePromoNext}
                   >
-                    <Ionicons name="close" size={32} color={'#c1c1c1'} />
+                    <Ionicons name="close" size={15} color={'#5e5c5c'} />
                   </Button>
                 </View>
               )}
@@ -116,8 +116,14 @@ function PopupPromoModal({
 const styles = StyleSheet.create({
   promoClose: {
     position: 'absolute',
-    right: 2,
+    right: -13,
+    flex: 1,
     top: Platform.OS === 'ios' ? 40 : 70,
+    backgroundColor: '#FEFEFE',
+    borderRadius: 20,
+    borderColor: '#5e5c5c',
+    borderWidth: 1,
+    ...shadows[3]
   },
 
   promoMaster: {

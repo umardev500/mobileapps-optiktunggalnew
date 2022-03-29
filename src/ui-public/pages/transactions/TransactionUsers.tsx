@@ -38,7 +38,7 @@ function TransactionUsers() {
   const handleRefresh = async () => {
     setIsLoading(true);
 
-    await retrieveCustomerTransaction();
+    retrieveCustomerTransaction();
 
     setIsLoading(false);
   };
@@ -109,7 +109,7 @@ function TransactionUsers() {
               </Typography>
             </View>
             <View style={[wrapper.row, { marginTop: 5, paddingHorizontal: 10, width: '100%' }]}>
-              {item.no_card == "" ? (
+              {item.no_card == null ? (
                 <Typography style={{ textAlign: 'center', fontSize: 10, paddingHorizontal: 3, color: '#ec3a3b' }}>
                   BELUM MENJADI MEMBER
                 </Typography>
@@ -141,6 +141,18 @@ function TransactionUsers() {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FEFEFE' }}>
+      <View style={[wrapper.row, { backgroundColor: '#FEFEFE' }]}>
+        <PressableBox
+            opacity
+            style={{ alignItems: 'center', }}
+            onPress={() => navigation.navigatePath('Public', {
+                screen: 'BottomTabs.AccountStack.Account'
+            })}>
+            <Typography color="black" style={{ marginVertical: 20, marginHorizontal: 15 }}>
+              <Ionicons name="arrow-back" size={18} color={colors.gray[900]} /> {`${''}Transaksi Pelanggan`}
+            </Typography>
+        </PressableBox>
+      </View>
       <Typography textAlign="center" style={{ paddingVertical: 12, fontSize: 11, backgroundColor: '#FEFEFE' }}>
         {t(`Klik nama dibawah untuk melihat detail transaksi.`)}
       </Typography>
@@ -168,7 +180,7 @@ function TransactionUsers() {
         ) : (
           <View style={{ marginTop: 15 }}>
             <Typography textAlign="center">
-              {t(`${''}Sudah ditampilkan semua.`)}
+              {t(`${''}Data tidak ditemukan dan anda belum pernah melakukan transaksi.`)}
             </Typography>
           </View>
         )}
