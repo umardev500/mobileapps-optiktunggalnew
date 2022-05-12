@@ -55,7 +55,7 @@ function PinEdit() {
       setError(state => ({
         ...state,
         fields: ['new_pin'],
-        message: `${''}Masukkan minimal 6 karakter untuk Password Anda.`
+        message: `${''}Enter at least 6 characters for your Password.`
       }));
     }
   }, [fields.new_pin]);
@@ -94,13 +94,13 @@ function PinEdit() {
     let errorMessage = '';
 
     if (fields.new_pin && fields.new_pin.length < 6) {
-      errorMessage = `${''}Masukkan minimal 6 karakter untuk password anda.`;
+      errorMessage = `${''}Enter at least 6 characters for your password.`;
     } else if (!fields.new_pin?.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?!.*[&%$]).{6,}$/g)) {
-      errorMessage = `${''}Password harus memiliki kombinasi huruf besar, kecil, dan angka.`;
+      errorMessage = `${''}Password must have a combination of uppercase, lowercase and numbers.`;
     } else if (!fields.new_pin || !fields.new_pin_confirmation) {
-      errorMessage = `${''}Mohon masukkan password dengan lengkap.`;
+      errorMessage = `${''}Please enter the complete password.`;
     } else if (fields.new_pin !== fields.new_pin_confirmation) {
-      errorMessage = `${''}Password yang anda masukan belum sesuai..`;
+      errorMessage = `${''}Please enter the complete password..`;
     }
 
     if (errorMessage) {
@@ -131,7 +131,7 @@ function PinEdit() {
         //   params: [{email: route.params.email}],
         // });
 
-        Alert.alert( "Selamat", "Anda berhasil melakukan pendaftaran akun.",
+        Alert.alert( "Success!", "You have successfully registered an account.",
                     [{ 
                       text: "Login", onPress: () => 
                         navigation.navigatePath('Public', { 
@@ -212,17 +212,17 @@ function PinEdit() {
 
       <View style={{ marginTop: 24 }}>
         <Typography style={{ marginTop: 2, textAlign: 'center' }}>
-          {t(`${''}Pastikan password memiliki kombinasi Huruf Besar, Huruf Kecil dan Angka`)}
+          {t(`${''}Make sure the password has a combination of Uppercase, Lowercase and Numbers`)}
         </Typography>
 
         <Typography style={{ marginTop: 2, textAlign: 'center' }}>
-          Email anda {route.params.email}
+          Your email {route.params.email}
         </Typography>
       </View>
 
       <TextField
         containerStyle={{ marginTop: 50 }}
-        placeholder={`${''}Masukkan Password`}
+        placeholder={`${''}Enter Password`}
         value={fields.new_pin}
         onChangeText={(value) => handleFieldChange('new_pin', value)}
         autoCompleteType="password"
@@ -244,7 +244,7 @@ function PinEdit() {
 
       <TextField
         containerStyle={{ marginTop: 12 }}
-        placeholder={`${''}Verifikasi Password`}
+        placeholder={`${''}Password Verification`}
         value={fields.new_pin_confirmation}
         onChangeText={(value) => handleFieldChange('new_pin_confirmation', value)}
         autoCompleteType="password"
@@ -274,7 +274,7 @@ function PinEdit() {
         <Button
           containerStyle={{ alignSelf: 'center' }}
           style={{ width: 350, height: 40 }}
-          label={`${''}Kirim`.toUpperCase()}
+          label={`${''}Submit`.toUpperCase()}
           color="primary"
           shadow={3}
           onPress={handleSubmit}

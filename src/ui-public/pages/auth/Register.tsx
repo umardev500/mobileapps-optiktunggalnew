@@ -126,7 +126,7 @@ function Register() {
     }).then(({ status, data }) => {
       setIsSaving(false);
       if (status === 200) {
-        Alert.alert( "Pemberitahuan", "Password sudah kami kirimkan ke email anda.",
+        Alert.alert( "Alert", "We have sent the password to your email.",
           [
             { text: "OK", onPress: () => { navigation.navigatePath('Public', { screen: 'BottomTabs.AccountStack.Login',}); }}
           ]
@@ -156,13 +156,13 @@ function Register() {
   const handleSubmit = () => {
     // console.log('GENDER__'+tabIndex);
     if (!fields.namadepan || !fields.namabelakang) {
-      return handleErrorShow('namadepan', t('Masukan Nama Depan dan Nama Belakang.'));
+      return handleErrorShow('namadepan', t('Enter First Name and Last Name.'));
     } else if (!fields.hp) {
-      return handleErrorShow('hp', t('Masukan Nomor Handphone.'));
+      return handleErrorShow('hp', t('Enter Mobile Number.'));
     } else if (!fields.email) {
-      return handleErrorShow('email', t('Masukan alamat email.'));
+      return handleErrorShow('email', t('Enter email address.'));
     } else if (!validator.isEmail(fields.email)) {
-      return handleErrorShow('email', t('Masukan alamat email.'));
+      return handleErrorShow('email', t('Enter email address.'));
     } /*else if (!fields.foto) {
       return handleErrorShow('namafoto', t('Please select the file for your profile photo.'));
     } else if (!fields.ktp) {
@@ -180,9 +180,9 @@ function Register() {
     }).then(({ status, data }) => {
       setIsSaving(false);
       if (status === 200) {
-        Alert.alert( "Pemberitahuan", "Sepertinya anda sudah pernah melakukan transaksi di OPTIK TUNGGAL. Silahkan klik tombol minta password untuk mengakses apps ini dan anda tidak perlu daftar akun baru. Terima Kasih",
+        Alert.alert( "Alert", "Looks like you've done transactions at OPTIK TUNGGAL. Please click the request password button to access these apps and you don't need to register a new account. Thank you",
           [
-            { text: "Minta Password", onPress: () => kirimPassword() }
+            { text: "Request Password", onPress: () => kirimPassword() }
           ]
         );
       }else if(status === 201){

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, SliceCaseReducers } from '@reduxjs/toolkit'
 import { CartModel, CategoryModel, BrandModel, GenderModel, ModelKacamata } from '../../types/model';
 import { ShopRootState } from '../../types/redux/ShopReducer';
-import { fetchCategories, fetchBrand, pushCartItem, setCartItems, fetchGender, fetchModelKacamata } from '../actions/shopActions';
+import { fetchCategories, fetchBrand, pushCartItem, setCartItems, fetchModelKacamata } from '../actions/shopActions';
 
 export const shopSlice = createSlice<ShopRootState, SliceCaseReducers<ShopRootState>, 'shop'>({
   name: 'shop',
@@ -9,6 +9,7 @@ export const shopSlice = createSlice<ShopRootState, SliceCaseReducers<ShopRootSt
     cart_items: [],
     categories: [],
     brands: [],
+    // genders: [],
   },
   reducers: {
     setCartItems: (state, action: PayloadAction<CartModel[]>) => {
@@ -23,6 +24,12 @@ export const shopSlice = createSlice<ShopRootState, SliceCaseReducers<ShopRootSt
         categories: action.payload,
       };
     },
+    // setGenders: (state, action: PayloadAction<GenderModel[]>) => {
+    //   return {
+    //     ...state,
+    //     genders: action.payload,
+    //   };
+    // },
     setBrand: (state, action: PayloadAction<BrandModel[]>) => {
       return {
         ...state,
@@ -38,12 +45,12 @@ export const shopSlice = createSlice<ShopRootState, SliceCaseReducers<ShopRootSt
           categories: action.payload,
         };
       })
-      .addCase(fetchGender.fulfilled, (state, action) => {
-        return {
-          ...state,
-          genders: action.payload,
-        };
-      })
+      // .addCase(fetchGender.fulfilled, (state, action) => {
+      //   return {
+      //     ...state,
+      //     genders: action.payload,
+      //   };
+      // })
       .addCase(fetchModelKacamata.fulfilled, (state, action) => {
         return {
           ...state,
@@ -76,6 +83,7 @@ export const {
   setCartItems: setShopCartItems,
   setCategories: setShopCategories,
   setBrand: setShopBrand,
+  // setGenders: setShopGenders,
 } = shopSlice.actions;
 
 export default shopSlice.reducer;

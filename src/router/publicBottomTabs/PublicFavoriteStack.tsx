@@ -28,7 +28,7 @@ function PublicFavoriteStack() {
           return (
             <Header
               title={title}
-              left={!!back}
+              // left={!!back}
               {...(!options.headerRight ? null : {
                 right: options.headerRight(navigation as any)
               })}

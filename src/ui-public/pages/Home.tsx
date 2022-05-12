@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FlatList, Image, ListRenderItemInfo, StyleSheet, useWindowDimensions, View, Alert, ScrollView, RefreshControl } from 'react-native';
+import { FlatList, Image, ListRenderItemInfo, StyleSheet, useWindowDimensions, 
+         View, Alert, ScrollView, RefreshControl, ImageBackground, Linking } from 'react-native';
 import { colors, shadows, wrapper } from '../../lib/styles';
 import { CarouselDots, PressableBox, Typography, Button, ButtonCart, RenderHtml } from '../../ui-shared/components';
 import Carousel from 'react-native-snap-carousel';
@@ -20,7 +21,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 const Home = () => {
   // Hooks
   const navigation = useAppNavigation();
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const { t } = useTranslation('home');
   const dispatch = useAppDispatch();
   const { categories } = useAppSelector(({ shop }) => shop);
@@ -124,7 +125,7 @@ const Home = () => {
     // });
 
     //await retrieveContactUs();
-    // await retrievePopups();
+    // retrievePopups();
 
     setIsRefreshing(false);
   };
@@ -223,9 +224,7 @@ const Home = () => {
           }]} />
         ) : (
           <Image source={{ uri: item.fotobrand }} style={styles.brandImage} />
-        )}
-
-        
+        )}        
       </PressableBox>
     );
   };
@@ -310,19 +309,38 @@ const Home = () => {
     const long = item.StoreLongitude;
     return (
       <>
-      <View style={[wrapper.row, { alignItems: 'center', marginHorizontal: 10 }]}>
-        <Image source={{ uri: 'https://optiktunggal.com/img/store_location/'+item.StoreImage }} 
-              style={{ width: '20%', height: 70 }} />
-        <View style={{ marginLeft: 10, width: '65%' }}>
-          <Typography type="h4" style={{ marginTop: 10, fontSize: 12, }} numberOfLines={2}>
-            {item.StoreName} | {item.StoreLocationUnit}
-          </Typography>
-          <Typography style={{ marginTop: 5, fontSize: 10, textAlign: 'justify'}} numberOfLines={4}>
-            {item.StoreAddress}, Phone : { item.StorePhone }, {item.StoreNotes}
-          </Typography>
-        </View>
-      </View>
-      <View style={{ height: 1, backgroundColor: '#ccc', marginTop: 10, marginHorizontal: 10 }}></View>
+      <PressableBox
+          containerStyle={{ paddingHorizontal: 10 }}
+          onPress={() => navigation.navigatePath('Public', {
+            // setSelected(item);
+            // (lat && long) && setCoordinate([lat, long]);
+            screen: 'StoreDetail',
+            params: [{
+              storename: item.StoreName+' '+item.StoreLocationUnit,
+              address: item.StoreAddress,
+              waphone: item.waphone,
+              phone: item.StorePhone,
+              note: item.StoreNotes,
+              images: item.StoreImage,
+              latitude: item.StoreLatitude,
+              longitude: item.StoreLongitude
+            }]
+          })}
+        >
+          <View style={[wrapper.row, { alignItems: 'center', marginHorizontal: 10 }]}>
+              <Image source={{ uri: 'https://optiktunggal.com/img/store_location/'+item.StoreImage }} 
+                    style={{ width: '30%', height: 75, resizeMode: 'cover' }} />
+              <View style={{ marginLeft: 10, width: '65%' }}>
+                <Typography type="h4" style={{ marginTop: 10, fontSize: 12, }} numberOfLines={2}>
+                  {item.StoreName} | {item.StoreLocationUnit}
+                </Typography>
+                <Typography style={{ marginTop: 5, fontSize: 10, textAlign: 'justify'}} numberOfLines={4}>
+                  {item.StoreAddress}, Phone : { item.StorePhone }, {item.StoreNotes}
+                </Typography>
+              </View>
+          </View>
+          <View style={{ height: 1, backgroundColor: '#ccc', marginTop: 10, marginHorizontal: 10 }}></View>
+        </PressableBox>
       </>
     )
   };
@@ -347,15 +365,15 @@ const Home = () => {
       >
         {!item.foto ? (
           <View style={[styles.categoryImage, {
-            backgroundColor: '#FEFEFE',
+            backgroundColor: '#FEFEFE'
           }]} />
         ) : (
-          <Image source={{ uri: item.foto }} style={styles.categoryImage} />
+          <ImageBackground source={{ uri: item.foto }} style={styles.categoryImage}>
+            <Typography textAlign="center" style={{ marginTop: 82, fontSize: 12, color: '#FEFEFE', backgroundColor: '#282c3433' }}>
+              {t(`${item.ds}`)}
+            </Typography>
+          </ImageBackground>
         )}
-
-        <Typography size="xxs" textAlign="center" style={{ marginTop: 5, fontSize: 12 }}>
-          {t(`${item.ds} \nCollection's`)}
-        </Typography>
       </PressableBox>
     );
   };
@@ -393,6 +411,7 @@ const Home = () => {
               renderItem={renderCarousel}
               sliderWidth={width}
               itemWidth={width}
+              apparitionDelay={5}
               autoplay={true}
               loop={true}
               contentContainerStyle={{
@@ -413,18 +432,18 @@ const Home = () => {
         </View>
 
         {/*brands*/}
-        <View style={[wrapper.row, { alignItems: 'center', marginTop: 5, marginBottom: 10, paddingHorizontal: 10 }]}>
-          <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 12 }}>
-            Brands
+        <View style={[wrapper.row, { alignItems: 'center', marginBottom: 10, paddingHorizontal: 10 }]}>
+          <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 13 }}>
+            BRANDS
           </Typography>
           <Button
             containerStyle={[styles.actionBtnContainer, { marginTop: 0 }]}
-            label={t('Lihat Semua', { count: 1 })}
+            label={t('View All', { count: 1 })}
             labelProps={{ type: 'p', size: 'sm' }}
-            labelStyle={{ textAlign: 'right', color: 'blue', fontSize: 10 }}
+            labelStyle={{ textAlign: 'right', color: '#0d674e', fontSize: 10 }}
             size="lg"
             right={(
-              <Ionicons name="chevron-forward" size={12} color={'blue'} />
+              <Ionicons name="chevron-forward" size={12} color={'#0d674e'} />
             )}
             onPress={() => navigation.navigatePath('Public', {
               screen: 'Brand'
@@ -433,8 +452,7 @@ const Home = () => {
         </View>
 
         <View 
-          style={{marginTop: -10, marginLeft: 15,
-                  ...(!brand.modelsLoaded ? null : shadows[3])}}>
+          style={{marginTop: -20}}>
               {!brand.modelsLoaded ? (
                 <View style={[wrapper.row, {
                   justifyContent: 'center',
@@ -448,188 +466,170 @@ const Home = () => {
                 </View>
               ) : (
                 <FlatList
-                    data={brand.models || []}
-                    renderItem={renderBrand}
-                    contentContainerStyle={{
-                      alignItems: 'center',
-                      height: 100,
-                      backgroundColor: '#FEFEFE',
-                    }}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                  />
-              )}
-        </View>
-
-        {/* Category Carousel */}
-        <View>
-          <View style={[wrapper.row, { alignItems: 'center', marginTop: -5, paddingHorizontal: 10}]}>
-            <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 12 }}>
-              Kategori
-            </Typography>
-          </View>
-          <View style={{
-            marginBottom: 15,
-            backgroundColor: '#FEFEFE',
-            // ...(!category.modelsLoaded ? null : shadows[3])
-          }}>
-            {!brand.modelsLoaded ? (
-              <View style={[wrapper.row, {
-                justifyContent: 'center',
-                paddingVertical: 8,
-              }]}>
-                {Array.from(Array(5)).map((item, index) => (
-                  <View key={index} style={{ marginHorizontal: 8 }}>
-                    <BoxLoading width={48} height={48} />
-
-                    <BoxLoading width={48} height={16} style={{ marginTop: 6 }} />
-                  </View>
-                ))}
-              </View>
-            ) : (
-              <FlatList
-                data={category.models || []}
-                renderItem={renderCategories}
-                contentContainerStyle={{
-                  alignItems: 'center',
-                  height: 150,
-                  backgroundColor: '#FEFEFE',
-                  paddingHorizontal: 20,
-                  paddingVertical: 0,
-                }}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-              />
-            )}
-          </View>
-          <View>
-            <View style={[wrapper.row, { alignItems: 'center', paddingHorizontal: 10 }]}>
-              <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 12 }}>
-                Lens & Contact Lense
-              </Typography>
-            </View>
-            <PressableBox
-              opacity
-              containerStyle={{
-                flex: 1,
-                marginHorizontal: 5,
-                paddingHorizontal: 10,
-                marginBottom: 10
-              }}
-              style={{ alignItems: 'center', }}
-              onPress={() => navigation.navigatePath('Public', {
-                screen: 'Lens'
-              })}>
-              <View style={[wrapper.row, { marginTop: 10 }]}>
-                <Image source={{ uri: 'https://www.optiktunggal.com/img/home_middle_table/HC170105032019-12-16_10_25_44.jpg' }} style={styles.imgLens} />
-                <View style={{ width: '80%' }}>
-                  <Typography type="h4" color="black" style={{ paddingHorizontal: 10, fontSize: 12, textAlign: 'justify' ,marginTop: -5 }}>
-                    High Quality Optical Lenses
-                  </Typography>
-                  <Typography style={{ paddingHorizontal: 10, fontSize: 10, textAlign: 'justify' }} numberOfLines={3}>
-                    Penglihatan Anda layak mendapatkan yang terbaik. Dengan pengalaman lebih dari 90 tahun, Optik Tunggal berkomitmen untuk memberikan Anda layanan dan produk lensa optik dengan kualitas yang terbaik.
-                  </Typography>
-                </View>
-              </View>
-            </PressableBox>
-            <PressableBox
-              opacity
-              containerStyle={{
-                flex: 1,
-                marginHorizontal: 5,
-                paddingHorizontal: 10,
-                marginBottom: 20
-              }}
-              style={{ alignItems: 'center', }}
-              onPress={() => navigation.navigatePath('Public', {
-                screen: 'ContactLens'
-              })}>
-              <View style={[wrapper.row, { marginTop: 10 }]}>
-                <Image source={{ uri: 'https://www.optiktunggal.com/img/contact_lens/category/CLC191212012019-12-12_11_27_58.jpg' }} style={styles.imgContLens} />
-                <View style={{ width: '80%' }}>
-                  <Typography type="h4" color="black" style={{ paddingHorizontal: 10, fontSize: 12, textAlign: 'justify' ,marginTop: -5 }}>
-                    Contact Lense
-                  </Typography>
-                  <Typography style={{ paddingHorizontal: 10, fontSize: 10, textAlign: 'justify' }} numberOfLines={3}>
-                    Schon adalah merek softlens yang menyediakan softlens kosmetik dan juga softlens korektif.
-                    Softlens Schon didesain khusus untuk mata orang Indonesia yang mempunyai beragam pilihan, baik itu softlens bening dan juga yang berwarna.
-                    Untuk varian softlens bening tersedia pilihan masa pakai harian dan bulanan.
-                    Untuk varian softlens berwarna tersedia warna-warna natural dan warna-warna menarik lainnya yang dapat membuat tampilan anda lebih memukau.
-                    Dapatkan softlens Schon di semua cabang Optik Tunggal di seluruh Indonesia.
-                  </Typography>
-                </View>
-              </View>
-            </PressableBox>
-          </View>
-        </View>
-
-        {/*Artikel*/}
-        <View>
-          <View style={[wrapper.row, { alignItems: 'center', marginTop: -5, paddingHorizontal: 10 }]}>
-            <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 12 }}>
-              News
-            </Typography>
-            <Button
-              containerStyle={[styles.actionBtnContainer, { marginTop: 0 }]}
-              label={t('Lihat Selengkapnya', { count: 1 })}
-              labelProps={{ type: 'p', size: 'sm' }}
-              labelStyle={{ textAlign: 'right', color: 'blue', fontSize: 10 }}
-              size="lg"
-              right={(
-                <Ionicons name="chevron-forward" size={12} color={'blue'} />
-              )}
-              onPress={() => navigation.navigatePath('Public', {
-                screen: 'BottomTabs.ArticleStack'
-              })}
-            />
-          </View>
-            {!slider.modelsLoaded ? (
-              <View style={[wrapper.row, styles.promoCard, { alignItems: 'center' }]}>
-                <BoxLoading width={74} height={74} rounded={8} />
-
-                <View style={{ flex: 1, paddingLeft: 12 }}>
-                  <BoxLoading width={[250, 250]} height={20} />
-
-                  <BoxLoading width={[250, 250]} height={18} style={{ marginTop: 6 }} />
-                  <BoxLoading width={[250, 250]} height={18} style={{ marginTop: 2 }} />
-                </View>
-              </View>
-            ) : (
-              <View style={{ width: '100%'}}>
-                <Carousel
-                  ref={carouselRef}
-                  data={article.models as any[]}
-                  renderItem={renderArticle}
-                  sliderWidth={width}
-                  autoplay={true}
-                  loop={true}
-                  itemWidth={width}
-                  onSnapToItem={(activeIndex) => setSlider(state => ({
-                    ...state,
-                    activeIndex
-                  }))}
+                  data={brand.models || []}
+                  renderItem={renderBrand}
+                  contentContainerStyle={{
+                    alignItems: 'center',
+                    height: 90,
+                  }}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
                 />
+              )}
+        </View>
+
+        <View style={{marginTop: -5, backgroundColor: '#0d674e',}}>
+          <Typography type="h4" color="white" style={{ flex: 1, textAlign: 'left', paddingHorizontal: 10, fontSize: 13, marginTop: 10, marginBottom: 10 }}>
+            CATEGORIES
+          </Typography>
+          <View style={[wrapper.row, {
+            justifyContent: 'center',
+          }]}>
+            <View style={[wrapper.row]}>
+                <View style={{ marginHorizontal: 3, backgroundColor: '#282c3433', height: height * 100 / 780, borderRadius: 5 }}>
+                  <PressableBox
+                  onPress={() => navigation.navigatePath('Public', {
+                    screen: 'BottomTabs.HomeStack.Search',
+                    params: [null, null, {
+                      keywords: 'frame',
+                    }]
+                  })}>
+                    <ImageBackground 
+                      resizeMode='cover'
+                      borderRadius={5}
+                      source={require('../../assets/icons/figma/frame.jpg')} 
+                      style={{ width: width * 100 / 210, height: height * 100 / 790, marginBottom: 10 }}>
+                        <Typography textAlign="center" 
+                                    style={{ fontSize: 18, color: '#FEFEFE', backgroundColor: '#3c404359', height: height * 100 / 780,
+                                             textAlignVertical: 'center', borderRadius: 5, fontWeight: 'bold', 
+                                             borderColor: '#fff', borderWidth: 1 }}>
+                          {`\n`}{t(`FRAME`)}
+                        </Typography>
+                    </ImageBackground>
+                  </PressableBox>
+                </View>
+                <View style={{ marginHorizontal: 3, backgroundColor: '#282c3433', height: height * 100 / 780, borderRadius: 5 }}>
+                  <PressableBox
+                    onPress={() => navigation.navigatePath('Public', {
+                      screen: 'BottomTabs.HomeStack.Search',
+                      params: [null, null, {
+                        keywords: 'sunglass',
+                      }]
+                    })}>
+                    <ImageBackground 
+                      resizeMode='cover'
+                      borderRadius={5}
+                      source={require('../../assets/icons/figma/sunglass.jpg')} 
+                      style={{ width: width * 100 / 210, height: height * 100 / 780, marginBottom: 10 }}>
+                        <Typography textAlign="center" 
+                                    style={{ fontSize: 18, color: '#FEFEFE', backgroundColor: '#3c404359', height: height * 100 / 780,
+                                            textAlignVertical: 'center', borderRadius: 5, fontWeight: 'bold',
+                                            borderColor: '#fff', borderWidth: 1 }}>
+                          {`\n`}{t(`SUNGLASS`)}
+                        </Typography>
+                    </ImageBackground>
+                  </PressableBox>
+                </View>
+            </View>
+          </View>
+          <View style={[wrapper.row, {
+            justifyContent: 'center',
+            paddingVertical: 5,
+          }]}>
+            <View style={[wrapper.row]}>
+            <View style={{ marginHorizontal: 3 }}>
+                <PressableBox
+                  onPress={() => navigation.navigatePath('Public', {
+                    screen: 'BottomTabs.HomeStack.Search',
+                    params: [null, null, {
+                      keywords: 'contactlens',
+                    }]
+                  })}>  
+                  <ImageBackground 
+                    resizeMode='stretch'
+                    borderRadius= {10}
+                    source={require('../../assets/icons/figma/contactlens.jpg')}
+                    style={{ width: width * 100 / 320, height: 70 }}>
+                      <Typography textAlign="center" 
+                                  style={{ fontSize: 12, color: '#fff', fontWeight: 'bold',
+                                          backgroundColor: '#282c3433', height: '100%', 
+                                          textAlignVertical: 'center', borderRadius: 5,
+                                          borderColor: '#fff', borderWidth: 1 }}>
+                        {t(`CONTACT LENS`)}
+                      </Typography>
+                  </ImageBackground>
+                </PressableBox>
               </View>
-            )}  
+
+              <View style={{ marginHorizontal: 3 }}>
+                <PressableBox
+                  onPress={() => navigation.navigatePath('Public', {
+                    screen: 'BottomTabs.HomeStack.Search',
+                    params: [null, null, {
+                      keywords: 'solutions',
+                    }]
+                  })}>
+                  <ImageBackground 
+                    resizeMode='cover'
+                    borderRadius={10}
+                    source={require('../../assets/icons/figma/solutions.jpg')}
+                    style={{ width: width * 100 / 320, height: 70 }}>
+                      <Typography textAlign="center" 
+                          style={{ fontSize: 12, color: '#fff', fontWeight: 'bold',
+                                  backgroundColor: '#282c3433', height: '100%', 
+                                  textAlignVertical: 'center',
+                                  borderRadius: 5, borderColor: '#fff', borderWidth: 1
+                                }}>
+                        {t(`SOLUTIONS`)}
+                      </Typography>
+                  </ImageBackground>
+                </PressableBox>
+              </View>
+              
+              <View style={{ marginHorizontal: 3 }}>
+                <PressableBox
+                  onPress={() => navigation.navigatePath('Public', {
+                    screen: 'BottomTabs.HomeStack.Search',
+                    params: [null, null, {
+                      keywords: 'accessories',
+                    }]
+                  })}>
+                  <ImageBackground 
+                    resizeMode='stretch'
+                    borderRadius={10}
+                    source={require('../../assets/icons/figma/accessories.jpeg')}
+                    style={{ width: width * 100 / 320, height: 70 }}>
+                      <Typography textAlign="center" 
+                                  style={{ fontSize: 12, color: '#fff', fontWeight: 'bold',
+                                          backgroundColor: '#282c3433', height: '100%', 
+                                          textAlignVertical: 'center', borderRadius: 5,
+                                          borderColor: '#fff', borderWidth: 1 }}>
+                        {t(`ACCESSORIES`)}
+                      </Typography>
+                  </ImageBackground>
+                </PressableBox>
+              </View>
+            </View>
+          </View>
         </View>
 
         {/*Store*/}
-        <View style={{ marginBottom: 50, marginTop: 20 }}>
+        {/* <View style={{ marginBottom: 3, marginTop: 5 }}>
           <View style={[wrapper.row, { alignItems: 'center', marginTop: 10, paddingHorizontal: 10, }]}>
-            <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 12 }}>
-              Outlet Kami
+            <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 13 }}>
+              OUR STORES  
             </Typography>
             <Button
               containerStyle={[styles.actionBtnContainer]}
-              label={t('Lihat Semua', { count: 1 })}
+              label={t('View All', { count: 1 })}
               labelProps={{ type: 'p', size: 'sm' }}
-              labelStyle={{ textAlign: 'right', color: 'blue', fontSize: 10 }}
+              labelStyle={{ textAlign: 'right', color: '#0d674e', fontSize: 10 }}
               size="lg"
               right={(
-                <Ionicons name="chevron-forward" size={12} color={'blue'} />
+                <Ionicons name="chevron-forward" size={12} color={'#0d674e'} />
               )}
               onPress={() => navigation.navigatePath('Public', {
-                screen: 'OurStore'
+                screen: 'BottomTabs.OurStoreStack'
               })}
             />
           </View>
@@ -645,10 +645,39 @@ const Home = () => {
               </View>
             </View>
           ) : (
-            <View style={{ marginBottom: 50 }}>
+            <View style={{ marginBottom: 30 }}>
               <FlatList data={contactUs.models} renderItem={renderStore} style={styles.flatList} />
             </View>
           )}
+        </View> */}
+        <View style={{ backgroundColor: '#0d674e', }}>
+          <View style={{ alignItems: 'center', paddingHorizontal: 10, marginVertical: 5}}>
+            <View style={[wrapper.row]}>
+              <Typography type="h4" color="white" style={{ flex: 1, paddingVertical: 4, fontSize: 16 }}>
+                FOLLOW US ON
+              </Typography>
+              <PressableBox
+                onPress={() => Linking.openURL('https://www.youtube.com/OptikTunggalOfficial')}
+              >
+                <Image source={require('../../assets/icons/figma/youtube.png')} style={{width: 26, height: 26, marginHorizontal: 5, marginTop: 2}}/>
+              </PressableBox>
+              <PressableBox
+                onPress={() => Linking.openURL('https://www.instagram.com/optiktunggal/')}
+              >
+                <Image source={require('../../assets/icons/figma/instagram.png')} style={{width: 24, height: 24, marginHorizontal: 5, marginTop: 2}}/>
+              </PressableBox>
+              <PressableBox
+                onPress={() => Linking.openURL('http://www.facebook.com/optiktunggalofficial')}
+              >
+                <Image source={require('../../assets/icons/figma/facebook.png')} style={{width: 24, height: 24, marginHorizontal: 5, marginTop: 2}}/>
+              </PressableBox>
+              <PressableBox
+                onPress={() => Linking.openURL('https://vt.tiktok.com/ZSduAfsBR/')}
+              >
+                <Image source={require('../../assets/icons/figma/tiktok.png')} style={{width: 24, height: 24, marginHorizontal: 5, marginTop: 2}}/>
+              </PressableBox>
+            </View>
+          </View>
         </View>
       </ScrollView>
       {!options.popupModels.length ? null : (
@@ -667,7 +696,6 @@ const Home = () => {
 
 const styles = StyleSheet.create({
   flatList: {
-      top: 20,
       flex: 1,
   },
   promoCard: {
@@ -721,9 +749,9 @@ const styles = StyleSheet.create({
     // width: '100%',
   },
   categoryImage: {
-    width: 200,
+    width: 100,
     height: 100,
-    resizeMode: 'contain',
+    resizeMode: 'stretch',
     marginHorizontal: 10,
   },
   articleImage: {
@@ -732,8 +760,8 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   brandImage: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     resizeMode: 'contain',
   },
   imgLens: {
@@ -747,7 +775,6 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   actionBtnContainer: {
-    backgroundColor: colors.white,
     borderRadius: 0,
     marginRight: -20,
     color: 'blue'

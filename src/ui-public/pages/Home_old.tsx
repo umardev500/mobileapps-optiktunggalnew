@@ -265,7 +265,7 @@ const Home = () => {
         )}
 
         <Typography size="xxs" textAlign="center" style={{ marginTop: 5, fontSize: 12 }}>
-          {item.ds} Collection's
+          {item.ds}
         </Typography>
       </PressableBox>
     );

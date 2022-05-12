@@ -20,6 +20,7 @@ export type ContactUsModel = {
   StoreLongitude?: string;
   StoreLatitude?: string;
   koordinat?: string;
+  waphone?: string;
 };
 
 export type CityStoreModel = {

@@ -8,7 +8,7 @@ export type UserModel = null | {
   verified?: number;
   password?: string;
   type_member?: string;
-
+  address?: string;
   namadepan?: string;
   namabelakang?: string;
   hp?: string;

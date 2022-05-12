@@ -22,6 +22,7 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     case 'Cart':
       return { title: tHome('Cart') };
     case 'Search':
+      return { headerShown: false };
     case 'Checkout':
       return { headerShown: false };
     case 'PaymentMethod':
@@ -31,25 +32,27 @@ export function routeOptions(fileName: string): StackNavigationOptions {
 
     // Notifications | Transaction
     case 'Notification':
-      return { title: tNotif('Notifikasi') };
+      return { title: tNotif('Notification') };
     case 'TransactionUsers':
       return { headerShown: false };
     case 'TransactionList':
-      return { title: tNotif('Transaksi Anda') };
+      return { title: tNotif('Your Transaction') };
     case 'TransactionDetail':
-      return { title: tNotif('Detail Transaksi') };
+      return { title: tNotif('Transaction Details') };
     case 'PromotionList':
-      return { title: tNotif('Promosi') };
+      return { title: tNotif('Promotion') };
     case 'PromotionDetail':
-      return { title: tNotif(`${''}Detail Promosi`) };
+      return { title: tNotif(`${''}Promotion Details`) };
 
     // Contact | About
     case 'Contact':
       return { headerShown: false };
     case 'OurStore':
       return { headerShown: false };
+    case 'StoreDetail':
+      return { headerShown: false };
     case 'OurContact':
-      return { title: `${''}Kontak Kami` };
+      return { title: `${''}Contact Us` };
     case 'FAQ':
       return { title: `${''}FAQ` };
     case 'Brand':
@@ -68,13 +71,13 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { headerShown: false};
     // Favorites
     case 'Favorite':
-      return { title: `${''}Favorit` };
+      return { title: `${''}Wishlist` };
 
-    case 'Article':
-      return { title: `${''}Kabar dari kami` };
+    case 'News':
+      return { title: `${''}News` };
 
     case 'ArticleDetail':
-      return { title: `${''}Detail Artikel` };
+      return { title: `${''}Article Details` };
       
     // case 'ContactLens':
     //   return { title: `${''}Contact Lens` };
@@ -88,37 +91,40 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     case 'Login':
       return { title: tAcc('Login') };
     case 'ForgotPassword':
-      return { title: tAcc('Lupa Password') };
+      return { title: tAcc('Forgot Password') };
     case 'Register':
-      return { title: tAcc('Buat Akun') };
+      return { title: tAcc('Create Akun') };
     case 'SelectUsers':
-        return { title: tAcc('Buat Akun') };  
+        return { title: tAcc('Create Akun') };  
     case 'Verification':
       return {
-        title: tAcc(`${''}Verifikasi Akun`)
+        title: tAcc(`${''}Account Verification`)
       };
     case 'AddressEdit':
       return {
-        title: [tAcc('Informasi Alamat'), tAcc('sebagai alamat penerima.')] as any
+        title: [tAcc('Address Information'), tAcc('as recipient address.')] as any
       };
     case 'AddressList':
       return { headerShown: false };
     case 'PinEdit':
       return {
-        title: [tAcc('Masukan Password')] as any
+        title: [tAcc('Enter Password')] as any
       };
     case 'PasswordReset':
-      return { title: tAcc(`${''}Keamanan Akun`) };
+      return { title: tAcc(`${''}Account Security`) };
     case 'ReviewList':
-      return { title: tAcc(`${''}Ulasan`) };
+      return { title: tAcc(`${''}Reviews`) };
     case 'ProfileEdit':
       return { title: tAcc(`${'Profile'}`) };
-
+    case 'Members':
+      return { title: tAcc(`${'Members'}`) };
+    case 'Stores':
+      return { title: tAcc(`${'Stores'}`) };
     // Company
     case 'Terms':
-      return { title: `${''}Syarat & Ketentuan` };
+      return { title: `${''}Terms & Condition` };
     case 'PrivacyPolicy':
-      return { title: `${''}Kebijakan Privasi` };
+      return { title: `${''}Privacy Policy` };
   }
 
   return { title: '' };

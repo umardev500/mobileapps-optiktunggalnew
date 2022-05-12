@@ -70,17 +70,16 @@ function PromotionDetail() {
 
     return httpService('/api/product/product/', {
       data: {
-        act: 'PrdList',
+        act: 'PrdListKatalog',
         dt: JSON.stringify({
-          comp: '001',
           reccnt,
           pg: page,
+          param: "katalog",
           limit: product.perPage,
-          search: "",
-          param: "cariprd",
+          prdcat: "",
+          search: null,
         }),
       },
-      method: 'POST'
     }).then(({ status, data }) => {
       if (200 === status) {
         setProduct(state => ({

@@ -49,53 +49,23 @@ function PasswordReset() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Typography heading>
-        {t(`Ubah password`)}
+        {t(`Reset Password`)}
       </Typography>
 
       <Typography style={{ marginTop: 4 }}>
-        {t(`Jangan beritahukan password anda kepada orang lain.`)}
+        {t(`Do not share your password with others.`)}
       </Typography>
 
       <View style={{ marginTop: 24 }}>
-        {/*<Button
-          containerStyle={[styles.resetBtnContainer, { marginBottom: 12 }]}
-          rounded={15}
-          left={(
-            <View style={{ marginRight: 15 }}>
-              <Ionicons name="mail" size={28} color={colors.gray[900]} />
-            </View>
-          )}
-          onPress={() => Alert.alert(
-            t(`Reset Sandi`),
-            t(`Anda yakin mengatur ulang sandi?\nSandi baru akan dikirim ke alamat email Anda`),
-            [
-              { text: t(`Batal`) },
-              {
-                text: t(`Ya`),
-                onPress: handleSubmit
-              },
-            ]
-          )}
-          loading={isLoading}
-        >
-          <View style={{ flex: 1 }}>
-            <Typography>Email ke</Typography>
-
-            <Typography numberOfLines={1} style={{ marginTop: 4 }}>
-              {`${mailName.substr(0, mailName.length - 3).replace(/./g, '*')}${mailName.substr(-3)}@${mailDomain}`}
-            </Typography>
-          </View>
-        </Button>*/}
-
         <Button
           containerStyle={styles.resetBtnContainer}
-          style={{ justifyContent: 'flex-start' }}
-          label={t(`Ubah Password`)}
+          style={{ justifyContent: 'flex-start', height: 60 }}
+          label={t(`Change Password`)}
           labelProps={{ textAlign: 'left', type: 'p' }}
-          rounded={15}
+          rounded={5}
           left={(
             <View style={{ marginRight: 15 }}>
-              <Ionicons name="key" size={28} color={colors.gray[900]} />
+              <Ionicons name="key" size={28} color={colors.gray[800]} />
             </View>
           )}
           onPress={() => navigation.navigatePath('Public', {
@@ -106,7 +76,7 @@ function PasswordReset() {
 
         {!isSuccess ? null : (
           <Typography color="green" style={{ marginTop: 6 }}>
-            {t(`Password baru telah dikirim ke email Anda.`)}
+            {t(`A new password has been sent to your email.`)}
           </Typography>
         )}
       </View>

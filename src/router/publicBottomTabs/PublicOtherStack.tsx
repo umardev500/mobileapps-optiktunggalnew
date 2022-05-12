@@ -43,6 +43,7 @@ function PublicOtherStack() {
         .map((name) => (
           <Stack.Screen key={name} name={name} component={Katalog[name]} options={routeOptions(name)} />
         ))}
+
     </Stack.Navigator>
   );
 }

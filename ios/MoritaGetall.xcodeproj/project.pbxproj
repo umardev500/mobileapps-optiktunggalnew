@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* OptikTunggalTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OptikTunggalTests.m */; };
+		00E356F31AD99517003FC87E /* MoritaGetallTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* MoritaGetallTests.m */; };
 		02E353287E3F4C79B1992580 /* Poppins-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CCDA2AACF2CF4D7894B02E47 /* Poppins-BoldItalic.ttf */; };
 		084CC32AEB5746E9A3F11AA0 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CB01A4853148496096EC1676 /* Poppins-Medium.ttf */; };
 		0D89E1A3864A4EE9AA521C01 /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D96812EA51524FADBB3B14A8 /* Poppins-ThinItalic.ttf */; };
@@ -19,9 +19,9 @@
 		5882BF7E9AEE4D6489072106 /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 448FA835C23A4767AA9809D8 /* Poppins-BlackItalic.ttf */; };
 		5D87808629C841EA93A32B0E /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DACEB87159E64165AB2D1156 /* Poppins-ExtraLight.ttf */; };
 		5E5BC99459234A8C9A11DD11 /* Poppins_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8F655F3F88F4B0AA6B853EB /* Poppins_bold.ttf */; };
-		6172F2D35A4C3AA820D92908 /* libPods-OptikTunggal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-OptikTunggal.a */; };
+		6172F2D35A4C3AA820D92908 /* libPods-MoritaGetall.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-MoritaGetall.a */; };
 		79E2D9054659474D93BB88A5 /* Poppins-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D275CF7BAB1D4FB99DA7D720 /* Poppins-ExtraLightItalic.ttf */; };
-		7EF68E3733C33B6898317E18 /* libPods-OptikTunggal-OptikTunggalTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-OptikTunggal-OptikTunggalTests.a */; };
+		7EF68E3733C33B6898317E18 /* libPods-MoritaGetall-MoritaGetallTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-MoritaGetall-MoritaGetallTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		81E8E0B938D94911B6FB708F /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 664FF447F4F74F85965A089B /* Poppins-Black.ttf */; };
 		8C05EB29AE174A4FA7B864AD /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7BA9F84E84B444ECAA6FB2E8 /* Poppins-SemiBold.ttf */; };
@@ -44,56 +44,56 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = OptikTunggal;
+			remoteInfo = MoritaGetall;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00E356EE1AD99517003FC87E /* OptikTunggalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OptikTunggalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* MoritaGetallTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoritaGetallTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* OptikTunggalTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OptikTunggalTests.m; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* MoritaGetallTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoritaGetallTests.m; sourceTree = "<group>"; };
 		0C2D1DBA3B434FFAAFA5725A /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* OptikTunggal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OptikTunggal.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = OptikTunggal/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = OptikTunggal/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = OptikTunggal/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OptikTunggal/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OptikTunggal/main.m; sourceTree = "<group>"; };
-		1D0AE47A65C8663E3B452821 /* Pods-OptikTunggal-OptikTunggalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OptikTunggal-OptikTunggalTests.release.xcconfig"; path = "Target Support Files/Pods-OptikTunggal-OptikTunggalTests/Pods-OptikTunggal-OptikTunggalTests.release.xcconfig"; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* MoritaGetall.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoritaGetall.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = MoritaGetall/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = MoritaGetall/AppDelegate.m; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MoritaGetall/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MoritaGetall/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MoritaGetall/main.m; sourceTree = "<group>"; };
+		1D0AE47A65C8663E3B452821 /* Pods-MoritaGetall-MoritaGetallTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MoritaGetall-MoritaGetallTests.release.xcconfig"; path = "Target Support Files/Pods-MoritaGetall-MoritaGetallTests/Pods-MoritaGetall-MoritaGetallTests.release.xcconfig"; sourceTree = "<group>"; };
 		3EC254A9739E42379D75BD01 /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-LightItalic.ttf"; path = "../src/assets/fonts/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
 		3F7D96531143431AA340F5F7 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		448FA835C23A4767AA9809D8 /* Poppins-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BlackItalic.ttf"; path = "../src/assets/fonts/Poppins-BlackItalic.ttf"; sourceTree = "<group>"; };
 		4658FF0CBF9543A8A14B9491 /* Poppins-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Thin.ttf"; path = "../src/assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; };
 		4F0DFE370B394F829F48FB7B /* Poppins_bold_italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Poppins_bold_italic.ttf; path = ../src/assets/fonts/Poppins_bold_italic.ttf; sourceTree = "<group>"; };
 		5D51677969BF4173AE6EC8C7 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
-		6423831EA8574132BED9D8CC /* libPods-OptikTunggal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OptikTunggal.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6423831EA8574132BED9D8CC /* libPods-MoritaGetall.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MoritaGetall.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		664FF447F4F74F85965A089B /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../src/assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
 		68916894C2624A848EDC671E /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		68C5E4241B9647ECA542713A /* Poppins-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Poppins-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
-		6C97AB639B58BBB4B15BBE30 /* Pods-OptikTunggal-OptikTunggalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OptikTunggal-OptikTunggalTests.debug.xcconfig"; path = "Target Support Files/Pods-OptikTunggal-OptikTunggalTests/Pods-OptikTunggal-OptikTunggalTests.debug.xcconfig"; sourceTree = "<group>"; };
+		6C97AB639B58BBB4B15BBE30 /* Pods-MoritaGetall-MoritaGetallTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MoritaGetall-MoritaGetallTests.debug.xcconfig"; path = "Target Support Files/Pods-MoritaGetall-MoritaGetallTests/Pods-MoritaGetall-MoritaGetallTests.debug.xcconfig"; sourceTree = "<group>"; };
 		79F2129A89D745F49DF46355 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		7BA9F84E84B444ECAA6FB2E8 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../src/assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		7F3BA51FED84407FBFE825C9 /* Poppins-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-MediumItalic.ttf"; path = "../src/assets/fonts/Poppins-MediumItalic.ttf"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = OptikTunggal/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MoritaGetall/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		888F62C61C1A449DAEFDC390 /* Poppins.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Poppins.ttf; path = ../src/assets/fonts/Poppins.ttf; sourceTree = "<group>"; };
 		8BA8E5CC266F4D69AA036E63 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		96FFEB22A06E4B0599A854E7 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		A891317727CE45769F85AC54 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		A8F6E6AD76C44AFD90C1343F /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
-		ABFE59519B596E51CEFDCCC0 /* libPods-OptikTunggal-OptikTunggalTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OptikTunggal-OptikTunggalTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABFE59519B596E51CEFDCCC0 /* libPods-MoritaGetall-MoritaGetallTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MoritaGetall-MoritaGetallTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC4AFE7804F142F4BA9BC3B9 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		B5E8E0E3A86242A9942DB5D1 /* Poppins-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Italic.ttf"; path = "../src/assets/fonts/Poppins-Italic.ttf"; sourceTree = "<group>"; };
 		B637B5ED33254F9E9840E0CB /* Poppins-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Light.ttf"; path = "../src/assets/fonts/Poppins-Light.ttf"; sourceTree = "<group>"; };
 		B8AA2A98DE0D470F9B6E67C4 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		B8F655F3F88F4B0AA6B853EB /* Poppins_bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Poppins_bold.ttf; path = ../src/assets/fonts/Poppins_bold.ttf; sourceTree = "<group>"; };
 		BEAB65AF98164DA48FD42251 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
-		C0A881CF5CF3F2B244570E2A /* Pods-OptikTunggal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OptikTunggal.debug.xcconfig"; path = "Target Support Files/Pods-OptikTunggal/Pods-OptikTunggal.debug.xcconfig"; sourceTree = "<group>"; };
+		C0A881CF5CF3F2B244570E2A /* Pods-MoritaGetall.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MoritaGetall.debug.xcconfig"; path = "Target Support Files/Pods-MoritaGetall/Pods-MoritaGetall.debug.xcconfig"; sourceTree = "<group>"; };
 		C89D4CC74CB44D91B62EA8E8 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBold.ttf"; path = "../src/assets/fonts/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
 		C95FECAF8F484C438903392D /* Poppins_italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Poppins_italic.ttf; path = ../src/assets/fonts/Poppins_italic.ttf; sourceTree = "<group>"; };
 		CB01A4853148496096EC1676 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
 		CC91F21B98BC4764ACA4EF59 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		CCDA2AACF2CF4D7894B02E47 /* Poppins-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BoldItalic.ttf"; path = "../src/assets/fonts/Poppins-BoldItalic.ttf"; sourceTree = "<group>"; };
-		D00AAFFCFCFDA5787532823F /* Pods-OptikTunggal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OptikTunggal.release.xcconfig"; path = "Target Support Files/Pods-OptikTunggal/Pods-OptikTunggal.release.xcconfig"; sourceTree = "<group>"; };
+		D00AAFFCFCFDA5787532823F /* Pods-MoritaGetall.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MoritaGetall.release.xcconfig"; path = "Target Support Files/Pods-MoritaGetall/Pods-MoritaGetall.release.xcconfig"; sourceTree = "<group>"; };
 		D275CF7BAB1D4FB99DA7D720 /* Poppins-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLightItalic.ttf"; path = "../src/assets/fonts/Poppins-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		D7274C9ED86E4596B2C49543 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		D96812EA51524FADBB3B14A8 /* Poppins-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ThinItalic.ttf"; path = "../src/assets/fonts/Poppins-ThinItalic.ttf"; sourceTree = "<group>"; };
@@ -111,7 +111,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7EF68E3733C33B6898317E18 /* libPods-OptikTunggal-OptikTunggalTests.a in Frameworks */,
+				7EF68E3733C33B6898317E18 /* libPods-MoritaGetall-MoritaGetallTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,20 +119,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6172F2D35A4C3AA820D92908 /* libPods-OptikTunggal.a in Frameworks */,
+				6172F2D35A4C3AA820D92908 /* libPods-MoritaGetall.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* OptikTunggalTests */ = {
+		00E356EF1AD99517003FC87E /* MoritaGetallTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* OptikTunggalTests.m */,
+				00E356F21AD99517003FC87E /* MoritaGetallTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = OptikTunggalTests;
+			path = MoritaGetallTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -143,7 +143,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* OptikTunggal */ = {
+		13B07FAE1A68108700A75B9A /* MoritaGetall */ = {
 			isa = PBXGroup;
 			children = (
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -153,15 +153,15 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = OptikTunggal;
+			name = MoritaGetall;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				6423831EA8574132BED9D8CC /* libPods-OptikTunggal.a */,
-				ABFE59519B596E51CEFDCCC0 /* libPods-OptikTunggal-OptikTunggalTests.a */,
+				6423831EA8574132BED9D8CC /* libPods-MoritaGetall.a */,
+				ABFE59519B596E51CEFDCCC0 /* libPods-MoritaGetall-MoritaGetallTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -176,9 +176,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* OptikTunggal */,
+				13B07FAE1A68108700A75B9A /* MoritaGetall */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* OptikTunggalTests */,
+				00E356EF1AD99517003FC87E /* MoritaGetallTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				E233CBF5F47BEE60B243DCF8 /* Pods */,
@@ -192,8 +192,8 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* OptikTunggal.app */,
-				00E356EE1AD99517003FC87E /* OptikTunggalTests.xctest */,
+				13B07F961A680F5B00A75B9A /* MoritaGetall.app */,
+				00E356EE1AD99517003FC87E /* MoritaGetallTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -246,10 +246,10 @@
 		E233CBF5F47BEE60B243DCF8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C0A881CF5CF3F2B244570E2A /* Pods-OptikTunggal.debug.xcconfig */,
-				D00AAFFCFCFDA5787532823F /* Pods-OptikTunggal.release.xcconfig */,
-				6C97AB639B58BBB4B15BBE30 /* Pods-OptikTunggal-OptikTunggalTests.debug.xcconfig */,
-				1D0AE47A65C8663E3B452821 /* Pods-OptikTunggal-OptikTunggalTests.release.xcconfig */,
+				C0A881CF5CF3F2B244570E2A /* Pods-MoritaGetall.debug.xcconfig */,
+				D00AAFFCFCFDA5787532823F /* Pods-MoritaGetall.release.xcconfig */,
+				6C97AB639B58BBB4B15BBE30 /* Pods-MoritaGetall-MoritaGetallTests.debug.xcconfig */,
+				1D0AE47A65C8663E3B452821 /* Pods-MoritaGetall-MoritaGetallTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -257,9 +257,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* OptikTunggalTests */ = {
+		00E356ED1AD99517003FC87E /* MoritaGetallTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "OptikTunggalTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "MoritaGetallTests" */;
 			buildPhases = (
 				A130D646172E58E1D159D8F2 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -273,14 +273,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = OptikTunggalTests;
-			productName = OptikTunggalTests;
-			productReference = 00E356EE1AD99517003FC87E /* OptikTunggalTests.xctest */;
+			name = MoritaGetallTests;
+			productName = MoritaGetallTests;
+			productReference = 00E356EE1AD99517003FC87E /* MoritaGetallTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* OptikTunggal */ = {
+		13B07F861A680F5B00A75B9A /* MoritaGetall */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "OptikTunggal" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MoritaGetall" */;
 			buildPhases = (
 				3E482C27206C4DEF2FE45063 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -295,9 +295,9 @@
 			);
 			dependencies = (
 			);
-			name = OptikTunggal;
-			productName = OptikTunggal;
-			productReference = 13B07F961A680F5B00A75B9A /* OptikTunggal.app */;
+			name = MoritaGetall;
+			productName = MoritaGetall;
+			productReference = 13B07F961A680F5B00A75B9A /* MoritaGetall.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -317,7 +317,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "OptikTunggal" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "MoritaGetall" */;
 			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -330,8 +330,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* OptikTunggal */,
-				00E356ED1AD99517003FC87E /* OptikTunggalTests */,
+				13B07F861A680F5B00A75B9A /* MoritaGetall */,
+				00E356ED1AD99517003FC87E /* MoritaGetallTests */,
 			);
 		};
 /* End PBXProject section */
@@ -398,15 +398,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OptikTunggal-OptikTunggalTests/Pods-OptikTunggal-OptikTunggalTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MoritaGetall-MoritaGetallTests/Pods-MoritaGetall-MoritaGetallTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OptikTunggal-OptikTunggalTests/Pods-OptikTunggal-OptikTunggalTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MoritaGetall-MoritaGetallTests/Pods-MoritaGetall-MoritaGetallTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OptikTunggal-OptikTunggalTests/Pods-OptikTunggal-OptikTunggalTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MoritaGetall-MoritaGetallTests/Pods-MoritaGetall-MoritaGetallTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3E482C27206C4DEF2FE45063 /* [CP] Check Pods Manifest.lock */ = {
@@ -424,7 +424,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OptikTunggal-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-MoritaGetall-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -437,15 +437,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OptikTunggal-OptikTunggalTests/Pods-OptikTunggal-OptikTunggalTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MoritaGetall-MoritaGetallTests/Pods-MoritaGetall-MoritaGetallTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OptikTunggal-OptikTunggalTests/Pods-OptikTunggal-OptikTunggalTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MoritaGetall-MoritaGetallTests/Pods-MoritaGetall-MoritaGetallTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OptikTunggal-OptikTunggalTests/Pods-OptikTunggal-OptikTunggalTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MoritaGetall-MoritaGetallTests/Pods-MoritaGetall-MoritaGetallTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A130D646172E58E1D159D8F2 /* [CP] Check Pods Manifest.lock */ = {
@@ -463,7 +463,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OptikTunggal-OptikTunggalTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-MoritaGetall-MoritaGetallTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -476,15 +476,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OptikTunggal/Pods-OptikTunggal-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MoritaGetall/Pods-MoritaGetall-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OptikTunggal/Pods-OptikTunggal-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MoritaGetall/Pods-MoritaGetall-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OptikTunggal/Pods-OptikTunggal-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MoritaGetall/Pods-MoritaGetall-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C8AC78B0264D0F9F6F6D630E /* [CP] Embed Pods Frameworks */ = {
@@ -493,15 +493,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OptikTunggal/Pods-OptikTunggal-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MoritaGetall/Pods-MoritaGetall-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OptikTunggal/Pods-OptikTunggal-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MoritaGetall/Pods-MoritaGetall-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OptikTunggal/Pods-OptikTunggal-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MoritaGetall/Pods-MoritaGetall-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -530,7 +530,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* OptikTunggalTests.m in Sources */,
+				00E356F31AD99517003FC87E /* MoritaGetallTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -548,7 +548,7 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* OptikTunggal */;
+			target = 13B07F861A680F5B00A75B9A /* MoritaGetall */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -556,14 +556,14 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6C97AB639B58BBB4B15BBE30 /* Pods-OptikTunggal-OptikTunggalTests.debug.xcconfig */;
+			baseConfigurationReference = 6C97AB639B58BBB4B15BBE30 /* Pods-MoritaGetall-MoritaGetallTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = OptikTunggalTests/Info.plist;
+				INFOPLIST_FILE = MoritaGetallTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -577,17 +577,17 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OptikTunggal.app/OptikTunggal";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MoritaGetall.app/MoritaGetall";
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1D0AE47A65C8663E3B452821 /* Pods-OptikTunggal-OptikTunggalTests.release.xcconfig */;
+			baseConfigurationReference = 1D0AE47A65C8663E3B452821 /* Pods-MoritaGetall-MoritaGetallTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = OptikTunggalTests/Info.plist;
+				INFOPLIST_FILE = MoritaGetallTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -601,13 +601,13 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OptikTunggal.app/OptikTunggal";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MoritaGetall.app/MoritaGetall";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C0A881CF5CF3F2B244570E2A /* Pods-OptikTunggal.debug.xcconfig */;
+			baseConfigurationReference = C0A881CF5CF3F2B244570E2A /* Pods-MoritaGetall.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -616,7 +616,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 99HWTV59MU;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = OptikTunggal/Info.plist;
+				INFOPLIST_FILE = MoritaGetall/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -627,8 +627,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = optik.tunggal.ios;
-				PRODUCT_NAME = OptikTunggal;
+				PRODUCT_BUNDLE_IDENTIFIER = com.moritagetall.ios;
+				PRODUCT_NAME = MoritaGetall;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -638,7 +638,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D00AAFFCFCFDA5787532823F /* Pods-OptikTunggal.release.xcconfig */;
+			baseConfigurationReference = D00AAFFCFCFDA5787532823F /* Pods-MoritaGetall.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -646,7 +646,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 99HWTV59MU;
-				INFOPLIST_FILE = OptikTunggal/Info.plist;
+				INFOPLIST_FILE = MoritaGetall/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -657,8 +657,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = optik.tunggal.ios;
-				PRODUCT_NAME = OptikTunggal;
+				PRODUCT_BUNDLE_IDENTIFIER = com.moritagetall.ios;
+				PRODUCT_NAME = MoritaGetall;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -793,7 +793,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "OptikTunggalTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "MoritaGetallTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -802,7 +802,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "OptikTunggal" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MoritaGetall" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -811,7 +811,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "OptikTunggal" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "MoritaGetall" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

@@ -96,8 +96,8 @@ function SelectUsers() {
     <View style={{ flex: 1, backgroundColor: '#FEFEFE' }}>
         <Typography style={{ marginVertical: 10, marginHorizontal: 15, fontSize: 12, textAlign: 'justify' }}>
           {/* {t(`${t('PencariPilih User Produk')} “${search}”`)} */}
-          Alamat email anda sudah menjadi pelanggan di Optik tunggal. 
-          silahkan pilih user dibawah untuk melanjutkan proses pendaftaran akun.
+          Your email address is already a subscriber at Optik Tunggal.
+          Please select a user below to continue the account registration process.
         </Typography>
         <ScrollView
           contentContainerStyle={{

@@ -2,7 +2,7 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { colors } from '../lib/styles';
 
-export type ClientStackParamList = {
+export type ClientStack = {
   // BottomTabs: {};
 };
 

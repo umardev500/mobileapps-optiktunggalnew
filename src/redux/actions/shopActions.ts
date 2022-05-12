@@ -8,7 +8,7 @@ export const fetchCategories = createAsyncThunk('shop/fetchCategories', async ()
 
   await httpService('/api/category', {
     data: {
-      act: 'PrdCatList',
+      act: 'PrdGenderList',
       dt: JSON.stringify({ comp: '001' }),
     },
   }).then(({ status, data }) => {

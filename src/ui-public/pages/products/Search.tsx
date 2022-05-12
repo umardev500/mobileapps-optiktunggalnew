@@ -17,11 +17,11 @@ import { useTranslation } from 'react-i18next';
 import ViewCollapse from '../../components/ViewCollapse';
 
 const SORT = [
-  { label: `${''}Ulasan`, value: 'review-desc' },
-  // { label: `${''}Harga Tertinggi`, value: 'price-desc' },
-  // { label: `${''}Harga Terendah`, value: 'price-asc' },
-  { label: `${''}Populer`, value: 'price-asc' },
-  { label: `${''}Terbaru`, value: 'price-asc' },
+  // { label: `${''}Ulasan`, value: 'review-desc' },
+  { label: `${''}lowest price`, value: 'price-asc' },
+  { label: `${''}highest price`, value: 'price-desc' },
+  // { label: `${''}Popular`, value: 'price-asc' },
+  // { label: `${''}Latest`, value: 'price-asc' },
 ];
 
 type Fields = {
@@ -141,6 +141,7 @@ function Search() {
           limit: reccnt,
           search: search,
           param: "cariprd",
+          keyword: !route.params.keywords ? null : route.params.keywords,
           ...fields
         }),
       },
@@ -244,29 +245,34 @@ function Search() {
   return (
     <View style={{ flex: 1 }}>
       <Header
-        left
+        left="kosong"
         search={search || undefined}
       />
 
       <View style={[styles.wrapper, { paddingTop: 8, paddingBottom: 12 }]}>
         {!search ? null : (
-          <Typography type="h5" style={{ marginVertical: 10, marginLeft: -8 }}>
-            {t(`${t('Pencarian Produk')} “${search}”`)}
+          <Typography type="h5" style={{ marginVertical: 10, marginLeft: -10 }}>
+            {!brandActive ? (t(`${t('Product keyword')} “${search}”`)) : (
+                t(`${t('Product keyword')} “${brandActive.name}”`)
+            )}
           </Typography>
         )}
 
-        {/* <View style={[wrapper.row, { alignItems: 'center' }]}>
+
+        <View style={[wrapper.row, { alignItems: 'center' }]}>
           <Button
             containerStyle={{
-              borderColor: colors.transparent(filterColor, 0.25),
+              marginLeft: -12,
+              borderColor: '#fff',
+              backgroundColor: '#0d674e'
             }}
             label={`${t('Filter')}`}
-            labelProps={{ type: 'p', color: filterColor }}
+            labelProps={{ type: 'p', color: '#fff' }}
             rounded={8}
             border
             left={(
               <View style={{ marginRight: 8 }}>
-                <Ionicons name="filter" size={16} color={filterColor} />
+                <Ionicons name="filter" size={16} color={'#fff'} />
               </View>
             )}
             onPress={() => handleModalToggle('filter', true)}
@@ -297,7 +303,7 @@ function Search() {
               )}
             />
           )}
-        </View> */}
+        </View>
       </View>
 
       <Products
@@ -331,22 +337,22 @@ function Search() {
         )}
       />
 
-      {/* Popup Provinces */}
+      {/* Popup Filter */}
       <BottomDrawer
         isVisible={options.filterModalOpen}
         swipeDirection={null}
         onBackButtonPress={() => handleModalToggle('filter', false)}
         onBackdropPress={() => handleModalToggle('filter', false)}
-        title="Filter"
+        // title="Filter"
         style={{ maxHeight: height * 0.75 }}
       >
         <Button
-            containerStyle={{ alignSelf: 'center', marginBottom: 20 }}
-            style={{ minWidth: 350 }}
-            label={`${t('Terapkan Filter')}`}
-            color="primary"
-            onPress={handleFilterApply}
-          />
+          containerStyle={{ alignSelf: 'center', marginBottom: 20, backgroundColor: '#0d674e' }}
+          style={{ minWidth: 350 }}
+          onPress={handleFilterApply}
+        >
+          <Typography style={{ color: '#fff' }}>Apply Filter</Typography>
+        </Button>
         <ScrollView
           contentContainerStyle={{
             paddingHorizontal: 24,
@@ -354,8 +360,8 @@ function Search() {
             paddingBottom: 24
           }}
         >
-          {/* <Typography type="h5" style={{ paddingBottom: 8 }}>
-            {`${t('Urutkan Berdasar')}`}
+          <Typography type="h5" style={{ paddingBottom: 8 }}>
+            {`${t('Sort By')}`}
           </Typography>
 
           <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
@@ -374,10 +380,10 @@ function Search() {
                 onPress={() => handleFieldChange('sort', item.value)}
               />
             ))}
-          </View> */}
+          </View>
 
           {!brand.modelsLoaded ? null : (
-            <View style={{ marginTop: -10 }}>
+            <View style={{ marginTop: 0 }}>
               <ViewCollapse
                   style={styles.menuContainer}
                   pressableProps={{
@@ -392,7 +398,7 @@ function Search() {
                   {[
                     {
                       id: '',
-                      name: t(`${t('Semua Brand')}`),
+                      name: t(`${t('All Brand')}`),
                     },
                     ...(brand.models || [])
                     ].map((item, index) => {
@@ -400,123 +406,33 @@ function Search() {
                       return (
                         <Button
                           key={index}
-                          label={item.name}
                           labelProps={{ type: 'p' }}
                           containerStyle={{
                             marginTop: index > 0 ? 4 : 0,
-                            backgroundColor: selected ? colors.transparent('palettes.primary', 0.1) : undefined,
+                            backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
                           }}
                           style={{ justifyContent: 'space-between' }}
                           onPress={() => handleFieldChange('brand', item.id)}
                           size="lg"
                           right={(
-                            <Typography size="sm" color={selected ? 'blue' : 'primary'}>
-                              {selected ? `${t('Dipilih')}` : `${t('Pilih')}`}
+                            <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
+                              {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
                             </Typography>
                           )}
-                        />
+                        >
+                          <View style={[wrapper.row]}>
+                            <Image source={{ uri: item.fotobrand }} style={{ width: 30, height: 20, resizeMode: 'stretch' }} />
+                            <Typography style={{ marginLeft: 5}}>
+                              {item.name}
+                            </Typography>
+                          </View>
+                        </Button>
                       );
                     })
                   }
                 </ViewCollapse>
             </View>
           )}
-
-          <ViewCollapse
-            style={styles.menuContainer}
-            pressableProps={{
-              containerStyle: styles.menuBtnContainer,
-            }}
-            header={t(`${''}Model`)}
-            headerProps={{
-              type: 'h',
-            }}
-            collapse
-          >
-            {!categories?.length ? (
-              <Typography>
-                {t(`${t('Tidak ada model')}`)}
-              </Typography>
-            ) : (
-              [
-                {
-                  id: '',
-                  ds: t(`${t('Semua Kategori')}`),
-                },
-                ...categories
-              ].map((item, index) => {
-                const selected = item?.id === options.prdcat;
-
-                return (
-                  <Button
-                    key={index}
-                    label={item.ds}
-                    labelProps={{ type: 'p' }}
-                    containerStyle={{
-                      marginTop: index > 0 ? 4 : 0,
-                      backgroundColor: selected ? colors.transparent('palettes.primary', 0.1) : undefined,
-                    }}
-                    style={{ justifyContent: 'space-between' }}
-                    onPress={() => setOptions(state => ({ ...state, prdcat: item.id }))}
-                    size="lg"
-                    right={(
-                      <Typography size="sm" color={selected ? 'blue' : 'primary'}>
-                        {selected ? `${t('Dipilih')}` : `${t('Pilih')}`}
-                      </Typography>
-                    )}
-                  />
-                );
-              })
-            )}
-          </ViewCollapse>
-          
-          <ViewCollapse
-            style={styles.menuContainer}
-            pressableProps={{
-              containerStyle: styles.menuBtnContainer,
-            }}
-            header={t(`${''}Kategori`)}
-            headerProps={{
-              type: 'h',
-            }}
-            collapse
-          >
-            {!categories?.length ? (
-              <Typography>
-                {t(`${t('Tidak ada kategori')}`)}
-              </Typography>
-            ) : (
-              [
-                {
-                  id: '',
-                  ds: t(`${t('Semua Kategori')}`),
-                },
-                ...categories
-              ].map((item, index) => {
-                const selected = item?.id === options.prdcat;
-
-                return (
-                  <Button
-                    key={index}
-                    label={item.ds}
-                    labelProps={{ type: 'p' }}
-                    containerStyle={{
-                      marginTop: index > 0 ? 4 : 0,
-                      backgroundColor: selected ? colors.transparent('palettes.primary', 0.1) : undefined,
-                    }}
-                    style={{ justifyContent: 'space-between' }}
-                    onPress={() => setOptions(state => ({ ...state, prdcat: item.id }))}
-                    size="lg"
-                    right={(
-                      <Typography size="sm" color={selected ? 'blue' : 'primary'}>
-                        {selected ? `${t('Dipilih')}` : `${t('Pilih')}`}
-                      </Typography>
-                    )}
-                  />
-                );
-              })
-            )}
-          </ViewCollapse>
 
           <ViewCollapse
             style={styles.menuContainer}
@@ -531,13 +447,13 @@ function Search() {
           >
             {!categories?.length ? (
               <Typography>
-                {t(`${t('Tidak ada Gender')}`)}
+                {t(`${t('No Gender')}`)}
               </Typography>
             ) : (
               [
                 {
                   id: '',
-                  ds: t(`${t('Semua Gender')}`),
+                  ds: t(`${t('All Gender')}`),
                 },
                 ...categories
               ].map((item, index) => {
@@ -550,14 +466,14 @@ function Search() {
                     labelProps={{ type: 'p' }}
                     containerStyle={{
                       marginTop: index > 0 ? 4 : 0,
-                      backgroundColor: selected ? colors.transparent('palettes.primary', 0.1) : undefined,
+                      backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
                     }}
                     style={{ justifyContent: 'space-between' }}
                     onPress={() => setOptions(state => ({ ...state, prdcat: item.id }))}
                     size="lg"
                     right={(
-                      <Typography size="sm" color={selected ? 'blue' : 'primary'}>
-                        {selected ? `${t('Dipilih')}` : `${t('Pilih')}`}
+                      <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
+                        {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
                       </Typography>
                     )}
                   />
@@ -586,7 +502,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     backgroundColor: colors.white,
-    paddingHorizontal: 15,
+    paddingHorizontal: 25,
   },
 
   header: {

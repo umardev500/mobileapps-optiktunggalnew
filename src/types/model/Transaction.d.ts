@@ -23,6 +23,7 @@ export type TransactionModel = {
   methodds?: string;
   currds?: string;
   password?: string;
+  nm_store?: string;
 };
 
 type TransactionStatus = 'nklunas' | 'nplunas' | 'npfullpay' | 'npprogress' | 'open' | 'confirm' | 'do';

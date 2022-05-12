@@ -16,9 +16,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { showPhone } from '../../../lib/utilities';
 import PhoneInput from "react-native-phone-number-input";
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import SelectDropdown from 'react-native-select-dropdown';
 
 type Fields = {
   namadepan?: string,
+  namatengah?: string,
   namabelakang?: string,
   hp?: string,
   email?: string,
@@ -29,6 +32,7 @@ type Fields = {
   foto?: string,
   namafoto?: string,
   gender?: string,
+  tgllahir?: string,
   // password?: string,
 };
 
@@ -40,22 +44,27 @@ function Register() {
   const { t } = useTranslation('notification');
   const phoneInput = useRef<PhoneInput>(null);
   const [phone, setPhone] = useState("");
+  const [date, setDate] = useState("");
+  const [gender, setGender] = useState("");
   // const [tabIndex, setTabIndex] = React.useState();
   // const handleTabsChange = index => {
   //   setTabIndex(index);
   //   console.log('Current state unit: ', setTabIndex(index));
   // };
+  const genderData = ["-- Pilih Jenis Kelamin --", "Pria", "Wanita"];
   const [isSaving, setIsSaving] = useState(false);
   // States
   const [isLoading, setIsLoading] = useState(false);
   const [fields, setFields] = useState<Fields>({
     namadepan: '',
+    namatengah: '',
     namabelakang: '',
     hp: '',
     email: '',
     namaktp: '',
     namafoto: '',
     gender: '',
+    tgllahir: '',
   });
   const [options, setOptions] = useState({
     ktpFileUploading: false,
@@ -66,37 +75,46 @@ function Register() {
     message: undefined,
   });
 
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    // const isDate = moment().format("DD/MM/YYYY");
+    setDate(date);
+    console.warn("A date has been picked: ", date);
+    hideDatePicker();
+  };
+
+  const getDate = () => {
+    if(date == ""){
+      let tempDate = "";
+      return tempDate;
+    }else{
+      let tempDate = moment(date).format("YYYY-MM-DD");
+      return tempDate;
+    }
+  };
+
+  const getGender = (gender) => {
+    setGender(gender);
+  }
+
+  const jk = () => {
+    return gender;
+  }
+
   // Effects
   useEffect(() => {
     // 
   }, []);
-
-  // const getdataExist = async () => {
-  //   return httpService('/api/login/login', {
-  //     data: {
-  //       act: 'CekEmailExist',
-  //       dt: JSON.stringify({
-  //         email: 'nrntwhd@gmail.com',
-  //         hp: '0812563400463',
-  //       }),
-  //     }
-  //   }).then(({ status, data }) => {
-  //     setIsSaving(false);
-  //     if (status === 201) {
-  //       Alert.alert( "Pemberitahuan", "Email atau No. Handphone sudah terdaftar. "+data.kd_customer,
-  //         [
-  //           { text: "OK", onPress: () => console.log("OK Pressed") }
-  //         ]
-  //       );
-  //     }else{
-
-  //     }
-  //   }).catch((err) => {
-  //     setIsSaving(false);
-  //   });
-    
-  // };
-
+  
   // Vars
   const handleFieldChange = (field: keyof Fields, value: ValueOf<Fields>) => {
     const { fields = [] } = error;
@@ -130,7 +148,7 @@ function Register() {
     }).then(({ status, data }) => {
       setIsSaving(false);
       if (status === 200) {
-        Alert.alert( "Pemberitahuan", "Password sudah kami kirimkan ke email anda.",
+        Alert.alert( "Alert", "We have sent the password to your email.",
           [
             { text: "OK", onPress: () => { navigation.navigatePath('Public', { screen: 'BottomTabs.AccountStack.Login',}); }}
           ]
@@ -160,14 +178,18 @@ function Register() {
   const handleSubmit = () => {
     // console.log('GENDER__'+tabIndex);
     if (!fields.namadepan || !fields.namabelakang) {
-      return handleErrorShow('namadepan', t('Masukan Nama Depan dan Nama Belakang.'));
+      return handleErrorShow('namadepan', t('Please fill first and last name.'));
     } else if (!fields.hp) {
-      return handleErrorShow('hp', t('Masukan Nomor Handphone.'));
+      return handleErrorShow('hp', t('Please fill phone number.'));
     } else if (!fields.email) {
-      return handleErrorShow('email', t('Masukan alamat email.'));
+      return handleErrorShow('email', t('Please fill email address.'));
     } else if (!validator.isEmail(fields.email)) {
-      return handleErrorShow('email', t('Masukan alamat email.'));
-    } /*else if (!fields.foto) {
+      return handleErrorShow('email', t('Please fill email address.'));
+    } else if(!date){
+      return handleErrorShow('tgllahir', t('Please fill date of birth'));
+    }else if(!SelectDropdown){
+      return handleErrorShow('gender', t('Please select gender'));
+    }/*else if (!fields.foto) {
       return handleErrorShow('namafoto', t('Please select the file for your profile photo.'));
     } else if (!fields.ktp) {
       return handleErrorShow('namaktp', t('Please select your KTP/NPWP photo file.'));
@@ -202,96 +224,35 @@ function Register() {
           params: [{
             profile: {
               ...fields,
+              tgllahir: getDate(),
+              gender: jk(),
               // hp: `62${fields.hp}`,
               hp: phone.replace('+', ''), //showPhone(fields.hp, '62'),
             },
           }],
         });
+      }else if(status === 202){
+        Alert.alert( "Alert", "Sorry, the email has been registered.",
+          [
+            { text: "Oke", onPress: () => navigation.navigatePath('Public', {screen: 'BottomTabs.HomeStack.Home'}) }
+          ]
+        );
+        
       }
     }).catch((err) => {
       setIsSaving(false);
     });
   };
 
-  // const handleCameraOpen = async (field: keyof Fields) => {
-  //   const { assets = [] } = await launchCamera({
-  //     mediaType: 'photo',
-  //     maxWidth: 1920,
-  //     maxHeight: 1920,
-  //   }).catch(() => ({ assets: [] }));
-
-  //   const [file] = assets;
-
-  //   if (file) {
-  //     const fileNames = file.fileName?.split('.') || [];
-  //     const fileExt = fileNames[fileNames.length - 1];
-  //     const fieldValue = moment().format('YYYYMMDD') + "_" + moment().unix() + "." + fileExt;
-  //     const filePath = Platform.OS === 'android' ? file.uri : file.uri?.replace('file://', '');
-  //     let attachmentKey = '';
-
-  //     switch (field) {
-  //       case 'namaktp':
-  //         attachmentKey = 'ktp';
-  //         handleFieldChange('ktpLocalName', `Camera_${fieldValue}`);
-  //         break;
-  //       case 'namafoto':
-  //         attachmentKey = 'foto';
-  //         handleFieldChange('fotoLocalName', `Camera_${fieldValue}`);
-  //         break;
-  //     }
-
-  //     (attachmentKey && filePath) && await RNFS.readFile(filePath, 'base64').then((value) => {
-  //       const fileBase64 = `data:${file.type};base64,${value}`;
-
-  //       handleFieldChange(attachmentKey as keyof Fields, fileBase64);
-  //     });
-
-  //     handleFieldChange(field, fieldValue);
-  //   }
-  // };
-
-  // const handleFileOpen = async (field: keyof Fields) => {
-  //   const [file] = await DocumentPicker.pick({
-  //     type: [DocumentPicker.types.allFiles],
-  //   }).catch(() => []);
-
-  //   if (file) {
-  //     const fileNames = file.name?.split('.') || [];
-  //     const fileExt = fileNames[fileNames.length - 1];
-  //     const fieldValue = moment().format('YYYYMMDD') + "_" + moment().unix() + "." + fileExt;
-  //     const filePath = Platform.OS === 'android' ? file.uri : file.uri.replace('file://', '');
-  //     let attachmentKey = '';
-
-  //     switch (field) {
-  //       case 'namaktp':
-  //         attachmentKey = 'ktp';
-  //         handleFieldChange('ktpLocalName', file.name);
-  //         break;
-  //       case 'namafoto':
-  //         attachmentKey = 'foto';
-  //         handleFieldChange('fotoLocalName', file.name);
-  //         break;
-  //     }
-
-  //     attachmentKey && await RNFS.readFile(filePath, 'base64').then((value) => {
-  //       const fileBase64 = `data:${file.type};base64,${value}`;
-
-  //       handleFieldChange(attachmentKey as keyof Fields, fileBase64);
-  //     });
-
-  //     handleFieldChange(field, fieldValue);
-  //   }
-  // };
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Image source={{ uri: 'http://www.resindaparkmall.com/media/k2/items/cache/ba1b7eb9b8ad142948e3b9dce300b4c6_L.jpg'}} style={{ width: '60%', height: 75, alignSelf: 'center' }}/>
+      <Image source={{ uri: 'https://www.resindaparkmall.com/media/k2/items/cache/ba1b7eb9b8ad142948e3b9dce300b4c6_L.jpg'}} style={{ width: '60%', height: 75, alignSelf: 'center' }}/>
       {/*<Typography style={{ textAlign: 'center', marginTop: 10 }}>
         Please fill in your personal data.
       </Typography>*/}
       <TextField
         containerStyle={{ marginTop: 25 }}
-        placeholder={t('First Name')}
+        placeholder={t('Nama Depan')}
         value={fields.namadepan}
         onChangeText={(value) => handleFieldChange('namadepan', value)}
         error={!!getFieldError('namadepan')}
@@ -300,26 +261,59 @@ function Register() {
 
       <TextField
         containerStyle={{ marginTop: 12 }}
-        placeholder={t('Last Name')}
+        placeholder={t('Nama Tengah (Jika ada)')}
+        value={fields.namabelakang}
+        onChangeText={(value) => handleFieldChange('namatengah', value)}
+        error={!!getFieldError('namatengah')}
+        message={error.message}
+      />
+
+      <TextField
+        containerStyle={{ marginTop: 12 }}
+        placeholder={t('Nama Belakang')}
         value={fields.namabelakang}
         onChangeText={(value) => handleFieldChange('namabelakang', value)}
         error={!!getFieldError('namabelakang')}
         message={error.message}
       />
-
-      {/*<View style={{ marginTop: 30 }}>
-        <Typography style={{ marginBottom: 10, fontWeight: 'bold' }}>Jenis Kelamin</Typography>
-        <SegmentedControl
-          tabs={['Laki-laki', 'Wanita']}
-          currentIndex={tabIndex}
-          onChange={handleTabsChange}
-          segmentedControlBackgroundColor='#CCCCCC'
-          activeSegmentBackgroundColor='#FEFEFE'
-          activeTextColor='black'
-          textColor='#9e9e9e'
-          paddingVertical={6}
+      
+      <PressableBox onPress={showDatePicker}>
+        <TextField
+          containerStyle={{ marginTop: 12 }}
+          placeholder={t('Tanggal lahir')}
+          value={getDate()}
+          onChangeText={(value) => handleFieldChange('tgllahir', value)}
+          error={!!getFieldError('tgllahir')}
+          message={error.message}
+          onPressOut={showDatePicker}
+          editable={false}
         />
-      </View>*/}
+      </PressableBox>
+
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
+
+      {/* <Typography style={{ marginTop: 10, }}>Select Gender</Typography> */}
+      <SelectDropdown
+        defaultValue={0}
+        buttonStyle={styles.dropdown1BtnStyle}
+        buttonTextStyle={styles.dropdown1BtnTxtStyle}
+        data={genderData}
+        onSelect={(selectedItem, index) => {
+          console.log('Select '+selectedItem)
+          getGender(selectedItem);
+        }}
+        buttonTextAfterSelection={(selectedItem, index) => {
+          return selectedItem
+        }}
+        rowTextForSelection={(item, index) => {
+          return item
+        }}
+      />
 
       <PhoneInput
         containerStyle={{ marginTop: 20, width: 330 }}
@@ -331,27 +325,12 @@ function Register() {
         defaultCode="ID"
         layout="first"
         value={fields.hp}
-        placeholder="Phone Number"
+        placeholder="Nomor Handphone"
         onChangeText={(value) => handleFieldChange('hp', value)}
         onChangeFormattedText={text => {
           setPhone(text);
         }}
         autoFocus/>
-
-      {/* <TextField
-        containerStyle={{ marginTop: 20 }}
-        placeholder={t('contoh : 8123456789')}
-        value={fields.hp}
-        onChangeText={(value) => handleFieldChange('hp', value)}
-        keyboardType="phone-pad"
-        left={(
-          <View style={{ ...wrapper.row, alignItems: 'center' }}>
-            <Typography color={950} style={{ marginLeft: 6 }}>+62</Typography>
-          </View>
-        )}
-        error={!!getFieldError('hp')}
-        message={error.message}
-      /> */}
 
       <TextField
         containerStyle={{ marginTop: 12 }}
@@ -363,98 +342,14 @@ function Register() {
         error={!!getFieldError('email')}
         message={error.message}
       />
-      
-      {/*
-      <PressableBox
-        containerStyle={{ overflow: 'visible' }}
-        opacity={1}
-        onPress={() => handleFileOpen('namaktp')}
-      >
-        <TextField
-          containerStyle={{ flex: 1, marginTop: 12 }}
-          placeholder={t('Upload KTP or NPWP')}
-          value={fields.ktpLocalName}
-          editable={false}
-          pointerEvents="none"
-          right={(
-            <Button
-              size={32}
-              onPress={() => handleCameraOpen('namaktp')}
-            >
-              <Ionicons name="camera-outline" size={24} color={colors.gray[700]} />
-            </Button>
-          )}
-          error={!!getFieldError('namaktp')}
-          message={error.message}
-        />
-      </PressableBox>
-
-      <PressableBox
-        containerStyle={{ overflow: 'visible' }}
-        opacity={1}
-        onPress={() => handleFileOpen('namafoto')}
-      >
-        <TextField
-          containerStyle={{ marginTop: 12 }}
-          placeholder={t('Upload Photo')}
-          value={fields.fotoLocalName}
-          editable={false}
-          pointerEvents="none"
-          right={(
-            <Button
-              size={32}
-              onPress={() => handleCameraOpen('namafoto')}
-            >
-              <Ionicons name="camera-outline" size={24} color={colors.gray[700]} />
-            </Button>
-          )}
-          error={!!getFieldError('namafoto')}
-          message={error.message}
-        />
-      </PressableBox>*/}
 
       <View style={{ marginTop: 60, paddingTop: 24 }}> 
         <Button 
-          containerStyle={{ alignSelf: 'center', borderRadius: 5, backgroundColor: '#CCC', }} 
-          style={{ width: 300, height: 40,  }} 
-          label={t('Submit').toUpperCase()} 
-          shadow={3} 
-          onPress={handleSubmit} />
-        {/*Typography style={{ textAlign: 'center', marginTop: 20 }}>
-          - OR -
-        </Typography>
-        <PressableBox
-          containerStyle={{ alignSelf: 'center', marginTop: 20, 
-                            backgroundColor: '#df5449', borderColor: '#ccc', 
-                            borderWidth: 1, borderRadius: 5, overflow: 'visible' }}
-          style={{ width: 360, height: 40, }}
-          opacity={1}
-          onPress={() => Alert.alert( "Halo", "Fitur Google ini sedang dikembangkan!",
-                                      [{text: "Cancel",onPress: () => console.log("Cancel Pressed"),style: "cancel"},
-                                        { text: "OK", onPress: () => console.log("OK Pressed") }
-                                      ]
-                        )}>
-          <Typography style={{ textAlign: 'center', marginTop: 10, color: 'white' }}>
-            <Ionicons name="logo-google" size={15} />
-            oogle
-          </Typography>
-        </PressableBox>
-        <PressableBox
-          containerStyle={{ alignSelf: 'center', marginTop: 20, 
-                            backgroundColor: '#4867aa', borderColor: '#ccc', 
-                            borderWidth: 1, borderRadius: 5, overflow: 'visible' }}
-          style={{ width: 360, height: 40, }}
-          opacity={1}
-          onPress={() => Alert.alert( "Halo", "Fitur Facebook ini sedang dikembangkan!",
-                                      [{text: "Cancel",onPress: () => console.log("Cancel Pressed"),style: "cancel"},
-                                        { text: "OK", onPress: () => console.log("OK Pressed") }
-                                      ]
-                        )}>
-          <Typography style={{ textAlign: 'center', marginTop: 10, color: 'white' }}>
-            <Ionicons name="logo-facebook" size={15} style={{color: 'white'}} />          
-            acebook
-          </Typography>
-        </PressableBox>*/}
+          containerStyle={{ alignSelf: 'center', borderRadius: 5, backgroundColor: '#0d674e', }} 
+          style={{ width: 350, height: 40,  }} 
+          onPress={handleSubmit} >
+            <Typography style={{ color: '#FEFEFE' }}>{t('Submit').toUpperCase()} </Typography>
+        </Button>
       </View>
 
     </ScrollView>
@@ -468,6 +363,16 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     backgroundColor: colors.white,
   },
+  dropdown1BtnStyle: {
+    width: '100%',
+    height: 40,
+    backgroundColor: '#FFF',
+    borderRadius: 5,
+    borderWidth: 1,
+    marginTop: 15,
+    borderColor: '#ccc',
+  },
+  dropdown1BtnTxtStyle: {color: '#444', fontSize: 16, textAlign: 'left'},
 });
 
 export type { Fields as RegisterFields };

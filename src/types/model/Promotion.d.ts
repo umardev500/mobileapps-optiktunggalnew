@@ -13,6 +13,11 @@ export type PromotionModel = {
   remark?: string;
 };
 
+export type BenefitsModel = {
+  image?: string;
+  html?: string;
+};
+
 export type PopupModel = {
   image?: string;
   bg?: string;

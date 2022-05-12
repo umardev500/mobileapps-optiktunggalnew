@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Image, Linking, Platform, StatusBar, StyleSheet, useWindowDimensions, View, Alert, RefreshControl } from 'react-native';
+import { Image, Linking, Platform, StatusBar, StyleSheet, useWindowDimensions, View, Alert, RefreshControl, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { colors, shadows, wrapper } from '../../lib/styles';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -26,6 +26,7 @@ function Account() {
   const { height } = useWindowDimensions();
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
   // States
   const [options, setOptions] = useState({
@@ -37,10 +38,13 @@ function Account() {
     faqUrl: '',
   });
 
+  useEffect(() => {
+    handleRefresh();
+  }, []);
+
   // Effects
   useEffect(() => {
     handleVersionCheck();
-    renderLogin();
   }, []);
   
   useEffect(() => {
@@ -65,7 +69,13 @@ function Account() {
     };
   }, [user]);
 
-  const renderLogin = () => {
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    await renderLogin();
+    setIsLoading(false);
+  };
+
+  const renderLogin = async () => {
     setIsLoading(true);
     return httpService('/api/login/login', {
       data: {
@@ -195,61 +205,77 @@ function Account() {
 
           <ScrollView
             contentContainerStyle={[styles.wrapper, styles.container]}
+            refreshControl={(
+              <RefreshControl
+                refreshing={isLoading}
+                onRefresh={handleRefresh}
+                colors={[colors.palettes.primary]}
+              />
+            )}
           >
             <View style={styles.accountCard}>
-              <View style={[wrapper.row, { alignItems: 'center', marginTop: 5, }]}>
-                {!user.foto ? <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw&usqp=CAU' }} style={styles.avatar} /> : (
-                  <Image source={{ uri: user.foto }} style={styles.avatar} />
-                )}
-                <View style={{ flexGrow: 1 }}>
-                  <Typography style={{ color: '#333333', fontSize: 14, fontWeight: 'bold',  marginHorizontal: 15}} >
-                    {user?.nama || `${user?.namadepan} ${user?.namabelakang}`}
-                  </Typography>
-                  <Typography style={{ color: '#333333', fontSize: 14, fontWeight: 'bold',  marginHorizontal: 15}} >
-                    {user?.id}
-                  </Typography>
-                  <Typography style={{ color: '#333333', fontSize: 14, marginHorizontal: 15, marginTop: 3}} >
-                    {showPhone(String(user.hp), '0')}
-                  </Typography>
-                  {user.verified || 1 ?
-                    <PressableBox
-                      containerStyle={{ marginTop: 1 }}
-                      onPress={() => navigation.navigatePath('Public', {
-                        screen: 'BottomTabs.AccountStack.ProfileEdit',
-                        params: [null, null, {
-                          email: user.email,
-                        }]
-                      })}>
-                      <Typography
-                        textAlign="left"
-                        style={{ marginHorizontal: 15, marginTop: 3}}
-                        color="primary">
-                        {t(`${''}Lihat Profil`)}
-                      </Typography>
-                    </PressableBox>: (
-                    <PressableBox
-                      containerStyle={{ marginTop: 8 }}
-                      onPress={() => navigation.navigatePath('Public', {
-                        screen: 'BottomTabs.AccountStack.Verification',
-                        params: [null, null, {
-                          profile: user,
-                        }]
-                      })}
-                    >
-                      <Typography
-                        textAlign="center"
-                        color="primary"
-                        style={{
-                          borderBottomWidth: 1,
-                          borderColor: colors.palettes.primary
-                        }}
+              {!user.foto ? <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw&usqp=CAU' }} style={styles.avatar} /> : (
+                <Image source={{ uri: user.foto }} style={styles.avatar} />
+              )}
+              <PressableBox
+                containerStyle={{ marginTop: 1 }}
+                onPress={() => navigation.navigatePath('Public', {
+                  screen: 'BottomTabs.AccountStack.ProfileEdit',
+                  params: [null, null, {
+                    email: user.email,
+                  }]
+                })}>
+                <View style={
+                  {  
+                    paddingVertical: 10,
+                  }}>
+                  <View style={{ flexGrow: 1 }}>
+                    <Typography textAlign="center" style={{ color: '#0d674e', fontSize: 14}} >
+                      {user?.nama || `${user?.namadepan} ${user?.namabelakang}`}{`\n`}
+                      {`${user?.id}`}
+                      {/* {showPhone(String(user.hp), '0')} */}
+                    </Typography>
+                    {user.verified || 1 ?
+                      <PressableBox
+                        containerStyle={{ marginTop: 1, backgroundColor: '#0d674e', height: 30, width: 150, alignSelf: 'center' }}
+                        onPress={() => navigation.navigatePath('Public', {
+                          screen: 'BottomTabs.AccountStack.ProfileEdit',
+                          params: [null, null, {
+                            email: user.email,
+                          }]
+                        })}>
+                        <Typography
+                          textAlign="center"
+                          style={{ textAlignVertical: 'center', height: 30 }}
+                          color="#fff">
+                          {t(`${''}Edit Profile`)}
+                          <Ionicons name="chevron-forward" size={12} color={'#fff'} />
+                        </Typography>
+                      </PressableBox>: (
+                      <PressableBox
+                        containerStyle={{ marginTop: 8 }}
+                        onPress={() => navigation.navigatePath('Public', {
+                          screen: 'BottomTabs.AccountStack.Verification',
+                          params: [null, null, {
+                            profile: user,
+                          }]
+                        })}
                       >
-                        {t(`${''}Akun Belum terverifikasi`)}
-                      </Typography>
-                    </PressableBox>
-                  )}
+                        <Typography
+                          textAlign="center"
+                          color="primary"
+                          style={{
+                            borderBottomWidth: 1,
+                            borderColor: colors.palettes.primary
+                          }}
+                        >
+                          {t(`${''}Akun Belum terverifikasi`)}
+                        </Typography>
+                      </PressableBox>
+                    )}
+                  </View>
                 </View>
-              </View>
+              </PressableBox>
 
               <View style={{ marginTop: 5 }}>
                 <ViewCollapse
@@ -257,21 +283,20 @@ function Account() {
                   pressableProps={{
                     containerStyle: styles.menuBtnContainer,
                   }}
-                  header={t(`${''}Transaksi`)}
+                  header={t(`${''}Transactions`)}
                   headerProps={{
                     type: 'h',
-                    style: { paddingLeft: 24 + 15 }
                   }}
                   collapse
                 >
                   {[
                     {
-                      title: t(`${''}Transaksi Anda`),
-                      subtitle: t(`${''}Transaksi yang pernah anda lakukan.`),
+                      title: t(`${''}Your Transaction`),
+                      subtitle: t(`${''}Transactions that you have done.`),
                       Icon: FigmaIcon.FigmaDownload,
                       navigatePath: () => {
                         navigation.navigatePath('Public', {
-                          screen: 'BottomTabs.NotificationStack.TransactionUsers',
+                          screen: 'BottomTabs.MemberStack',
                           params: [null, {
                             initial: false,
                           }]
@@ -279,12 +304,12 @@ function Account() {
                       },
                     },
                     {
-                      title: t(`${''}Favorit Kamu`),
-                      subtitle: t(`${''}Produk yang kamu sukai`),
+                      title: t(`${''}Wishlist`),
+                      subtitle: t(`${''}Your wishlist product`),
                       Icon: FigmaIcon.Figmawishlist,
                       navigatePath: () => {
                         navigation.navigatePath('Public', {
-                          screen: 'BottomTabs.FavoriteStack.Favorite',
+                          screen: 'Favorite',
                         });
                       },
                     },
@@ -334,10 +359,10 @@ function Account() {
                   pressableProps={{
                     containerStyle: styles.menuBtnContainer,
                   }}
-                  header={t(`${''}Pengaturan Akun`)}
+                  header={t(`${''}Account Settings`)}
                   headerProps={{
                     type: 'h',
-                    style: { paddingLeft: 24 + 15 }
+                    // style: { paddingLeft: 24 + 15 }
                   }}
                   collapse
                 >
@@ -381,16 +406,16 @@ function Account() {
                     //   navigatePath: 'BottomTabs.AccountStack.AddressList',
                     // },
                     {
-                      title: t(`${''}Keamanan Akun`),
-                      subtitle: t(`${''}Jangan beritahukan kata sandi anda kepada siapapun`),
+                      title: t(`${''}Account Security`),
+                      subtitle: t(`${''}Don't share your password with anyone`),
                       Icon: FigmaIcon.FigmaLock,
                       navigatePath: 'BottomTabs.AccountStack.PasswordReset',
                     },
 
                     {
-                      title: t(`${''}Hubungi Kami`),
+                      title: t(`${''}Contact Us`),
                       Icon: FigmaIcon.FigmaContact,
-                      subtitle: t(`${''}Kami senang melayani anda, silahkan ajukan pertanyaan.`),
+                      subtitle: t(`${''}We are happy to serve you, please ask questions.`),
                       navigatePath: 'Contact',
                     },
                   ].map((item, index) => (
@@ -439,16 +464,16 @@ function Account() {
                   pressableProps={{
                     containerStyle: styles.menuBtnContainer,
                   }}
-                  header={t(`${''}Informasi lain`)}
+                  header={t(`${''}Other Information `)}
                   headerProps={{
                     type: 'h',
-                    style: { paddingLeft: 24 + 15 }
+                    // style: { paddingLeft: 24 + 15 }
                   }}
                   collapse
                 >
                   {[
                     {
-                      title: t(`${''}Syarat & Ketentuan`),
+                      title: t(`${''}Terms & Condition`),
                       navigatePath: 'Terms',
                       url: options.termsUrl,
                       Icon: FigmaIcon.FigmaHomeFilled,
@@ -459,12 +484,12 @@ function Account() {
                       url: options.faqUrl,                    
                     },
                     {
-                      title: t(`${''}Kebijakan Privasi`),
+                      title: t(`${''}Privacy Policy`),
                       navigatePath: 'PrivacyPolicy',
                       url: options.privacyUrl,
                     },
                     {
-                      title: t(`${''}Ulas Aplikasi ini`),
+                      title: t(`${''}Review this app`),
                       navigatePath: 'BottomTabs.AccountStack.Account',
                       url: options.versionUrl,
                     },
@@ -498,7 +523,7 @@ function Account() {
                     borderBottomWidth: 0
                   }]}
                   style={{ paddingHorizontal: 15, paddingVertical: 12 }}
-                  label={`${''}Keluar Akun`}
+                  label={`${''}Logout`}
                   labelStyle={{
                     paddingLeft: 15,
                     minWidth: 128,
@@ -512,14 +537,14 @@ function Account() {
                     </View>
                   )}
                   onPress={() => Alert.alert(
-                    `${t('Keluar')}`,
-                    `${t('Yakin mau keluar aplikasi?')}`,
+                    `${t('Logout')}`,
+                    `${t('Close app?')}`,
                     [
                       {
-                        text: `${t('Batal')}`,
+                        text: `${t('Cancel')}`,
                       },
                       {
-                        text: `${t('Ya')}`,
+                        text: `${t('Yes')}`,
                         onPress: () => handleLogout(),
                       }
                     ]
@@ -586,7 +611,10 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 128,
+    borderColor: '#0d674e',
+    borderWidth: 1,
     resizeMode: 'cover',
+    marginTop: 15
   },
   cardMember: {
     marginTop: 20, 

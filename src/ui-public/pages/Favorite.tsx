@@ -117,10 +117,10 @@ function Favorite() {
           ListHeaderComponent={(
             <View style={[styles.wrapper, { paddingTop: 8, paddingBottom: 12, paddingHorizontal: -10 }]}>
               <Typography type="h5" style={{ marginVertical: 5 }}>
-                {`${''}Produk Favorit`}
+                {`${''}Product wishlist`}
               </Typography>
               <Typography>
-                Semua produk yang kamu sukai ada disini
+              All wishlist products are here
               </Typography>
             </View>
           )}
@@ -134,7 +134,7 @@ function Favorite() {
               />*/}
 
               <Typography textAlign="center" style={{ marginTop: 10 }}>
-                {t(`${''}Belum ada produk yang kamu sukai`)}
+                {t(`${''}There are no wishlist products yet`)}
               </Typography>
               <PressableBox
                 containerStyle={{
@@ -149,7 +149,7 @@ function Favorite() {
                 })}
               >
                 <Typography textAlign="center" style={{ paddingVertical: 10}}>
-                  {t(`${''}Lihat Produk`)}
+                  {t(`${''}View Products`)}
                 </Typography>
               </PressableBox>
             </View>
@@ -160,7 +160,7 @@ function Favorite() {
           )}
           ListFooterComponent={!product.isPageEnd ? null : (
             <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
-              {t(`${''}Sudah menampilkan semua produk`)}
+              {t(`${''}Already showing all products`)}
             </Typography>
           )}
         />

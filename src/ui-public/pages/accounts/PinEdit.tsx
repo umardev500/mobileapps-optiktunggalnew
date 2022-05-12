@@ -55,7 +55,7 @@ function PinEdit() {
       setError(state => ({
         ...state,
         fields: ['new_pin'],
-        message: `${''}Masukkan minimal 6 karakter untuk Password Anda.`
+        message: `${''}Enter at least 6 characters for your Password.`
       }));
     }
   }, [fields.new_pin]);
@@ -95,13 +95,13 @@ function PinEdit() {
     let errorMessage = '';
 
     if (fields.new_pin && fields.new_pin.length < 6) {
-      errorMessage = `${''}Masukkan minimal 6 karakter untuk password anda.`;
+      errorMessage = `${''}Enter at least 6 characters for your password.`;
     } else if (!fields.new_pin?.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?!.*[&%$]).{6,}$/g)) {
-      errorMessage = `${''}Password harus memiliki kombinasi huruf besar, kecil, dan angka.`;
+      errorMessage = `${''}Password must have a combination of uppercase, lowercase and numbers.`;
     } else if (!fields.new_pin || !fields.new_pin_confirmation) {
-      errorMessage = `${''}Mohon masukkan password dengan lengkap.`;
+      errorMessage = `${''}Please enter the complete password.`;
     } else if (fields.new_pin !== fields.new_pin_confirmation) {
-      errorMessage = `${''}Password yang anda masukan belum sesuai..`;
+      errorMessage = `${''}The password you entered is not correct.`;
     }
 
     if (errorMessage) {
@@ -115,6 +115,7 @@ function PinEdit() {
         dt: JSON.stringify({
           email: user?.email,
           pwd: fields.new_pin,
+          nama: null
         }),
       }
     }).then(({ status, data }) => {
@@ -125,7 +126,7 @@ function PinEdit() {
           ...user,
           verified: 1
         });
-        ToastAndroid.show(`${''}Password berhasil diubah.`, ToastAndroid.SHORT);
+        ToastAndroid.show(`${''}Password changed successfully.`, ToastAndroid.SHORT);
         navigation.navigatePath('Public', {
           screen: 'BottomTabs.AccountStack.PasswordReset'
         });
@@ -190,18 +191,19 @@ function PinEdit() {
       {isRegister ? null : (
         <View style={{ marginTop: 24 }}>
           <Typography style={{ marginTop: 2, textAlign: 'center' }}>
-            {t(`${''}Pastikan password memiliki kombinasi Huruf Besar, Huruf Kecil dan Angka`)}
+            {t(`${''}Make sure the password has a combination of Uppercase, Lowercase and Numbers.`)}
           </Typography>
 
           <Typography style={{ marginTop: 2, textAlign: 'center' }}>
-            Email anda {user?.email}
+            Your email 
+            <Typography style={{ fontWeight: 'bold', fontStyle: 'italic' }}> {user?.email}</Typography>
           </Typography>
         </View>
       )}
 
       <TextField
         containerStyle={{ marginTop: 50 }}
-        placeholder={`${''}Masukkan Password`}
+        placeholder={`${''}Enter Password`}
         value={fields.new_pin}
         onChangeText={(value) => handleFieldChange('new_pin', value)}
         autoCompleteType="password"
@@ -223,7 +225,7 @@ function PinEdit() {
 
       <TextField
         containerStyle={{ marginTop: 12 }}
-        placeholder={`${''}Verifikasi Password`}
+        placeholder={`${''}Password Verification`}
         value={fields.new_pin_confirmation}
         onChangeText={(value) => handleFieldChange('new_pin_confirmation', value)}
         autoCompleteType="password"
@@ -252,13 +254,13 @@ function PinEdit() {
       <View style={{ marginTop: 30, paddingTop: 24 }}>
         <Button
           containerStyle={{ alignSelf: 'center' }}
-          style={{ width: 350, height: 40 }}
-          label={`${''}Kirim`.toUpperCase()}
-          color="primary"
+          style={{ width: 350, height: 40, backgroundColor: '#0d674e' }}
           shadow={3}
           onPress={handleSubmit}
           loading={isSaving}
-        />
+        >
+          <Typography style={{ color: '#FEFEFE' }}>{`${''}Reset Password`.toUpperCase()}</Typography>
+        </Button>
       </View>
 
       {/* Popup Welcome */}

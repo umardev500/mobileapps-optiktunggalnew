@@ -100,7 +100,7 @@ function Verification() {
 
   const handleSubmit = async () => {
     if (!fields.otp_code) {
-      return handleErrorShow('otp_code', t(`Kode OTP belum lengkap.`));
+      return handleErrorShow('otp_code', t(`OTP code is not complete.`));
     }
 
     setIsSaving(true);
@@ -109,7 +109,7 @@ function Verification() {
       data: {
         act: 'CekVerifikasi',
         dt: JSON.stringify({
-          email: user?.email || fields.email,
+          email: route.params.email,
           otp: fields.otp_code,
         }),
       },
@@ -131,7 +131,7 @@ function Verification() {
           });
         });
       }else{
-        Alert.alert( "Pemberitahuan", "Kode OTP yang anda masukan salah.",[{ text: "Oke", onPress: () => console.log("OK Pressed") }]);
+        Alert.alert( "Notification", "The OTP code you entered is wrong.",[{ text: "Oke", onPress: () => console.log("OK Pressed") }]);
       }
     }).catch(({ msg }) => {
       setIsSaving(false);
@@ -139,7 +139,7 @@ function Verification() {
       if ('string' === typeof msg) {
         switch (msg.toLowerCase()) {
           case 'kode verifikasi tidak valid':
-            handleErrorShow('otp_code', t(`Kode verifikasi tidak valid`));
+            handleErrorShow('otp_code', t(`Invalid verification code`));
             break;
         }
       }
@@ -156,9 +156,9 @@ function Verification() {
     const email = !profile ? fields.email : profile.email;
 
     if (!email) {
-      return handleErrorShow('otp_code', t(`Mohon masukan alamat email Anda.`));
+      return handleErrorShow('otp_code', t(`Please enter your email address.`));
     } else if (!validator.isEmail(email)) {
-      return handleErrorShow('otp_code', t(`Mohon masukan alamat email yang valid.`));
+      return handleErrorShow('otp_code', t(`Please enter a valid email address.`));
     }
 
     setIsSaving(true);
@@ -180,12 +180,12 @@ function Verification() {
       if (200 === status) {
         setTimer(120);
 
-        ToastAndroid.show(t(`Kode verifikasi dikirimkan ke email anda.`), ToastAndroid.SHORT);
+        ToastAndroid.show(t(`Verification code sent to your email.`), ToastAndroid.SHORT);
       }
     }).catch((err) => {
       setIsSaving(false);
 
-      return handleErrorShow('email', t(`Alamat email belum terdaftar.`));
+      return handleErrorShow('email', t(`Email address not registered.`));
     });
   };
 
@@ -193,11 +193,11 @@ function Verification() {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={{ paddingTop: 24, alignSelf: 'center' }}>
         <Typography heading style={{ marginTop: 2, color: '#333', textAlign: 'center' }}>
-          {t(`${''}Masukan Kode Verifikasi`)}
+          {t(`${''}Enter Verification Code`)}
         </Typography>
 
         <Typography style={{ marginTop: 2, color: '#333', textAlign: 'center' }}>
-          {t(`${''}Kode Verifikasi telah dikirimkan melalui Email anda.`)}
+          {t(`${''}Verification Code has been sent to your email.`)}
         </Typography>
       </View>
       <Typography textAlign="center" style={{ paddingTop: 24 }}>
@@ -246,7 +246,7 @@ function Verification() {
           <Button
             containerStyle={{ alignSelf: 'center' }}
             style={{ width: 320, height: 40 }}
-            label={`${''}Kirim`.toUpperCase()}
+            label={`${''}Submit`.toUpperCase()}
             color="primary"
             shadow={3}
             onPress={handleSubmit}
@@ -261,7 +261,7 @@ function Verification() {
             <Typography heading size="sm" color={!profile ? 'primary' : 900} style={{
               textDecorationLine: 'underline',
             }}>
-              {`${''}Kirim ulang kode verifikasi`.toUpperCase()}
+              {`${''}Resend verification code`.toUpperCase()}
             </Typography>
           </PressableBox>
         </View>

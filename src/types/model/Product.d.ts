@@ -90,6 +90,8 @@ export type GenderModel = {
   id?: string;
   name?: string;
   ds?: string;
+  image?: any;
+  foto?: string;
 };
 
 export type ModelKacamata = {

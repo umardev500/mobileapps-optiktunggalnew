@@ -2,7 +2,7 @@ import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { Linking, RefreshControl, ScrollView, StyleSheet, useWindowDimensions, 
-         View, ListRenderItemInfo, Image, FlatList, ToastAndroid, Alert } from 'react-native';
+         View, ListRenderItemInfo, Image, FlatList, ToastAndroid, Alert, SafeAreaView } from 'react-native';
 import { FigmaIcon } from '../../../assets/icons';
 import { getConfig } from '../../../lib/config';
 import { colors, wrapper, shadows } from '../../../lib/styles';
@@ -39,19 +39,35 @@ function OurStore() {
     modelsLoaded: false,
   });
 
-  const [coordinates, setCoordinates] = useState([106.82150309838204, -6.19540649567783]);
+  const [coordinate, setCoordinate] = useState([106.82150309838204, -6.19540649567783]);
   const [selected, setSelected] = useState<ContactUsModel>({});
 
   MapboxGL.setAccessToken(
     "pk.eyJ1Ijoib3B0aWt0dW5nZ2FsIiwiYSI6ImNreWptY2N6ODF1NHkyd3FoZG1taXN5cWgifQ.G06xjHOeLJrk9JiKUQDYCg"
   );
-
+  
   const [action, setAction] = useState('');
 
   useEffect(() => {
     retrieveContactUs();
   }, []);
 
+  const hitungJarak = (lat: any, long: any) => {
+    let R = 6371;
+    let dLati = (106.773025-lat) * Math.PI/180.0;
+    let dlongi = (-6.2034954-long) * Math.PI/180.0;
+
+    let lati1 = (lat)*Math.PI/180.0;
+    let lati2 = (106.773025)*Math.PI/180.0;
+
+    let a = Math.pow(Math.sin(dLati / 2), 2) +
+            Math.pow(Math.sin(dlongi / 2), 2) *
+            Math.cos(lati1) * Math.cos(lati2); 
+
+    let c = 2 * Math.asin(Math.sqrt(a));
+    let d = R * c;
+    return d;
+  }
   // Vars
   const handleRefresh = async () => {
     setIsLoading(true);
@@ -94,7 +110,7 @@ function OurStore() {
         onPress={() => {
           setSelected(item);
 
-          (lat && long) && setCoordinates([lat, long]);
+          (lat && long) && setCoordinate([lat, long]);
 
           console.log("LAT LN SLEECT", lat, long);
         }}
@@ -111,6 +127,9 @@ function OurStore() {
           <Typography style={{ fontSize: 12, textAlign: 'justify'}}>
             Phone : { item.StorePhone }, {item.StoreNotes}
           </Typography>
+          <Typography style={{ fontSize: 12, textAlign: 'justify'}}>
+            Jarak : + - {Number(hitungJarak(lat, long)).toFixed(2)} Km
+          </Typography>
         </View>
       </PressableBox>
       <View style={{ height: 1, backgroundColor: '#ccc', marginTop: 6, marginHorizontal: 10 }}></View>
@@ -123,7 +142,7 @@ function OurStore() {
     const long = item.StoreLongitude;
     return (
       <>
-        <MapboxGL.MarkerView id={"marker"} coordinate={coordinates}>
+        <MapboxGL.MarkerView id={"marker"} coordinate={coordinate}>
           <View>
             <View style={styles.markerContainer}>
               <View style={styles.TypographyContainer}>
@@ -147,26 +166,8 @@ function OurStore() {
     )
   };
 
-  // const renderAnnotations = () => {
-  //   return (
-  //     <MapboxGL.PointAnnotation
-  //       key="pointAnnotation"
-  //       id="pointAnnotation"
-  //       coordinate={[3.3362400, 6.5790100]}>
-  //       <View style={{
-  //                 height: 30, 
-  //                 width: 30, 
-  //                 backgroundColor: '#00cccc', 
-  //                 borderRadius: 50, 
-  //                 borderColor: '#fff', 
-  //                 borderWidth: 3
-  //               }} />
-  //     </MapboxGL.PointAnnotation>
-  //   );
-  // }
-
   return (
-    <>
+    <SafeAreaView style={{flex: 1}} >
       <View style={[wrapper.row]}>
         <PressableBox
             opacity
@@ -174,24 +175,29 @@ function OurStore() {
                 screen: 'BottomTabs.HomeStack'
             })}>
             <Typography color="black" style={{ marginVertical: 15, marginHorizontal: 15 }}>
-              <Ionicons name="arrow-back" size={18} /> {`${''}Kembali`}
+              <Ionicons name="arrow-back" size={18} /> {`${''}Back`}
             </Typography>
         </PressableBox>
       </View>
 
       <View style={styles.page}>
         <View style={styles.container}>
-          <MapboxGL.MapView style={styles.container}>
-            <MapboxGL.UserLocation/>
+          <MapboxGL.MapView style={styles.container} 
+            zoomEnabled 
+            logoEnabled={false}>
+            <MapboxGL.UserLocation 
+              visible={true}
+              ref={(location) => {console.log('HAHA:', {location})}}
+            />
             <MapboxGL.Light />
             <MapboxGL.Images />
             <MapboxGL.Camera 
               zoomLevel={7} 
-              centerCoordinate={coordinates}/>
+              centerCoordinate={coordinate}/>
             {/*{renderAnnotations()}*/}
 
             {!selected.StoreID ? null : (
-              <MapboxGL.MarkerView id={"marker"} coordinate={coordinates}>
+              <MapboxGL.MarkerView id={"marker"} coordinate={coordinate}>
                 <View>
                   <View style={styles.markerContainer}>
                     <View style={styles.TypographyContainer}>
@@ -274,7 +280,7 @@ function OurStore() {
           </View>
         )}
       </ScrollView>
-    </>
+    </SafeAreaView>
   );
 };
 

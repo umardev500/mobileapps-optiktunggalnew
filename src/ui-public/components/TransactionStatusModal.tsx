@@ -80,45 +80,45 @@ function TransactionStatusModal({
       });
     }
 
-    if (data.buktibayartgl) {
-      logs.push({
-        date: moment(data.buktibayartgl, 'YYYYMMDD').format('YYYY-MM-DD'),
-        time: data.buktibayarjam,
-        description: t(`Bukti pembayaran dikirim`)
-      });
-    }
+    // if (data.buktibayartgl) {
+    //   logs.push({
+    //     date: moment(data.buktibayartgl, 'YYYYMMDD').format('YYYY-MM-DD'),
+    //     time: data.buktibayarjam,
+    //     description: t(`Bukti pembayaran dikirim`)
+    //   });
+    // }
 
-    if (data.verifybayartgl) {
-      logs.push({
-        date: moment(data.verifybayartgl, 'YYYYMMDD').format('YYYY-MM-DD'),
-        time: data.verifybayarjam,
-        description: t(`Pembayaran sudah diverifikasi\nPembayaran sudah diterima`),
-      });
-    }
+    // if (data.verifybayartgl) {
+    //   logs.push({
+    //     date: moment(data.verifybayartgl, 'YYYYMMDD').format('YYYY-MM-DD'),
+    //     time: data.verifybayarjam,
+    //     description: t(`Pembayaran sudah diverifikasi\nPembayaran sudah diterima`),
+    //   });
+    // }
 
-    if (data.dotgl) {
-      logs.push({
-        date: moment(data.dotgl, 'YYYYMMDD').format('YYYY-MM-DD'),
-        time: data.dojam,
-        description: t(`Barang sedang dikirim`),
-      });
-    }
+    // if (data.dotgl) {
+    //   logs.push({
+    //     date: moment(data.dotgl, 'YYYYMMDD').format('YYYY-MM-DD'),
+    //     time: data.dojam,
+    //     description: t(`Barang sedang dikirim`),
+    //   });
+    // }
 
-    if (data.kirimtgl) {
-      logs.push({
-        date: moment(data.kirimjam, 'YYYYMMDD').format('YYYY-MM-DD'),
-        time: data.kirimjam,
-        description: t(`Barang sampai di tujuan`)
-      });
-    }
+    // if (data.kirimtgl) {
+    //   logs.push({
+    //     date: moment(data.kirimjam, 'YYYYMMDD').format('YYYY-MM-DD'),
+    //     time: data.kirimjam,
+    //     description: t(`Barang sampai di tujuan`)
+    //   });
+    // }
 
-    if (data.terimatgl) {
-      logs.push({
-        date: moment(data.terimatgl, 'YYYYMMDD').format('YYYY-MM-DD'),
-        time: data.terimajam,
-        description: t(`Barang diterima`)
-      });
-    }
+    // if (data.terimatgl) {
+    //   logs.push({
+    //     date: moment(data.terimatgl, 'YYYYMMDD').format('YYYY-MM-DD'),
+    //     time: data.terimajam,
+    //     description: t(`Barang diterima`)
+    //   });
+    // }
 
     return logs;
   };
@@ -148,7 +148,7 @@ function TransactionStatusModal({
         </View>
 
         <Typography size="sm" textAlign="right" style={{ paddingVertical: 4, minWidth: 48 }}>
-          {item.time}
+          {/* {item.time} */}
         </Typography>
       </View>
     );

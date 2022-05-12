@@ -22,7 +22,7 @@ import { default as _omit } from 'lodash/omit';
 import { getConfig } from '../../../lib/config';
 import { toggleFavorite } from '../../../redux/actions';
 import { useTranslation } from 'react-i18next';
-import Products from '../../components/Products';
+import ProductsSerupa from '../../components/ProductsSerupa';
 import ProductsLoading from '../../loadings/ProductsLoading';
 import { WebView } from 'react-native-webview';
 
@@ -68,11 +68,12 @@ function ProductDetail() {
 
   // Effects
   useEffect(() => {
-    
+    retrieveProductsList();
   }, []);
 
   useEffect(() => {
     const { product_id, product } = route.params;
+    // Alert.alert( "Pemberitahuan", "Brand : "+route.params.product?.merk);
     product && setProduct(state => ({
       ...state,
       model: product,
@@ -80,12 +81,12 @@ function ProductDetail() {
     }));
 
     undefined !== product_id && retrieveProduct(product_id);
-    // retrieveReviews(product_id);
+    retrieveProductsList();
   }, [route.params]);
 
   useEffect(() => {
     if (product.modelLoaded && !review.modelsLoaded) {
-      // retrieveReviews();
+      retrieveProductsList();
     }
   }, [product.modelLoaded]);
 
@@ -98,32 +99,42 @@ function ProductDetail() {
     setIsLoading(true);
 
     route.params?.product_id && await retrieveProduct(route.params.product_id);
+    await retrieveProductsList();
 
     setIsLoading(false);
   };
 
-  const renderPrdSerupa = ({ item, index }: ListRenderItemInfo<ProductModel>) => {
-    return (
-      <PressableBox
-        key={index}
-        opacity
-        containerStyle={{
-          marginHorizontal: 5,
-          maxWidth: 190,
-          backgroundColor: '#FEFEFE',
-          ...shadows[3]
-        }}
-        style={{ alignItems: 'center', backgroundColor: '#FEFEFE' }}
-        // onPress={() => navigation.navigatePath('Public', {
-        //   screen: 'BottomTabs.HomeStack.Search',
-        //   params: [null, null, {
-        //     brand: item,
-        //   }],
-        // })}
-      >
-        <Image source={{ uri: item.prd_foto }} style={styles.brandImage} />
-      </PressableBox>
-    );
+  const retrieveProductsList = async (page: number = 1) => {
+    const reccnt = 4 * (page <= 1 ? 0 : page);
+
+    setProduct(state => ({ ...state, modelsLoaded: false }));
+
+    return httpService('/api/product/product', {
+      data: {
+        act: 'PrdSerupa',
+        dt: JSON.stringify({
+          reccnt,
+          pg: page,
+          param: "serupa",
+          limit: 4,
+          brand: route.params.product?.merk || productModel.merk,
+          prdid: route.params.product?.prd_id || route.params.product_id,
+          prdcat: "",
+          search: null,
+        }),
+      },
+    }).then(({ status, data }) => {
+      if (200 === status) {
+        setProduct(state => ({
+          ...state,
+          models: [...(state.models || []), ...data],
+          modelsLoaded: true,
+          isPageEnd: !data?.length,
+        }));
+      }
+    }).catch(err => {
+      setProduct(state => ({ ...state, modelsLoaded: true }));
+    });
   };
 
   const retrieveProduct = async (product_id: string) => {
@@ -138,9 +149,6 @@ function ProductDetail() {
           ...state,
           model: {
             ...data,
-            // harga: parseFloat(data.harga || 0),
-            // harga_promo: parseFloat(data.harga_promo || 0),
-            // diskon: parseFloat(data.diskon || 0),
             images: foto
           },
           modelLoaded: true
@@ -236,9 +244,7 @@ function ProductDetail() {
       {!product.modelLoaded ? (
         <View>
           <BoxLoading width={width} height={width} style={{ marginHorizontal: -15 }} />
-
           <BoxLoading width={[200, 240]} height={20} style={{ marginTop: 15 }} />
-
           <BoxLoading width={width - 30} height={16} style={{ marginTop: 15 }} />
           <BoxLoading width={width - 30} height={16} style={{ marginTop: 2 }} />
           <BoxLoading width={180} height={16} style={{ marginTop: 2 }} />
@@ -266,8 +272,8 @@ function ProductDetail() {
                 size={40}
                 rounded={40}
                 onPress={() => navigation.navigatePath('Public', {
-                  // screen: 'BottomTabs.OtherStack.Katalog'
-                  screen: 'BottomTabs.HomeStack.Search'
+                  screen: 'BottomTabs.OtherStack.Katalog'
+                  // screen: 'BottomTabs.HomeStack.Search'
                 })}
               >
                 <Ionicons
@@ -303,113 +309,47 @@ function ProductDetail() {
             </View>
           )}
           <View style={{ paddingTop: -20, paddingHorizontal: 5 }}>
-            <Typography type="h3" style={{color: '#333333'}}>
+            <Typography type="h5" style={{color: '#333333'}}>
               {productModel.prd_ds}
             </Typography>
-            
+            <Typography style={{color: '#333333', fontSize: 14}}>
+              {productModel.merk}
+            </Typography>
+            <Typography style={{color: '#333333', fontSize: 14}}>
+              {route.params.product_id}
+            </Typography>
+
             {productModel.harga_promo == 0 ? 
               (<>
-                <Typography type="h4" color="primary">
-                  Rp {productModel.harga}
+                <Typography type="h4" color="#0d674e">
+                  Rp. {productModel.harga}
                 </Typography>
                </>) : (
                 <>
                   <Typography type="h4" color="red" style={{ textDecorationLine: 'line-through' }}>
-                    Rp {productModel.harga}
+                    Rp. {productModel.harga}
                   </Typography>
-                  <Typography type="h4" color="primary">
+                  <Typography type="h4" color="#0d674e">
                     Rp {productModel.harga_promo}
                   </Typography>
                 </>
-            )}
-            
-            <Typography style={{color: '#333333', fontSize: 12}}>
-              Brand : {productModel.merk}
-            </Typography>
-            <Typography style={{color: '#333333', fontSize: 12}}>
-              SKU : {route.params.product_id}
-            </Typography>
-            {/* <WebView
-              originWhitelist={['*']}
-              source={{ html: productModel.product_info.replace('\r\n', '') }}
-            /> */}
-            {/*{route.params.product.harga_promo == 0 ? (
-              <View></View>
-             ) : (
-               <View style={{ marginTop: 10 }}>
-                 <Typography type="h6" style={{ color: '#333333' }}>
-                    {t('Ketentuan')}
-                  </Typography>
-                  <View style={[styles.borderTop, {
-                    borderColor: colors.gray[400],
-                  }]} />
-               </View>
-             )}*/}
-
-            {/*<Typography type="h5" style={{color: '#333333'}}>
-              {t('Details')}
-            </Typography>
-
-            <View style={styles.borderTop} />
-
-            <View>
-              <RenderHtml
-                source={{ html: route.params.product.product_info }}
-                tagsStyles={{
-                  p: { marginVertical: 0, height: 'auto', fontSize: 12, paddingHorizontal: 5, textAlign: 'justify' }
-                }}
-              />
-            </View>*/}
-            
-            {/* {!review.modelsLoaded ? null : (
-              <>
-                <Typography type="h5" style={{ marginTop: 10, color: '#333333' }}>
-                  {t('Reviews')}
-                </Typography>
-
-                <View style={[styles.borderTop, {
-                  borderColor: colors.gray[400],
-                  marginVertical: 12,
-                }]} />
-
-                {!review.models?.length ? (
-                  <Typography style={{ textAlign: 'center' }}>
-                    {t('Ulasan masih kosong')}
-                  </Typography>
-                ) : (
-                  <View>
-                    {review.models.map((item, index) => (
-                      <ReviewItem
-                        key={index}
-                        review={item}
-                        style={{
-                          paddingHorizontal: 24,
-                          marginHorizontal: -24,
-                        }}
-                      />
-                    ))}
-                    <PressableBox
-                      containerStyle={{ marginTop: 10, marginBottom: 30, backgroundColor: '#f9f9f9' }}
-                      onPress={() => navigation.navigatePath('Public', {
-                        screen: 'ReviewAll',
-                        params: [{ 
-                          product_id: route.params.product_id || 0,
-                          product,
-                        }]
-                      })}
-                      >
-                      <Typography
-                        textAlign="center"
-                        style={{ marginHorizontal: 15, paddingVertical: 10, fontSize: 12 }}
-                        color="primary">
-                        {t(`${''}Lihat Review lainnya...`)}
-                      </Typography>
-                    </PressableBox>
-                  </View>
-                )}
-              </>
-            )} */}
+            )}            
           </View> 
+          <Typography 
+            type="h5" 
+            style={{ marginTop: 20, marginBottom: 10, color: '#333333', 
+                     textAlign: 'center', }}>
+            {t('You might like these too')}
+          </Typography>
+          <View style={{ borderBottomColor: '#ccc', borderBottomWidth: 1, marginBottom: 10 }}></View>
+          <ProductsSerupa
+            contentContainerStyle={[styles.container, styles.wrapper]}
+            refreshing={isLoading}
+            data={product.models}
+            LoadingView={(
+            <ProductsLoading />
+            )}
+          />
         </View>
       )}
 

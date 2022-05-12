@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, Platform, StyleSheet, View, ViewProps, Dimensions } from 'react-native';
+import { Image, Platform, StyleSheet, View, ViewProps, Dimensions, Linking, useWindowDimensions } from 'react-native';
 import Typography, { TypographyProps } from './Typography';
 import TextField from './TextField';
 import Button, { ButtonProps } from './Button';
@@ -8,6 +8,7 @@ import { IconProps } from 'react-native-vector-icons/Icon';
 import { colors, wrapper } from '../../lib/styles';
 import { useAppNavigation } from '../../router/RootNavigation';
 import { TextFieldProps } from '.';
+import { BottomDrawer, PressableBox } from '../../ui-shared/components';
 
 type Props = ViewProps & {
   title?: string | string[] | React.ReactNode[];
@@ -26,6 +27,10 @@ type Props = ViewProps & {
   right?: boolean | React.ReactNode; // If true show Back button
   rightProps?: ButtonProps;
   rightIconProps?: Partial<IconProps>;
+};
+
+type OptionsState = {
+  filterModalOpen?: boolean;
 };
 
 function Header({
@@ -49,7 +54,11 @@ function Header({
   // Hooks
   const navigation = useAppNavigation();
   // State
+  const { width, height } = useWindowDimensions();
   const [search, setSearch] = useState(searchValue);
+  const [options, setOptions] = useState<OptionsState>({
+    filterModalOpen: false,
+  });
 
   // Effects
   useEffect(() => {
@@ -61,7 +70,7 @@ function Header({
     return 'string' === typeof title ? (
       <View style={{ flex: 1, alignSelf: 'center', alignItems: 'center' }}>
         <Typography
-          style={{marginTop: -20, color: '#333333'}}
+          style={{marginTop: -25, color: '#333333'}}
           textAlign="center"
           {...titleProps}
         >{title}</Typography>
@@ -73,6 +82,21 @@ function Header({
         )}
       </View>
     ) : title;
+  };
+
+  const handleCloseModal = async () => {
+    handleModalToggle('popup', false);
+  };
+
+  const handleModalToggle = async (type: string, open: boolean | null = null) => {
+    switch (type) {
+      case 'popup':
+        setOptions(state => ({
+          ...state,
+          filterModalOpen: 'boolean' === typeof open ? open : !options.filterModalOpen
+        }));
+        break;
+    }
   };
 
   const handleSearch = () => {
@@ -98,21 +122,24 @@ function Header({
       <View style={[styles.container, style]} {...props}>
         <View style={[wrapper.row, {
           marginTop: !title && !children && !hideSearch ? 8 : 0,
-          minHeight: !hideSearch ? 30 : 0,
+          minHeight: !hideSearch ? 60 : 0,
+          height: 60,
+          
         }]}>
           {/* Left Column */}
           {'boolean' !== typeof left ? (
-            'function' === typeof left ? left() : left
+            null
+            // 'function' === typeof left ? left() : left
           ) : (
             (!left || !navigation.canGoBack()) ? null : (
               <Button
-                containerStyle={{ marginRight: 12, alignSelf: 'flex-start', paddingVertical: -15, marginTop: -15 }}
+                containerStyle={{ marginRight: 12, alignSelf: 'flex-start', paddingVertical: -15, marginTop: -5 }}
                 size={38}
                 color="transparent"
                 onPress={() => navigation.goBack()}
                 {...leftProps}
               >
-                <Ionicons name="arrow-back" size={24} color={colors.gray[700]} {...leftIconProps} />
+                <Ionicons name="arrow-back" size={24} color={'#0d674e'} {...leftIconProps} />
               </Button>
             )
           )}
@@ -122,31 +149,71 @@ function Header({
             // Render $children
             children || (
               // Spaces between left & right
+              
               !hideSearch ? (
-                <TextField
-                  border
-                  containerStyle={{ flex: 1, backgroundColor: colors.gray[100], alignSelf: 'center', marginTop: -25, marginBottom: -5 }}
-                  style={{
-                    paddingTop: Platform.OS === 'ios' ? 4 : 2,
-                    paddingBottom: Platform.OS === 'ios' ? 4 : 2,
-                    height: 38,
-                    fontSize: 11
-                  }}
-                  placeholder="Cari Produk.."
-                  value={search}
-                  onChangeText={(value) => setSearch(value)}
-                  onSubmitEditing={handleSearch}
-                  returnKeyType="search"
-                  right={(
-                    <Ionicons
-                      name="search"
-                      size={20}
-                      color={colors.gray[500]}
-                      style={{ paddingHorizontal: 3, }}
-                    />
-                  )}
-                  {...searchProps}
-                />
+                <View style={[wrapper.row, {width: '100%', marginTop: -5, height: 40}]}>
+                  <View style={{ flex:1 }}>
+                    <Image source={require('../../assets/logocard-removebg-preview.png')} style={styles.logo} />
+                  </View>
+                  <Button
+                    containerStyle={{ alignSelf: 'flex-start', }}
+                    size={40}
+                    color="transparent"
+                    onPress={() => navigation.navigatePath('Public', {
+                      screen: 'Notification',
+                    })}
+                    {...rightProps}
+                    style={{marginTop: -5}}
+                  >
+                    <Ionicons name="notifications-outline" size={22} color={'#0d674e'} {...rightIconProps} />
+                  </Button>
+                  <Button
+                    containerStyle={{ alignSelf: 'flex-start',  }}
+                    size={40}
+                    color="transparent"
+                    onPress={() => handleModalToggle('popup', true)}
+                    {...rightProps}
+                    style={{marginTop: -5}}
+                  >
+                    <Ionicons name="logo-whatsapp" size={22} color={'#0d674e'} {...rightIconProps} />
+                  </Button>
+                  <Button
+                    containerStyle={{ alignSelf: 'flex-start',  }}
+                    size={40}
+                    color="transparent"
+                    onPress={() => navigation.navigatePath('Public', {
+                      screen: 'Search',
+                    })}
+                    {...rightProps}
+                    style={{marginTop: -5}}
+                  >
+                    <Ionicons name="search-outline" size={22} color={'#0d674e'} {...rightIconProps} />
+                  </Button>
+                  {/* <TextField
+                    border
+                    containerStyle={{ flex: 1, backgroundColor: colors.gray[100], alignSelf: 'center', marginTop: -25, marginBottom: -5 }}
+                    style={{
+                      paddingTop: Platform.OS === 'ios' ? 4 : 2,
+                      paddingBottom: Platform.OS === 'ios' ? 4 : 2,
+                      height: 38,
+                      fontSize: 11
+                    }}
+                    placeholder="Cari Produk.."
+                    value={search}
+                    onChangeText={(value) => setSearch(value)}
+                    onSubmitEditing={handleSearch}
+                    returnKeyType="search"
+                    right={(
+                      <Ionicons
+                        name="search"
+                        size={20}
+                        color={colors.gray[500]}
+                        style={{ paddingHorizontal: 3, }}
+                      />
+                    )}
+                    {...searchProps}
+                  /> */}
+                </View>
               ) : (
                 !right ? null : (
                   <View style={{ flex: 1 }} />
@@ -172,12 +239,50 @@ function Header({
                 onPress={() => navigation.goBack()}
                 {...rightProps}
               >
-                <Ionicons name="cart-outline" size={18} color={colors.gray[900]} {...rightIconProps} />
+                <Ionicons name="cart-outline" size={18} color={'#0d674e'} {...rightIconProps} />
               </Button>
             )
           )}
         </View>
       </View>
+      {/* Popup Filter */}
+      <BottomDrawer
+        isVisible={options.filterModalOpen}
+        swipeDirection={null}
+        onBackButtonPress={() => handleModalToggle('filter', false)}
+        onBackdropPress={() => handleModalToggle('filter', false)}
+        style={{ maxHeight: height * 0.75 }}
+      >
+        <Button
+          containerStyle={{ alignItems: 'flex-end', marginBottom: 10, marginTop: -15 }}
+          onPress={handleCloseModal}
+        >
+          <Ionicons name="ios-close" size={24} color={'#333'} {...leftIconProps} />
+          <Typography style={{ color: '#333' }}>Close</Typography>
+        </Button>
+        <Image 
+          source={require('../../assets/popup/cs.jpg')} 
+          style={{ width: '85%', height: '43%', alignSelf: 'center', resizeMode: 'stretch', borderRadius: 10 }} />
+        <Typography style={{ marginVertical: 20, fontSize: 13, textAlign: 'center'}}>
+          {`LIVE CHAT : Monday - Friday ( 08:30AM - 05:30PM ).`}
+        </Typography>
+        <Button
+          containerStyle={{ alignSelf: 'center', backgroundColor: '#0d674e' }}
+          style={{ minWidth: 250 }}
+          onPress={() => Linking.openURL('https://api.whatsapp.com/send/?phone=6281113203000&text=Halo+Optik+Tunggal&app_absent=0')}
+        >
+          <Ionicons name="logo-whatsapp" size={24} color={'#fff'} {...leftIconProps} />
+          <Typography style={{ color: '#fff', marginLeft: 10 }}>Customer Service</Typography>
+        </Button>
+        {/* <Button
+          containerStyle={{ alignSelf: 'center', marginBottom: 20, backgroundColor: '#0d674e' }}
+          style={{ minWidth: 250 }}
+          onPress={() => Linking.openURL('https://api.whatsapp.com/send/?phone=6281113511000&text=Halo+Optik+Tunggal&app_absent=0')}
+        >
+          <Ionicons name="logo-whatsapp" size={24} color={'#fff'} {...leftIconProps} />
+          <Typography style={{ color: '#fff', marginLeft: 10 }}>Customer Service 2</Typography>
+        </Button> */}
+      </BottomDrawer>
     </View>
   );
 };
@@ -191,16 +296,20 @@ const styles = StyleSheet.create({
 
   headercolor: {
     width: Dimensions.get('window').width,
-    height: 50,
+    height: 60,
     // backgroundColor: "#204c29",
-    backgroundColor: "#FEFEFE",
+    backgroundColor: "#fff",
     position: 'absolute',
     resizeMode: 'cover',
+    borderBottomColor: '#0d674e',
+    borderBottomWidth: 5
   },
 
   logo: {
-    width: 100,
-    height: 30,
+    width: 135,
+    height: 40,
+    marginTop: -5,
+    marginLeft: 5
   }
 });
 

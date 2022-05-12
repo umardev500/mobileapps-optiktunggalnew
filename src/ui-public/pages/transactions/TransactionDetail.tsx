@@ -129,7 +129,7 @@ function TransactionDetail() {
 
             <Button
               containerStyle={{ marginTop: 12 }}
-              label={t(`Kembali`)}
+              label={t(`Back`)}
               border
               onPress={() => navigation.navigatePath('Public', {
                 screen: 'BottomTabs.NotificationStack.TransactionList'

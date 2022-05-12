@@ -109,7 +109,7 @@ function AddressEdit() {
   // Effects
   useEffect(() => {
     const { profile, address, action } = route.params;
-    console.log('PROFILE : '+ route.params.profile.alamat);
+    console.log('PROFILE : '+ route.params.profile.gender);
     action && setAction(action);
 
     if (profile) {
@@ -397,7 +397,8 @@ function AddressEdit() {
 
       if (status === 200) {
         navigation.navigatePath('Public', {
-          screen: 'PinEdit',
+          // screen: 'PinEdit',
+          screen: 'Verification',
           params: [{ email }],
         });
       }
@@ -448,39 +449,39 @@ function AddressEdit() {
 
   if (options.provinceModalOpen) {
     locationField = 'prop';
-    locationModalTitle = t(`${''}Pilih Provinsi`);
+    locationModalTitle = t(`${''}Select Province`);
     locationModalList = options.provinces || [];
     locationModalListLoaded = !!options.provincesLoaded;
   } else if (options.regencyModalOpen) {
     locationField = 'kab';
-    locationModalTitle = t(`${''}Pilih Kota/Kabupaten`);
+    locationModalTitle = t(`${''}Select City`);
     locationModalList = options.regencies || [];
     locationModalListLoaded = !!options.regenciesLoaded;
 
     if (!fields.prop) {
-      locationStepRequired = t(`${''}Mohon pilih Provinsi.`);
+      locationStepRequired = t(`${''}Please Select Province.`);
     }
   } else if (options.districtModalOpen) {
     locationField = 'kec';
-    locationModalTitle = t(`${''}Pilih Kecamatan`);
+    locationModalTitle = t(`${''}Select District`);
     locationModalList = options.districts || [];
     locationModalListLoaded = !!options.districtsLoaded;
 
     if (!fields.kab) {
-      locationStepRequired = t(`${''}Mohon pilih Kota/Kabupaten.`);
+      locationStepRequired = t(`${''}Please select city.`);
     }
   } else if (options.villageModalOpen) {
     locationField = 'kel';
-    locationModalTitle = t(`${''}Pilih Kelurahan`);
+    locationModalTitle = t(`${''}Select Villages`);
     locationModalList = options.villages || [];
     locationModalListLoaded = !!options.villagesLoaded;
 
     if (!fields.kec) {
-      locationStepRequired = t(`${''}Mohon pilih Kecamatan.`);
+      locationStepRequired = t(`${''}Please select District.`);
     }
   }
 
-  const textPilih = t(`${''}Pilih`);
+  const textPilih = t(`${''}Select`);
   const { address: addressRoute } = route.params;
 
   return (
@@ -488,11 +489,11 @@ function AddressEdit() {
       {profile ? null : (
         <View style={{ marginTop: 24 }}>
           <Typography type="h4" style={{ marginBottom: 8 }}>
-            {`${''}Informasi Alamat pengiriman`}
+            {`${''}Shipping Address Information`}
           </Typography>
 
           <TextField
-            placeholder={`${''}Nama Penerima`}
+            placeholder={`${''}Recipient name`}
             value={fields.nama}
             onChangeText={(value) => handleFieldChange('nama', value)}
             error={!!getFieldError('nama')}
@@ -501,7 +502,7 @@ function AddressEdit() {
 
           <TextField
             containerStyle={{ marginTop: 12 }}
-            placeholder={t('Nomor Telepon')}
+            placeholder={t('Phone Number')}
             value={fields.hp}
             onChangeText={(value) => handleFieldChange('hp', value)}
             keyboardType="phone-pad"
@@ -518,7 +519,7 @@ function AddressEdit() {
 
       {profile ? null : (
         <Typography type="h4" style={{ marginTop: 24 }}>
-          {`${''}Detail Alamat`}
+          {`${''}Address Detail`}
         </Typography>
       )}
 
@@ -530,7 +531,7 @@ function AddressEdit() {
             onPress={() => handleModalToggle('prop', true)}
           >
             <TextField
-              placeholder={`${''}Pilih Provinsi`}
+              placeholder={`${''}Select Province`}
               value={options.provinces?.find(({ id }) => id === fields.prop)?.nama}
               editable={false}
               pointerEvents="none"
@@ -543,7 +544,7 @@ function AddressEdit() {
             onPress={() => handleModalToggle('kab', true)}
           >
             <TextField
-              placeholder={`${''}Pilih Kota/Kabupaten`}
+              placeholder={`${''}Select City`}
               value={options.regencies?.find(({ id }) => id === fields.kab)?.nama}
               editable={false}
               pointerEvents="none"
@@ -556,7 +557,7 @@ function AddressEdit() {
             onPress={() => handleModalToggle('kec', true)}
           >
             <TextField
-              placeholder={`${''}Pilih Kecamatan`}
+              placeholder={`${''}Select District`}
               value={options.districts?.find(({ id }) => id === fields.kec)?.nama}
               editable={false}
               pointerEvents="none"
@@ -569,7 +570,7 @@ function AddressEdit() {
             onPress={() => handleModalToggle('kel', true)}
           >
             <TextField
-              placeholder={`${''}Pilih Kelurahan`}
+              placeholder={`${''}Select Village`}
               value={options.villages?.find(({ id }) => id === fields.kel)?.nama}
               editable={false}
               pointerEvents="none"
@@ -617,7 +618,7 @@ function AddressEdit() {
       <TextField
         containerStyle={{ marginTop: 12 }}
         style={{ height: 120, paddingTop: 8 }}
-        placeholder={`${''}Alamat Lengkap (Beserta patokan alamat)`}
+        placeholder={`${''}Complete Address (Along with the reference address)`}
         value={options.villages?.find(({ id }) => id === route.params.profile.alamat)?.nama_alamat}
         onChangeText={(value) => handleFieldChange('jl', value)}
         multiline

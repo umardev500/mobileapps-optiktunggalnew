@@ -2,7 +2,7 @@ import { RouteProp, useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, ToastAndroid, View, Text, Alert } from 'react-native';
 import { colors, wrapper } from '../../../lib/styles';
-import LOGO from '../../../assets/app-logo.png';
+import LOGO from '../../../assets/OptikTunggalG.jpg';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { ErrorState, ValueOf } from '../../../types/utilities';
 import { Button, PressableBox, TextField, Typography } from '../../../ui-shared/components';
@@ -144,8 +144,9 @@ function Login() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', marginTop: -350 }}>
-        <Image source={LOGO} style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 15 }}/>
+      <Image source={LOGO} 
+               style={{ marginBottom: -50, width: 250, marginTop: -100 }}/>
+      {/* <View style={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', marginTop: -350 }}> */}
         <TextField
           placeholder={`${''}Email address`}
           value={fields.email}
@@ -181,17 +182,18 @@ function Login() {
         />
 
         <Button
-          containerStyle={{ alignSelf: 'center', borderRadius: 5, backgroundColor: '#CCC',  marginTop: 30}}
+          containerStyle={{ alignSelf: 'center', borderRadius: 5, backgroundColor: '#0d674e',  marginTop: 30}}
           style={{ width: 300, height: 40,  }}
-          label={`${''}Login`.toUpperCase()}
           shadow={3}
           onPress={handleSubmit}
           loading={isSaving}
-        />
+        >
+          <Typography style={{ color: '#FFF' }}>LOGIN</Typography>
+        </Button>
 
         <View style={[wrapper.row, { alignItems: 'center', marginHorizontal: 10 }]}>
           <PressableBox
-            containerStyle={{ marginTop: 40, alignSelf: 'center', padding: 10 }}
+            containerStyle={{ marginTop: 40, alignSelf: 'center', padding: 5 }}
             opacity
             onPress={() => {
               navigation.navigatePath('Public', {
@@ -199,22 +201,22 @@ function Login() {
               });
             }}
           >
-            <Typography heading size="sm" color="primary" style={{}}>
-              Lupa Password?
+            <Typography size="sm" color="#cd0505" style={{}}>
+              Forgot Password?
             </Typography>
           </PressableBox>
-          <Typography style={{ paddingHorizontal: 10, marginTop: 40}}>
+          <Typography style={{ paddingHorizontal: 10, marginTop: 40, color: '#0d674e'}}>
             |
           </Typography>
           <PressableBox
-            containerStyle={{ marginTop: 40, alignSelf: 'center', padding: 10 }}
+            containerStyle={{ marginTop: 40, alignSelf: 'center', padding: 5 }}
             opacity
             onPress={() => navigation.navigatePath('Public', {
               screen: 'Register'
             })}
           >
-            <Typography heading size="sm" color="primary" style={{}}>
-              Belum punya akun?
+            <Typography size="sm" color="#0d674e" style={{}}>
+              Dont't have an account?
             </Typography>
           </PressableBox>
         </View>
@@ -257,7 +259,7 @@ function Login() {
             </Typography>
           </PressableBox>
         </View>*/}
-      </View>
+      {/* </View> */}
     </ScrollView>
   );
 };
@@ -269,7 +271,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: -150
+    marginTop: -150
   },
 });
 

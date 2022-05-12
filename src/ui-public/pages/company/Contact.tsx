@@ -47,7 +47,7 @@ function Contact() {
                 screen: 'BottomTabs.HomeStack'
             })}>
             <Typography color="black" style={{ marginVertical: 15, marginHorizontal: 15 }}>
-              <Ionicons name="arrow-back" size={18} /> {`${''}Kembali`}
+              <Ionicons name="arrow-back" size={18} /> {`${''}Back`}
             </Typography>
         </PressableBox>
       </View>

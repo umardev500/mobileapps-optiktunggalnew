@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, ToastAndroid, View } from 'react-native';
+import { ScrollView, StyleSheet, ToastAndroid, View, Alert } from 'react-native';
 import { colors } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { ErrorState, ValueOf } from '../../../types/utilities';
@@ -91,30 +91,36 @@ function ForgotPassword() {
       setIsSaving(false);
 
       if (200 === status) {
-        navigation.navigatePath('Public', {
-          screen: 'BottomTabs.AccountStack.Verification',
-          params: [null, null, {
-            email: fields.email
-          }]
-        });
+        Alert.alert( "Notification", "Password change was successful. please check your email!",
+          [
+            { text: "OK", onPress: () => 
+              navigation.navigatePath('Public', {
+                screen: 'BottomTabs.AccountStack.Verification',
+                params: [null, null, {
+                  email: fields.email
+                }]
+              })
+            }
+          ]
+        );
       } else {
-        return handleErrorShow('email', `${''}Alamat email tidak terdaftar.`);
+        return handleErrorShow('email', `${''}Email address is not registered.`);
       }
     }).catch((err) => {
       setIsSaving(false);
 
-      return handleErrorShow('email', `${''}Alamat email tidak terdaftar.`);
+      return handleErrorShow('email', `${''}Email address is not registered.`);
     });
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Typography type="h5" style={{ marginTop: 12 }}>
-        {`${''}Masukan alamat email anda`}
+        {`${''}Enter your e-mail address`}
       </Typography>
 
       <Typography size="sm" color={700} textAlign="center" style={{ marginTop: 4 }}>
-        {`${''}Kami akan mengirimkan link lupa password ke email anda.`}
+        {`${''}We will send a forgot password link to your email.`}
       </Typography>
 
       <TextField
@@ -130,14 +136,16 @@ function ForgotPassword() {
 
       <View style={{ marginTop: 'auto', paddingTop: 24, marginBottom: 50 }}>
         <Button
-          containerStyle={{ alignSelf: 'center' }}
+          containerStyle={{ alignSelf: 'center', backgroundColor: '#0d674e' }}
           style={{ width: 300, height: 40 }}
-          label={`${''}Kirim Permintaan`.toUpperCase()}
-          color="primary"
           shadow={3}
           onPress={handleSubmit}
           loading={isSaving}
-        />
+        >
+          <Typography style={{ color: '#FEFEFE' }}>
+            {`${''}Send Request`.toUpperCase()}
+          </Typography>
+        </Button>
       </View>
     </ScrollView>
   );

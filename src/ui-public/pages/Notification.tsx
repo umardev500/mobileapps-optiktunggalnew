@@ -44,7 +44,7 @@ function Notification() {
       {!user ? null : (
         <Button
           containerStyle={styles.actionBtnContainer}
-          label={t('Transaksi', { count: 2 })}
+          label={t('Transaction', { count: 2 })}
           labelProps={{ type: 'p', size: 'md' }}
           labelStyle={{ flex: 1, textAlign: 'left' }}
           size="lg"
@@ -60,7 +60,7 @@ function Notification() {
 
       <Button
         containerStyle={[styles.actionBtnContainer, { marginTop: 0 }]}
-        label={t('Promosi', { count: 2 })}
+        label={t('Promotion', { count: 2 })}
         labelProps={{ type: 'p', size: 'md' }}
         labelStyle={{ flex: 1, textAlign: 'left' }}
         size="lg"
@@ -69,6 +69,20 @@ function Notification() {
         )}
         onPress={() => navigation.navigatePath('Public', {
           screen: 'BottomTabs.NotificationStack.PromotionList'
+        })}
+      />
+
+      <Button
+        containerStyle={[styles.actionBtnContainer, { marginTop: 0 }]}
+        label={t('News', { count: 2 })}
+        labelProps={{ type: 'p', size: 'md' }}
+        labelStyle={{ flex: 1, textAlign: 'left' }}
+        size="lg"
+        right={(
+          <Ionicons name="chevron-forward" size={20} color='black' />
+        )}
+        onPress={() => navigation.navigatePath('Public', {
+          screen: 'News'
         })}
       />
 

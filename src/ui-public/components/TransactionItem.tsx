@@ -84,7 +84,7 @@ function TransactionItem({
 
   // Vars
   const retrieveInfo = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
 
     return httpService('/api/transaction/transaction', {
       data: {
@@ -92,7 +92,7 @@ function TransactionItem({
         dt: JSON.stringify({ idtrx : transaction.orderno }),
       }
     }).then(({ status, data, item, shipTo }) => {
-      setIsLoading(false);
+      // setIsLoading(false);
 
       transaction.methodid = data.methodid;
 
@@ -112,7 +112,7 @@ function TransactionItem({
 
       setAddress(infoAddress);
     }).then(() => {
-      setIsLoading(false);
+      // setIsLoading(false);
 
       setCart(state => ({
         ...state,
@@ -178,7 +178,7 @@ function TransactionItem({
 
           <View>
             <Typography>
-              Lihat Detail
+              View Details
               <Ionicons name="chevron-down" size={16} color={colors.gray[900]} />
             </Typography>
             <Typography
@@ -191,7 +191,9 @@ function TransactionItem({
             </Typography>
           </View>
         </View>
-
+        <Typography size="sm" style={{ marginTop: 4 }}>
+            Store Name : {`${transaction.nm_store}`}
+          </Typography>
         {!cartItem?.product ? null : (
           <View style={[styles.headerCart, { marginTop: 8 }]}>
             <View style={[wrapper.row]}>
@@ -201,13 +203,13 @@ function TransactionItem({
               <View style={{ flex: 1, paddingTop: 4 }}>
                 <View style={{ flex: 1 }}>
                   <Typography>
-                    {cartItem.product?.prd_ds} {`(Qty : ${cart_items?.length || 0} ${t(`Produk`)})`}
+                    {cartItem.product?.prd_ds}
                   </Typography>
                 </View>
 
                 <View style={[wrapper.row, { marginTop: 'auto', paddingTop: 12 }]}>
                   <Typography style={{ flex: 1 }}>
-                    {t(`Total`)}
+                    {t(`Total`)} {`(${cart_items?.length || 0} ${t(`item`)})`}
                   </Typography>
 
                   <Typography heading>
@@ -242,7 +244,7 @@ function TransactionItem({
           <View style={{ alignItems: 'flex-end' }}>
             {['proses', 'diterima'].indexOf(status || '') < 0 ? (
               <Typography>
-                Tutup Detail
+                Close Detail
                 <Ionicons name="chevron-up" size={16} color={colors.gray[900]} />
               </Typography>
             ) : (
@@ -251,7 +253,7 @@ function TransactionItem({
                 onPress={!onDetailPress ? null : () => onDetailPress(transaction)}
               >
                 <Typography size="sm" style={{ borderBottomWidth: 1, borderColor: colors.gray[700] }}>
-                  {t(`Lihat Detail`)}
+                  {t(`View Detail`)}
                 </Typography>
               </PressableBox>
             )}
@@ -264,12 +266,18 @@ function TransactionItem({
 
         {!cartItem?.product ? 
           <Typography style={{ marginTop: 20, textAlign: 'center'}}>
-            {t(`Detail Produk Tidak Ada.`)}
+            {t(`Product Details Missing.`)}
           </Typography>
         : (
           <View style={[styles.headerCart, { marginTop: 8 }]}>
             <Typography heading>
-              {t(`Detail Produk`)}
+              {t(`Store Name`)}
+            </Typography>
+            <Typography size="md" style={{ marginTop: 4, marginBottom: 10 }}>
+              {`${transaction.nm_store}`}
+            </Typography>
+            <Typography heading>
+              {t(`Product Details`)}
             </Typography>
 
             {cart_items?.map((item, index) => {
@@ -412,144 +420,135 @@ function TransactionItem({
           }}
           style={styles.content}
         >
-          {isLoading ? (
-            <View style={styles.contentSection}>
-              <BoxLoading width={[120, 180]} height={20} />
-              <BoxLoading width={[180, 280]} height={18} style={{ marginTop: 8 }} />
-              <BoxLoading width={[180, 280]} height={18} style={{ marginTop: 4 }} />
-              <BoxLoading width={[120, 160]} height={18} style={{ marginTop: 4 }} />
-            </View>
-          ) : (
-            <>
-              {/* {!address ? null : (
-                <View style={styles.contentSection}>
-                  <Typography heading>
-                    {t(`Info Pengiriman`)}
+          <>
+            {/* {!address ? null : (
+              <View style={styles.contentSection}>
+                <Typography heading>
+                  {t(`Info Pengiriman`)}
+                </Typography>
+
+                <View style={[wrapper.row, { marginTop: 6 }]}>
+                  <Typography style={{ width: 140 }}>
+                    {t(`Alamat`)}
                   </Typography>
 
-                  <View style={[wrapper.row, { marginTop: 6 }]}>
+                  <View style={{ flex: 1 }}>
+                    {!address?.title ? null : (
+                      <Typography heading>
+                        {address?.title}
+                      </Typography>
+                    )}
+
+                    <Typography heading style={{ marginTop: 4 }}>
+                      {address?.vch_nama}
+                    </Typography>
+
+                    <Typography size="sm" style={{ marginTop: 4 }}>
+                      {showPhone(address?.hp, '+62')}
+                    </Typography>
+
+                    <Typography size="sm" style={{ marginTop: 4 }}>
+                      {address?.alamat}
+                    </Typography>
+                  </View>
+                </View>
+              </View>
+            )} */}
+
+            {/* {!paymentMethod ? null : (
+              <View style={[styles.contentSection, { marginTop: 12 }]}>
+                <Typography heading>
+                  {t(`Info Pembayaran`)}
+                </Typography>
+
+                <View style={[wrapper.row, { marginTop: 6 }]}>
+                  <Typography style={{ width: 140, flex: 1 }}>
+                    {t(`Metode Pembayaran`)}
+                  </Typography>
+
+                  <Typography style={{ flex: 1, textAlign: 'right' }} heading>
+                    {paymentMethod.nama}
+                  </Typography>
+                </View>
+              </View>
+            )} */}
+
+            {/*{!transferInfo ? null : (
+              <View style={[styles.contentSection, {
+                marginTop: 0,
+                paddingTop: 8,
+                borderTopWidth: 0
+              }]}>
+                <Typography heading size="sm">
+                  {t(`Transfer Menuju`)}
+                </Typography>
+
+                {([
+                  { label: t(`Nama Bank`), key: 'bankName' },
+                  { label: t(`No. Rekening`), key: 'bankNo' },
+                  { label: t(`Atas Nama`), key: 'bankAccount' },
+                ]).map((item, index) => (
+                  <View key={index} style={[wrapper.row, { marginTop: 4 }]}>
                     <Typography style={{ width: 140 }}>
-                      {t(`Alamat`)}
+                      {item.label}
                     </Typography>
 
-                    <View style={{ flex: 1 }}>
-                      {!address?.title ? null : (
-                        <Typography heading>
-                          {address?.title}
+                    {item.key !== 'bankNo' ? (
+                      <Typography style={{ flex: 1 }} selectable>
+                        {transferInfo[item.key as keyof typeof transferInfo]}
+                      </Typography>
+                    ) : (
+                      <View style={[wrapper.row, { flex: 1, justifyContent: 'flex-start' }]}>
+                        <Typography selectable>
+                          {transferInfo.bankNo}
                         </Typography>
-                      )}
 
-                      <Typography heading style={{ marginTop: 4 }}>
-                        {address?.vch_nama}
-                      </Typography>
+                        <Button
+                          containerStyle={{ marginLeft: 2 }}
+                          size={18}
+                          onPress={() => {
+                            const bankNo = transferInfo.bankNo;
 
-                      <Typography size="sm" style={{ marginTop: 4 }}>
-                        {showPhone(address?.hp, '+62')}
-                      </Typography>
+                            Clipboard.setString(bankNo.replace(/-/g, ''));
 
-                      <Typography size="sm" style={{ marginTop: 4 }}>
-                        {address?.alamat}
-                      </Typography>
-                    </View>
+                            ToastAndroid.show(`${''}Copied!`, ToastAndroid.SHORT);
+                          }}
+                        >
+                          <Ionicons name="copy" size={14} color={colors.gray[800]} />
+                        </Button>
+                      </View>
+                    )}
                   </View>
-                </View>
-              )} */}
+                ))}
+              </View>
+            )}*/}
 
-              {/* {!paymentMethod ? null : (
-                <View style={[styles.contentSection, { marginTop: 12 }]}>
-                  <Typography heading>
-                    {t(`Info Pembayaran`)}
+            {!price.total ? null : (
+              <View style={[styles.contentSection, { marginTop: 12 }]}>
+                {/* <View style={[wrapper.row, { marginTop: 0 }]}>
+                  <Typography style={{ width: 140, flex: 1 }}>
+                    {`${t(`Total Harga`)}\n(${cart_items?.length} ${t(`Barang`, { count: cart_items?.length})})`}
                   </Typography>
 
-                  <View style={[wrapper.row, { marginTop: 6 }]}>
-                    <Typography style={{ width: 140, flex: 1 }}>
-                      {t(`Metode Pembayaran`)}
-                    </Typography>
+                  <Typography style={{ flex: 1, textAlign: 'right' }} heading>
+                    {numeral(price.total).format()}
+                  </Typography>
+                </View> */}
 
-                    <Typography style={{ flex: 1, textAlign: 'right' }} heading>
-                      {paymentMethod.nama}
-                    </Typography>
-                  </View>
-                </View>
-              )} */}
-
-              {/*{!transferInfo ? null : (
-                <View style={[styles.contentSection, {
-                  marginTop: 0,
-                  paddingTop: 8,
-                  borderTopWidth: 0
-                }]}>
-                  <Typography heading size="sm">
-                    {t(`Transfer Menuju`)}
+                <View style={[wrapper.row, { alignItems: 'flex-end' }]}>
+                  <Typography heading style={{ width: 140, flex: 1 }}>
+                    {`${t(`Total`)}`} {`(${cart_items?.length || 0} ${t(`item`)})`}
                   </Typography>
 
-                  {([
-                    { label: t(`Nama Bank`), key: 'bankName' },
-                    { label: t(`No. Rekening`), key: 'bankNo' },
-                    { label: t(`Atas Nama`), key: 'bankAccount' },
-                  ]).map((item, index) => (
-                    <View key={index} style={[wrapper.row, { marginTop: 4 }]}>
-                      <Typography style={{ width: 140 }}>
-                        {item.label}
-                      </Typography>
-
-                      {item.key !== 'bankNo' ? (
-                        <Typography style={{ flex: 1 }} selectable>
-                          {transferInfo[item.key as keyof typeof transferInfo]}
-                        </Typography>
-                      ) : (
-                        <View style={[wrapper.row, { flex: 1, justifyContent: 'flex-start' }]}>
-                          <Typography selectable>
-                            {transferInfo.bankNo}
-                          </Typography>
-
-                          <Button
-                            containerStyle={{ marginLeft: 2 }}
-                            size={18}
-                            onPress={() => {
-                              const bankNo = transferInfo.bankNo;
-
-                              Clipboard.setString(bankNo.replace(/-/g, ''));
-
-                              ToastAndroid.show(`${''}Copied!`, ToastAndroid.SHORT);
-                            }}
-                          >
-                            <Ionicons name="copy" size={14} color={colors.gray[800]} />
-                          </Button>
-                        </View>
-                      )}
-                    </View>
-                  ))}
+                  <Typography style={{ flex: 1, textAlign: 'right' }} heading>
+                    {numeral(price.total + price.courier).format()}
+                  </Typography>
                 </View>
-              )}*/}
+              </View>
+            )}
 
-              {!price.total ? null : (
-                <View style={[styles.contentSection, { marginTop: 12 }]}>
-                  {/* <View style={[wrapper.row, { marginTop: 0 }]}>
-                    <Typography style={{ width: 140, flex: 1 }}>
-                      {`${t(`Total Harga`)}\n(${cart_items?.length} ${t(`Barang`, { count: cart_items?.length})})`}
-                    </Typography>
-
-                    <Typography style={{ flex: 1, textAlign: 'right' }} heading>
-                      {numeral(price.total).format()}
-                    </Typography>
-                  </View> */}
-
-                  <View style={[wrapper.row, { alignItems: 'flex-end' }]}>
-                    <Typography heading style={{ width: 140, flex: 1 }}>
-                      {`${t(`Total`)}`}
-                    </Typography>
-
-                    <Typography style={{ flex: 1, textAlign: 'right' }} heading>
-                      {numeral(price.total + price.courier).format()}
-                    </Typography>
-                  </View>
-                </View>
-              )}
-
-              {/* {renderAction()} */}
-            </>
-          )}
+            {/* {renderAction()} */}
+          </>
         </View>
       </Animatable.View>
     </View>

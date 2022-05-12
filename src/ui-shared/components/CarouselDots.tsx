@@ -13,7 +13,7 @@ type Props = ViewProps & {
 function CarouselDots({
   dotCount,
   activeIndexes = [],
-  color = colors.gray[700],
+  color = '#0d674e',
   size = 10,
   containerStyle,
   style,

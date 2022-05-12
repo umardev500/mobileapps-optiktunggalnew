@@ -12,8 +12,10 @@ import {
   PublicNotificationStack,
   PublicArticleStack,
   PublicContactStack,
+  PublicMemberStack,
   PublicFavoriteStack,
   PublicOtherStack,
+  PublicOurStoreStack
 } from './publicBottomTabs';
 import { useTranslation } from 'react-i18next';
 import { FocusAwareStatusBar } from '../ui-shared/components';
@@ -21,11 +23,13 @@ import { FocusAwareStatusBar } from '../ui-shared/components';
 export type PublicBottomTabParamList = {
   HomeStack: {};
   NotificationStack: {};
+  MemberStack: {},
   ContactStack: {};
   FavoriteStack: {};
   AccountStack: {};
   ArticleStack: {};
   OtherStack: {};
+  OurStoreStack: {};
 };
 
 const Tab = createBottomTabNavigator<PublicBottomTabParamList>();
@@ -44,13 +48,13 @@ function PublicBottomTab() {
     width: 30, // size,
     height: 30, // size,
     color: colors.gray[500],
-    ...(!focused ? null : { color: colors.palettes.primary }),
+    ...(!focused ? null : { color: '#0d674e' }),
   });
 
   return (
     <SafeAreaView style={{
       flex: 1,
-      backgroundColor: colors.palettes.white
+      backgroundColor: colors.palettes.white,
     }}>
       <FocusAwareStatusBar
         backgroundColor={colors.palettes.skyblue}
@@ -60,7 +64,7 @@ function PublicBottomTab() {
       <Tab.Navigator
         initialRouteName="HomeStack"
         screenOptions={{
-          tabBarActiveTintColor: colors.palettes.primary,
+          tabBarActiveTintColor: '#0d674e',
           tabBarStyle: {
             height: 64,
             paddingTop: 8,
@@ -81,12 +85,12 @@ function PublicBottomTab() {
           }}
         />
         <Tab.Screen
-          name="NotificationStack"
-          component={PublicNotificationStack}
+          name="MemberStack"
+          component={PublicMemberStack}
           options={{
-            tabBarLabel: t('Notifikasi'),
+            tabBarLabel: t('Members'),
             tabBarIcon: (iconParams) => (
-              <FigmaIcon.FigmaNotification {...iconProps(iconParams)} />
+              <FigmaIcon.FigmaMember {...iconProps(iconParams)} />
             ),
           }}
         />
@@ -94,23 +98,23 @@ function PublicBottomTab() {
           name="OtherStack"
           component={PublicOtherStack}
           options={{
-            tabBarLabel: t('Katalog'),
+            tabBarLabel: t('Shop'),
             tabBarIcon: (iconParams) => (
               <FigmaIcon.FigmaCatalogue {...iconProps(iconParams)} />
             ),
           }}
         />
         <Tab.Screen
-          name="FavoriteStack"
-          component={PublicFavoriteStack}
+          name="OurStoreStack"
+          component={PublicOurStoreStack}
           options={{
-            tabBarLabel: t('Favorit'),
+            tabBarLabel: t('Stores'),
             tabBarIcon: (iconParams) => (
               <FigmaIcon.FigmaFavorite {...iconProps(iconParams)} />
             ),
           }}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           // name="FavoriteStack"
           name="ArticleStack"
           component={PublicArticleStack}
@@ -120,12 +124,12 @@ function PublicBottomTab() {
               <FigmaIcon.FigmaNews {...iconProps(iconParams)} />
             ),
           }}
-        />
+        /> */}
         <Tab.Screen
           name="AccountStack"
           component={PublicAccountStack}
           options={{
-            tabBarLabel: t('Settings'),
+            tabBarLabel: t('Profile'),
             tabBarIcon: (iconParams) => (!user?.foto || true) ? (
               <FigmaIcon.FigmaAccount {...iconProps(iconParams)} />
             ) : (

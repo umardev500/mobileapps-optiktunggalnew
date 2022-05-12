@@ -18,7 +18,7 @@ type Props = Omit<MasonryListProps, 'data' | 'renderItem'> & {
   favoriteShow?: boolean;
 };
 
-function Products({
+function ProductsByKategori({
   data = [],
   favoriteShow = false,
   style,
@@ -26,7 +26,8 @@ function Products({
 }: Props) {
   // Hooks
   const navigation = useAppNavigation();
-  const { user, favorites } = useAppSelector(({ user }) => user);
+  // const { user, favorites } = useAppSelector(({ user }) => user);
+  const { user: { user, favorites } } = useAppSelector((state) => state);
   const { width } = useWindowDimensions();
   const dispatch = useDispatch();
 
@@ -45,6 +46,16 @@ function Products({
     }));
   }, [data]);
 
+  useEffect(() => {
+    if (product.modelLoaded) {
+      // retrieveReviews();
+    }
+  }, [product.modelLoaded]);
+
+  useEffect(() => {
+    // 
+  }, [favorites]);
+
   // Vars
   const handleGoToDetail = (product: ProductModel) => {
     if (!product.prd_id) {
@@ -57,19 +68,23 @@ function Products({
         product_id: product.prd_id || 0,
         product_ds: product.prd_ds || 0,
         product,
+        brand: product.brands
       }]
     });
     console.log(product);
   };
 
-  const handleFavoriteToggle = async (item: ProductModel, index: number) => {
+  const { ...productModel } = product.model || {};
+  const favorite = favorites.find((item) => item.prd_id === product.model?.prd_id);
+
+  const handleFavoriteToggle = async () => {
     if (!user) {
       return navigation.navigatePath('Public', {
         screen: 'BottomTabs.AccountStack.Account',
       });
     }
-
-    return dispatch(toggleFavorite(item));
+    // console.log("DATA_PRODUK: "+product.model?.id);
+    return !product.model ? void(0) : dispatch(toggleFavorite(product.model));
   };
 
   const renderProducts = (item: ProductModel, index: number) => {
@@ -85,62 +100,48 @@ function Products({
           onPress={() => handleGoToDetail(item)}
         >
           <View style={styles.productCardThumb}>
+            {/* <Button
+              containerStyle={{
+                position: 'absolute',
+                top: 5,
+                right: 5,
+                backgroundColor: colors.white,
+                elevation: 2,
+              }}
+              size={40}
+              rounded={40}
+              onPress={handleFavoriteToggle}
+            >
+              <Ionicons
+                name={!favorite ? 'heart-outline' : 'heart'}
+                size={28}
+                color={!favorite ? colors.gray[600] : colors.palettes.red}
+                style={{ marginTop: 2 }}
+              />
+            </Button> */}
             {!item.prd_foto ? (
               <View style={[styles.productCardImage, { minHeight }]} />
             ) : (
               <Image source={{ uri: item.prd_foto }} style={[styles.productCardImage, { minHeight }]} />
 
             )}
-
-            {/*!discount ? null : (
-              <Typography style={{backgroundColor: 'red', color: '#FEFEFE', padding: 3, textAlign: 'center', borderRadius: 3, marginTop: 10}}>
-                {(`${''}Disc ${discount}%`).toUpperCase()}
-              </Typography>
-            )*/}
-
-            {/*!favoriteShow ? null : (
-              <Button
-                containerStyle={{
-                  position: 'absolute',
-                  top: 8,
-                  right: 8,
-                  backgroundColor: colors.white,
-                  elevation: 2,
-                }}
-                size={32}
-                rounded={32}
-                onPress={() => handleFavoriteToggle(item, index)}
-              >
-                <Ionicons
-                  name={!favorite ? 'heart-outline' : 'heart'}
-                  size={24}
-                  color={!favorite ? colors.gray[600] : colors.palettes.red}
-                  style={{ marginTop: 2 }}
-                />
-              </Button>
-            )*/}
           </View>
 
           <View style={styles.productCardContent}>
             <View style={{ height: 1, backgroundColor: '#f1f1f1', marginBottom: 10 }} />
-            <Typography style={{ fontSize: 12, fontWeight: 'bold' }} numberOfLines={2}>
-              {item.prd_ds}
+            <Typography style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'center'}}>
+              {`${item.merk}`.toUpperCase()}
             </Typography>
-
-            {/*<View style={styles.user}>
-              <RatingStars
-                size={14}
-                value={5}
-                icons={['star', 'star-outline']}
-              />
-              <Typography style={{ fontSize: 10, fontWeight: 'bold', marginTop: 5, marginLeft: 5 }}>
-                (4.9)
-              </Typography>
-            </View>*/}
-
-            {/*<Typography size="md" style={{ marginTop: 10, color: 'green', fontWeight: 'bold', textAlign: 'right' }}>
-              {`Rp${item.harga}`}
-            </Typography>*/}
+            <Typography style={{ fontSize: 12, textAlign: 'center' }}>
+              {item.prd_no}
+            </Typography>
+            {/* <Typography style={{ fontSize: 12, textAlign: 'center' }}>
+              {item.prd_ds}
+            </Typography> */}
+            
+            <Typography size="md" style={{ marginTop: 10, color: '#0d674e', textAlign: 'center' }}>
+              {`Rp. ${item.harga}`}
+            </Typography>
 
             {!item.rating && !item.sales_count ? null : (
               <View style={[wrapper.row, { alignItems: 'center', marginTop: 8 }]}>
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
   },
   productCardImage: {
     width: '100%',
-    marginTop: 15,
+    marginTop: 35,
   },
   productCardContent: {
     paddingTop: 12,
@@ -225,4 +226,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Products;
+export default ProductsByKategori;
