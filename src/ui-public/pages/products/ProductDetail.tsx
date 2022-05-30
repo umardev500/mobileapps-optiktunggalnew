@@ -68,7 +68,7 @@ function ProductDetail() {
 
   // Effects
   useEffect(() => {
-    retrieveProductsList();
+    handleRefresh();
   }, []);
 
   useEffect(() => {
@@ -80,13 +80,12 @@ function ProductDetail() {
       modelLoaded: false,
     }));
 
-    undefined !== product_id && retrieveProduct(product_id);
-    retrieveProductsList();
+    undefined !== product_id && retrieveProduct(product_id) && retrieveProductsList();
   }, [route.params]);
 
   useEffect(() => {
     if (product.modelLoaded && !review.modelsLoaded) {
-      retrieveProductsList();
+      // retrieveProductsList();
     }
   }, [product.modelLoaded]);
 
@@ -98,8 +97,7 @@ function ProductDetail() {
   const handleRefresh = async () => {
     setIsLoading(true);
 
-    route.params?.product_id && await retrieveProduct(route.params.product_id);
-    await retrieveProductsList();
+    route.params?.product_id && await retrieveProduct(route.params.product_id) && retrieveProductsList();;
 
     setIsLoading(false);
   };
@@ -342,14 +340,24 @@ function ProductDetail() {
             {t('You might like these too')}
           </Typography>
           <View style={{ borderBottomColor: '#ccc', borderBottomWidth: 1, marginBottom: 10 }}></View>
-          <ProductsSerupa
-            contentContainerStyle={[styles.container, styles.wrapper]}
-            refreshing={isLoading}
-            data={product.models}
-            LoadingView={(
-            <ProductsLoading />
-            )}
-          />
+          {!product.models ? (
+            <View style={[styles.container, styles.wrapper]}>
+              <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
+              <Typography textAlign="center" style={{ marginVertical: 12 }}>
+              {t(`${t('Product Not Found')}`)}
+              </Typography>
+            </View>
+          ) : 
+          (
+            <ProductsSerupa
+              contentContainerStyle={[styles.container, styles.wrapper]}
+              refreshing={isLoading}
+              data={product.models}
+              LoadingView={(
+              <ProductsLoading />
+              )}
+            />
+          )}
         </View>
       )}
 
@@ -372,6 +380,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingBottom: 24,
     backgroundColor: colors.white,
+  },
+  sorry: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginTop: 80
   },
   wrapper: {
     backgroundColor: colors.white,

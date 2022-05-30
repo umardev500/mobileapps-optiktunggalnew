@@ -262,17 +262,17 @@ function Header({
         </Button>
         <Image 
           source={require('../../assets/popup/cs.jpg')} 
-          style={{ width: '85%', height: '43%', alignSelf: 'center', resizeMode: 'stretch', borderRadius: 10 }} />
-        <Typography style={{ marginVertical: 20, fontSize: 13, textAlign: 'center'}}>
-          {`LIVE CHAT : Monday - Friday ( 08:30AM - 05:30PM ).`}
+          style={{ width: '90%', height: '50%', alignSelf: 'center', resizeMode: 'stretch', borderRadius: 10 }} />
+        <Typography style={{ marginVertical: 20, fontSize: 15, textAlign: 'center'}}>
+          {`LIVE CHAT : `}{`\n`}{`Monday - Friday ( 08:30AM - 05:30PM ).`}
         </Typography>
         <Button
           containerStyle={{ alignSelf: 'center', backgroundColor: '#0d674e' }}
-          style={{ minWidth: 250 }}
+          style={{ minWidth: 350 }}
           onPress={() => Linking.openURL('https://api.whatsapp.com/send/?phone=6281113203000&text=Halo+Optik+Tunggal&app_absent=0')}
         >
           <Ionicons name="logo-whatsapp" size={24} color={'#fff'} {...leftIconProps} />
-          <Typography style={{ color: '#fff', marginLeft: 10 }}>Customer Service</Typography>
+          <Typography style={{ color: '#fff', marginLeft: 10 }}>Chat Now</Typography>
         </Button>
         {/* <Button
           containerStyle={{ alignSelf: 'center', marginBottom: 20, backgroundColor: '#0d674e' }}

@@ -17,11 +17,11 @@ import { useTranslation } from 'react-i18next';
 import ViewCollapse from '../../components/ViewCollapse';
 
 const SORT = [
-  // { label: `${''}Ulasan`, value: 'review-desc' },
-  { label: `${''}lowest price`, value: 'price-asc' },
-  { label: `${''}highest price`, value: 'price-desc' },
-  // { label: `${''}Popular`, value: 'price-asc' },
-  // { label: `${''}Latest`, value: 'price-asc' },
+  { label: `${''}Rp. 0 - 1.300.000`, value: '0sd1300' },
+  { label: `${''}Rp. 1.300.000 - Rp. 2.000.000`, value: '1300sd2jt' },
+  { label: `${''}Rp. 2.000.000 - Rp. 4.000.000`, value: '2jtsd4jt' },
+  { label: `${''}Rp. 4.000.000 - Rp. 7.000.000`, value: '4jtsd7jt' },
+  { label: `${''}> Rp. 7.000.000`, value: '7jtlebih' },
 ];
 
 type Fields = {
@@ -354,7 +354,7 @@ function Katalog() {
           }}
         >
           <Typography type="h5" style={{ paddingBottom: 8 }}>
-            {`${t('Sort By')}`}
+            {`${t('Price')}`}
           </Typography>
 
           <View style={[wrapper.row, { flexWrap: 'wrap' }]}>

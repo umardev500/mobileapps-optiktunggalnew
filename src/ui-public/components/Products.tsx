@@ -58,7 +58,7 @@ function ProductsByKategori({
 
   // Vars
   const handleGoToDetail = (product: ProductModel) => {
-    if (!product.prd_id) {
+    if (!product.prd_id || product.description == 'CL' || product.description == 'SL' || product.description == 'ACCS') {
       return void(0);
     }
 
@@ -71,7 +71,7 @@ function ProductsByKategori({
         brand: product.brands
       }]
     });
-    console.log(product);
+    // console.log('ASS '+product.description);
   };
 
   const { ...productModel } = product.model || {};

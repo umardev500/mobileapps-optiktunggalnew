@@ -1,10 +1,11 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, ScrollView, StyleSheet, ToastAndroid, useWindowDimensions, View, Alert, RefreshControl } from 'react-native';
+import { FlatList, Image, ScrollView, StyleSheet, ToastAndroid, 
+         useWindowDimensions, View, Alert, RefreshControl, TouchableOpacity } from 'react-native';
 import { colors, shadows, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { ErrorState, ValueOf } from '../../../types/utilities';
-import { Button, PressableBox, TextField, Typography, BottomDrawer } from '../../../ui-shared/components';
+import { Button, PressableBox, TextField, Typography, BottomDrawer, RadioButton } from '../../../ui-shared/components';
 import validator from 'validator';
 import DocumentPicker from 'react-native-document-picker';
 import moment from 'moment';
@@ -18,6 +19,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { CityModel, RegionModel } from '../../../types/model';
 import { BoxLoading } from '../../../ui-shared/loadings';
+
 
 type Fields = {
   kodecust?: string;
@@ -52,9 +54,10 @@ function ProfileEdit() {
   const { user: { user, location } } = useAppSelector(state => state);
   const { width, height } = useWindowDimensions();
   const { t } = useTranslation('account');
-  const genderData = ["-- Pilih Jenis Kelamin --", "Pria", "Wanita"];
+  const genderData = ['Pria', 'Wanita'];
   const [date, setDate] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState(0);
+  // const [checked, setChecked] = useState(0);
   // States
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -119,8 +122,8 @@ function ProfileEdit() {
         namadepan: user.namadepan || namadepan,
         namatengah: user.namatengah || namatengah,
         namabelakang: user.namabelakang || namabelakang,
-        gender: user.gender,
-        tgllahir: user.tgllahir,
+        gender: user.gender || fields.gender,
+        tgllahir: user.tgllahir || fields.tgllahir,
         hp: showPhone(String(user.hp), ''), // Remove leading 62
         email: user?.email,
         city: user?.city,
@@ -204,7 +207,7 @@ function ProfileEdit() {
           regid: user?.id,
           ip: location.ip,
           gender: jk(),
-          tgllahir: getDate(),
+          tgllahir: fields.tgllahir,
         }),
         // ktp,
         foto
@@ -308,8 +311,8 @@ function ProfileEdit() {
 
     return await httpService('/api/zonasi/zonasi', {
       data: {
-        act: 'KotaStore',
-        search: ''
+        act: 'Kota',
+        dt: JSON.stringify({ prop: 'all' })
       }
     }).then(({ status, data }) => {
       if (status === 200) {
@@ -373,7 +376,7 @@ function ProfileEdit() {
     handleModalToggle('city', false);
   };
 
-  const textPilih = t(`${''}Click`);
+  const textPilih = t(`${''}Select`);
 
   return (
     <View>
@@ -387,177 +390,238 @@ function ProfileEdit() {
           />
         )}
         >
-        <View style={[wrapper.row, {marginTop: 30, marginBottom: 12}]}>
-          <Typography>Kode Pelanggan</Typography>
-          <Typography style={{textAlign: 'right', flex: 1}}>{fields.kodecust}</Typography>
-        </View>
-        <View style={[wrapper.row]}>
-          <Typography style={{textAlignVertical: 'center', paddingTop: 10}}>Nama Depan</Typography>
-          <View style={{flex: 1, marginLeft: 25}}>
-            <TextField
-              style={{textAlign: 'right'}}
-              placeholder={t('Nama Depan')}
-              value={fields.namadepan}
-              onChangeText={(value) => handleFieldChange('namadepan', value)}
-              error={!!getFieldError('namadepan')}
-              editable={true}
-              message={error.message}
-            />
+        <View style={{...shadows[3], backgroundColor: '#FEFEFE', marginTop: 20, borderRadius: 5}}>
+          <Typography type='h4' style={{padding: 10, color: '#0d674e'}}>Profil</Typography>
+          <View style={{borderBottomColor: '#0d674e', borderBottomWidth: 1, marginHorizontal: 10}}></View>
+          <View style={[wrapper.row, {marginBottom: 12, marginHorizontal: 10, marginTop: 20}]}>
+            <Typography style={{color: '#686868'}}>Kode Pelanggan</Typography>
+            <Typography style={{textAlign: 'right', flex: 1, fontSize: 16, marginRight: 10}}>{fields.kodecust}</Typography>
           </View>
-        </View>
-        <View style={[wrapper.row, {marginTop: 10}]}>
-          <Typography style={{textAlignVertical: 'center', paddingTop: 10}}>Nama Tengah</Typography>
-          <View style={{flex: 1, marginLeft: 25}}>
-            <TextField
-              style={{textAlign: 'right'}}
-              placeholder={t('Nama Tengah (Jika ada)')}
-              value={fields.namatengah}
-              onChangeText={(value) => handleFieldChange('namatengah', value)}
-              editable={true}
-              message={error.message}
-            />
-          </View>
-        </View>
-        <View style={[wrapper.row, {marginTop: 10}]}>
-          <Typography style={{textAlignVertical: 'center', paddingTop: 10}}>Nama Belakang</Typography>
-          <View style={{flex: 1, marginLeft: 25}}>
-            <TextField
-              style={{textAlign: 'right'}}
-              placeholder={t('Nama Belakang')}
-              value={fields.namabelakang}
-              onChangeText={(value) => handleFieldChange('namabelakang', value)}
-              error={!!getFieldError('namabelakang')}
-              editable={true}
-              message={error.message}
-            />
-          </View>
-        </View>
-        <View style={[wrapper.row, {marginTop: 10}]}>
-          <Typography style={{textAlignVertical: 'center', paddingTop: 10}}>Tanggal Lahir</Typography>
-          <View style={{flex: 1, marginLeft: 25}}>
-            <PressableBox onPress={showDatePicker}>
+          <View style={{marginHorizontal: 10}}>
+            <Typography style={{textAlignVertical: 'center', paddingTop: 10, color: '#686868'}}>Nama Depan</Typography>
+            <View style={{flex: 1}}>
               <TextField
-                style={{textAlign: 'right'}}
-                placeholder={t('Date of birth')}
-                value={fields.tgllahir ? fields.tgllahir : getDate()}
-                onChangeText={(value) => handleFieldChange('tgllahir', value)}
-                error={!!getFieldError('tgllahir')}
-                message={error.message}
-                onPressOut={showDatePicker}
-                editable={false}
-              />
-            </PressableBox>
-          </View>
-        </View>
-          
-        <DateTimePickerModal
-          isVisible={isDatePickerVisible}
-          mode="date"
-          onConfirm={handleConfirm}
-          onCancel={hideDatePicker}
-        />
-
-        <View style={[wrapper.row, {marginTop: 5}]}>
-          <Typography style={{textAlignVertical: 'center', paddingTop: 10}}>Jenis Kelamin</Typography>
-          <View style={{flex: 1, marginLeft: 25}}>
-            <SelectDropdown
-              defaultValue={fields.gender}
-              buttonStyle={styles.dropdown1BtnStyle}
-              buttonTextStyle={styles.dropdown1BtnTxtStyle}
-              data={genderData}
-              rowTextStyle={{ textAlign: 'left' }}
-              onSelect={(selectedItem, index) => {
-                console.log('Select '+selectedItem)
-                getGender(selectedItem);
-              }}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                return selectedItem
-              }}
-              rowTextForSelection={(item, index) => {
-                return item
-              }}
-            />
-          </View>
-        </View>
-        
-        <View style={[wrapper.row, {marginTop: 10}]}>
-          <Typography style={{textAlignVertical: 'center', paddingTop: 10}}>Nomor Handphone</Typography>
-          <View style={{flex: 1, marginLeft: 25}}>
-            <TextField
-              style={{textAlign: 'right'}}
-              placeholder={t('Nomor Handphone')}
-              value={fields.hp}
-              onChangeText={(value) => handleFieldChange('hp', value)}
-              editable={false}
-              keyboardType="phone-pad"
-              // left={(
-              //   <View style={{ ...wrapper.row, alignItems: 'center' }}>
-              //     <Typography color={950} style={{ marginLeft: 6 }}>+62</Typography>
-              //   </View>
-              // )}
-              error={!!getFieldError('hp')}
-              message={error.message}
-            />
-          </View>
-        </View>
-
-        {
-          <View style={[wrapper.row, {marginTop: 10}]}>
-            <Typography style={{textAlignVertical: 'center', paddingTop: 10}}>Email</Typography>
-            <View style={{flex: 1, marginLeft: 10}}>
-              <TextField
-                style={{textAlign: 'right'}}
-                placeholder={t('Email')}
-                value={fields.email}
-                onChangeText={(value) => handleFieldChange('email', value)}
-                keyboardType="email-address"
-                editable={false}
-                autoCapitalize="none"
-                error={!!getFieldError('email')}
+                style={{paddingLeft: 0}}
+                placeholder={t('Nama Depan')}
+                value={fields.namadepan}
+                onChangeText={(value) => handleFieldChange('namadepan', value)}
+                error={!!getFieldError('namadepan')}
+                editable={true}
                 message={error.message}
               />
             </View>
           </View>
-        }
-        <View style={[wrapper.row, {marginTop: 5}]}>
-          <Typography style={{textAlignVertical: 'center', paddingTop: 10}}>Kota</Typography>
-          <PressableBox
-            containerStyle={{ overflow: 'visible', marginTop: 12, borderRadius: 5, 
-                              borderWidth: 1, borderColor: '#ccc', flex: 1, marginLeft: 50 }}
-            opacity={1}
-            onPress={() => handleModalToggle('city', true)}
-          >
-            <TextField
-              style={{textAlign: 'right'}}
-              placeholder={`${''}Pilih Kota`}
-              value={options.cities?.find(({ id }) => id === fields.city)?.nama}
-              onChangeText={(value) => setFields(state => ({ ...state, search: value }))}
-              returnKeyType="search"
-              editable={false}
-              pointerEvents="none"
-              right={<Ionicons name="chevron-down" size={20} color={'#ccc'} />}
-            />
-          </PressableBox>
-        </View>
+          <View style={{marginTop: 10, marginHorizontal: 10}}>
+            <Typography style={{textAlignVertical: 'center', paddingTop: 10, color: '#686868'}}>Nama Tengah (Jika ada)</Typography>
+            <View style={{flex: 1}}>
+              <TextField
+                style={{paddingLeft: 0}}
+                placeholder={t('Nama Tengah (Jika ada)')}
+                value={fields.namatengah}
+                onChangeText={(value) => handleFieldChange('namatengah', value)}
+                editable={true}
+                message={error.message}
+              />
+            </View>
+          </View>
+          <View style={{marginTop: 10, marginHorizontal: 10}}>
+            <Typography style={{textAlignVertical: 'center', paddingTop: 10, color: '#686868'}}>Nama Belakang</Typography>
+            <View style={{flex: 1}}>
+              <TextField
+                style={{paddingLeft: 0}}
+                placeholder={t('Nama Belakang')}
+                value={fields.namabelakang}
+                onChangeText={(value) => handleFieldChange('namabelakang', value)}
+                error={!!getFieldError('namabelakang')}
+                editable={true}
+                message={error.message}
+              />
+            </View>
+          </View>
+          <View style={{marginTop: 10, marginHorizontal: 10}}>
+            <Typography style={{textAlignVertical: 'center', paddingTop: 10, color: '#686868'}}>Tanggal Lahir</Typography>
+            <View style={{flex: 1}}>
+              <PressableBox onPress={showDatePicker}>
+                <TextField
+                  style={{paddingLeft: 0}}
+                  placeholder={t('Date of birth')}
+                  value={fields.tgllahir ? fields.tgllahir : getDate()}
+                  onChangeText={(value) => handleFieldChange('tgllahir', value)}
+                  error={!!getFieldError('tgllahir')}
+                  message={error.message}
+                  onPressOut={showDatePicker}
+                  editable={false}
+                />
+              </PressableBox>
+            </View>
+          </View>
+            
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
+          />
 
-        <View style={[wrapper.row, {marginTop: 10}]}>
-          <Typography style={{textAlignVertical: 'top', paddingTop: 10}}>Alamat</Typography>
-          <View style={{flex: 1, marginLeft: 25}}>
+          <View style={[wrapper.row, {marginTop: 5, marginHorizontal: 10, marginBottom: 20}]}>
+            <Typography style={{textAlignVertical: 'center', paddingTop: 10, color: '#686868'}}>Jenis Kelamin</Typography>
+            {/* <View style={{flex: 1, marginLeft: 25}}>
+              <SelectDropdown
+                defaultValue={fields.gender}
+                buttonStyle={styles.dropdown1BtnStyle}
+                buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                data={genderData}
+                rowTextStyle={{ textAlign: 'left' }}
+                onSelect={(selectedItem, index) => {
+                  console.log('Select '+selectedItem)
+                  getGender(selectedItem);
+                }}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  return selectedItem
+                }}
+                rowTextForSelection={(item, index) => {
+                  return item
+                }}
+              />
+            </View> */}
+            {genderData.map((genderData, key) => {
+              return (
+                <View key={genderData} style={{marginHorizontal: 25, marginVertical: 5}}>
+                  <View style={[wrapper.row, {marginTop: 10}]}>
+                    {gender == key ? (
+                      <TouchableOpacity style={styles.radioCircle}>
+                        <View style={styles.selectedRb} />
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setGender(key);
+                          getGender(key);
+                        }}
+                        style={styles.radioCircle}>
+                        
+                      </TouchableOpacity>
+                    )}
+                    <Typography style={{marginTop: 3, fontSize: 14, fontWeight: '600', marginHorizontal: 10}}>{genderData}</Typography>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+          
+          {/* <View style={[wrapper.row, {marginTop: 5, marginHorizontal: 10, marginBottom: 20}]}>
+            <RadioButton PROP={genderData} />
+          </View> */}
+          {/* <View style={[wrapper.row, {flex: 1}]}>
+            <TouchableOpacity
+              style={styles.button}
+              // onPress={onPress("")}
+            >
+              {fields.gender === "Pria" && 
+                <View style={{backgroundColor: '#0d674e', width: '100%'}} >
+                  <Typography style={{color: '#FEFEFE', padding: 10, alignSelf: 'center'}}>Pria</Typography>
+                </View>
+              }
+              {
+                fields.gender != "Pria" && <Typography style={{color: '#0d674e', padding: 10, alignSelf: 'center'}}>Pria</Typography>
+              }
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              // onPress={onPress("")}
+            >
+              {fields.gender === "Wanita" && 
+                <View style={{backgroundColor: '#0d674e', width: '100%'}} >
+                  <Typography style={{color: '#FEFEFE', padding: 10, alignSelf: 'center'}}>Wanita</Typography>
+                </View>
+              }
+              {
+                fields.gender != "Wanita" && <Typography style={{color: '#0d674e', padding: 10, alignSelf: 'center'}}>Wanita</Typography>
+              }
+            </TouchableOpacity>
+          </View> */}
+        </View>
+        
+        <View style={{...shadows[3], backgroundColor: '#FEFEFE', borderRadius: 5, marginTop: 20}}>
+          <Typography type='h4' style={{padding: 10, color: '#0d674e'}}>Kontak</Typography>
+          <View style={{borderBottomColor: '#0d674e', borderBottomWidth: 1, marginHorizontal: 10}}></View>
+          <View style={{marginTop: 10, marginHorizontal: 10}}>
+            <Typography style={{textAlignVertical: 'center', paddingTop: 10, color: '#686868'}}>Nomor Handphone</Typography>
+            <View style={{flex: 1}}>
+              <TextField
+                style={{paddingLeft: 0}}
+                placeholder={t('Nomor Handphone')}
+                value={fields.hp}
+                onChangeText={(value) => handleFieldChange('hp', value)}
+                editable={false}
+                keyboardType="phone-pad"
+                left={(
+                  <View style={{ ...wrapper.row, alignItems: 'center' }}>
+                    <Typography color={950} style={{ marginLeft: 6 }}>+62</Typography>
+                  </View>
+                )}
+                error={!!getFieldError('hp')}
+                message={error.message}
+              />
+            </View>
+          </View>
+          {
+            <View style={{marginTop: 10, marginHorizontal: 10}}>
+              <Typography style={{textAlignVertical: 'center', paddingTop: 10, color: '#686868'}}>Email</Typography>
+              <View style={{flex: 1}}>
+                <TextField
+                  style={{paddingLeft: 0}}
+                  placeholder={t('Email')}
+                  value={fields.email}
+                  onChangeText={(value) => handleFieldChange('email', value)}
+                  keyboardType="email-address"
+                  editable={false}
+                  autoCapitalize="none"
+                  error={!!getFieldError('email')}
+                  message={error.message}
+                />
+              </View>
+            </View>
+          }
+          <View style={{marginTop: 5, marginHorizontal: 10}}>
+            <Typography style={{textAlignVertical: 'center', paddingTop: 10, color: '#686868'}}>Kota Domisili</Typography>
+            <PressableBox
+              containerStyle={{ overflow: 'visible', marginTop: 12, borderRadius: 5, 
+                                borderWidth: 1, borderColor: '#ccc', flex: 1, marginHorizontal: 2 }}
+              opacity={1}
+              onPress={() => handleModalToggle('city', true)}
+            >
+              <TextField
+                placeholder={`${''}Pilih Kota`}
+                value={options.cities?.find(({ id }) => id === fields.city)?.nama}
+                onChangeText={(value) => setFields(state => ({ ...state, search: value }))}
+                returnKeyType="search"
+                editable={false}
+                pointerEvents="none"
+                right={<Ionicons name="chevron-down" size={20} color={'#ccc'} />}
+              />
+            </PressableBox>
+          </View>
+          <View style={{marginHorizontal: 10, marginTop: 20}}>
+            <Typography style={{textAlignVertical: 'top', paddingTop: 10, color: '#686868'}}>Alamat Domisili</Typography>
             <TextField
               placeholder={t('Address')}
               value={fields.address}
               onChangeText={(value) => handleFieldChange('address', value)}
               error={!!getFieldError('address')}
-              style={{ height: 120, paddingTop: 8 }}
+              style={{ height: 120, paddingTop: 10, paddingLeft: -10 }}
               multiline
               textAlignVertical="top"
               editable={true}
               message={error.message}
             />
           </View>
+          <View style={{marginVertical: 10}}></View>
         </View>
-
-        <View style={{ marginTop: 20, paddingTop: 24 }}>
+        <Typography style={{marginTop: 10, textAlign: 'justify', color: '#0d674e', fontStyle: 'italic', fontSize: 12, marginHorizontal: 5}}>
+          Segala informasi yang kami dapatkan akan kami gunakan sepenuhnya untuk memperbaiki 
+          layanan yang kami berikan untuk Anda dan Kami menjaga kerahasiaan data Anda.</Typography>
+        <View style={{ marginTop: 10, paddingTop: 24 }}>
           <Button
             containerStyle={{
               alignSelf: 'center',
@@ -649,6 +713,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingBottom: 24,
     backgroundColor: colors.white,
+  },
+  radioCircle: {
+		height: 20,
+		width: 20,
+		borderRadius: 100,
+		borderWidth: 2,
+		borderColor: '#0d674e',
+		alignItems: 'center',
+		justifyContent: 'center',
+		padding: 10
+	},
+	selectedRb: {
+		width: 15,
+		height: 15,
+		borderRadius: 50,
+		backgroundColor: '#0d674e',
+    },
+  button: {
+    alignItems: "center",
+    alignSelf: 'center',
+    borderColor: '#0d674e',
+    borderWidth: 1,
+    width: 160,
+    marginHorizontal: 10,
+    marginVertical: 5
   },
   dropdown1BtnStyle: {
     width: '100%',

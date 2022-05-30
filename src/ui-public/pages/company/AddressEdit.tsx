@@ -590,7 +590,7 @@ function AddressEdit() {
                 borderTopRightRadius: 0,
                 borderBottomRightRadius: 0
               }}
-              placeholder={`${''}RT`}
+              placeholder={`${''}RT/Blok`}
               value={fields.rt}
               onChangeText={(value) => handleFieldChange('rt', value)}
             />
@@ -601,7 +601,7 @@ function AddressEdit() {
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0
               }}
-              placeholder={`${''}RW`}
+              placeholder={`${''}RW/No.`}
               value={fields.rw}
               onChangeText={(value) => handleFieldChange('rw', value)}
             />
@@ -618,7 +618,7 @@ function AddressEdit() {
       <TextField
         containerStyle={{ marginTop: 12 }}
         style={{ height: 120, paddingTop: 8 }}
-        placeholder={`${''}Complete Address (Along with the reference address)`}
+        placeholder={`${''}Alamat domisili`}
         value={options.villages?.find(({ id }) => id === route.params.profile.alamat)?.nama_alamat}
         onChangeText={(value) => handleFieldChange('jl', value)}
         multiline
@@ -663,12 +663,12 @@ function AddressEdit() {
         ) : (
           <Button
             containerStyle={{ alignSelf: 'center' }}
-            style={{ width: 300 }}
-            label={`${''}Lanjut`.toUpperCase()}
-            color="primary"
+            style={{ width: 300, backgroundColor: '#0d674e' }}
             onPress={handleSubmit}
             loading={isSaving}
-          />
+          >
+            <Typography style={{color: '#FEFEFE'}}>{`${''}Lanjut`.toUpperCase()}</Typography>
+          </Button>
         )}
       </View>
 

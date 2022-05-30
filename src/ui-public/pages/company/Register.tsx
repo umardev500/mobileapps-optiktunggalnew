@@ -1,6 +1,7 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState, useRef } from 'react';
-import { Platform, RefreshControl, ScrollView, StyleSheet, ToastAndroid, useWindowDimensions, View, Alert, Image, useColorScheme } from 'react-native';
+import { Platform, TouchableOpacity, ScrollView, StyleSheet, ToastAndroid, 
+         useWindowDimensions, View, Alert, Image, useColorScheme } from 'react-native';
 import { colors, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { ErrorState, ValueOf } from '../../../types/utilities';
@@ -45,13 +46,13 @@ function Register() {
   const phoneInput = useRef<PhoneInput>(null);
   const [phone, setPhone] = useState("");
   const [date, setDate] = useState("");
-  const [gender, setGender] = useState("");
   // const [tabIndex, setTabIndex] = React.useState();
   // const handleTabsChange = index => {
   //   setTabIndex(index);
   //   console.log('Current state unit: ', setTabIndex(index));
   // };
-  const genderData = ["-- Pilih Jenis Kelamin --", "Pria", "Wanita"];
+  const genderData = ['Pria', 'Wanita'];
+  const [gender, setGender] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   // States
   const [isLoading, setIsLoading] = useState(false);
@@ -250,43 +251,42 @@ function Register() {
       {/*<Typography style={{ textAlign: 'center', marginTop: 10 }}>
         Please fill in your personal data.
       </Typography>*/}
+      <Typography style={{ marginTop: 20, marginBottom: 10 }}>Nama Depan</Typography>
       <TextField
-        containerStyle={{ marginTop: 25 }}
-        placeholder={t('Nama Depan')}
+        placeholder={t('Masukan Nama Depan')}
         value={fields.namadepan}
         onChangeText={(value) => handleFieldChange('namadepan', value)}
         error={!!getFieldError('namadepan')}
         message={error.message}
       />
-
+      <Typography style={{ marginVertical: 10 }}>Nama Tengah (Jika ada)</Typography>
       <TextField
-        containerStyle={{ marginTop: 12 }}
-        placeholder={t('Nama Tengah (Jika ada)')}
-        value={fields.namabelakang}
+        placeholder={t('Masukan Nama Tengah (Jika ada)')}
+        value={fields.namatengah}
         onChangeText={(value) => handleFieldChange('namatengah', value)}
         error={!!getFieldError('namatengah')}
         message={error.message}
       />
-
+      <Typography style={{ marginVertical: 10 }}>Nama Belakang</Typography>
       <TextField
-        containerStyle={{ marginTop: 12 }}
-        placeholder={t('Nama Belakang')}
+        placeholder={t('Masukan Nama Belakang')}
         value={fields.namabelakang}
         onChangeText={(value) => handleFieldChange('namabelakang', value)}
         error={!!getFieldError('namabelakang')}
         message={error.message}
       />
-      
+      <Typography style={{ marginVertical: 10 }}>Tanggal lahir</Typography>
       <PressableBox onPress={showDatePicker}>
         <TextField
           containerStyle={{ marginTop: 12 }}
-          placeholder={t('Tanggal lahir')}
+          placeholder={t('YYYY/MM/DD')}
           value={getDate()}
           onChangeText={(value) => handleFieldChange('tgllahir', value)}
           error={!!getFieldError('tgllahir')}
           message={error.message}
           onPressOut={showDatePicker}
           editable={false}
+          right={<Ionicons name="calendar" size={24} color={'#ccc'}/>}
         />
       </PressableBox>
 
@@ -297,41 +297,51 @@ function Register() {
         onCancel={hideDatePicker}
       />
 
-      {/* <Typography style={{ marginTop: 10, }}>Select Gender</Typography> */}
-      <SelectDropdown
-        defaultValue={0}
-        buttonStyle={styles.dropdown1BtnStyle}
-        buttonTextStyle={styles.dropdown1BtnTxtStyle}
-        data={genderData}
-        onSelect={(selectedItem, index) => {
-          console.log('Select '+selectedItem)
-          getGender(selectedItem);
-        }}
-        buttonTextAfterSelection={(selectedItem, index) => {
-          return selectedItem
-        }}
-        rowTextForSelection={(item, index) => {
-          return item
-        }}
-      />
-
+      <Typography style={{ marginTop: 15 }}>Pilih Jenis Kelamin</Typography>
+      <View style={[wrapper.row]}>
+        {genderData.map((genderData, key) => {
+          return (
+            <View key={genderData} style={{marginHorizontal: 5, marginVertical: 5}}>
+              <View style={[wrapper.row, {marginTop: 10}]}>
+                {gender == key ? (
+                  <TouchableOpacity style={styles.radioCircle}>
+                    <View style={styles.selectedRb} />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setGender(key);
+                      getGender(key);
+                    }}
+                    style={styles.radioCircle}>
+                    
+                  </TouchableOpacity>
+                )}
+                <Typography style={{marginTop: 3, fontSize: 14, fontWeight: '600', marginHorizontal: 15}}>{genderData}</Typography>
+              </View>
+            </View>
+          );
+        })}
+      </View>
+      
+      <Typography style={{ marginVertical: 10 }}>Nomor Handphone</Typography>
       <PhoneInput
-        containerStyle={{ marginTop: 20, width: 330 }}
+        containerStyle={{ width: 330 }}
         textContainerStyle={{ height: 50, borderColor: '#f1f1f1', borderWidth: 1, borderRadius: 5, backgroundColor: '#FEFEFE' }}
-        textInputStyle={{ height: 50, fontSize: 15 }}
+        textInputStyle={{ height: 50, fontSize: 16, paddingTop: 15, fontWeight: '600' }}
         codeTextStyle={{ fontSize: 16 }}
         ref={phoneInput}
         defaultValue={phone}
         defaultCode="ID"
         layout="first"
         value={fields.hp}
-        placeholder="Nomor Handphone"
+        placeholder="8123456789"
         onChangeText={(value) => handleFieldChange('hp', value)}
         onChangeFormattedText={text => {
           setPhone(text);
         }}
         autoFocus/>
-
+      <Typography style={{ marginVertical: 10 }}>Email</Typography>
       <TextField
         containerStyle={{ marginTop: 12 }}
         placeholder={t('Email')}
@@ -371,6 +381,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginTop: 15,
     borderColor: '#ccc',
+  },
+  radioCircle: {
+		height: 20,
+		width: 20,
+		borderRadius: 100,
+		borderWidth: 2,
+		borderColor: '#0d674e',
+		alignItems: 'center',
+		justifyContent: 'center',
+		padding: 10
+	},
+	selectedRb: {
+		width: 15,
+		height: 15,
+		borderRadius: 50,
+		backgroundColor: '#0d674e',
   },
   dropdown1BtnTxtStyle: {color: '#444', fontSize: 16, textAlign: 'left'},
 });

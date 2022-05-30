@@ -24,6 +24,7 @@ type OptionsState = {
   payModalOpen?: boolean;
   payModel?: null | TransactionModel;
   filterModalOpen?: boolean;
+  benefitModalOpen?: boolean;
 };
 
 function Members() {
@@ -88,6 +89,10 @@ function Members() {
   const handleCloseModal = async () => {
     handleModalToggle('popup', false);
   };
+
+  const handleModalCloseBenefit = async () => {
+    handleModalToggle('benefitnotyet', false);
+  }
 
   const retrieveMembersBenefits = async () => {
     return httpService(`/members.json`, {
@@ -164,6 +169,12 @@ function Members() {
           filterModalOpen: 'boolean' === typeof open ? open : !options.filterModalOpen
         }));
         break;
+      case 'benefitnotyet':
+        setOptions(state => ({
+          ...state,
+          benefitModalOpen: 'boolean' === typeof open ? open : !options.benefitModalOpen
+        }));
+        break;
     }
   };
 
@@ -220,14 +231,21 @@ function Members() {
         </View>
       ) : (
         <View style={{ marginBottom: 50, marginHorizontal: 15 }}>
-          {user?.no_card == '' ? (
-            <View>
+          {user?.no_card == null ? (
+            <View style={{marginTop: 20}}>
               <Typography style={{ textAlign: 'center', fontSize: 12, paddingHorizontal: 3, color: '#ec3a3b' }}>
                 You are not a member yet
               </Typography>
               <Typography style={{ textAlign: 'center', fontSize: 12, paddingHorizontal: 3 }}>
                 Member users will get the best offers every time they make a transaction.
               </Typography>
+              <PressableBox 
+                onPress={() => handleModalToggle('benefitnotyet', true)}
+                style={{marginVertical: 10, marginRight: 15, alignSelf: 'center'}}>
+                <Typography style={{fontSize: 12, fontStyle: 'italic', textDecorationLine: 'underline'}}>
+                  Click & View Benefit
+                </Typography>
+              </PressableBox>
             </View>
           ) : (
             <View>
@@ -345,7 +363,7 @@ function Members() {
                   null
                 )}
                 <Typography textAlign="center" style={{ marginVertical: 12 }}>
-                  {t(`${t('Transaction is still empty.')}`)}
+                  {t(`${t('Empty Transaction List.')}`)}
                 </Typography>
               </View>
             ) : transaction.models.map((item, index) => (
@@ -385,19 +403,84 @@ function Members() {
         style={{ maxHeight: height * 0.75 }}
       >
         <Button
-          containerStyle={{ alignItems: 'flex-end', marginBottom: 10, marginTop: -15 }}
+          containerStyle={{ alignItems: 'flex-end', marginBottom: 5, marginTop: -15 }}
           onPress={handleCloseModal}
         >
           <Ionicons name="ios-close" size={24} color={'#333'} />
           <Typography style={{ color: '#333' }}>Close</Typography>
         </Button>
-        <Typography type='h4' style={{ paddingVertical: 10, paddingHorizontal: 15}}>
+        <Typography type='h4' style={{ paddingVertical: 10, paddingHorizontal: 15, color: '#0d674e' }}>
           {`Referral terms & conditions`}
         </Typography>
-        <ScrollView style={{ paddingVertical: 10, paddingHorizontal: 25}}>
+        <View style={{borderColor: '#0d674e', borderWidth: 1, marginHorizontal: 15}}></View>
+        <ScrollView style={{ paddingVertical: 10, paddingHorizontal: 15}}>
           <Typography style={{marginBottom: 20, textAlign: 'justify', lineHeight: 25}}>
             {`Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.`}
           </Typography>
+        </ScrollView>
+        {/* <Button
+          containerStyle={{ alignSelf: 'center', marginBottom: 20, backgroundColor: '#0d674e' }}
+          style={{ minWidth: 250 }}
+          // onPress={() => }
+        >
+          <Ionicons name="share-social-outline" size={24} color={'#fff'} />
+          <Typography style={{ color: '#fff', marginLeft: 10 }}>Share Referral</Typography>
+        </Button> */}
+        <View style={{ marginVertical: 20 }}></View>
+      </BottomDrawer>
+
+      {/*BENEFIT*/}
+      <BottomDrawer
+        isVisible={options.benefitModalOpen}
+        swipeDirection={null}
+        onBackButtonPress={() => handleModalToggle('benefit', false)}
+        onBackdropPress={() => handleModalToggle('benefit', false)}
+        style={{ maxHeight: height * 0.75 }}
+      >
+        <Button
+          containerStyle={{ alignItems: 'flex-end', marginBottom: 5, marginTop: -15 }}
+          onPress={handleModalCloseBenefit}
+        >
+          <Ionicons name="ios-close" size={24} color={'#333'} />
+          <Typography style={{ color: '#333' }}>Close</Typography>
+        </Button>
+        <Typography type='h4' style={{ paddingVertical: 10, paddingHorizontal: 15, color: '#0d674e' }}>
+          {`BENEFIT`}
+        </Typography>
+        <View style={{borderColor: '#0d674e', borderWidth: 1, marginHorizontal: 15}}></View>
+        <ScrollView style={{ paddingVertical: 10, paddingHorizontal: 15}}>
+        <View style={{marginHorizontal: 5}}>
+            <View style={[wrapper.row, { marginRight: 15, marginTop: 10 }]}>
+              <Typography style={{marginHorizontal: 5}}>-</Typography>
+              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                Setiap transaksi pembelanjaan Frame, Sunglass dan Lensa, diseluruh cabang Optik TUnggal, Optik Tunggal Next Generation dan ZEISS Vision Center, Sebagai VIP Member Anda akan mendapatkan point reward sebanyak 5% dari nilai netto pembelanjaan.
+              </Typography>
+            </View>
+            <View style={[wrapper.row, { marginRight: 5 }]}>
+              <Typography style={{marginHorizontal: 5}}>-</Typography>
+              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                Nilai 1 (satu) point reward = 1 (satu) Rupiah.
+              </Typography>
+            </View>
+            <View style={[wrapper.row, { marginRight: 5 }]}>
+              <Typography style={{marginHorizontal: 5}}>-</Typography>
+              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                Masa berlaku point reward mengikuti masa berlaku VIP Member Optik Tunggal.
+              </Typography>
+            </View>
+            <View style={[wrapper.row, { marginRight: 5 }]}>
+              <Typography style={{marginHorizontal: 5}}>-</Typography>
+              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                Point Reward yang terkumpul dapat digunakan untuk berbelanja Frame, Sunglass dan Lensa, di seluruh cabang Optik Tunggal, Optik Tunggal Next Generation dan ZEISS Vision Center.
+              </Typography>
+            </View>
+            <View style={[wrapper.row, { marginRight: 5}]}>
+              <Typography style={{marginHorizontal: 5}}>-</Typography>
+              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                Sebagai VIP Member Anda berpeluang menerima kejutan dari Optik Tunggal di hari Ulang Tahun Anda.
+              </Typography>
+            </View>
+          </View>
         </ScrollView>
         {/* <Button
           containerStyle={{ alignSelf: 'center', marginBottom: 20, backgroundColor: '#0d674e' }}

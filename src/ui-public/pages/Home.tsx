@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Image, ListRenderItemInfo, StyleSheet, useWindowDimensions, 
          View, Alert, ScrollView, RefreshControl, ImageBackground, Linking } from 'react-native';
 import { colors, shadows, wrapper } from '../../lib/styles';
-import { CarouselDots, PressableBox, Typography, Button, ButtonCart, RenderHtml } from '../../ui-shared/components';
+import { CarouselDots, PressableBox, Typography, Button, ButtonCart, RenderHtml, BottomDrawer } from '../../ui-shared/components';
 import Carousel from 'react-native-snap-carousel';
 import { BoxLoading } from '../../ui-shared/loadings';
 import { BannerModel, CategoryModel, Modelable, ModelablePaginate, BrandModel, ContactUsModel, ArticleModel, GenderModel } from '../../types/model';
@@ -17,6 +17,11 @@ import PopupPromoModal from '../components/PopupPromoModal';
 import moment from 'moment';
 import { Text } from 'react-native-animatable';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+type OptionsState = {
+  filterContactLens?: boolean;
+  // benefitModalOpen?: boolean;
+};
 
 const Home = () => {
   // Hooks
@@ -57,6 +62,7 @@ const Home = () => {
   const [options, setOptions] = useState({
     popupModalOpen: false,
     popupModels: [],
+    filterContactLens: false,
   });
 
   const [contactUs, setContactUs] = useState<Modelable<ContactUsModel>>({
@@ -247,14 +253,14 @@ const Home = () => {
     const height = width * 150 / 205;
 
     return (
-      <PressableBox
-        key={index}
-        containerStyle={styles.carouselItem}
-        opacity
-        onPress={() => handleGoToDetailBanner(item)}
-      >
+      // <PressableBox
+      //   key={index}
+      //   containerStyle={styles.carouselItem}
+      //   opacity
+      //   onPress={() => handleGoToDetailBanner(item)}
+      // >
         <Image source={{ uri: item.banner_foto }} style={{ height }} />
-      </PressableBox>
+      // </PressableBox>
     );
   };
 
@@ -378,6 +384,10 @@ const Home = () => {
     );
   };
 
+  const handleCloseModalContactLens = async () => {
+    handleModalToggle('contactLensModal', false);
+  };
+  
   const handleModalToggle = async (type: string, open: boolean | null = null) => {
     switch (type) {
       case 'popup':
@@ -386,8 +396,79 @@ const Home = () => {
           popupModalOpen: 'boolean' === typeof open ? open : !options.popupModalOpen
         }));
         break;
+      case 'contactLensModal':
+        setOptions(state => ({
+          ...state,
+          filterContactLens: 'boolean' === typeof open ? open : !options.filterContactLens,
+        }));
+        break;
     }
   };
+
+  const toProductList = async(jenis: String) => {
+    switch(jenis){
+      case 'acuvue':
+        navigation.navigatePath('Public', {
+          screen: 'BottomTabs.HomeStack.Search',
+          params: [null, null, {
+            keywords: 'contactlens',
+            jenis: 'acuvue'
+          }]
+        });
+        handleCloseModalContactLens();
+        break;
+      case 'axcent':
+        navigation.navigatePath('Public', {
+          screen: 'BottomTabs.HomeStack.Search',
+          params: [null, null, {
+            keywords: 'contactlens',
+            jenis: 'axcent'
+          }]
+        });
+        handleCloseModalContactLens();
+        break;
+      case 'edgy':
+        navigation.navigatePath('Public', {
+          screen: 'BottomTabs.HomeStack.Search',
+          params: [null, null, {
+            keywords: 'contactlens',
+            jenis: 'edgy'
+          }]
+        });
+        handleCloseModalContactLens();
+        break;
+      case 'schon':
+        navigation.navigatePath('Public', {
+          screen: 'BottomTabs.HomeStack.Search',
+          params: [null, null, {
+            keywords: 'contactlens',
+            jenis: 'schon'
+          }]
+        });
+        handleCloseModalContactLens();
+        break;
+      case 'selexyz':
+        navigation.navigatePath('Public', {
+          screen: 'BottomTabs.HomeStack.Search',
+          params: [null, null, {
+            keywords: 'contactlens',
+            jenis: 'selexyz'
+          }]
+        });
+        handleCloseModalContactLens();
+        break;
+      case 'qrious':
+        navigation.navigatePath('Public', {
+          screen: 'BottomTabs.HomeStack.Search',
+          params: [null, null, {
+            keywords: 'contactlens',
+            jenis: 'qrious'
+          }]
+        });
+        handleCloseModalContactLens();
+        break;    
+    }
+  }
 
   return (
     <>
@@ -459,7 +540,7 @@ const Home = () => {
                   paddingVertical: 8,
                 }]}>
                   {Array.from(Array(5)).map((item, index) => (
-                    <View key={index} style={{ marginHorizontal: 8 }}>
+                    <View key={index} style={{ marginHorizontal: 8, marginBottom: 10 }}>
                       <BoxLoading width={60} height={60} />
                     </View>
                   ))}
@@ -486,7 +567,7 @@ const Home = () => {
             justifyContent: 'center',
           }]}>
             <View style={[wrapper.row]}>
-                <View style={{ marginHorizontal: 3, backgroundColor: '#282c3433', height: height * 100 / 780, borderRadius: 5 }}>
+                <View style={{ marginHorizontal: 3, height: height * 100 / 780, borderRadius: 5 }}>
                   <PressableBox
                   onPress={() => navigation.navigatePath('Public', {
                     screen: 'BottomTabs.HomeStack.Search',
@@ -500,15 +581,15 @@ const Home = () => {
                       source={require('../../assets/icons/figma/frame.jpg')} 
                       style={{ width: width * 100 / 210, height: height * 100 / 790, marginBottom: 10 }}>
                         <Typography textAlign="center" 
-                                    style={{ fontSize: 18, color: '#FEFEFE', backgroundColor: '#3c404359', height: height * 100 / 780,
-                                             textAlignVertical: 'center', borderRadius: 5, fontWeight: 'bold', 
+                                    style={{ fontSize: 16, color: '#0d674ee0', height: height * 100 / 780,
+                                             textAlignVertical: 'bottom', borderRadius: 5, fontWeight: 'bold', 
                                              borderColor: '#fff', borderWidth: 1 }}>
                           {`\n`}{t(`FRAME`)}
                         </Typography>
                     </ImageBackground>
                   </PressableBox>
                 </View>
-                <View style={{ marginHorizontal: 3, backgroundColor: '#282c3433', height: height * 100 / 780, borderRadius: 5 }}>
+                <View style={{ marginHorizontal: 3, height: height * 100 / 780, borderRadius: 5 }}>
                   <PressableBox
                     onPress={() => navigation.navigatePath('Public', {
                       screen: 'BottomTabs.HomeStack.Search',
@@ -522,8 +603,8 @@ const Home = () => {
                       source={require('../../assets/icons/figma/sunglass.jpg')} 
                       style={{ width: width * 100 / 210, height: height * 100 / 780, marginBottom: 10 }}>
                         <Typography textAlign="center" 
-                                    style={{ fontSize: 18, color: '#FEFEFE', backgroundColor: '#3c404359', height: height * 100 / 780,
-                                            textAlignVertical: 'center', borderRadius: 5, fontWeight: 'bold',
+                                    style={{ fontSize: 16, color: '#0d674ee0', height: height * 100 / 780,
+                                            textAlignVertical: 'bottom', borderRadius: 5, fontWeight: 'bold',
                                             borderColor: '#fff', borderWidth: 1 }}>
                           {`\n`}{t(`SUNGLASS`)}
                         </Typography>
@@ -539,22 +620,16 @@ const Home = () => {
             <View style={[wrapper.row]}>
             <View style={{ marginHorizontal: 3 }}>
                 <PressableBox
-                  onPress={() => navigation.navigatePath('Public', {
-                    screen: 'BottomTabs.HomeStack.Search',
-                    params: [null, null, {
-                      keywords: 'contactlens',
-                    }]
-                  })}>  
+                  onPress={() => handleModalToggle('contactLensModal', true)}>  
                   <ImageBackground 
                     resizeMode='stretch'
                     borderRadius= {10}
                     source={require('../../assets/icons/figma/contactlens.jpg')}
                     style={{ width: width * 100 / 320, height: 70 }}>
                       <Typography textAlign="center" 
-                                  style={{ fontSize: 12, color: '#fff', fontWeight: 'bold',
-                                          backgroundColor: '#282c3433', height: '100%', 
-                                          textAlignVertical: 'center', borderRadius: 5,
-                                          borderColor: '#fff', borderWidth: 1 }}>
+                                  style={{ fontSize: 12, color: '#0d674ee0', fontWeight: 'bold',
+                                           height: '100%', textAlignVertical: 'bottom', borderRadius: 5,
+                                           borderColor: '#fff', borderWidth: 1 }}>
                         {t(`CONTACT LENS`)}
                       </Typography>
                   </ImageBackground>
@@ -571,14 +646,13 @@ const Home = () => {
                   })}>
                   <ImageBackground 
                     resizeMode='cover'
-                    borderRadius={10}
+                    borderRadius={5}
                     source={require('../../assets/icons/figma/solutions.jpg')}
                     style={{ width: width * 100 / 320, height: 70 }}>
                       <Typography textAlign="center" 
-                          style={{ fontSize: 12, color: '#fff', fontWeight: 'bold',
-                                  backgroundColor: '#282c3433', height: '100%', 
-                                  textAlignVertical: 'center',
-                                  borderRadius: 5, borderColor: '#fff', borderWidth: 1
+                          style={{ fontSize: 12, color: '#0d674ee0', fontWeight: 'bold',
+                                   height: '100%', textAlignVertical: 'bottom',
+                                   borderRadius: 5, borderColor: '#fff', borderWidth: 1
                                 }}>
                         {t(`SOLUTIONS`)}
                       </Typography>
@@ -600,10 +674,9 @@ const Home = () => {
                     source={require('../../assets/icons/figma/accessories.jpeg')}
                     style={{ width: width * 100 / 320, height: 70 }}>
                       <Typography textAlign="center" 
-                                  style={{ fontSize: 12, color: '#fff', fontWeight: 'bold',
-                                          backgroundColor: '#282c3433', height: '100%', 
-                                          textAlignVertical: 'center', borderRadius: 5,
-                                          borderColor: '#fff', borderWidth: 1 }}>
+                                  style={{ fontSize: 12, color: '#0d674ee0', fontWeight: 'bold',
+                                           height: '100%', textAlignVertical: 'bottom', borderRadius: 5,
+                                           borderColor: '#fff', borderWidth: 1 }}>
                         {t(`ACCESSORIES`)}
                       </Typography>
                   </ImageBackground>
@@ -612,44 +685,6 @@ const Home = () => {
             </View>
           </View>
         </View>
-
-        {/*Store*/}
-        {/* <View style={{ marginBottom: 3, marginTop: 5 }}>
-          <View style={[wrapper.row, { alignItems: 'center', marginTop: 10, paddingHorizontal: 10, }]}>
-            <Typography type="h4" color="black" style={{ flex: 1, paddingVertical: 4, fontSize: 13 }}>
-              OUR STORES  
-            </Typography>
-            <Button
-              containerStyle={[styles.actionBtnContainer]}
-              label={t('View All', { count: 1 })}
-              labelProps={{ type: 'p', size: 'sm' }}
-              labelStyle={{ textAlign: 'right', color: '#0d674e', fontSize: 10 }}
-              size="lg"
-              right={(
-                <Ionicons name="chevron-forward" size={12} color={'#0d674e'} />
-              )}
-              onPress={() => navigation.navigatePath('Public', {
-                screen: 'BottomTabs.OurStoreStack'
-              })}
-            />
-          </View>
-          {!contactUs.modelsLoaded ? (
-            <View style={[wrapper.row, styles.promoCard, { alignItems: 'center' }]}>
-              <BoxLoading width={74} height={74} rounded={8} />
-
-              <View style={{ flex: 1, paddingLeft: 12 }}>
-                <BoxLoading width={[250, 250]} height={20} />
-
-                <BoxLoading width={[250, 250]} height={18} style={{ marginTop: 6 }} />
-                <BoxLoading width={[250, 250]} height={18} style={{ marginTop: 2 }} />
-              </View>
-            </View>
-          ) : (
-            <View style={{ marginBottom: 30 }}>
-              <FlatList data={contactUs.models} renderItem={renderStore} style={styles.flatList} />
-            </View>
-          )}
-        </View> */}
         <View style={{ backgroundColor: '#0d674e', }}>
           <View style={{ alignItems: 'center', paddingHorizontal: 10, marginVertical: 5}}>
             <View style={[wrapper.row]}>
@@ -680,6 +715,84 @@ const Home = () => {
           </View>
         </View>
       </ScrollView>
+      <BottomDrawer
+        isVisible={options.filterContactLens}
+        swipeDirection={null}
+        onBackButtonPress={() => handleModalToggle('filter', false)}
+        onBackdropPress={() => handleModalToggle('filter', false)}
+        style={{ maxHeight: height * 0.75 }}
+      >
+        <Button
+          containerStyle={{ alignItems: 'flex-end', marginBottom: 5, marginTop: -15 }}
+          onPress={handleCloseModalContactLens}
+        >
+          <Typography style={{ color: '#333' }}>Close</Typography>
+          <Ionicons name="ios-close" size={24} color={'#333'} />
+        </Button>
+        <Typography type='h4' style={{ paddingVertical: 10, paddingHorizontal: 15, color: '#0d674e' }}>
+          {`Select Contact Lens Brand`}
+        </Typography>
+        <View style={{borderColor: '#0d674e', borderWidth: 1, marginHorizontal: 15}}/>
+        <ScrollView style={{height: 270}}>
+          <View style={[wrapper.row, {flex: 1, marginVertical: 10, marginHorizontal: 15, height: 60}]}>
+            <PressableBox
+              style={{ width: 100, height: 60, marginHorizontal: 5 }}
+              onPress={() => toProductList('acuvue')}>
+              <Image 
+                source={require('../../assets/contactlens/acuvue.jpg')}
+                style={{ width: 100, height: 60, borderRadius: 5 }}/>
+            </PressableBox>
+            <PressableBox
+              style={{ width: 100, height: 60, marginHorizontal: 15 }}
+              onPress={() => toProductList('axcent')}>
+              <Image 
+                source={require('../../assets/contactlens/axcent.jpg')} 
+                style={{ width: 100, height: 60, borderRadius: 5, resizeMode: 'stretch', }}/>
+            </PressableBox>
+            <PressableBox
+              style={{ width: 110, height: 60, marginHorizontal: 5 }}
+              onPress={() => toProductList('edgy')}>
+              <Image 
+                source={require('../../assets/contactlens/edgy.jpg')} 
+                style={{ width: 100, height: 60, borderRadius: 5 }} />
+            </PressableBox>
+          </View>
+          <View style={[wrapper.row, {flex: 1, marginHorizontal: 15}]}>
+            <Typography style={{ width: '30%', borderRadius: 5, marginHorizontal: 5, textAlign: 'center' }}>ACUVUE</Typography>
+            <Typography style={{ width: '30%', borderRadius: 5, marginHorizontal: 5, textAlign: 'center' }}>AXCENT</Typography>
+            <Typography style={{ width: '30%', borderRadius: 5, marginHorizontal: 5, textAlign: 'center' }}>EDGY</Typography>
+          </View>
+          <View style={[wrapper.row, {flex: 1, marginVertical: 10, marginHorizontal: 15, height: 60}]}>
+            <PressableBox
+              style={{ width: 100, height: 60, marginHorizontal: 5 }}
+              onPress={() => toProductList('schon')}>
+              <Image 
+                source={require('../../assets/contactlens/schon.png')}
+                style={{ width: 100, height: 60, borderRadius: 5, resizeMode: 'stretch' }}/>
+            </PressableBox>
+            <PressableBox
+              style={{ width: 100, height: 60, marginHorizontal: 15 }}
+              onPress={() => toProductList('selexyz')}>
+              <Image 
+                source={require('../../assets/contactlens/selexyz.jpeg')} 
+                style={{ width: 100, height: 60, borderRadius: 5}}/>
+            </PressableBox>
+            <PressableBox
+              style={{ width: 100, height: 60, marginHorizontal: 5, marginLeft: 10 }}
+              onPress={() => toProductList('qrious')}>
+              <Image 
+                source={require('../../assets/contactlens/qrious.jpg')} 
+                style={{ width: 100, height: 60, borderRadius: 5 }} />
+            </PressableBox>
+          </View>
+          <View style={[wrapper.row, {flex: 1, marginHorizontal: 15}]}>
+            <Typography style={{ width: '30%', borderRadius: 5, marginHorizontal: 5, textAlign: 'center' }}>SCHON</Typography>
+            <Typography style={{ width: '30%', borderRadius: 5, marginHorizontal: 5, textAlign: 'center' }}>SELEXYZ</Typography>
+            <Typography style={{ width: '30%', borderRadius: 5, marginHorizontal: 5, textAlign: 'center' }}>QRIOUS</Typography>
+          </View>
+        </ScrollView>        
+        <View style={{ marginVertical: 20 }}></View>
+      </BottomDrawer>
       {!options.popupModels.length ? null : (
         <PopupPromoModal
           isVisible={options.popupModalOpen}

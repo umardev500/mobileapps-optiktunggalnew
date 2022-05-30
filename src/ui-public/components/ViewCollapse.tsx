@@ -46,7 +46,7 @@ function ViewCollapse({
         onPress={() => setCollapse(!collapse)}
       >
         {'string' === typeof header ? (
-          <View style={[wrapper.row, { paddingVertical: 12, paddingHorizontal: 15 }]}>
+          <View style={[wrapper.row, { paddingVertical: 12 }]}>
             <View style={{ flex: 1, marginRight: 15, alignSelf: 'center' }}>
               {'string' === typeof header ? (
                 <Typography {...headerProps}>{header}</Typography>

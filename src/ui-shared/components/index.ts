@@ -16,6 +16,7 @@ export {default as TextField} from './TextField';
 export {default as TextFieldNumber} from './TextFieldNumber';
 export {default as Toaster} from './Toaster';
 export {default as Typography} from './Typography';
+export {default as RadioButton} from './RadioButton';
 export * from './Badge';
 export * from './BottomDrawer';
 export * from './Button';
@@ -23,4 +24,5 @@ export * from './Header';
 export * from './PressableBox';
 export * from './TextField';
 export * from './Typography';
+export * from './RadioButton';
 

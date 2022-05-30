@@ -17,11 +17,16 @@ import { useTranslation } from 'react-i18next';
 import ViewCollapse from '../../components/ViewCollapse';
 
 const SORT = [
-  // { label: `${''}Ulasan`, value: 'review-desc' },
-  { label: `${''}lowest price`, value: 'price-asc' },
-  { label: `${''}highest price`, value: 'price-desc' },
-  // { label: `${''}Popular`, value: 'price-asc' },
-  // { label: `${''}Latest`, value: 'price-asc' },
+  { label: `${''}Rp. 0 - 1.300.000`, value: '0sd1300' },
+  { label: `${''}Rp. 1.300.000 - Rp. 2.000.000`, value: '1300sd2jt' },
+  { label: `${''}Rp. 2.000.000 - Rp. 4.000.000`, value: '2jtsd4jt' },
+  { label: `${''}Rp. 4.000.000 - Rp. 7.000.000`, value: '4jtsd7jt' },
+  { label: `${''}> Rp. 7.000.000`, value: '7jtlebih' },
+];
+
+const SORTCLSLACS = [
+  { label: `${''}Lowest price`, value: 'lowprice', icon: 'ios-arrow-down-circle-sharp' },
+  { label: `${''}Highest price`, value: 'highprice', icon: 'ios-arrow-up-circle-sharp' },,
 ];
 
 type Fields = {
@@ -61,6 +66,10 @@ function Search() {
     models: [],
     modelsLoaded: false,
   });
+  const [brandCL, setBrandCL] = useState<Modelable<BrandModel>>({ // CL itu Contact Lens
+    models: [],
+    modelsLoaded: false,
+  });
   const [gender, setGender] = useState<Modelable<GenderModel>>({
     models: [],
     modelsLoaded: false,
@@ -87,6 +96,11 @@ function Search() {
 
     retrieveBrands();
     retrieveGenders();
+    if(route.params.keywords == 'contactlens'){
+      retrieveBrandCategory('contactlens');
+    }else if(route.params.keywords == 'solutions'){
+      retrieveBrandCategory('solutions');
+    }
   }, []);
 
   useEffect(() => {
@@ -142,6 +156,7 @@ function Search() {
           search: search,
           param: "cariprd",
           keyword: !route.params.keywords ? null : route.params.keywords,
+          jenis: !route.params.jenis ? null : route.params.jenis,
           ...fields
         }),
       },
@@ -159,6 +174,25 @@ function Search() {
     }).catch(err => {
       setIsLoading(false);
       setProduct(state => ({ ...state, modelsLoaded: true }));
+    });
+  };
+
+  const retrieveBrandCategory = async (jenis: String) => {
+    return httpService('/api/brand/brand', {
+      data: {
+        act: 'CategoryBrand',
+        dt: JSON.stringify({ jns: jenis }),
+      }
+    }).then(({ status, data }) => {
+      if (200 === status) {
+        setBrandCL(state => ({
+          ...state,
+          models: data,
+          modelsLoaded: true
+        }));
+      }
+    }).catch((err) => {
+      // 
     });
   };
 
@@ -360,127 +394,221 @@ function Search() {
             paddingBottom: 24
           }}
         >
-          <Typography type="h5" style={{ paddingBottom: 8 }}>
-            {`${t('Sort By')}`}
-          </Typography>
+          {route.params.keywords == 'contactlens' || route.params.keywords == 'solutions' || route.params.keywords == 'accessories' ? 
+            (
+              <>
+                <Typography type="h5" style={{ paddingBottom: 8 }}>
+                  {`${t('Price')}`}
+                </Typography>
 
-          <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
-            {SORT.map((item, index) => (
-              <Button
-                key={index}
-                containerStyle={{
-                  marginBottom: 8,
-                  marginRight: 8,
-                  borderColor: fields.sort === item.value ? colors.transparent('palettes.primary', 0.5) : colors.gray[400]
-                }}
-                label={t(`${''}${item.label}`)}
-                labelProps={{ color: fields.sort === item.value ? colors.palettes.primary : colors.gray[900] }}
-                size="sm"
-                border
-                onPress={() => handleFieldChange('sort', item.value)}
-              />
-            ))}
-          </View>
+                <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
+                  {SORTCLSLACS.map((item, index) => (
+                    <Button
+                      key={index}
+                      containerStyle={{
+                        marginBottom: 8,
+                        marginRight: 8,
+                        borderColor: fields.sort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[400],
+                      }}
+                      labelProps={{ color: fields.sort === item.value ? '#0d674e' : colors.gray[900] }}
+                      size="sm"
+                      border
+                      onPress={() => handleFieldChange('sort', item.value)}
+                    >
+                      <Typography>
+                        <Ionicons
+                          name={item.icon}
+                          size={18}
+                          color={'#333'}
+                        /> {t(`${''}${item.label}`)}</Typography>
+                    </Button>
+                  ))}
+                </View>
+              </>
+            ) 
+            :
+            (
+              <>
+                <Typography type="h5" style={{ paddingBottom: 8 }}>
+                  {`${t('Price')}`}
+                </Typography>
 
-          {!brand.modelsLoaded ? null : (
-            <View style={{ marginTop: 0 }}>
+                <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
+                  {SORT.map((item, index) => (
+                    <Button
+                      key={index}
+                      containerStyle={{
+                        marginBottom: 8,
+                        marginRight: 8,
+                        borderColor: fields.sort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[400],
+                      }}
+                      label={t(`${''}${item.label}`)}
+                      labelProps={{ color: fields.sort === item.value ? '#0d674e' : colors.gray[900] }}
+                      size="sm"
+                      border
+                      onPress={() => handleFieldChange('sort', item.value)}
+                    />
+                  ))}
+                </View>
+              </>
+            )
+          }
+          
+          {route.params.keywords == 'contactlens' || route.params.keywords == 'solutions' ? 
+            (
+              <View style={{ marginTop: 0 }}>
+                <ViewCollapse
+                    style={styles.menuContainer}
+                    pressableProps={{
+                      containerStyle: styles.menuBtnContainer,
+                    }}
+                    header={t(`${''}Brand`)}
+                    headerProps={{
+                      type: 'h',
+                    }}
+                    collapse
+                  >
+                    {[
+                      {
+                        id: '',
+                        name: t(`${t('All Brand')}`),
+                      },
+                      ...(brandCL.models || [])
+                      ].map((item, index) => {
+                        const selected = item?.id === fields.brand;
+                        return (
+                          <Button
+                            key={index}
+                            labelProps={{ type: 'p' }}
+                            containerStyle={{
+                              marginTop: index > 0 ? 4 : 0,
+                              backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
+                            }}
+                            style={{ justifyContent: 'space-between' }}
+                            onPress={() => handleFieldChange('brand', item.id)}
+                            size="lg"
+                            right={(
+                              <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
+                                {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
+                              </Typography>
+                            )}
+                          >
+                            <Typography style={{ marginLeft: 5}}>{item.name}</Typography>
+                          </Button>
+                        );
+                      })
+                    }
+                  </ViewCollapse>
+              </View>
+            ) 
+            :
+            (
+              route.params.keywords == 'accessories' ? null : 
+              (
+                <View style={{ marginTop: 0 }}>
+                  <ViewCollapse
+                      style={styles.menuContainer}
+                      pressableProps={{
+                        containerStyle: styles.menuBtnContainer,
+                      }}
+                      header={t(`${''}Brand`)}
+                      headerProps={{
+                        type: 'h',
+                      }}
+                      collapse
+                    >
+                      {[
+                        {
+                          id: '',
+                          name: t(`${t('All Brand')}`),
+                        },
+                        ...(brand.models || [])
+                        ].map((item, index) => {
+                          const selected = item?.id === fields.brand;
+                          return (
+                            <Button
+                              key={index}
+                              labelProps={{ type: 'p' }}
+                              containerStyle={{
+                                marginTop: index > 0 ? 4 : 0,
+                                backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
+                              }}
+                              style={{ justifyContent: 'space-between' }}
+                              onPress={() => handleFieldChange('brand', item.id)}
+                              size="lg"
+                              right={(
+                                <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
+                                  {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
+                                </Typography>
+                              )}
+                            >
+                              <View style={[wrapper.row]}>
+                                <Image source={{ uri: item.fotobrand }} style={{ width: 30, height: 20, resizeMode: 'stretch' }} />
+                                <Typography style={{ marginLeft: 5}}>
+                                  {item.name}
+                                </Typography>
+                              </View>
+                            </Button>
+                          );
+                        })
+                      }
+                    </ViewCollapse>
+                </View>
+              )
+            )
+          }
+          {route.params.keywords == 'contactlens' || route.params.keywords == 'solutions' || route.params.keywords == 'accessories' ? null 
+            :
+            (
               <ViewCollapse
-                  style={styles.menuContainer}
-                  pressableProps={{
-                    containerStyle: styles.menuBtnContainer,
-                  }}
-                  header={t(`${''}Brand`)}
-                  headerProps={{
-                    type: 'h',
-                  }}
-                  collapse
-                >
-                  {[
+                style={styles.menuContainer}
+                pressableProps={{
+                  containerStyle: styles.menuBtnContainer,
+                }}
+                header={t(`${''}Gender`)}
+                headerProps={{
+                  type: 'h',
+                }}
+                collapse
+              >
+                {!categories?.length ? (
+                  <Typography>
+                    {t(`${t('No Gender')}`)}
+                  </Typography>
+                ) : (
+                  [
                     {
                       id: '',
-                      name: t(`${t('All Brand')}`),
+                      ds: t(`${t('All Gender')}`),
                     },
-                    ...(brand.models || [])
-                    ].map((item, index) => {
-                      const selected = item?.id === fields.brand;
-                      return (
-                        <Button
-                          key={index}
-                          labelProps={{ type: 'p' }}
-                          containerStyle={{
-                            marginTop: index > 0 ? 4 : 0,
-                            backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
-                          }}
-                          style={{ justifyContent: 'space-between' }}
-                          onPress={() => handleFieldChange('brand', item.id)}
-                          size="lg"
-                          right={(
-                            <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
-                              {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
-                            </Typography>
-                          )}
-                        >
-                          <View style={[wrapper.row]}>
-                            <Image source={{ uri: item.fotobrand }} style={{ width: 30, height: 20, resizeMode: 'stretch' }} />
-                            <Typography style={{ marginLeft: 5}}>
-                              {item.name}
-                            </Typography>
-                          </View>
-                        </Button>
-                      );
-                    })
-                  }
-                </ViewCollapse>
-            </View>
-          )}
+                    ...categories
+                  ].map((item, index) => {
+                    const selected = item?.id === options.prdcat;
 
-          <ViewCollapse
-            style={styles.menuContainer}
-            pressableProps={{
-              containerStyle: styles.menuBtnContainer,
-            }}
-            header={t(`${''}Gender`)}
-            headerProps={{
-              type: 'h',
-            }}
-            collapse
-          >
-            {!categories?.length ? (
-              <Typography>
-                {t(`${t('No Gender')}`)}
-              </Typography>
-            ) : (
-              [
-                {
-                  id: '',
-                  ds: t(`${t('All Gender')}`),
-                },
-                ...categories
-              ].map((item, index) => {
-                const selected = item?.id === options.prdcat;
-
-                return (
-                  <Button
-                    key={index}
-                    label={item.ds}
-                    labelProps={{ type: 'p' }}
-                    containerStyle={{
-                      marginTop: index > 0 ? 4 : 0,
-                      backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
-                    }}
-                    style={{ justifyContent: 'space-between' }}
-                    onPress={() => setOptions(state => ({ ...state, prdcat: item.id }))}
-                    size="lg"
-                    right={(
-                      <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
-                        {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
-                      </Typography>
-                    )}
-                  />
-                );
-              })
-            )}
-          </ViewCollapse>
+                    return (
+                      <Button
+                        key={index}
+                        label={item.ds}
+                        labelProps={{ type: 'p' }}
+                        containerStyle={{
+                          marginTop: index > 0 ? 4 : 0,
+                          backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
+                        }}
+                        style={{ justifyContent: 'space-between' }}
+                        onPress={() => setOptions(state => ({ ...state, prdcat: item.id }))}
+                        size="lg"
+                        right={(
+                          <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
+                            {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
+                          </Typography>
+                        )}
+                      />
+                    );
+                  })
+                )}
+              </ViewCollapse>
+            )
+          }
         </ScrollView>
       </BottomDrawer>
     </View>

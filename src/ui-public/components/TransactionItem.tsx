@@ -163,10 +163,14 @@ function TransactionItem({
         paddingVertical: 8,
         paddingHorizontal: 15,
       }}>
-        <View style={[wrapper.row, { alignItems: 'center' }]}>
+        <View style={[wrapper.row]}>
           <FigmaIcon.FigmaShoppingBag width={24} height={24} color={colors.gray[900]} />
-
-          <View style={{ flex: 1, marginRight: 15, marginLeft: 12 }}>
+          <Typography size="md" style={{ marginTop: 4, marginBottom: 10, fontSize: 13, marginLeft: 10, fontWeight: 'bold'}}>
+            {`${transaction.nm_store}`}
+          </Typography>
+        </View>
+        <View style={[wrapper.row, { alignItems: 'center' }]}>
+          <View style={{ flex: 1, marginRight: 15 }}>
             <Typography>
             {`${transaction.orderno}`}
             </Typography>
@@ -191,9 +195,6 @@ function TransactionItem({
             </Typography>
           </View>
         </View>
-        <Typography size="sm" style={{ marginTop: 4 }}>
-            Store Name : {`${transaction.nm_store}`}
-          </Typography>
         {!cartItem?.product ? null : (
           <View style={[styles.headerCart, { marginTop: 8 }]}>
             <View style={[wrapper.row]}>
@@ -263,19 +264,15 @@ function TransactionItem({
             </Typography>
           </View>
         </View>
-
+        <Typography size="md" style={{ marginTop: 4, marginBottom: 10, fontSize: 13 }}>
+          {`${transaction.nm_store}`}
+        </Typography>
         {!cartItem?.product ? 
           <Typography style={{ marginTop: 20, textAlign: 'center'}}>
             {t(`Product Details Missing.`)}
           </Typography>
         : (
           <View style={[styles.headerCart, { marginTop: 8 }]}>
-            <Typography heading>
-              {t(`Store Name`)}
-            </Typography>
-            <Typography size="md" style={{ marginTop: 4, marginBottom: 10 }}>
-              {`${transaction.nm_store}`}
-            </Typography>
             <Typography heading>
               {t(`Product Details`)}
             </Typography>
