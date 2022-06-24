@@ -27,6 +27,7 @@ function ProductsLoading({
             <BoxLoading width={[100, 80]} height={16} style={{ marginTop: 4 }} />
           </View>
         </View>
+        
       ))}
     </View>
   );
@@ -43,6 +44,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     width: '100%',
     marginHorizontal: 6,
+    marginVertical: 5,
     borderRadius: 15,
     marginBottom: 12,
     borderWidth: 1,

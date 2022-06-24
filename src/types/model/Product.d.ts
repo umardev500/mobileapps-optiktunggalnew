@@ -21,6 +21,7 @@ export type ProductModel = {
 
   categories?: CategoryModel[];
   brands?: BrandModel[];
+  warnas?: ColorModel[];
   genders?: GenderModel[];
   modelkacamatas?: ModelKacamata[];
 
@@ -107,6 +108,11 @@ export type BrandModel = {
   codebrand?: string;
   imgbrand?: any;
   imgbrandbg?: any;
+};
+
+export type ColorModel = {
+  id?: string;
+  name?: string;
 };
 
 export type ReviewModel = {

@@ -1,6 +1,6 @@
 import { RouteProp, useRoute } from '@react-navigation/core';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, useWindowDimensions, ToastAndroid } from 'react-native';
+import { Image, ScrollView, StyleSheet, useWindowDimensions, ToastAndroid, Alert } from 'react-native';
 import { View } from 'react-native-animatable';
 import { colors, wrapper } from '../../../lib/styles';
 import { PublicHomeStackParamList } from '../../../router/publicBottomTabs';
@@ -17,11 +17,12 @@ import { useTranslation } from 'react-i18next';
 import ViewCollapse from '../../components/ViewCollapse';
 
 const SORT = [
-  { label: `${''}Rp. 0 - 1.300.000`, value: '0sd1300' },
-  { label: `${''}Rp. 1.300.000 - Rp. 2.000.000`, value: '1300sd2jt' },
-  { label: `${''}Rp. 2.000.000 - Rp. 4.000.000`, value: '2jtsd4jt' },
-  { label: `${''}Rp. 4.000.000 - Rp. 7.000.000`, value: '4jtsd7jt' },
-  { label: `${''}> Rp. 7.000.000`, value: '7jtlebih' },
+  { label: `${''}All Price`, value: '0' },
+  { label: `${''}Rp. 0 - 1.300.000`, value: '1' },
+  { label: `${''}Rp. 1.300.001 - Rp. 2.000.000`, value: '2' },
+  { label: `${''}Rp. 2.000.001 - Rp. 4.000.000`, value: '3' },
+  { label: `${''}Rp. 4.000.001 - Rp. 7.000.000`, value: '4' },
+  { label: `${''}> Rp. 7.000.001`, value: '5' },
 ];
 
 type Fields = {
@@ -152,7 +153,9 @@ function Katalog() {
           modelsLoaded: true,
           isPageEnd: !data?.length,
         }));
-      }
+      }/*else{
+        Alert.alert( "", "Product not found!", [{ text: "OK", onPress: () => console.log("OK Pressed") }])
+      }*/
     }).catch(err => {
       setProduct(state => ({ ...state, modelsLoaded: true }));
     });
@@ -237,6 +240,7 @@ function Katalog() {
   const filterColor = filterCount ? colors.palettes.primary : colors.gray[700];
   const categoryActive = categories?.find(item => item.id === fields.prdcat);
   const brandActive = brands?.find(item => item.id === fields.brand);
+  const priceActive = SORT?.find(item => item.value === fields.sort);
 
   return (
     <View style={{ flex: 1 }}>
@@ -256,45 +260,56 @@ function Katalog() {
             containerStyle={{
               marginLeft: -12,
               borderColor: '#fff',
-              backgroundColor: '#0d674e'
+              backgroundColor: '#0d674e',
+              marginRight: 5
             }}
-            label={`${t('Filter')}`}
+            // label={`${t('Filter')}`}
             labelProps={{ type: 'p', color: '#fff' }}
             rounded={8}
             border
             left={(
-              <View style={{ marginRight: 8 }}>
-                <Ionicons name="filter" size={16} color={'#fff'} />
+              <View /*style={{ marginRight: 8 }}*/>
+                <Typography style={{color: '#fff', fontSize: 12}}>Filter <Ionicons name="caret-down" size={10} color={'#fff'} /></Typography>
               </View>
             )}
             onPress={() => handleModalToggle('filter', true)}
           />
+          {!priceActive ? null : (
+              <Badge
+                style={[styles.filterItem]}
+                label={priceActive.label}
+                labelProps={{ size: 'sm' }}
+              />
+            )
+          }
 
           {!categoryActive ? null : (
             <Badge
-              style={[styles.filterItem, { marginLeft: 12 }]}
+              style={[styles.filterItem, { marginLeft: 5 }]}
               label={categoryActive.ds}
               labelProps={{ size: 'sm' }}
-              left={!categoryActive.foto ? false : (
-                <View style={{ marginRight: 4 }}>
-                  <Image source={{ uri: categoryActive.foto }} style={styles.filterIcon} />
-                </View>
-              )}
+              // left={!categoryActive.foto ? false : (
+              //   <View style={{ marginRight: 4 }}>
+              //     <Image source={{ uri: categoryActive.foto }} style={styles.filterIcon} />
+              //   </View>
+              // )}
             />
-          )}
+            )
+          }
 
           {!brandActive ? null : (
             <Badge
-              style={[styles.filterItem, { marginLeft: 12, paddingVertical: 7 }]}
+              style={[styles.filterItem, { marginLeft: 5 }]}
               label={brandActive.name}
               labelProps={{ size: 'sm' }}
-              left={!brandActive.fotobrand ? false : (
-                <View>
-                  <Image source={{ uri: brandActive.fotobrand }} style={styles.filterIconBrand} />
-                </View>
-              )}
+              // left={!brandActive.fotobrand ? false : (
+              //   <View>
+              //     <Image source={{ uri: brandActive.fotobrand }} style={styles.filterIconBrand} />
+              //   </View>
+              // )}
             />
-          )}
+            )
+          }
         </View>
       </View>
 
@@ -313,16 +328,19 @@ function Katalog() {
           }
         }}
         data={product.models}
-        LoadingView={isLoading ? ( <ProductsLoading/> ) : null}
-        ListEmptyComponent={isLoading ? ( <ProductsLoading/> ) : 
+        LoadingView={(<ProductsLoading />)}
+        ListEmptyComponent={!product.modelsLoaded ? ( 
           <ProductsLoading/>
-          // <View style={[styles.container, styles.wrapper]}>
-          //   <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
-          //   <Typography textAlign="center" style={{ marginVertical: 12 }}>
-          //     {t(`${t('Produk tidak ditemukan')}`)}
-          //   </Typography>
-          // </View>
-        }
+        ) : product.models?.length ? null : (
+          <>
+            <View style={[styles.container, styles.wrapper]}>
+              <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
+              <Typography textAlign="center" style={{ marginVertical: 12 }}>
+                {t(`${t('Produk tidak ditemukan')}`)}
+              </Typography>
+            </View>
+          </>
+        )}
         ListFooterComponent={!product.isPageEnd ? null : (
           <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
             {t(`${t('Already showing all products')}`)}
@@ -451,7 +469,6 @@ function Katalog() {
                 ...categories
               ].map((item, index) => {
                 const selected = item?.id === options.prdcat;
-
                 return (
                   <Button
                     key={index}
@@ -508,7 +525,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.transparent('palettes.primary', 0.25),
     paddingVertical: 4,
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
   },
   filterIcon: {
     width: 24,

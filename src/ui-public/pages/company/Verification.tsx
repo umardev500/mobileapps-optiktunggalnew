@@ -244,21 +244,21 @@ function Verification() {
 
         <View style={{ marginTop: 50, paddingTop: 24 }}>
           <Button
-            containerStyle={{ alignSelf: 'center' }}
+            containerStyle={{ alignSelf: 'center', backgroundColor: '#0d674e' }}
             style={{ width: 320, height: 40 }}
-            label={`${''}Submit`.toUpperCase()}
-            color="primary"
             shadow={3}
             onPress={handleSubmit}
             loading={isSaving}
-          />
+          >
+            <Typography style={{color: '#FFFFFF'}}>SUBMIT</Typography>
+          </Button>
 
           <PressableBox
             containerStyle={{ marginTop: 30, alignSelf: 'center' }}
             opacity
             onPress={handleVerificationResend}
           >
-            <Typography heading size="sm" color={!profile ? 'primary' : 900} style={{
+            <Typography heading size="sm" color={!profile ? '#0d674e' : 900} style={{
               textDecorationLine: 'underline',
             }}>
               {`${''}Resend verification code`.toUpperCase()}

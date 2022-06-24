@@ -1,11 +1,11 @@
 import { RouteProp, useRoute } from '@react-navigation/core';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, useWindowDimensions, ToastAndroid } from 'react-native';
+import { Image, ScrollView, StyleSheet, useWindowDimensions, ToastAndroid, Alert } from 'react-native';
 import { View } from 'react-native-animatable';
 import { colors, wrapper } from '../../../lib/styles';
 import { PublicHomeStackParamList } from '../../../router/publicBottomTabs';
 import { useAppNavigation } from '../../../router/RootNavigation';
-import { Modelable, ModelablePaginate, ProductModel, BrandModel, GenderModel } from '../../../types/model';
+import { Modelable, ModelablePaginate, ProductModel, BrandModel, ColorModel, GenderModel } from '../../../types/model';
 import { Badge, BottomDrawer, Button, Header, Typography } from '../../../ui-shared/components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ProductsLoading from '../../loadings/ProductsLoading';
@@ -17,11 +17,12 @@ import { useTranslation } from 'react-i18next';
 import ViewCollapse from '../../components/ViewCollapse';
 
 const SORT = [
-  { label: `${''}Rp. 0 - 1.300.000`, value: '0sd1300' },
-  { label: `${''}Rp. 1.300.000 - Rp. 2.000.000`, value: '1300sd2jt' },
-  { label: `${''}Rp. 2.000.000 - Rp. 4.000.000`, value: '2jtsd4jt' },
-  { label: `${''}Rp. 4.000.000 - Rp. 7.000.000`, value: '4jtsd7jt' },
-  { label: `${''}> Rp. 7.000.000`, value: '7jtlebih' },
+  { label: `${''}All Price`, value: '0' },
+  { label: `${''}Rp. 0 - 1.300.000`, value: '1' },
+  { label: `${''}Rp. 1.300.001 - Rp. 2.000.000`, value: '2' },
+  { label: `${''}Rp. 2.000.001 - Rp. 4.000.000`, value: '3' },
+  { label: `${''}Rp. 4.000.001 - Rp. 7.000.000`, value: '4' },
+  { label: `${''}> Rp. 7.000.001`, value: '5' },
 ];
 
 const SORTCLSLACS = [
@@ -34,6 +35,7 @@ type Fields = {
   prdcat?: string;
   // prdgender?: string;
   brand?: string;
+  warna?: string;
 };
 
 type OptionsState = {
@@ -41,6 +43,7 @@ type OptionsState = {
   prdcat?: string;
   // prdgender?: string;
   brand?: string;
+  warna?: string;
 };
 
 function Search() {
@@ -50,6 +53,7 @@ function Search() {
   const { width, height } = useWindowDimensions();
   const { categories } = useAppSelector(({ shop }) => shop);
   const { brands } = useAppSelector(({ shop }) => shop);
+  const { warnas } = useAppSelector(({ shop }) => shop);
   const { t } = useTranslation('home');
 
   // States
@@ -66,6 +70,10 @@ function Search() {
     models: [],
     modelsLoaded: false,
   });
+  const [warna, setWarna] = useState<Modelable<ColorModel>>({
+    models: [],
+    modelsLoaded: false,
+  });
   const [brandCL, setBrandCL] = useState<Modelable<BrandModel>>({ // CL itu Contact Lens
     models: [],
     modelsLoaded: false,
@@ -79,12 +87,14 @@ function Search() {
     prdcat: '',
     // prdgender: '',
     brand: '',
+    warna: '',
   });
   const [options, setOptions] = useState<OptionsState>({
     filterModalOpen: false,
     prdcat: '',
     // prdgender: '',
     brand: '',
+    warna: '',
   });
 
   // Effects
@@ -98,16 +108,17 @@ function Search() {
     retrieveGenders();
     if(route.params.keywords == 'contactlens'){
       retrieveBrandCategory('contactlens');
+      retrieveColors('contactlenscolor');
     }else if(route.params.keywords == 'solutions'){
       retrieveBrandCategory('solutions');
+    }else if(route.params.keywords == 'accessories'){
+      retrieveBrandCategory('accessories');
     }
   }, []);
 
   useEffect(() => {
     const { search: routeSearch, category: routeCategory, brand: routeBrand } = route.params;
-
     routeSearch && setSearch(routeSearch);
-
     if (routeCategory) {
       handleFieldChange('prdcat', routeCategory.id);
 
@@ -147,14 +158,13 @@ function Search() {
 
     return httpService('/api/product/product', {
       data: {
-        act: 'PrdList',
+        act: route.params.keywords == 'contactlens' || route.params.keywords == 'solutions' || route.params.keywords == 'accessories' ? 'PrdListKatalog' : 'PrdSearchProduk',
         dt: JSON.stringify({
           comp: '001',
           reccnt,
           pg: page,
           limit: reccnt,
-          search: search,
-          param: "cariprd",
+          search: !route.params.keywords ? search : route.params.keywords,
           keyword: !route.params.keywords ? null : route.params.keywords,
           jenis: !route.params.jenis ? null : route.params.jenis,
           ...fields
@@ -174,6 +184,25 @@ function Search() {
     }).catch(err => {
       setIsLoading(false);
       setProduct(state => ({ ...state, modelsLoaded: true }));
+    });
+  };
+
+  const retrieveColors = async (jenis: String) => {
+    return httpService('/api/brand/brand', {
+      data: {
+        act: 'CategoryBrand',
+        dt: JSON.stringify({ jns: jenis }),
+      }
+    }).then(({ status, data }) => {
+      if (200 === status) {
+        setWarna(state => ({
+          ...state,
+          models: data,
+          modelsLoaded: true
+        }));
+      }
+    }).catch((err) => {
+      // 
     });
   };
 
@@ -275,6 +304,7 @@ function Search() {
   const filterColor = filterCount ? colors.palettes.primary : colors.gray[700];
   const categoryActive = categories?.find(item => item.id === fields.prdcat);
   const brandActive = brands?.find(item => item.id === fields.brand);
+  const priceActive = SORT?.find(item => item.value === fields.sort);
 
   return (
     <View style={{ flex: 1 }}>
@@ -300,41 +330,48 @@ function Search() {
               borderColor: '#fff',
               backgroundColor: '#0d674e'
             }}
-            label={`${t('Filter')}`}
             labelProps={{ type: 'p', color: '#fff' }}
             rounded={8}
             border
             left={(
-              <View style={{ marginRight: 8 }}>
-                <Ionicons name="filter" size={16} color={'#fff'} />
+              <View /*style={{ marginRight: 8 }}*/>
+                <Typography style={{color: '#fff', fontSize: 12}}>Filter <Ionicons name="caret-down" size={10} color={'#fff'} /></Typography>
               </View>
             )}
             onPress={() => handleModalToggle('filter', true)}
           />
 
+          {!priceActive ? null : (
+            <Badge
+              style={[styles.filterItem, {marginLeft: 5}]}
+              label={priceActive.label}
+              labelProps={{ size: 'sm' }}
+            />
+          )}
+
           {!categoryActive ? null : (
             <Badge
-              style={[styles.filterItem, { marginLeft: 12 }]}
+              style={[styles.filterItem, { marginLeft: 5 }]}
               label={categoryActive.ds}
               labelProps={{ size: 'sm' }}
-              left={!categoryActive.foto ? false : (
-                <View style={{ marginRight: 4 }}>
-                  <Image source={{ uri: categoryActive.foto }} style={styles.filterIcon} />
-                </View>
-              )}
+              // left={!categoryActive.foto ? false : (
+              //   <View style={{ marginRight: 4 }}>
+              //     <Image source={{ uri: categoryActive.foto }} style={styles.filterIcon} />
+              //   </View>
+              // )}
             />
           )}
 
           {!brandActive ? null : (
             <Badge
-              style={[styles.filterItem, { marginLeft: 12, paddingVertical: 7 }]}
+              style={[styles.filterItem, { marginLeft: 5}]}
               label={brandActive.name}
               labelProps={{ size: 'sm' }}
-              left={!brandActive.fotobrand ? false : (
-                <View>
-                  <Image source={{ uri: brandActive.fotobrand }} style={styles.filterIconBrand} />
-                </View>
-              )}
+              // left={!brandActive.fotobrand ? false : (
+              //   <View>
+              //     <Image source={{ uri: brandActive.fotobrand }} style={styles.filterIconBrand} />
+              //   </View>
+              // )}
             />
           )}
         </View>
@@ -355,15 +392,17 @@ function Search() {
           }
         }}
         data={product.models}
-        LoadingView={isLoading ? ( <ProductsLoading/> ) : null}
-        ListEmptyComponent={isLoading ? ( <ProductsLoading/> ) : 
+        LoadingView={(<ProductsLoading />)}
+        ListEmptyComponent={!product.modelsLoaded ? ( 
+          <ProductsLoading/>
+        ) : product.models?.length ? null : (
           <View style={[styles.container, styles.wrapper]}>
             <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
             <Typography textAlign="center" style={{ marginVertical: 12 }}>
               {t(`${t('Produk tidak ditemukan')}`)}
             </Typography>
           </View>
-        }
+        )}
         ListFooterComponent={!product.isPageEnd ? null : (
           <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
             {t(`${t('Sudah menampilkan semua produk')}`)}
@@ -454,7 +493,7 @@ function Search() {
             )
           }
           
-          {route.params.keywords == 'contactlens' || route.params.keywords == 'solutions' ? 
+          {route.params.keywords == 'contactlens' || route.params.keywords == 'solutions' || route.params.keywords == 'accessories' ? 
             (
               <View style={{ marginTop: 0 }}>
                 <ViewCollapse
@@ -557,6 +596,52 @@ function Search() {
               )
             )
           }
+          {route.params.keywords == 'contactlens' ? (
+            <View style={{ marginTop: 0 }}>
+            <ViewCollapse
+                style={styles.menuContainer}
+                pressableProps={{
+                  containerStyle: styles.menuBtnContainer,
+                }}
+                header={t(`${''}Color`)}
+                headerProps={{
+                  type: 'h',
+                }}
+                collapse
+              >
+                {[
+                  {
+                    id: '',
+                    name: t(`${t('All Color')}`),
+                  },
+                  ...(warna.models || [])
+                  ].map((item, index) => {
+                    const selected = item?.id === fields.warna;
+                    return (
+                      <Button
+                        key={index}
+                        labelProps={{ type: 'p' }}
+                        containerStyle={{
+                          marginTop: index > 0 ? 4 : 0,
+                          backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
+                        }}
+                        style={{ justifyContent: 'space-between' }}
+                        onPress={() => handleFieldChange('warna', item.id)}
+                        size="lg"
+                        right={(
+                          <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
+                            {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
+                          </Typography>
+                        )}
+                      >
+                        <Typography style={{ marginLeft: 5}}>{item.name}</Typography>
+                      </Button>
+                    );
+                  })
+                }
+              </ViewCollapse>
+            </View>
+          ) : null}
           {route.params.keywords == 'contactlens' || route.params.keywords == 'solutions' || route.params.keywords == 'accessories' ? null 
             :
             (

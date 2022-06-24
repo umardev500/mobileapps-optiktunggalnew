@@ -272,14 +272,14 @@ function PinEdit() {
 
       <View style={{ marginTop: 30, paddingTop: 24 }}>
         <Button
-          containerStyle={{ alignSelf: 'center' }}
-          style={{ width: 350, height: 40 }}
-          label={`${''}Submit`.toUpperCase()}
-          color="primary"
-          shadow={3}
-          onPress={handleSubmit}
-          loading={isSaving}
-        />
+            containerStyle={{ alignSelf: 'center', backgroundColor: '#0d674e' }}
+            style={{ width: 320, height: 40 }}
+            shadow={3}
+            onPress={handleSubmit}
+            loading={isSaving}
+          >
+            <Typography style={{color: '#FFFFFF'}}>SUBMIT</Typography>
+          </Button>
       </View>
 
       {/* Popup Welcome */}

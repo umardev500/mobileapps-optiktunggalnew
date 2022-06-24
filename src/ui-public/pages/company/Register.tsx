@@ -177,24 +177,23 @@ function Register() {
   };
 
   const handleSubmit = () => {
-    // console.log('GENDER__'+tabIndex);
-    if (!fields.namadepan || !fields.namabelakang) {
-      return handleErrorShow('namadepan', t('Please fill first and last name.'));
-    } else if (!fields.hp) {
-      return handleErrorShow('hp', t('Please fill phone number.'));
-    } else if (!fields.email) {
-      return handleErrorShow('email', t('Please fill email address.'));
+    if (!fields.hp) {
+      return handleErrorShow('hp', t('Please enter your phone number!'));
+    } else if (!fields.namadepan) {
+      return handleErrorShow('namadepan', t('Please enter first name!'));
+    }else if (!fields.namabelakang) {
+      return handleErrorShow('namabelakang', t('Please enter last name!'));
+    }else if (!fields.email) {
+      return handleErrorShow('email', t('Please enter your email address!'));
     } else if (!validator.isEmail(fields.email)) {
-      return handleErrorShow('email', t('Please fill email address.'));
-    } else if(!date){
-      return handleErrorShow('tgllahir', t('Please fill date of birth'));
-    }else if(!SelectDropdown){
-      return handleErrorShow('gender', t('Please select gender'));
-    }/*else if (!fields.foto) {
-      return handleErrorShow('namafoto', t('Please select the file for your profile photo.'));
+      return handleErrorShow('email', t('Please enter your email address!'));
+    } else if (!fields.foto) {
+      // return handleErrorShow('namafoto', t('Mohon pilih file untuk foto profil Anda.'));
     } else if (!fields.ktp) {
-      return handleErrorShow('namaktp', t('Please select your KTP/NPWP photo file.'));
-    }*/
+      // return handleErrorShow('namaktp', t('Mohon pilih file foto KTP/NPWP Anda.'));
+    }else if (!fields.tgllahir) {
+      return handleErrorShow('tgllahir', t('Please select your date of birth!'));
+    }
     setIsLoading(true);
     return httpService('/api/login/login', {
       data: {

@@ -129,17 +129,17 @@ function ProductsByKategori({
 
           <View style={styles.productCardContent}>
             <View style={{ height: 1, backgroundColor: '#f1f1f1', marginBottom: 10 }} />
-            <Typography style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'center'}}>
+            <Typography style={{ fontSize: 11, fontWeight: 'bold', textAlign: 'center'}}>
               {`${item.merk}`.toUpperCase()}
             </Typography>
-            <Typography style={{ fontSize: 12, textAlign: 'center' }}>
+            <Typography style={{ fontSize: 11, textAlign: 'center' }}>
               {item.prd_no}
             </Typography>
             {/* <Typography style={{ fontSize: 12, textAlign: 'center' }}>
               {item.prd_ds}
             </Typography> */}
             
-            <Typography size="md" style={{ marginTop: 10, color: '#0d674e', textAlign: 'center' }}>
+            <Typography size="sm" style={{ marginTop: 10, color: '#0d674e', textAlign: 'center' }}>
               {`Rp. ${item.harga}`}
             </Typography>
 

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { httpService, Storage } from "../../lib/utilities";
-import { CartModel, CategoryModel, BrandModel, GenderModel, ModelKacamata } from "../../types/model";
+import { CartModel, CategoryModel, BrandModel, ColorModel, GenderModel, ModelKacamata } from "../../types/model";
 import { RootStoreState } from "../store";
 
 export const fetchCategories = createAsyncThunk('shop/fetchCategories', async () => {
@@ -68,6 +68,22 @@ export const fetchBrand = createAsyncThunk('shop/fetchBrand', async () => {
   });
 
   return brands;
+});
+
+export const fetchWarna = createAsyncThunk('shop/fetchWarna', async () => {
+  let warnas: ColorModel[] = [];
+
+  await httpService('/api/brand/brand', {
+    data: {
+      act: 'BrandList',
+    },
+  }).then(({ status, data }) => {
+    if (status === 200) {
+      warnas = data;
+    }
+  });
+
+  return warnas;
 });
 
 export const setCartItems = createAsyncThunk('shop/setCartItems', async (items: CartModel[]) => {

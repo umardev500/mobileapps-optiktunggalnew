@@ -97,7 +97,9 @@ function ProductDetail() {
   const handleRefresh = async () => {
     setIsLoading(true);
 
-    route.params?.product_id && await retrieveProduct(route.params.product_id) && retrieveProductsList();;
+    route.params?.product_id; 
+    retrieveProduct(route.params?.product_id);
+    retrieveProductsList();
 
     setIsLoading(false);
   };

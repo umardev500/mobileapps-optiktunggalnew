@@ -198,33 +198,46 @@ function Members() {
             <Typography type='h4'>BENEFIT</Typography>
             <View style={{ borderBottomColor: '#ccc', borderBottomWidth: 1, marginTop: 5}}></View>
             <View style={[wrapper.row, { marginHorizontal: 15, marginTop: 10 }]}>
-              <Typography style={{marginHorizontal: 5}}>-</Typography>
+              <Typography style={{marginHorizontal: 5}}>1. </Typography>
               <Typography style={{textAlign: 'justify', lineHeight: 23}}>
                 Setiap transaksi pembelanjaan Frame, Sunglass dan Lensa, diseluruh cabang Optik TUnggal, Optik Tunggal Next Generation dan ZEISS Vision Center, Sebagai VIP Member Anda akan mendapatkan point reward sebanyak 5% dari nilai netto pembelanjaan.
               </Typography>
             </View>
             <View style={[wrapper.row, { marginHorizontal: 15 }]}>
-              <Typography style={{marginHorizontal: 5}}>-</Typography>
+              <Typography style={{marginHorizontal: 5}}>2. </Typography>
               <Typography style={{textAlign: 'justify', lineHeight: 23}}>
                 Nilai 1 (satu) point reward = 1 (satu) Rupiah.
               </Typography>
             </View>
             <View style={[wrapper.row, { marginHorizontal: 15 }]}>
-              <Typography style={{marginHorizontal: 5}}>-</Typography>
+              <Typography style={{marginHorizontal: 5}}>3. </Typography>
               <Typography style={{textAlign: 'justify', lineHeight: 23}}>
                 Masa berlaku point reward mengikuti masa berlaku VIP Member Optik Tunggal.
               </Typography>
             </View>
             <View style={[wrapper.row, { marginHorizontal: 15 }]}>
-              <Typography style={{marginHorizontal: 5}}>-</Typography>
+              <Typography style={{marginHorizontal: 5}}>4. </Typography>
               <Typography style={{textAlign: 'justify', lineHeight: 23}}>
                 Point Reward yang terkumpul dapat digunakan untuk berbelanja Frame, Sunglass dan Lensa, di seluruh cabang Optik Tunggal, Optik Tunggal Next Generation dan ZEISS Vision Center.
               </Typography>
             </View>
             <View style={[wrapper.row, { marginHorizontal: 15 }]}>
-              <Typography style={{marginHorizontal: 5}}>-</Typography>
+              <Typography style={{marginHorizontal: 5}}>5. </Typography>
               <Typography style={{textAlign: 'justify', lineHeight: 23}}>
                 Sebagai VIP Member Anda berpeluang menerima kejutan dari Optik Tunggal di hari Ulang Tahun Anda.
+              </Typography>
+            </View>
+            <View style={[wrapper.row, { marginHorizontal: 15}]}>
+              <Typography style={{marginHorizontal: 5}}>6. </Typography>
+              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                VIP Member akan mendapatkan kode referral. kode referral tersebut dapat digunakan untuk mereferensikan
+                orang lain yang belum pernah berbelanja di Optik Tunggal dan menjadi VIP Member. 
+              </Typography>
+            </View>
+            <View style={[wrapper.row, { marginHorizontal: 15}]}>
+              <Typography style={{marginHorizontal: 5}}>7. </Typography>
+              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                VIP Member akan mendapatkan tambahan saldo sebesar 5% atas transaksi frame, sunglass dan lensa dari netto pembelanjaan yang direferralkan.
               </Typography>
             </View>
           </View>
@@ -243,7 +256,7 @@ function Members() {
                 onPress={() => handleModalToggle('benefitnotyet', true)}
                 style={{marginVertical: 10, marginRight: 15, alignSelf: 'center'}}>
                 <Typography style={{fontSize: 12, fontStyle: 'italic', textDecorationLine: 'underline'}}>
-                  Click & View Benefit
+                  {'Click & View Benefits'}
                 </Typography>
               </PressableBox>
             </View>
@@ -272,7 +285,7 @@ function Members() {
                 </ImageBackground>
                 <View style={[wrapper.row, 
                               { borderRadius: 5, borderColor: '#ccc', 
-                                borderWidth: 1, marginTop: 10, marginHorizontal: 5}]}>
+                                borderWidth: 1, marginHorizontal: 5, marginTop: 10}]}>
                   <View style={{flex: 1}}>
                     <Typography type='h4' size='md' style={{ fontSize: 14, marginHorizontal: 10, marginVertical: 10 }}>
                         Referral Code : {user?.no_referral}
@@ -409,13 +422,13 @@ function Members() {
           <Ionicons name="ios-close" size={24} color={'#333'} />
           <Typography style={{ color: '#333' }}>Close</Typography>
         </Button>
-        <Typography type='h4' style={{ paddingVertical: 10, paddingHorizontal: 15, color: '#0d674e' }}>
+        {/* <Typography type='h4' style={{ paddingVertical: 10, paddingHorizontal: 15, color: '#0d674e' }}>
           {`Referral terms & conditions`}
         </Typography>
-        <View style={{borderColor: '#0d674e', borderWidth: 1, marginHorizontal: 15}}></View>
+        <View style={{borderColor: '#0d674e', borderWidth: 1, marginHorizontal: 15}}></View> */}
         <ScrollView style={{ paddingVertical: 10, paddingHorizontal: 15}}>
-          <Typography style={{marginBottom: 20, textAlign: 'justify', lineHeight: 25}}>
-            {`Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.`}
+          <Typography style={{marginBottom: 10, textAlign: 'center', lineHeight: 25}}>
+            {`Referensikan kode referral kepada keluarga, sahabat dan orang terdekat anda.`}
           </Typography>
         </ScrollView>
         {/* <Button
@@ -451,33 +464,46 @@ function Members() {
         <ScrollView style={{ paddingVertical: 10, paddingHorizontal: 15}}>
         <View style={{marginHorizontal: 5}}>
             <View style={[wrapper.row, { marginRight: 15, marginTop: 10 }]}>
-              <Typography style={{marginHorizontal: 5}}>-</Typography>
+              <Typography style={{marginHorizontal: 5}}>1. </Typography>
               <Typography style={{textAlign: 'justify', lineHeight: 23}}>
                 Setiap transaksi pembelanjaan Frame, Sunglass dan Lensa, diseluruh cabang Optik TUnggal, Optik Tunggal Next Generation dan ZEISS Vision Center, Sebagai VIP Member Anda akan mendapatkan point reward sebanyak 5% dari nilai netto pembelanjaan.
               </Typography>
             </View>
             <View style={[wrapper.row, { marginRight: 5 }]}>
-              <Typography style={{marginHorizontal: 5}}>-</Typography>
+              <Typography style={{marginHorizontal: 5}}>2. </Typography>
               <Typography style={{textAlign: 'justify', lineHeight: 23}}>
                 Nilai 1 (satu) point reward = 1 (satu) Rupiah.
               </Typography>
             </View>
             <View style={[wrapper.row, { marginRight: 5 }]}>
-              <Typography style={{marginHorizontal: 5}}>-</Typography>
-              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+              <Typography style={{marginHorizontal: 5}}>3. </Typography>
+              <Typography style={{textAlign: 'justify', lineHeight: 23, marginRight: 20}}>
                 Masa berlaku point reward mengikuti masa berlaku VIP Member Optik Tunggal.
               </Typography>
             </View>
             <View style={[wrapper.row, { marginRight: 5 }]}>
-              <Typography style={{marginHorizontal: 5}}>-</Typography>
-              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+              <Typography style={{marginHorizontal: 5}}>4. </Typography>
+              <Typography style={{textAlign: 'justify', lineHeight: 23, marginRight: 20}}>
                 Point Reward yang terkumpul dapat digunakan untuk berbelanja Frame, Sunglass dan Lensa, di seluruh cabang Optik Tunggal, Optik Tunggal Next Generation dan ZEISS Vision Center.
               </Typography>
             </View>
             <View style={[wrapper.row, { marginRight: 5}]}>
-              <Typography style={{marginHorizontal: 5}}>-</Typography>
-              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+              <Typography style={{marginHorizontal: 5}}>5. </Typography>
+              <Typography style={{textAlign: 'justify', lineHeight: 23, marginRight: 20}}>
                 Sebagai VIP Member Anda berpeluang menerima kejutan dari Optik Tunggal di hari Ulang Tahun Anda.
+              </Typography>
+            </View>
+            <View style={[wrapper.row, { marginRight: 5}]}>
+              <Typography style={{marginHorizontal: 5}}>6. </Typography>
+              <Typography style={{textAlign: 'justify', lineHeight: 23, marginRight: 20}}>
+                VIP Member akan mendapatkan kode referral. kode referral tersebut dapat digunakan untuk mereferensikan
+                orang lain yang belum pernah berbelanja di Optik Tunggal dan menjadi VIP Member. 
+              </Typography>
+            </View>
+            <View style={[wrapper.row, { marginRight: 5}]}>
+              <Typography style={{marginHorizontal: 5}}>7. </Typography>
+              <Typography style={{textAlign: 'justify', lineHeight: 23, marginRight: 20}}>
+                VIP Member akan mendapatkan tambahan saldo sebesar 5% atas transaksi frame, sunglass dan lensa dari netto pembelanjaan yang direferralkan.
               </Typography>
             </View>
           </View>

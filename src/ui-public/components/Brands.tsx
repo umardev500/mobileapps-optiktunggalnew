@@ -54,6 +54,7 @@ function Brands({
       screen: 'BottomTabs.HomeStack.Search',
       params: [null, null, {
         // product_id: brand.id || 0,
+        keywords : 'searchbybrand',
         brand,
       }]
     });

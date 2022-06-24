@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   label: {
-    paddingHorizontal: 2,
+    fontSize: 10,
   }
 });
 

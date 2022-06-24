@@ -10,6 +10,7 @@ export type UserModel = null | {
   type_member?: string;
   address?: string;
   namadepan?: string;
+  namatengah?: string;
   namabelakang?: string;
   hp?: string;
   prop?: string;

@@ -220,6 +220,7 @@ const Home = () => {
         onPress={() => navigation.navigatePath('Public', {
           screen: 'BottomTabs.HomeStack.Search',
           params: [null, null, {
+            keywords: 'searchbybrand',
             brand: item,
           }],
         })}
@@ -405,71 +406,6 @@ const Home = () => {
     }
   };
 
-  const toProductList = async(jenis: String) => {
-    switch(jenis){
-      case 'acuvue':
-        navigation.navigatePath('Public', {
-          screen: 'BottomTabs.HomeStack.Search',
-          params: [null, null, {
-            keywords: 'contactlens',
-            jenis: 'acuvue'
-          }]
-        });
-        handleCloseModalContactLens();
-        break;
-      case 'axcent':
-        navigation.navigatePath('Public', {
-          screen: 'BottomTabs.HomeStack.Search',
-          params: [null, null, {
-            keywords: 'contactlens',
-            jenis: 'axcent'
-          }]
-        });
-        handleCloseModalContactLens();
-        break;
-      case 'edgy':
-        navigation.navigatePath('Public', {
-          screen: 'BottomTabs.HomeStack.Search',
-          params: [null, null, {
-            keywords: 'contactlens',
-            jenis: 'edgy'
-          }]
-        });
-        handleCloseModalContactLens();
-        break;
-      case 'schon':
-        navigation.navigatePath('Public', {
-          screen: 'BottomTabs.HomeStack.Search',
-          params: [null, null, {
-            keywords: 'contactlens',
-            jenis: 'schon'
-          }]
-        });
-        handleCloseModalContactLens();
-        break;
-      case 'selexyz':
-        navigation.navigatePath('Public', {
-          screen: 'BottomTabs.HomeStack.Search',
-          params: [null, null, {
-            keywords: 'contactlens',
-            jenis: 'selexyz'
-          }]
-        });
-        handleCloseModalContactLens();
-        break;
-      case 'qrious':
-        navigation.navigatePath('Public', {
-          screen: 'BottomTabs.HomeStack.Search',
-          params: [null, null, {
-            keywords: 'contactlens',
-            jenis: 'qrious'
-          }]
-        });
-        handleCloseModalContactLens();
-        break;    
-    }
-  }
-
   return (
     <>
       <ScrollView style={{ flexBasis: '50%', backgroundColor: '#FEFEFE'}} 
@@ -583,7 +519,7 @@ const Home = () => {
                         <Typography textAlign="center" 
                                     style={{ fontSize: 16, color: '#0d674ee0', height: height * 100 / 780,
                                              textAlignVertical: 'bottom', borderRadius: 5, fontWeight: 'bold', 
-                                             borderColor: '#fff', borderWidth: 1 }}>
+                                             borderColor: '#fff', borderWidth: 2 }}>
                           {`\n`}{t(`FRAME`)}
                         </Typography>
                     </ImageBackground>
@@ -605,7 +541,7 @@ const Home = () => {
                         <Typography textAlign="center" 
                                     style={{ fontSize: 16, color: '#0d674ee0', height: height * 100 / 780,
                                             textAlignVertical: 'bottom', borderRadius: 5, fontWeight: 'bold',
-                                            borderColor: '#fff', borderWidth: 1 }}>
+                                            borderColor: '#fff', borderWidth: 2 }}>
                           {`\n`}{t(`SUNGLASS`)}
                         </Typography>
                     </ImageBackground>
@@ -620,7 +556,12 @@ const Home = () => {
             <View style={[wrapper.row]}>
             <View style={{ marginHorizontal: 3 }}>
                 <PressableBox
-                  onPress={() => handleModalToggle('contactLensModal', true)}>  
+                  onPress={() => navigation.navigatePath('Public', {
+                    screen: 'BottomTabs.HomeStack.Search',
+                    params: [null, null, {
+                      keywords: 'contactlens',
+                    }]
+                  })}>
                   <ImageBackground 
                     resizeMode='stretch'
                     borderRadius= {10}
@@ -629,7 +570,7 @@ const Home = () => {
                       <Typography textAlign="center" 
                                   style={{ fontSize: 12, color: '#0d674ee0', fontWeight: 'bold',
                                            height: '100%', textAlignVertical: 'bottom', borderRadius: 5,
-                                           borderColor: '#fff', borderWidth: 1 }}>
+                                           borderColor: '#fff', borderWidth: 2 }}>
                         {t(`CONTACT LENS`)}
                       </Typography>
                   </ImageBackground>
@@ -652,7 +593,7 @@ const Home = () => {
                       <Typography textAlign="center" 
                           style={{ fontSize: 12, color: '#0d674ee0', fontWeight: 'bold',
                                    height: '100%', textAlignVertical: 'bottom',
-                                   borderRadius: 5, borderColor: '#fff', borderWidth: 1
+                                   borderRadius: 5, borderColor: '#fff', borderWidth: 2
                                 }}>
                         {t(`SOLUTIONS`)}
                       </Typography>
@@ -676,7 +617,7 @@ const Home = () => {
                       <Typography textAlign="center" 
                                   style={{ fontSize: 12, color: '#0d674ee0', fontWeight: 'bold',
                                            height: '100%', textAlignVertical: 'bottom', borderRadius: 5,
-                                           borderColor: '#fff', borderWidth: 1 }}>
+                                           borderColor: '#fff', borderWidth: 2 }}>
                         {t(`ACCESSORIES`)}
                       </Typography>
                   </ImageBackground>
@@ -715,84 +656,7 @@ const Home = () => {
           </View>
         </View>
       </ScrollView>
-      <BottomDrawer
-        isVisible={options.filterContactLens}
-        swipeDirection={null}
-        onBackButtonPress={() => handleModalToggle('filter', false)}
-        onBackdropPress={() => handleModalToggle('filter', false)}
-        style={{ maxHeight: height * 0.75 }}
-      >
-        <Button
-          containerStyle={{ alignItems: 'flex-end', marginBottom: 5, marginTop: -15 }}
-          onPress={handleCloseModalContactLens}
-        >
-          <Typography style={{ color: '#333' }}>Close</Typography>
-          <Ionicons name="ios-close" size={24} color={'#333'} />
-        </Button>
-        <Typography type='h4' style={{ paddingVertical: 10, paddingHorizontal: 15, color: '#0d674e' }}>
-          {`Select Contact Lens Brand`}
-        </Typography>
-        <View style={{borderColor: '#0d674e', borderWidth: 1, marginHorizontal: 15}}/>
-        <ScrollView style={{height: 270}}>
-          <View style={[wrapper.row, {flex: 1, marginVertical: 10, marginHorizontal: 15, height: 60}]}>
-            <PressableBox
-              style={{ width: 100, height: 60, marginHorizontal: 5 }}
-              onPress={() => toProductList('acuvue')}>
-              <Image 
-                source={require('../../assets/contactlens/acuvue.jpg')}
-                style={{ width: 100, height: 60, borderRadius: 5 }}/>
-            </PressableBox>
-            <PressableBox
-              style={{ width: 100, height: 60, marginHorizontal: 15 }}
-              onPress={() => toProductList('axcent')}>
-              <Image 
-                source={require('../../assets/contactlens/axcent.jpg')} 
-                style={{ width: 100, height: 60, borderRadius: 5, resizeMode: 'stretch', }}/>
-            </PressableBox>
-            <PressableBox
-              style={{ width: 110, height: 60, marginHorizontal: 5 }}
-              onPress={() => toProductList('edgy')}>
-              <Image 
-                source={require('../../assets/contactlens/edgy.jpg')} 
-                style={{ width: 100, height: 60, borderRadius: 5 }} />
-            </PressableBox>
-          </View>
-          <View style={[wrapper.row, {flex: 1, marginHorizontal: 15}]}>
-            <Typography style={{ width: '30%', borderRadius: 5, marginHorizontal: 5, textAlign: 'center' }}>ACUVUE</Typography>
-            <Typography style={{ width: '30%', borderRadius: 5, marginHorizontal: 5, textAlign: 'center' }}>AXCENT</Typography>
-            <Typography style={{ width: '30%', borderRadius: 5, marginHorizontal: 5, textAlign: 'center' }}>EDGY</Typography>
-          </View>
-          <View style={[wrapper.row, {flex: 1, marginVertical: 10, marginHorizontal: 15, height: 60}]}>
-            <PressableBox
-              style={{ width: 100, height: 60, marginHorizontal: 5 }}
-              onPress={() => toProductList('schon')}>
-              <Image 
-                source={require('../../assets/contactlens/schon.png')}
-                style={{ width: 100, height: 60, borderRadius: 5, resizeMode: 'stretch' }}/>
-            </PressableBox>
-            <PressableBox
-              style={{ width: 100, height: 60, marginHorizontal: 15 }}
-              onPress={() => toProductList('selexyz')}>
-              <Image 
-                source={require('../../assets/contactlens/selexyz.jpeg')} 
-                style={{ width: 100, height: 60, borderRadius: 5}}/>
-            </PressableBox>
-            <PressableBox
-              style={{ width: 100, height: 60, marginHorizontal: 5, marginLeft: 10 }}
-              onPress={() => toProductList('qrious')}>
-              <Image 
-                source={require('../../assets/contactlens/qrious.jpg')} 
-                style={{ width: 100, height: 60, borderRadius: 5 }} />
-            </PressableBox>
-          </View>
-          <View style={[wrapper.row, {flex: 1, marginHorizontal: 15}]}>
-            <Typography style={{ width: '30%', borderRadius: 5, marginHorizontal: 5, textAlign: 'center' }}>SCHON</Typography>
-            <Typography style={{ width: '30%', borderRadius: 5, marginHorizontal: 5, textAlign: 'center' }}>SELEXYZ</Typography>
-            <Typography style={{ width: '30%', borderRadius: 5, marginHorizontal: 5, textAlign: 'center' }}>QRIOUS</Typography>
-          </View>
-        </ScrollView>        
-        <View style={{ marginVertical: 20 }}></View>
-      </BottomDrawer>
+      
       {!options.popupModels.length ? null : (
         <PopupPromoModal
           isVisible={options.popupModalOpen}

@@ -19,6 +19,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { CityModel, RegionModel } from '../../../types/model';
 import { BoxLoading } from '../../../ui-shared/loadings';
+import { SearchBar } from 'react-native-screens';
 
 
 type Fields = {
@@ -164,6 +165,19 @@ function ProfileEdit() {
     });
   };
 
+  const handleSearch = (text: any) => {
+    const newData = locationModalList.filter(function(item) {
+      const itemData = item.nama?.toLowerCase() ? item.nama.toUpperCase() : '';
+      const textData = text.toUpperCase();
+      return itemData.indexOf(textData) > -1;
+    });
+    setOptions(state => ({
+      ...state,
+      cities: newData,
+      citiesLoaded: false,
+    }));
+  }
+
   const handleErrorShow = (fields: keyof Fields | Array<keyof Fields>, message: string) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
 
@@ -181,17 +195,15 @@ function ProfileEdit() {
 
   const handleSubmit = () => {
     if (!fields.hp) {
-      return handleErrorShow('hp', t('Please enter your phone number.'));
-    } else if (!fields.email) {
-      return handleErrorShow('email', t('Please enter your email address.'));
-    } else if (!validator.isEmail(fields.email)) {
-      return handleErrorShow('email', t('Please enter your email address.'));
-    } else if (!fields.foto) {
-      // return handleErrorShow('namafoto', t('Mohon pilih file untuk foto profil Anda.'));
-    } else if (!fields.ktp) {
-      // return handleErrorShow('namaktp', t('Mohon pilih file foto KTP/NPWP Anda.'));
-    }else if (!fields.tgllahir) {
-      return handleErrorShow('tgllahir', t('Please select your date of birth.'));
+      return handleErrorShow('hp', t('Please enter your phone number!'));
+    }else if (!fields.namadepan) {
+      return handleErrorShow('namadepan', t('Please enter first name!'));
+    }else if (!fields.namabelakang) {
+      return handleErrorShow('namabelakang', t('Please enter last name!'));
+    }else if (!fields.city) {
+      return handleErrorShow('city', t('Please select City!'));
+    }else if(!fields.address){
+      return handleErrorShow('address', t('Please enter yout address!'));
     }
 
     const { ktp, foto, ...restFields } = fields;
@@ -374,10 +386,12 @@ function ProfileEdit() {
 
   const handleCloseModal = async () => {
     handleModalToggle('city', false);
+    handleRefresh();
   };
 
   const textPilih = t(`${''}Select`);
-
+  const nmtngh = user?.namatengah == null ? null : fields.namatengah;
+  
   return (
     <View>
       <ScrollView 
@@ -417,7 +431,7 @@ function ProfileEdit() {
               <TextField
                 style={{paddingLeft: 0}}
                 placeholder={t('Nama Tengah (Jika ada)')}
-                value={fields.namatengah}
+                value={nmtngh?.toString()}
                 onChangeText={(value) => handleFieldChange('namatengah', value)}
                 editable={true}
                 message={error.message}
@@ -445,7 +459,7 @@ function ProfileEdit() {
                 <TextField
                   style={{paddingLeft: 0}}
                   placeholder={t('Date of birth')}
-                  value={fields.tgllahir ? fields.tgllahir : getDate()}
+                  value={fields.tgllahir || getDate()}
                   onChangeText={(value) => handleFieldChange('tgllahir', value)}
                   error={!!getFieldError('tgllahir')}
                   message={error.message}
@@ -486,7 +500,7 @@ function ProfileEdit() {
             </View> */}
             {genderData.map((genderData, key) => {
               return (
-                <View key={genderData} style={{marginHorizontal: 25, marginVertical: 5}}>
+                <View key={genderData} style={{marginHorizontal: 15, marginVertical: 5}}>
                   <View style={[wrapper.row, {marginTop: 10}]}>
                     {gender == key ? (
                       <TouchableOpacity style={styles.radioCircle}>
@@ -618,9 +632,9 @@ function ProfileEdit() {
           </View>
           <View style={{marginVertical: 10}}></View>
         </View>
-        <Typography style={{marginTop: 10, textAlign: 'justify', color: '#0d674e', fontStyle: 'italic', fontSize: 12, marginHorizontal: 5}}>
+        {/* <Typography style={{marginTop: 10, textAlign: 'justify', color: '#0d674e', fontStyle: 'italic', fontSize: 12, marginHorizontal: 5}}>
           Segala informasi yang kami dapatkan akan kami gunakan sepenuhnya untuk memperbaiki 
-          layanan yang kami berikan untuk Anda dan Kami menjaga kerahasiaan data Anda.</Typography>
+          layanan yang kami berikan untuk Anda dan Kami menjaga kerahasiaan data Anda.</Typography> */}
         <View style={{ marginTop: 10, paddingTop: 24 }}>
           <Button
             containerStyle={{
@@ -645,16 +659,25 @@ function ProfileEdit() {
           style={{ maxHeight: height * 0.75 }}
         >
           <View style={[wrapper.row]}>
-          <Typography style={{ flex: 1, fontWeight: 'bold', fontSize: 16, marginLeft: 30 }}>{locationModalTitle}</Typography>
+            <Typography style={{ flex: 1, fontWeight: 'bold', fontSize: 16, marginLeft: 30 }}>{locationModalTitle}</Typography>
             <Button
               containerStyle={{ alignItems: 'flex-end', marginBottom: 10, marginTop: -15 }}
               onPress={handleCloseModal}
             >
-              <Ionicons name="ios-close" size={24} color={'#333'}/>
+              <Ionicons name="ios-close" size={25} color={'#333'}/>
               <Typography style={{ color: '#333' }}>Close</Typography>
             </Button>
           </View>
-          <View style={{ borderColor: '#ccc', borderWidth: 1, marginHorizontal: 30 }}></View>
+
+          <View style={{marginHorizontal: 30}}>
+            <TextField
+              autoCorrect={false}
+              clearButtonMode="always"
+              placeholder={t('Search City')}
+              onChangeText={(value) => handleSearch(value)}
+            />
+          </View>
+
           {!locationModalOpen ? null : (
             locationStepRequired ? (
               // Required to select parent location
@@ -678,7 +701,7 @@ function ProfileEdit() {
                 // Location List
                 <FlatList
                   data={locationModalList}
-                  style={{ maxHeight: height * 0.66, backgroundColor: '#FEFEFE' }}
+                  style={{ maxHeight: height * 0.45, backgroundColor: '#FEFEFE' }}
                   contentContainerStyle={styles.modalContainer}
                   renderItem={({ item, index }) => (
                     <Button
@@ -698,6 +721,7 @@ function ProfileEdit() {
                       )}
                     />
                   )}
+                  keyExtractor={(index) => index.toString()}
                 />
               )
             )
