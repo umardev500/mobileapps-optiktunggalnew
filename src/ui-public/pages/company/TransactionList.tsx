@@ -78,7 +78,7 @@ function TransactionList() {
     return httpService('/api/transaction/transaction', {
       data: {
         act: 'TrxList',
-        dt: JSON.stringify({ kdcust : usersModel.kd_customer }),
+        dt: JSON.stringify({ kdcust : user?.id }),
       }
     }).then(({ status, data }) => {
       setTransaction(state => ({
@@ -142,6 +142,11 @@ function TransactionList() {
 
   return (
     <View style={{ flex: 1 }}>
+      <View style={{ backgroundColor: '#FEFEFE', paddingVertical: 15, paddingHorizontal: 15 }}>
+        <Typography style={{borderBottomWidth: 1}}>
+          {t(`Transaction List`)}
+        </Typography>
+      </View>
       <ScrollView
         contentContainerStyle={styles.container}
         refreshControl={(
@@ -152,116 +157,45 @@ function TransactionList() {
           />
         )}
       >
-        {!usersModel? ( 
-            <View style={[styles.container, styles.wrapper]}>
-              <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
-              <Typography textAlign="center" style={{ marginVertical: 12 }}>
-                {t(`${t('Transaksi masih kosong.')}`)}
-              </Typography>
+        <View>              
+          {!transaction.modelLoaded == null ? (
+            <View style={{ alignItems: 'center', paddingVertical: 12 }}>
+              <ActivityIndicator size={32} animating color={colors.palettes.primary} />
             </View>
-          ) : ( 
-            <View>
-              {usersModel.no_card == '' ? (
-                <View>
-                  <Typography style={{ textAlign: 'center', fontSize: 12, paddingHorizontal: 3, color: '#ec3a3b' }}>
-                    Anda Belum Menjadi Member
-                  </Typography>
-                  <Typography style={{ textAlign: 'center', fontSize: 12, paddingHorizontal: 3 }}>
-                    Pengguna member akan mendapatkan penawaran terbaik setiap melakukan transaksi.
-                  </Typography>
-                </View>
-              ) : (
-                <View>
-                  <Typography style={{ flex: 1, textAlign: 'center', color: '#7e7e7e', marginTop: -13, fontSize: 10 }}>
-                    <Ionicons name="arrow-down" size={14} color={colors.gray[600]} />
-                    Tarik kebawah untuk refresh
-                  </Typography>
-                  {route.params.users.no_card == null ? null : (
-                    <>
-                    <ImageBackground source={require('../../../assets/icons/figma/membercard.png')} resizeMode= 'stretch' style={{width: '100%', height: 220, marginTop: 10 }}>
-                      <View style={{position: 'absolute', top: 145, left: 0, right: 0, bottom: 0}}>
-                        <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 16 }}>
-                          {usersModel.nm_lengkap}
-                          </Typography>
-                          <View style={[wrapper.row, { width: '100%', marginTop: 5 }]}>
-                            <Typography style={{ color: 'white', marginHorizontal: 20, fontSize: 16}}>
-                              {usersModel.no_card}
-                              </Typography>
-                              <Typography style={{ color: 'white', textAlign: 'center', fontSize: 10, flex: 1, marginLeft: 30 }}>
-                              Valid thru 12/31/2021
-                              </Typography>
-                          </View>
-                      </View>
-                    </ImageBackground>
-                    <View style={[wrapper.row, { borderRadius: 5, borderColor: '#ccc', borderWidth: 1, marginTop: 10}]}>
-                      <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, paddingHorizontal: 10 }}>
-                        Poin Redeem :
-                      </Typography>
-                      <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, fontWeight: 'bold' }}>
-                        {usersModel.saldo}
-                      </Typography>
-                    </View>
-                  
-                    <View style={[wrapper.row, { borderRadius: 5, borderColor: '#ccc', borderWidth: 1, marginTop: 10}]}>
-                      <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, paddingHorizontal: 10 }}>
-                        Password Redeem :
-                      </Typography>
-                      <Typography style={{ textAlign: 'center', fontSize: 14, paddingVertical: 10, fontWeight: 'bold' }}>
-                        {usersModel.password}
-                      </Typography>
-                    </View>
-                    {usersModel.saldo == 0 ? (
-                        <Typography style={{ color: 'red', fontSize: 11, textAlign: 'justify' }}>
-                          Ayo tingkatkan transaksi untuk mendapatkan poin dan banyak keuntungannya
-                        </Typography>
-                      ) : null }
-                    </>
-                  )}
-                </View>
-              )}
-              
-              <Typography style={{ paddingVertical: 12, marginVertical: 10, borderBottomWidth: 1, }}>
-                {t(`List Transaksi`)}
-              </Typography>
-              {!transaction.modelLoaded == null ? (
-                <View style={{ alignItems: 'center', paddingVertical: 12 }}>
-                  <ActivityIndicator size={32} animating color={colors.palettes.primary} />
-                </View>
-              ) : (
-                !transaction.models?.length ? (
-                  <View style={[styles.container, styles.wrapper]}>
-                    <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
-                    {!transaction.models?.length ? (
-                      <PressableBox
-                        containerStyle={{ alignSelf: 'center' }}
-                        onPress={() => handleRefresh()}>
-                        <Typography size="sm" style={{ borderBottomWidth: 1, borderColor: colors.gray[700] }}>
-                          {t(`klik untuk menampilkan transaksi`)}
-                        </Typography>
-                      </PressableBox>
-                    ) : (
-                      null
-                    )}
-                    <Typography textAlign="center" style={{ marginVertical: 12 }}>
-                      {t(`${t('Transaksi masih kosong.')}`)}
+          ) : (
+            !transaction.models?.length ? (
+              <View style={[styles.container, styles.wrapper]}>
+                <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
+                {/* {!transaction.models?.length ? (
+                  <PressableBox
+                    containerStyle={{ alignSelf: 'center' }}
+                    onPress={() => handleRefresh()}>
+                    <Typography size="sm" style={{ borderBottomWidth: 1, borderColor: colors.gray[700] }}>
+                      {t(`Click to view transaction`)}
                     </Typography>
-                  </View>
-                ) : transaction.models.map((item, index) => (
-                  <TransactionItem
-                    key={index}
-                    transaction={item}
-                    onDetailPress={(model) => handleModalToggle('detail', true, {
-                      detailModel: model
-                    })}
-                    // onPayPress={(model) => handleModalToggle('pay', true, {
-                    //   payModel: model
-                    // })}
-                    style={{ marginTop: index === 0 ? 0 : 12 }}
-                  />
-                ))
-              )}
-            </View>
-          ) }
+                  </PressableBox>
+                ) : (
+                  null
+                )} */}
+                <Typography textAlign="center" style={{ marginVertical: 12 }}>
+                  {t(`${t('Empty Transaction List.')}`)}
+                </Typography>
+              </View>
+            ) : transaction.models.map((item, index) => (
+              <TransactionItem
+                key={index}
+                transaction={item}
+                onDetailPress={(model) => handleModalToggle('detail', true, {
+                  detailModel: model
+                })}
+                // onPayPress={(model) => handleModalToggle('pay', true, {
+                //   payModel: model
+                // })}
+                style={{ marginTop: index === 0 ? 0 : 12 }}
+              />
+            ))
+          )}
+        </View>
       </ScrollView>
     </View>
   );
@@ -271,7 +205,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     paddingHorizontal: 15,
-    paddingTop: 12,
+    paddingTop: 0,
     paddingBottom: 24,
     backgroundColor: colors.white,
   },

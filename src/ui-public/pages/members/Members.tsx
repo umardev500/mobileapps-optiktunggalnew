@@ -197,48 +197,62 @@ function Members() {
           <View style={{marginHorizontal: 5}}>
             <Typography type='h4'>BENEFIT</Typography>
             <View style={{ borderBottomColor: '#ccc', borderBottomWidth: 1, marginTop: 5}}></View>
-            <View style={[wrapper.row, { marginHorizontal: 15, marginTop: 10 }]}>
+            <View style={[wrapper.row, { marginHorizontal: 0, marginTop: 10 }]}>
               <Typography style={{marginHorizontal: 5}}>1. </Typography>
-              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
-                Setiap transaksi pembelanjaan Frame, Sunglass dan Lensa, diseluruh cabang Optik TUnggal, Optik Tunggal Next Generation dan ZEISS Vision Center, Sebagai VIP Member Anda akan mendapatkan point reward sebanyak 5% dari nilai netto pembelanjaan.
-              </Typography>
+              <View style={{width: 320}}>
+                <Typography style={{textAlign: 'justify', lineHeight: 23, marginLeft: 5}}>
+                  Setiap transaksi pembelanjaan Frame, Sunglass dan Lensa, diseluruh cabang Optik TUnggal, Optik Tunggal Next Generation dan ZEISS Vision Center, Sebagai VIP Member Anda akan mendapatkan point reward sebanyak 5% dari nilai netto pembelanjaan.
+                </Typography>
+              </View>
             </View>
-            <View style={[wrapper.row, { marginHorizontal: 15 }]}>
+            <View style={[wrapper.row, { marginHorizontal: 0 }]}>
               <Typography style={{marginHorizontal: 5}}>2. </Typography>
-              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
-                Nilai 1 (satu) point reward = 1 (satu) Rupiah.
-              </Typography>
+              <View style={{width: 320}}>
+                <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                  Nilai 1 (satu) point reward = 1 (satu) Rupiah.
+                </Typography>
+              </View>
             </View>
-            <View style={[wrapper.row, { marginHorizontal: 15 }]}>
+            <View style={[wrapper.row, { marginHorizontal: 0 }]}>
               <Typography style={{marginHorizontal: 5}}>3. </Typography>
-              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
-                Masa berlaku point reward mengikuti masa berlaku VIP Member Optik Tunggal.
-              </Typography>
+              <View style={{width: 320}}>
+                <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                  Masa berlaku point reward mengikuti masa berlaku VIP Member Optik Tunggal.
+                </Typography>
+              </View>
             </View>
-            <View style={[wrapper.row, { marginHorizontal: 15 }]}>
+            <View style={[wrapper.row, { marginHorizontal: 0 }]}>
               <Typography style={{marginHorizontal: 5}}>4. </Typography>
-              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
-                Point Reward yang terkumpul dapat digunakan untuk berbelanja Frame, Sunglass dan Lensa, di seluruh cabang Optik Tunggal, Optik Tunggal Next Generation dan ZEISS Vision Center.
-              </Typography>
+              <View style={{width: 320}}>
+                <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                  Point Reward yang terkumpul dapat digunakan untuk berbelanja Frame, Sunglass dan Lensa, di seluruh cabang Optik Tunggal, Optik Tunggal Next Generation dan ZEISS Vision Center.
+                </Typography>
+              </View>
             </View>
-            <View style={[wrapper.row, { marginHorizontal: 15 }]}>
+            <View style={[wrapper.row, { marginHorizontal: 0 }]}>
               <Typography style={{marginHorizontal: 5}}>5. </Typography>
-              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
-                Sebagai VIP Member Anda berpeluang menerima kejutan dari Optik Tunggal di hari Ulang Tahun Anda.
-              </Typography>
+              <View style={{width: 320}}>
+                <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                  Sebagai VIP Member Anda berpeluang menerima kejutan dari Optik Tunggal di hari Ulang Tahun Anda.
+                </Typography>
+              </View>
             </View>
-            <View style={[wrapper.row, { marginHorizontal: 15}]}>
+            <View style={[wrapper.row, { marginHorizontal: 0 }]}>
               <Typography style={{marginHorizontal: 5}}>6. </Typography>
-              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
-                VIP Member akan mendapatkan kode referral. kode referral tersebut dapat digunakan untuk mereferensikan
-                orang lain yang belum pernah berbelanja di Optik Tunggal dan menjadi VIP Member. 
-              </Typography>
+              <View style={{width: 320}}>
+                <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                  VIP Member akan mendapatkan kode referral. kode referral tersebut dapat digunakan untuk mereferensikan
+                  orang lain yang belum pernah berbelanja di Optik Tunggal dan menjadi VIP Member. 
+                </Typography>
+              </View>
             </View>
-            <View style={[wrapper.row, { marginHorizontal: 15}]}>
+            <View style={[wrapper.row, { marginHorizontal: 0 }]}>
               <Typography style={{marginHorizontal: 5}}>7. </Typography>
-              <Typography style={{textAlign: 'justify', lineHeight: 23}}>
-                VIP Member akan mendapatkan tambahan saldo sebesar 5% atas transaksi frame, sunglass dan lensa dari netto pembelanjaan yang direferralkan.
-              </Typography>
+              <View style={{width: 320}}>
+                <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                  VIP Member akan mendapatkan tambahan saldo sebesar 5% atas transaksi frame, sunglass dan lensa dari netto pembelanjaan yang direferralkan.
+                </Typography>
+              </View>
             </View>
           </View>
         </View>
@@ -350,48 +364,68 @@ function Members() {
                   ) : null }
                 </>
               )}
-            </View>
-          )}
-          
-          <Typography style={{ paddingVertical: 12, marginVertical: 10, borderBottomWidth: 1, }}>
-            {t(`Transaction List`)}
-          </Typography>
-          {!transaction.modelLoaded == null ? (
-            <View style={{ alignItems: 'center', paddingVertical: 12 }}>
-              <ActivityIndicator size={32} animating color={colors.palettes.primary} />
-            </View>
-          ) : (
-            !transaction.models?.length ? (
-              <View style={[styles.container, styles.wrapper]}>
-                <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
-                {!transaction.models?.length ? (
-                  <PressableBox
-                    containerStyle={{ alignSelf: 'center' }}
-                    onPress={() => handleRefresh()}>
-                    <Typography size="sm" style={{ borderBottomWidth: 1, borderColor: colors.gray[700] }}>
-                      {t(`Click to view transaction`)}
+              <View style={{marginHorizontal: 5, marginTop: 15}}>
+                <Typography type='h4'>BENEFIT</Typography>
+                <View style={{ borderBottomColor: '#ccc', borderBottomWidth: 1, marginTop: 5}}></View>
+                <View style={[wrapper.row, { marginHorizontal: 0, marginTop: 10 }]}>
+                  <Typography style={{marginHorizontal: 5}}>1. </Typography>
+                  <View style={{width: 325}}>
+                    <Typography style={{textAlign: 'justify', lineHeight: 23, marginLeft: 5 }}>
+                      Setiap transaksi pembelanjaan Frame, Sunglass dan Lensa, diseluruh cabang Optik TUnggal, Optik Tunggal Next Generation dan ZEISS Vision Center, Sebagai VIP Member Anda akan mendapatkan point reward sebanyak 5% dari nilai netto pembelanjaan.
                     </Typography>
-                  </PressableBox>
-                ) : (
-                  null
-                )}
-                <Typography textAlign="center" style={{ marginVertical: 12 }}>
-                  {t(`${t('Empty Transaction List.')}`)}
-                </Typography>
+                  </View>
+                </View>
+                <View style={[wrapper.row, { marginHorizontal: 0 }]}>
+                  <Typography style={{marginHorizontal: 5}}>2. </Typography>
+                  <View style={{width: 320}}>
+                    <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                      Nilai 1 (satu) point reward = 1 (satu) Rupiah.
+                    </Typography>
+                  </View>
+                </View>
+                <View style={[wrapper.row, { marginHorizontal: 0 }]}>
+                  <Typography style={{marginHorizontal: 5}}>3. </Typography>
+                  <View style={{width: 320}}>
+                    <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                      Masa berlaku point reward mengikuti masa berlaku VIP Member Optik Tunggal.
+                    </Typography>
+                  </View>
+                </View>
+                <View style={[wrapper.row, { marginHorizontal: 0 }]}>
+                  <Typography style={{marginHorizontal: 5}}>4. </Typography>
+                  <View style={{width: 320}}>
+                    <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                      Point Reward yang terkumpul dapat digunakan untuk berbelanja Frame, Sunglass dan Lensa, di seluruh cabang Optik Tunggal, Optik Tunggal Next Generation dan ZEISS Vision Center.
+                    </Typography>
+                  </View>
+                </View>
+                <View style={[wrapper.row, { marginHorizontal: 0 }]}>
+                  <Typography style={{marginHorizontal: 5}}>5. </Typography>
+                  <View style={{width: 320}}>
+                    <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                      Sebagai VIP Member Anda berpeluang menerima kejutan dari Optik Tunggal di hari Ulang Tahun Anda.
+                    </Typography>
+                  </View>
+                </View>
+                <View style={[wrapper.row, { marginHorizontal: 0}]}>
+                  <Typography style={{marginHorizontal: 5}}>6. </Typography>
+                  <View style={{width: 320}}>
+                    <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                      VIP Member akan mendapatkan kode referral. kode referral tersebut dapat digunakan untuk mereferensikan
+                      orang lain yang belum pernah berbelanja di Optik Tunggal dan menjadi VIP Member. 
+                    </Typography>
+                  </View>
+                </View>
+                <View style={[wrapper.row, { marginHorizontal: 0}]}>
+                  <Typography style={{marginHorizontal: 5}}>7. </Typography>
+                  <View style={{width: 320}}>
+                    <Typography style={{textAlign: 'justify', lineHeight: 23}}>
+                      VIP Member akan mendapatkan tambahan saldo sebesar 5% atas transaksi frame, sunglass dan lensa dari netto pembelanjaan yang direferralkan.
+                    </Typography>
+                  </View>
+                </View>
               </View>
-            ) : transaction.models.map((item, index) => (
-              <TransactionItem
-                key={index}
-                transaction={item}
-                onDetailPress={(model) => handleModalToggle('detail', true, {
-                  detailModel: model
-                })}
-                // onPayPress={(model) => handleModalToggle('pay', true, {
-                //   payModel: model
-                // })}
-                style={{ marginTop: index === 0 ? 0 : 12 }}
-              />
-            ))
+            </View>
           )}
         </View>
       )}

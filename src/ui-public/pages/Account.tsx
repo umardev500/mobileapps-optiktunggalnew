@@ -296,7 +296,7 @@ function Account() {
                         Icon: FigmaIcon.FigmaDownload,
                         navigatePath: () => {
                           navigation.navigatePath('Public', {
-                            screen: 'BottomTabs.MemberStack',
+                            screen: 'TransactionList',
                             params: [null, {
                               initial: false,
                             }]
