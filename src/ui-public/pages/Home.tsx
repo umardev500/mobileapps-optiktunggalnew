@@ -5,13 +5,13 @@ import { colors, shadows, wrapper } from '../../lib/styles';
 import { CarouselDots, PressableBox, Typography, Button, ButtonCart, RenderHtml, BottomDrawer } from '../../ui-shared/components';
 import Carousel from 'react-native-snap-carousel';
 import { BoxLoading } from '../../ui-shared/loadings';
-import { BannerModel, CategoryModel, Modelable, ModelablePaginate, BrandModel, ContactUsModel, ArticleModel, GenderModel } from '../../types/model';
+import { BannerModel, CategoryModel, Modelable, ModelablePaginate, BrandModel, ContactUsModel, ArticleModel, GenderModel, BrandCLModel } from '../../types/model';
 import { useAppNavigation } from '../../router/RootNavigation';
 import Products from '../components/Products';
 import ProductsLoading from '../loadings/ProductsLoading';
 import { httpService } from '../../lib/utilities';
 import { useTranslation } from 'react-i18next';
-import { fetchCategories, fetchBrand, fetchGender, fetchModelKacamata } from '../../redux/actions/shopActions';
+import { fetchCategories, fetchBrand, fetchGender, fetchModelKacamata, fetchBrandColorCL, fetchBrandClearCL } from '../../redux/actions/shopActions';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import PopupPromoModal from '../components/PopupPromoModal';
 import moment from 'moment';
@@ -50,6 +50,14 @@ const Home = () => {
     models: [],
     modelsLoaded: false,
   });
+  const [brandClearCL, setBrandClearCL] = useState<Modelable<BrandCLModel>>({
+    models: [],
+    modelsLoaded: false,
+  });
+  const [brandColorCL, setBrandColorCL] = useState<Modelable<BrandCLModel>>({
+    models: [],
+    modelsLoaded: false,
+  });
   const [gender, setGender] = useState<Modelable<BrandModel>>({
     models: [],
     modelsLoaded: false,
@@ -80,16 +88,12 @@ const Home = () => {
     handleRefresh();
   }, []);
 
-  // useEffect(() => {
-  // });
-
   // Vars
   const handleRefresh = async () => {
     setIsRefreshing(true);
 
     retrieveHomepage();
     retrieveArticle();
-    
     dispatch(fetchCategories()).unwrap().then((results) => {
       setCategory(state => ({
         ...state,
@@ -110,28 +114,25 @@ const Home = () => {
       setBrand(state => ({ ...state, modelsLoaded: true }));
     });
 
-    // dispatch(fetchGender()).unwrap().then((results) => {
-    //   setBrand(state => ({
-    //     ...state,
-    //     models: results,
-    //     modelsLoaded: true
-    //   }));
-    // }).catch(() => {
-    //   setGender(state => ({ ...state, modelsLoaded: true }));
-    // });
+    dispatch(fetchBrandClearCL()).unwrap().then((results) => {
+      setBrandClearCL(state => ({
+        ...state,
+        models: results,
+        modelsLoaded: true
+      }));
+    }).catch(() => {
+      setBrandClearCL(state => ({ ...state, modelsLoaded: true }));
+    });
 
-    // dispatch(fetchModelKacamata()).unwrap().then((results) => {
-    //   setBrand(state => ({
-    //     ...state,
-    //     models: results,
-    //     modelsLoaded: true
-    //   }));
-    // }).catch(() => {
-    //   setModelkacamatas(state => ({ ...state, modelsLoaded: true }));
-    // });
-
-    //await retrieveContactUs();
-    // retrievePopups();
+    dispatch(fetchBrandColorCL()).unwrap().then((results) => {
+      setBrandColorCL(state => ({
+        ...state,
+        models: results,
+        modelsLoaded: true
+      }));
+    }).catch(() => {
+      setBrandColorCL(state => ({ ...state, modelsLoaded: true }));
+    });
 
     setIsRefreshing(false);
   };
@@ -183,7 +184,6 @@ const Home = () => {
     }).catch((err) => void(0));
   };
 
-
   const retrieveContactUs = async () => {
     return httpService(`/api/contactus/contactus`, {
       data: {
@@ -217,11 +217,15 @@ const Home = () => {
           ...shadows[3]
         }}
         style={{ alignItems: 'center', backgroundColor: '#FEFEFE' }}
+        // onPress={() => Alert.alert( "Pemberitahuan", "Test : "+item.id,
+        //                     [{text: "Cancel",onPress: () => console.log("Cancel Pressed"),style: "cancel"}]
+        //       )}
         onPress={() => navigation.navigatePath('Public', {
           screen: 'BottomTabs.HomeStack.Search',
           params: [null, null, {
             keywords: 'searchbybrand',
-            brand: item,
+            merk: item.id,
+            brand: item
           }],
         })}
       >
@@ -231,6 +235,79 @@ const Home = () => {
           }]} />
         ) : (
           <Image source={{ uri: item.fotobrand }} style={styles.brandImage} />
+        )}        
+      </PressableBox>
+    );
+  };
+
+  const toProductList = async(jenis: String, color: string) => {
+    navigation.navigatePath('Public', {
+      screen: 'BottomTabs.HomeStack.Search',
+      params: [null, null, {
+        keywords: 'contactlens',
+        color: color,
+        merk: jenis
+      }]
+    });
+    handleCloseModalContactLens();
+  }
+
+  const renderBrandCLClear = ({ item, index }: ListRenderItemInfo<BrandCLModel>) => {
+    const itemname = item.nama;
+    return (
+      <PressableBox
+        key={index}
+        opacity
+        containerStyle={{
+          marginHorizontal: 5,
+          maxWidth: 100,
+          backgroundColor: '#FEFEFE',
+          ...shadows[3]
+        }}
+        style={{ alignItems: 'center', backgroundColor: '#FEFEFE' }}
+        onPress={() => 
+                      toProductList(itemname, item.brandcode)
+                      // Alert.alert( "Pemberitahuan", "Brand : "+item.codebrand)
+                }
+      >
+        {!item.imagebrand ? (
+          <View style={[styles.brandImage, {
+            backgroundColor: '#FEFEFE',
+          }]} />
+        ) : (
+          <>
+            <Typography style={{paddingHorizontal: 10, paddingVertical: 15}}>{item.nama}</Typography>
+            {/* <Image source={{ uri: item.imagebrand }} style={styles.brandImage} /> */}
+          </>
+        )}        
+      </PressableBox>
+    );
+  };
+
+  const renderBrandCLColor = ({ item, index }: ListRenderItemInfo<BrandCLModel>) => {
+    const itemname = item.nama;
+    return (
+      <PressableBox
+        key={index}
+        opacity
+        containerStyle={{
+          marginHorizontal: 5,
+          maxWidth: 100,
+          backgroundColor: '#FEFEFE',
+          ...shadows[3]
+        }}
+        style={{ alignItems: 'center', backgroundColor: '#FEFEFE' }}
+        onPress={() => toProductList(itemname, item.brandcode)}
+      >
+        {!item.imagebrand ? (
+          <View style={[styles.brandImage, {
+            backgroundColor: '#FEFEFE',
+          }]} />
+        ) : (
+          <>
+            <Typography style={{paddingHorizontal: 10, paddingVertical: 15}}>{item.nama}</Typography>
+            {/* <Image source={{ uri: item.imagebrand }} style={styles.brandImage} /> */}
+          </>
         )}        
       </PressableBox>
     );
@@ -556,12 +633,13 @@ const Home = () => {
             <View style={[wrapper.row]}>
             <View style={{ marginHorizontal: 3 }}>
                 <PressableBox
-                  onPress={() => navigation.navigatePath('Public', {
+                  onPress={() => handleModalToggle('contactLensModal', true)}
+                  /*onPress={() => navigation.navigatePath('Public', {
                     screen: 'BottomTabs.HomeStack.Search',
                     params: [null, null, {
                       keywords: 'contactlens',
                     }]
-                  })}>
+                  })}*/>
                   <ImageBackground 
                     resizeMode='stretch'
                     borderRadius= {10}
@@ -656,7 +734,86 @@ const Home = () => {
           </View>
         </View>
       </ScrollView>
-      
+      <BottomDrawer
+        isVisible={options.filterContactLens}
+        swipeDirection={null}
+        onBackButtonPress={() => handleModalToggle('filter', false)}
+        onBackdropPress={() => handleModalToggle('filter', false)}
+        style={{ maxHeight: height * 0.75 }}
+      >
+        <Button
+          containerStyle={{ alignItems: 'flex-end', marginBottom: 5, marginTop: -15 }}
+          onPress={handleCloseModalContactLens}
+        >
+          <Typography style={{ color: '#333' }}>Close</Typography>
+          <Ionicons name="ios-close" size={24} color={'#333'} />
+        </Button>
+        <Typography type='h4' style={{ paddingVertical: 10, paddingHorizontal: 15, color: '#0d674e' }}>
+          {`Select Contact Lens Brand`}
+        </Typography>
+        <View style={{borderColor: '#0d674e', borderWidth: 1, marginHorizontal: 15}}/>
+        <ScrollView style={{height: 270}}>
+          <Typography size='md' style={{ paddingVertical: 10, paddingHorizontal: 15, color: '#0d674e' }}>
+            {`Clear`}
+          </Typography>
+          <View 
+            style={{marginTop: -20, marginHorizontal: 20}}>
+                {!brandClearCL.modelsLoaded ? (
+                  <View style={[wrapper.row, {
+                    justifyContent: 'center',
+                    paddingVertical: 8,
+                  }]}>
+                    {Array.from(Array(5)).map((item, index) => (
+                      <View key={index} style={{ marginHorizontal: 8, marginBottom: 10 }}>
+                        <BoxLoading width={60} height={60} />
+                      </View>
+                    ))}
+                  </View>
+                ) : (
+                  <FlatList
+                    data={brandClearCL.models || []}
+                    renderItem={renderBrandCLClear}
+                    contentContainerStyle={{
+                      alignItems: 'center',
+                      height: 90,
+                    }}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                  />
+                )}
+          </View>
+          <Typography size='md' style={{ paddingVertical: 10, paddingHorizontal: 15, color: '#0d674e' }}>
+            {`Color`}
+          </Typography>
+          <View 
+            style={{marginTop: -20, marginHorizontal: 20}}>
+                {!brandColorCL.modelsLoaded ? (
+                  <View style={[wrapper.row, {
+                    justifyContent: 'center',
+                    paddingVertical: 8,
+                  }]}>
+                    {Array.from(Array(5)).map((item, index) => (
+                      <View key={index} style={{ marginHorizontal: 8, marginBottom: 10 }}>
+                        <BoxLoading width={60} height={60} />
+                      </View>
+                    ))}
+                  </View>
+                ) : (
+                  <FlatList
+                    data={brandColorCL.models || []}
+                    renderItem={renderBrandCLColor}
+                    contentContainerStyle={{
+                      alignItems: 'center',
+                      height: 90,
+                    }}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                  />
+                )}
+          </View>
+        </ScrollView>       
+        <View style={{ marginVertical: 20 }}></View>
+      </BottomDrawer>
       {!options.popupModels.length ? null : (
         <PopupPromoModal
           isVisible={options.popupModalOpen}

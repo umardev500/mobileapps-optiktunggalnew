@@ -5,7 +5,7 @@ import { View } from 'react-native-animatable';
 import { colors, wrapper } from '../../../lib/styles';
 import { PublicHomeStackParamList } from '../../../router/publicBottomTabs';
 import { useAppNavigation } from '../../../router/RootNavigation';
-import { Modelable, ModelablePaginate, ProductModel, BrandModel, ColorModel, GenderModel } from '../../../types/model';
+import { Modelable, ModelablePaginate, ProductModel, BrandModel, ColorModel, GenderModel, BrandCLModel } from '../../../types/model';
 import { Badge, BottomDrawer, Button, Header, Typography } from '../../../ui-shared/components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ProductsLoading from '../../loadings/ProductsLoading';
@@ -27,7 +27,15 @@ const SORT = [
 
 const SORTCLSLACS = [
   { label: `${''}Lowest price`, value: 'lowprice', icon: 'ios-arrow-down-circle-sharp' },
-  { label: `${''}Highest price`, value: 'highprice', icon: 'ios-arrow-up-circle-sharp' },,
+  { label: `${''}Highest price`, value: 'highprice', icon: 'ios-arrow-up-circle-sharp' },
+];
+
+const CATEGORY = [
+  { label: `${''}Frame`, value: 'isFrame' },
+  { label: `${''}Sunglass`, value: 'isSunglass' },
+  { label: `${''}Contact Lens`, value: 'isLens' },
+  { label: `${''}Solutions`, value: 'isSol' },
+  { label: `${''}Accessories`, value: 'isAccs' },
 ];
 
 type Fields = {
@@ -36,6 +44,7 @@ type Fields = {
   // prdgender?: string;
   brand?: string;
   warna?: string;
+  catsort?: string;
 };
 
 type OptionsState = {
@@ -44,6 +53,7 @@ type OptionsState = {
   // prdgender?: string;
   brand?: string;
   warna?: string;
+  catsort?: string;
 };
 
 function Search() {
@@ -62,7 +72,7 @@ function Search() {
   const [product, setProduct] = useState<ModelablePaginate<ProductModel>>({
     models: [],
     modelsLoaded: false,
-    page: 0,
+    page: 1,
     perPage: 12,
     isPageEnd: false,
   });
@@ -74,7 +84,7 @@ function Search() {
     models: [],
     modelsLoaded: false,
   });
-  const [brandCL, setBrandCL] = useState<Modelable<BrandModel>>({ // CL itu Contact Lens
+  const [brandCL, setBrandCL] = useState<Modelable<BrandCLModel>>({ // CL itu Contact Lens
     models: [],
     modelsLoaded: false,
   });
@@ -88,6 +98,7 @@ function Search() {
     // prdgender: '',
     brand: '',
     warna: '',
+    catsort: '',
   });
   const [options, setOptions] = useState<OptionsState>({
     filterModalOpen: false,
@@ -95,6 +106,7 @@ function Search() {
     // prdgender: '',
     brand: '',
     warna: '',
+    catsort: ''
   });
 
   // Effects
@@ -132,7 +144,7 @@ function Search() {
   }, [route.params]);
 
   useEffect(() => {
-    if (!product.isPageEnd && product.page > 0) {
+    if (!product.isPageEnd) {
       retrieveProducts(product.page);
     }
   }, [product.page]);
@@ -146,7 +158,7 @@ function Search() {
       isPageEnd: false,
     }));
 
-    product.page === 1 && retrieveProducts();
+    // product.page === 1 && retrieveProducts();
   }, [search]);
 
   // Vars
@@ -158,15 +170,15 @@ function Search() {
 
     return httpService('/api/product/product', {
       data: {
-        act: route.params.keywords == 'contactlens' || route.params.keywords == 'solutions' || route.params.keywords == 'accessories' ? 'PrdListKatalog' : 'PrdSearchProduk',
+        act: 'PrdListKatalog',
         dt: JSON.stringify({
-          comp: '001',
           reccnt,
           pg: page,
-          limit: reccnt,
-          search: !route.params.keywords ? search : route.params.keywords,
+          limit: product.perPage,
+          search: !route.params.keywords ? route.params.search : route.params.keywords,
           keyword: !route.params.keywords ? null : route.params.keywords,
-          jenis: !route.params.jenis ? null : route.params.jenis,
+          color: !route.params.color ? null : route.params.color,
+          merk: !route.params.merk ? null : route.params.merk,
           ...fields
         }),
       },
@@ -300,11 +312,13 @@ function Search() {
   fields.sort && filterCount++;
   fields.prdcat && filterCount++;
   fields.brand && filterCount++;
+  fields.catsort && filterCount++;
 
   const filterColor = filterCount ? colors.palettes.primary : colors.gray[700];
   const categoryActive = categories?.find(item => item.id === fields.prdcat);
   const brandActive = brands?.find(item => item.id === fields.brand);
   const priceActive = SORT?.find(item => item.value === fields.sort);
+  const catActive = CATEGORY?.find(item => item.value === fields.catsort); // Frame, sunglass, contactlens, solution and accessories
 
   return (
     <View style={{ flex: 1 }}>
@@ -322,63 +336,72 @@ function Search() {
           </Typography>
         )}
 
+        {route.params?.keywords == 'contactlens' || route.params.keywords == "accessories" ? null :
+          (<View style={[wrapper.row, { alignItems: 'center' }]}>
+            <Button
+              containerStyle={{
+                marginLeft: -12,
+                borderColor: '#fff',
+                backgroundColor: '#0d674e'
+              }}
+              labelProps={{ type: 'p', color: '#fff' }}
+              rounded={8}
+              border
+              left={(
+                <View>
+                  <Typography style={{color: '#fff', fontSize: 12}}>Filter <Ionicons name="caret-down" size={10} color={'#fff'} /></Typography>
+                </View>
+              )}
+              onPress={() => handleModalToggle('filter', true)}
+            />
 
-        <View style={[wrapper.row, { alignItems: 'center' }]}>
-          <Button
-            containerStyle={{
-              marginLeft: -12,
-              borderColor: '#fff',
-              backgroundColor: '#0d674e'
-            }}
-            labelProps={{ type: 'p', color: '#fff' }}
-            rounded={8}
-            border
-            left={(
-              <View /*style={{ marginRight: 8 }}*/>
-                <Typography style={{color: '#fff', fontSize: 12}}>Filter <Ionicons name="caret-down" size={10} color={'#fff'} /></Typography>
-              </View>
+            {!catActive ? null : (
+              <Badge
+                style={[styles.filterItem, { marginLeft: 5}]}
+                label={catActive.label}
+                labelProps={{ size: 'sm' }}
+              />
             )}
-            onPress={() => handleModalToggle('filter', true)}
-          />
 
-          {!priceActive ? null : (
-            <Badge
-              style={[styles.filterItem, {marginLeft: 5}]}
-              label={priceActive.label}
-              labelProps={{ size: 'sm' }}
-            />
-          )}
+            {!priceActive ? null : (
+              <Badge
+                style={[styles.filterItem, {marginLeft: 5}]}
+                label={priceActive.label}
+                labelProps={{ size: 'sm' }}
+              />
+            )}
 
-          {!categoryActive ? null : (
-            <Badge
-              style={[styles.filterItem, { marginLeft: 5 }]}
-              label={categoryActive.ds}
-              labelProps={{ size: 'sm' }}
-              // left={!categoryActive.foto ? false : (
-              //   <View style={{ marginRight: 4 }}>
-              //     <Image source={{ uri: categoryActive.foto }} style={styles.filterIcon} />
-              //   </View>
-              // )}
-            />
-          )}
+            {!categoryActive ? null : (
+              <Badge
+                style={[styles.filterItem, { marginLeft: 5 }]}
+                label={categoryActive.ds}
+                labelProps={{ size: 'sm' }}
+                // left={!categoryActive.foto ? false : (
+                //   <View style={{ marginRight: 4 }}>
+                //     <Image source={{ uri: categoryActive.foto }} style={styles.filterIcon} />
+                //   </View>
+                // )}
+              />
+            )}
 
-          {!brandActive ? null : (
-            <Badge
-              style={[styles.filterItem, { marginLeft: 5}]}
-              label={brandActive.name}
-              labelProps={{ size: 'sm' }}
-              // left={!brandActive.fotobrand ? false : (
-              //   <View>
-              //     <Image source={{ uri: brandActive.fotobrand }} style={styles.filterIconBrand} />
-              //   </View>
-              // )}
-            />
-          )}
-        </View>
+            {!brandActive ? null : (
+              <Badge
+                style={[styles.filterItem, { marginLeft: 5}]}
+                label={brandActive.name}
+                labelProps={{ size: 'sm' }}
+                // left={!brandActive.fotobrand ? false : (
+                //   <View>
+                //     <Image source={{ uri: brandActive.fotobrand }} style={styles.filterIconBrand} />
+                //   </View>
+                // )}
+              />
+            )}
+          </View>)
+        }
       </View>
 
       <Products
-        contentContainerStyle={[styles.container, styles.wrapper, {marginTop: -5}]}
+        contentContainerStyle={[styles.container, styles.wrapper, {marginTop: -5,}]}
         refreshing={isLoading}
         onRefresh={handleFilterApply}
         loading={!product.modelsLoaded && !product.isPageEnd}
@@ -392,22 +415,23 @@ function Search() {
           }
         }}
         data={product.models}
-        LoadingView={(<ProductsLoading />)}
         ListEmptyComponent={!product.modelsLoaded ? ( 
-          <ProductsLoading/>
-        ) : product.models?.length ? null : (
           <View style={[styles.container, styles.wrapper]}>
             <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
             <Typography textAlign="center" style={{ marginVertical: 12 }}>
               {t(`${t('Produk tidak ditemukan')}`)}
             </Typography>
           </View>
+        ) : product.models?.length ? null : (
+          <View style={{ marginHorizontal: 10 }}>
+            <ProductsLoading />
+          </View>
         )}
-        ListFooterComponent={!product.isPageEnd ? null : (
+        ListFooterComponent={!product.isPageEnd ? (
           <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
             {t(`${t('Sudah menampilkan semua produk')}`)}
           </Typography>
-        )}
+        ) : null}
       />
 
       {/* Popup Filter */}
@@ -433,7 +457,7 @@ function Search() {
             paddingBottom: 24
           }}
         >
-          {route.params.keywords == 'contactlens' || route.params.keywords == 'solutions' || route.params.keywords == 'accessories' ? 
+          {route.params.keywords == 'solutions' ? 
             (
               <>
                 <Typography type="h5" style={{ paddingBottom: 8 }}>
@@ -469,6 +493,33 @@ function Search() {
             (
               <>
                 <Typography type="h5" style={{ paddingBottom: 8 }}>
+                  {`${t('Categories')}`}
+                </Typography>
+
+                <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
+                  {CATEGORY.map((item, index) => (
+                    <Button
+                      key={index}
+                      containerStyle={{
+                        marginBottom: 8,
+                        marginRight: 8,
+                        borderColor: fields.catsort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[400],
+                      }}
+                      border
+                      onPress={() => handleFieldChange('catsort', item.value)}
+                    >
+                      <Typography
+                        style={{
+                          color: fields.catsort === item.value ? '#0d674e' : colors.gray[900],
+                          fontSize: 12
+                        }}
+                      >
+                        {t(`${''}${item.label}`)}
+                      </Typography>
+                    </Button>
+                  ))}
+                </View>
+                <Typography type="h5" style={{ paddingBottom: 8 }}>
                   {`${t('Price')}`}
                 </Typography>
 
@@ -478,22 +529,29 @@ function Search() {
                       key={index}
                       containerStyle={{
                         marginBottom: 8,
-                        marginRight: 8,
+                        marginRight: 5,
                         borderColor: fields.sort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[400],
                       }}
-                      label={t(`${''}${item.label}`)}
-                      labelProps={{ color: fields.sort === item.value ? '#0d674e' : colors.gray[900] }}
-                      size="sm"
                       border
                       onPress={() => handleFieldChange('sort', item.value)}
-                    />
+                    >
+                      <Typography
+                        style={{
+                          color: fields.sort === item.value ? '#0d674e' : colors.gray[900],
+                          fontSize: 12,
+                          marginHorizontal: 5
+                        }}
+                      >
+                        {t(`${''}${item.label}`)}
+                      </Typography>
+                    </Button>
                   ))}
                 </View>
               </>
             )
           }
           
-          {route.params.keywords == 'contactlens' || route.params.keywords == 'solutions' || route.params.keywords == 'accessories' ? 
+          {route.params.keywords == 'solutions' ? 
             (
               <View style={{ marginTop: 0 }}>
                 <ViewCollapse
@@ -540,9 +598,9 @@ function Search() {
                   </ViewCollapse>
               </View>
             ) 
-            :
+            : 
             (
-              route.params.keywords == 'accessories' ? null : 
+              route.params.keywords == 'frame' || route.params.keywords == 'sunglass' || route.params.keywords == null ? 
               (
                 <View style={{ marginTop: 0 }}>
                   <ViewCollapse
@@ -581,68 +639,17 @@ function Search() {
                                 </Typography>
                               )}
                             >
-                              <View style={[wrapper.row]}>
-                                <Image source={{ uri: item.fotobrand }} style={{ width: 30, height: 20, resizeMode: 'stretch' }} />
-                                <Typography style={{ marginLeft: 5}}>
-                                  {item.name}
-                                </Typography>
-                              </View>
+                              <Typography style={{ marginLeft: 5}}>{item.name}</Typography>
                             </Button>
                           );
                         })
                       }
                     </ViewCollapse>
                 </View>
-              )
+              ) : null
             )
           }
-          {route.params.keywords == 'contactlens' ? (
-            <View style={{ marginTop: 0 }}>
-            <ViewCollapse
-                style={styles.menuContainer}
-                pressableProps={{
-                  containerStyle: styles.menuBtnContainer,
-                }}
-                header={t(`${''}Color`)}
-                headerProps={{
-                  type: 'h',
-                }}
-                collapse
-              >
-                {[
-                  {
-                    id: '',
-                    name: t(`${t('All Color')}`),
-                  },
-                  ...(warna.models || [])
-                  ].map((item, index) => {
-                    const selected = item?.id === fields.warna;
-                    return (
-                      <Button
-                        key={index}
-                        labelProps={{ type: 'p' }}
-                        containerStyle={{
-                          marginTop: index > 0 ? 4 : 0,
-                          backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
-                        }}
-                        style={{ justifyContent: 'space-between' }}
-                        onPress={() => handleFieldChange('warna', item.id)}
-                        size="lg"
-                        right={(
-                          <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
-                            {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
-                          </Typography>
-                        )}
-                      >
-                        <Typography style={{ marginLeft: 5}}>{item.name}</Typography>
-                      </Button>
-                    );
-                  })
-                }
-              </ViewCollapse>
-            </View>
-          ) : null}
-          {route.params.keywords == 'contactlens' || route.params.keywords == 'solutions' || route.params.keywords == 'accessories' ? null 
+          {route.params.keywords == 'solutions' ? null 
             :
             (
               <ViewCollapse
@@ -669,6 +676,7 @@ function Search() {
                     ...categories
                   ].map((item, index) => {
                     const selected = item?.id === options.prdcat;
+                    // const selected = item?.id === fields.prdcat;
 
                     return (
                       <Button

@@ -25,6 +25,15 @@ const SORT = [
   { label: `${''}> Rp. 7.000.001`, value: '5' },
 ];
 
+const CATEGORIES = [
+  { label: `${''}All`, value: 'all' },
+  { label: `${''}Frame`, value: 'framecat' },
+  { label: `${''}Sunglass`, value: 'sunglasscat' },
+  { label: `${''}Contact Lens`, value: 'contactlenscat' },
+  { label: `${''}Solution`, value: 'solutioncat' },
+  { label: `${''}Accessories`, value: 'accessoriescat' },
+];
+
 type Fields = {
   sort?: string;
   prdcat?: string;
@@ -139,7 +148,7 @@ function Katalog() {
           pg: page,
           limit: product.perPage,
           param: "katalog",
-          //prdcat: "katalog",
+          warna: '',
           search: "katalog",
           keyword: "katalog",
           ...fields
@@ -372,7 +381,29 @@ function Katalog() {
           }}
         >
           <Typography type="h5" style={{ paddingBottom: 8 }}>
-            {`${t('Price')}`}
+            {`${t('Categories')}`}
+          </Typography>
+
+          <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
+            {CATEGORIES.map((item, index) => (
+              <Button
+                key={index}
+                containerStyle={{
+                  marginBottom: 8,
+                  marginRight: 5,
+                  borderColor: fields.sort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[400]
+                }}
+                label={t(`${''}${item.label}`)}
+                labelProps={{ color: fields.sort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[900] }}
+                size="sm"
+                border
+                onPress={() => handleFieldChange('sort', item.value)}
+              />
+            ))}
+          </View>
+
+          <Typography type="h5" style={{ paddingBottom: 8 }}>
+            {`${t('Prices')}`}
           </Typography>
 
           <View style={[wrapper.row, { flexWrap: 'wrap' }]}>

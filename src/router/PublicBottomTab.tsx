@@ -14,7 +14,7 @@ import {
   PublicContactStack,
   PublicMemberStack,
   PublicFavoriteStack,
-  PublicOtherStack,
+  PublicCartStack,
   PublicOurStoreStack
 } from './publicBottomTabs';
 import { useTranslation } from 'react-i18next';
@@ -28,7 +28,7 @@ export type PublicBottomTabParamList = {
   FavoriteStack: {};
   AccountStack: {};
   ArticleStack: {};
-  OtherStack: {};
+  CartStack: {};
   OurStoreStack: {};
 };
 
@@ -95,8 +95,8 @@ function PublicBottomTab() {
           }}
         />
         <Tab.Screen
-          name="OtherStack"
-          component={PublicOtherStack}
+          name="CartStack"
+          component={PublicCartStack}
           options={{
             tabBarLabel: t('Shop'),
             tabBarIcon: (iconParams) => (

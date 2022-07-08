@@ -23,3 +23,4 @@ export {default as StoreDetail} from './StoreDetail';
 export {default as PromotionDetail} from './PromotionDetail';
 export {default as PromotionList} from './PromotionList';
 export {default as ArticleDetail} from './ArticleDetail';
+export {default as Vto} from './Vto';

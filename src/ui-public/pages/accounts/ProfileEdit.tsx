@@ -726,7 +726,7 @@ function ProfileEdit() {
               )
             )
           )}
-        </BottomDrawer>
+      </BottomDrawer>
     </View>
   );
 };

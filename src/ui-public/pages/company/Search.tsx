@@ -78,8 +78,8 @@ function Search() {
             <Image source={{ uri: item.prd_foto }} 
                     style={{ width: width - 300, height: width - 320}} />
             <View>
-              <Typography style={{ marginLeft: 15, marginTop: 0, width: width - 30, height: 16, fontSize: 12 }} >
-                {item.kd_brg}
+              <Typography style={{ marginLeft: 15, marginTop: 0, width: width - 30, height: 16, fontSize: 10 }} >
+                {item.nama_brg}
               </Typography>
               <Typography style={{ marginLeft: 15, marginTop: 0, width: width - 30, height: 16, fontSize: 12, color: '#0d674e', fontWeight: 'bold' }} >
                 Rp. {item.price}
@@ -96,8 +96,7 @@ function Search() {
     navigation.navigatePath('Public', {
       screen: 'BottomTabs.HomeStack.Search',
       params: [null, null, {
-        search,
-        keywords: 'cariprd',
+        search: search
       }]
     });
   };
@@ -128,7 +127,7 @@ function Search() {
               fontSize: 13,
             }}
             placeholder="Search Product.."
-            // value={search}
+            value={search?.toString()}
             onChangeText={(value) => setSearch(value)}
             onSubmitEditing={handleSearch}
             returnKeyType="search"

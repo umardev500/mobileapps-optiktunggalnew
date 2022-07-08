@@ -120,11 +120,11 @@ function ProductsSerupa({
           <View style={styles.productCardContent}>
             <View style={{ height: 1, backgroundColor: '#f1f1f1', marginBottom: 10 }} />
             <Typography style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'center'}}>
-            {`${item.merk}`.toUpperCase()}
+            {`${item.prd_ds}`.toUpperCase()}
             </Typography>
-            <Typography style={{ fontSize: 12, textAlign: 'center' }}>
+            {/* <Typography style={{ fontSize: 12, textAlign: 'center' }}>
               {item.prd_no}
-            </Typography>
+            </Typography> */}
             {/* <Typography style={{ fontSize: 12, textAlign: 'center' }}>
               {item.prd_ds}
             </Typography> */}

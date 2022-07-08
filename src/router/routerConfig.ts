@@ -37,6 +37,8 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { headerShown: false };
     case 'TransactionList':
       return { title: tNotif('Your Transaction') };
+    case 'Vto':
+        return { title: tNotif('Virtual Try On') };
     case 'TransactionDetail':
       return { title: tNotif('Transaction Details') };
     case 'PromotionList':

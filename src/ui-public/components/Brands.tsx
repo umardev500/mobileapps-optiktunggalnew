@@ -55,6 +55,7 @@ function Brands({
       params: [null, null, {
         // product_id: brand.id || 0,
         keywords : 'searchbybrand',
+        merk: brand.id,
         brand,
       }]
     });

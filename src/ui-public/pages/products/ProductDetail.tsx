@@ -4,8 +4,10 @@ import { Alert, Image, Linking, ListRenderItemInfo, RefreshControl, ScrollView,
          StyleSheet, Text, useWindowDimensions, View, FlatList } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { colors, ColorVariant, shadows, wrapper } from '../../../lib/styles';
-import { CartItemType, Modelable, ProductModel, ProductPhoto, ProductRetail, ProductType, ReviewModel } from '../../../types/model';
-import { BadgeDiscount, BottomDrawer, Button, ButtonCart, ImageAuto, PressableBox, ProgressBar, RenderHtml, Typography } from '../../../ui-shared/components';
+import { CartItemType, Modelable, ProductModel, ProductPhoto, 
+         ProductRetail, ColorModel, SpheriesModel, BaseCurveModel, ReviewModel } from '../../../types/model';
+import { BadgeDiscount, BottomDrawer, Button, ButtonCart, TextField,
+         ImageAuto, PressableBox, ProgressBar, RenderHtml, Typography } from '../../../ui-shared/components';
 import { BoxLoading } from '../../../ui-shared/loadings';
 import ReviewItem from '../../components/ReviewItem';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -25,19 +27,51 @@ import { useTranslation } from 'react-i18next';
 import ProductsSerupa from '../../components/ProductsSerupa';
 import ProductsLoading from '../../loadings/ProductsLoading';
 import { WebView } from 'react-native-webview';
+import { ErrorState, ValueOf } from '../../../types/utilities';
+import SelectDropdown from 'react-native-select-dropdown'
+
+const QTY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 type Fields = {
   sort?: string;
   prdcat?: string;
   brand?: string;
+  color?: string;
+  spheries?: string;
+  basecurve?: any;
 };
+
+type OptionsState = {
+  colors?: ColorModel[];
+  colorsLoaded?: boolean;
+  colorsModalOpen?: boolean;
+};
+
+type OptionsState2 = {
+  colors2?: ColorModel[];
+  colors2Loaded?: boolean;
+  colors2ModalOpen?: boolean;
+};
+
+type OptionsStateSpheries = {
+  sph?: SpheriesModel[];
+  sphLoaded?: boolean;
+  sphModalOpen?: boolean;
+};
+
+type OptionsStateBaseCurve = {
+  basecrv?: BaseCurveModel[];
+  basecrvLoaded?: boolean;
+  basecrvModalOpen?: boolean;
+};
+
 
 function ProductDetail() {
   // Hooks
   const navnav = useNavigation();
   const navigation = useAppNavigation();
   const route = useRoute<RouteProp<PublicHomeStackParamList, 'ProductDetail'>>();
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const { user: { user, favorites } } = useAppSelector((state) => state);
   const dispatch = useDispatch();
   const { t } = useTranslation('home');
@@ -59,11 +93,39 @@ function ProductDetail() {
     imageModalOpen: false,
     imageIndex: 0,
   });
+  const [pilihan, setPilihan] = useState<OptionsState>({
+    colors: [],
+    colorsLoaded: false,
+    colorsModalOpen: false,
+  });
+  const [pilihan2, setPilihan2] = useState<OptionsState2>({
+    colors2: [],
+    colors2Loaded: false,
+    colors2ModalOpen: false,
+  });
+  const [pilihanSpheries, setPilihanSpheries] = useState<OptionsStateSpheries>({
+    sph: [],
+    sphLoaded: false,
+    sphModalOpen: false,
+  });
+  const [pilihanBaseCrv, setPilihanBaseCrv] = useState<OptionsStateBaseCurve>({
+    basecrv: [],
+    basecrvLoaded: false,
+    basecrvModalOpen: false,
+  });
 
   const [fields, setFields] = useState<Fields>({
     sort: '',
     prdcat: '',
     brand: '',
+    color: '',
+    spheries: '',
+    basecurve: '',
+  });
+
+  const [error, setError] = useState<ErrorState<Fields>>({
+    fields: [],
+    message: undefined,
   });
 
   // Effects
@@ -73,14 +135,23 @@ function ProductDetail() {
 
   useEffect(() => {
     const { product_id, product } = route.params;
-    // Alert.alert( "Pemberitahuan", "Brand : "+route.params.product?.merk);
+    // Alert.alert( "Pemberitahuan", "Brand : "+type);
     product && setProduct(state => ({
       ...state,
       model: product,
       modelLoaded: false,
     }));
+    if(route.params.product?.description == 'CL' || route.params.product?.description == 'ACCS'){
+      retrieveColor();
+      retrieveSpheries();
+      retrieveBaseCurve();
+    }
 
-    undefined !== product_id && retrieveProduct(product_id) && retrieveProductsList();
+    if(route.params.product?.description == 'ACCS' || route.params.product?.description == 'CL' || route.params.product?.description == 'SL'){
+      undefined !== product_id && retrieveProduct(product_id);
+    }else{
+      undefined !== product_id && retrieveProduct(product_id) && retrieveProductsList();
+    }
   }, [route.params]);
 
   useEffect(() => {
@@ -99,14 +170,89 @@ function ProductDetail() {
 
     route.params?.product_id; 
     retrieveProduct(route.params?.product_id);
-    retrieveProductsList();
-
+    retrieveSpheries();
+    retrieveColor();
+    retrieveBaseCurve();
     setIsLoading(false);
+  };
+
+  // GET COLOR API
+  const retrieveColor = async () => {
+    setPilihan(state => ({
+      ...state,
+      colors: [],
+      colorsLoaded: false,
+    }));
+
+    return await httpService('/api/product/product', {
+      data: {
+        act: 'Color',
+        dt: JSON.stringify({ jenis : route.params.product?.description == 'ACCS' ? 'ACCS' : 'CL'})
+      }
+    }).then(({ status, data }) => {
+      if (status === 200) {
+        setPilihan(state => ({
+          ...state,
+          colors: data,
+          colorsLoaded: true,
+        }));
+      }
+    });
+  };
+
+  // GET SPHERIES API
+  const retrieveSpheries = async () => {
+    setPilihanSpheries(state => ({
+      ...state,
+      sph: [],
+      sphLoaded: false,
+    }));
+
+    return await httpService('/api/product/product', {
+      data: {
+        act: 'Spheries',
+        dt: JSON.stringify({ jenis : route.params.product?.description == 'ACCS' ? 'ACCS' : 'CL'})
+      }
+    }).then(({ status, data }) => {
+      if (status === 200) {
+        setPilihanSpheries(state => ({
+          ...state,
+          sph: data,
+          sphLoaded: true,
+        }));
+      }
+    });
+  };
+
+  // GET BASE CURVE API
+  const retrieveBaseCurve = async () => {
+    setPilihanBaseCrv(state => ({
+      ...state,
+      basecrv: [],
+      basecrvLoaded: false,
+    }));
+
+    return await httpService('/api/product/product', {
+      data: {
+        act: 'BaseCurve',
+        dt: JSON.stringify({ 
+          jenis : route.params.product?.description == 'ACCS' ? 'ACCS' : 'CL',
+          prdid: route.params.product?.prd_id || route.params.product_id,
+        })
+      }
+    }).then(({ status, data }) => {
+      if (status === 200) {
+        setPilihanBaseCrv(state => ({
+          ...state,
+          basecrv: data,
+          basecrvLoaded: true,
+        }));
+      }
+    });
   };
 
   const retrieveProductsList = async (page: number = 1) => {
     const reccnt = 4 * (page <= 1 ? 0 : page);
-
     setProduct(state => ({ ...state, modelsLoaded: false }));
 
     return httpService('/api/product/product', {
@@ -140,7 +286,7 @@ function ProductDetail() {
   const retrieveProduct = async (product_id: string) => {
     return httpService('/api/product/product/', {
       data: {
-        dt: JSON.stringify({ prd_id: product_id }),
+        dt: JSON.stringify({ prd_id: product_id, flaq: route.params.product?.description }),
         act: 'PrdInfo'
       },
     }).then(({ status, data: [data], foto }) => {
@@ -153,7 +299,12 @@ function ProductDetail() {
           },
           modelLoaded: true
         }));
-        retrieveReviews(product_id);
+        if(route.params.product?.description == 'ACCS' || route.params.product?.description == 'CL' || route.params.product?.description == 'SL'){
+          null
+        }else{
+          retrieveReviews(product_id);
+        }
+        
       }
     });
   };
@@ -184,6 +335,65 @@ function ProductDetail() {
         }));
         break;
     }
+  };
+
+  const PopupPilihan = async (type: string, open: boolean | null = null) => {
+    // Alert.alert( "Pemberitahuan", "Brand : "+type);
+    switch (type) {
+      case 'color1':
+        let newState1: Partial<OptionsState> = {};
+        newState1.colorsModalOpen = 'boolean' === typeof open ? open : !pilihan.colorsModalOpen;
+        setPilihan(state => ({
+          ...state,
+          ...newState1,
+        }));
+        break;
+      case 'color2':
+        let newState2: Partial<OptionsState2> = {};
+        newState2.colors2ModalOpen = 'boolean' === typeof open ? open : !pilihan2.colors2ModalOpen;
+        setPilihan2(state => ({
+          ...state,
+          ...newState2,
+        }));
+        break;
+      case 'spheries':
+        let newStateSph: Partial<OptionsStateSpheries> = {};
+        newStateSph.sphModalOpen = 'boolean' === typeof open ? open : !pilihanSpheries.sphModalOpen;
+        setPilihanSpheries(state => ({
+          ...state,
+          ...newStateSph,
+        }));
+        break;
+      case 'basecurve':
+        let newState: Partial<OptionsStateBaseCurve> = {};
+        newState.basecrvModalOpen = 'boolean' === typeof open ? open : !pilihanBaseCrv.basecrvModalOpen;
+        setPilihanBaseCrv(state => ({
+          ...state,
+          ...newState,
+        }));
+        break;
+    }
+  };
+
+  const handleCloseModal = async (type: string, open: boolean | null = null) => {
+    // Alert.alert( "Pemberitahuan", "Brand : "+type);
+    PopupPilihan(type, false);
+  };
+
+  const handleFieldChange = (field: keyof Fields, value: ValueOf<Fields>) => {
+    const { fields = [] } = error;
+    // Alert.alert( "Pemberitahuan", "Brand : "+field);
+    setFields(state => ({
+      ...state,
+      [field]: value
+    }));
+
+    fields.indexOf(field) >= 0 && setError({
+      fields: [],
+      message: undefined,
+    });
+
+    handleCloseModal(field, false);
   };
 
   const handleFavoriteToggle = async () => {
@@ -229,7 +439,8 @@ function ProductDetail() {
 
   const favorite = favorites.find((item) => item.prd_id === product.model?.prd_id);
   // let retails: ProductRetail[] = [];
-
+  const textPilih = t(`${''}Select`);
+  
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -261,7 +472,6 @@ function ProductDetail() {
                 itemWidth={width}
                 inactiveSlideScale={1}
               />
-
               <Button
                 containerStyle={{
                   position: 'absolute',
@@ -272,8 +482,7 @@ function ProductDetail() {
                 size={40}
                 rounded={40}
                 onPress={() => navigation.navigatePath('Public', {
-                  screen: 'BottomTabs.OtherStack.Katalog'
-                  // screen: 'BottomTabs.HomeStack.Search'
+                  screen: 'BottomTabs.HomeStack.Search'
                 })}
               >
                 <Ionicons
@@ -309,57 +518,469 @@ function ProductDetail() {
             </View>
           )}
           <View style={{ paddingTop: -20, paddingHorizontal: 5 }}>
-            <Typography type="h5" style={{color: '#333333'}}>
-              {productModel.prd_ds}
-            </Typography>
-            <Typography style={{color: '#333333', fontSize: 14}}>
-              {productModel.merk}
-            </Typography>
-            <Typography style={{color: '#333333', fontSize: 14}}>
-              {route.params.product_id}
-            </Typography>
-
-            {productModel.harga_promo == 0 ? 
-              (<>
-                <Typography type="h4" color="#0d674e">
-                  Rp. {productModel.harga}
+          {route.params.product?.description == 'CL' ? 
+            (
+              <>
+                <Typography type="h5" style={{color: '#333333'}}>
+                  {productModel.prd_ds}
                 </Typography>
-               </>) : (
+                {/* <Typography style={{color: '#333333', fontSize: 14}}>
+                  Brand : {productModel.merk}
+                </Typography> */}
+
+                {productModel.harga_promo == 0 ? 
+                  (<>
+                    <Typography type="h4" color="#0d674e">
+                      Rp. {productModel.harga}
+                    </Typography>
+                  </>) : (
+                    <>
+                      <Typography type="h4" color="red" style={{ textDecorationLine: 'line-through' }}>
+                        Rp. {productModel.harga}
+                      </Typography>
+                      <Typography type="h4" color="#0d674e">
+                        Rp {productModel.harga_promo}
+                      </Typography>
+                    </>
+                )}
+                <View style={{height: 1, backgroundColor: "#ccc", marginVertical: 15}}></View>
+                <View style={[wrapper.row]}>
+                  <View style={{flex: 0.7}}></View>
+                  <View style={{flex: 1}}>
+                    <Typography style={[styles.fontnya, {fontWeight: 'bold'}]}>
+                      Mata Kiri (OS)
+                    </Typography>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Typography style={[styles.fontnya, {marginLeft: 5, fontWeight: 'bold'}]}>
+                      Mata Kanan (OD)
+                    </Typography>
+                  </View>
+                </View>
+                {/*COLOR*/}
+                <View style={[wrapper.row, {marginTop: 5}]}>
+                  <View style={{flex: 0.5}}>
+                    <Typography style={styles.fontnya}>
+                      Color
+                    </Typography>
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <SelectDropdown
+                      data={pilihan.colors?.map(item => {
+                        return item.nm_warna
+                      })}
+                      onSelect={(selectedItem, index) => {
+                        console.log('color : '+selectedItem, index)
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item
+                      }}
+                      defaultButtonText={'Pilih Warna'}
+                      buttonStyle={styles.dropdown1BtnStyle}
+                      buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                      renderDropdownIcon={isOpened => {
+                        return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
+                      }}
+                      dropdownIconPosition={'right'}
+                      dropdownStyle={styles.dropdown1DropdownStyle}
+                      rowStyle={styles.dropdown1RowStyle}
+                      rowTextStyle={styles.dropdown1RowTxtStyle}
+                    />
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                  <SelectDropdown
+                      data={pilihan.colors?.map(item => {
+                        return item.nm_warna
+                      })}
+                      onSelect={(selectedItem, index) => {
+                        console.log(selectedItem, index)
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item
+                      }}
+                      defaultButtonText={'Pilih Warna'}
+                      buttonStyle={styles.dropdown1BtnStyle}
+                      buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                      renderDropdownIcon={isOpened => {
+                        return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
+                      }}
+                      dropdownIconPosition={'right'}
+                      dropdownStyle={styles.dropdown1DropdownStyle}
+                      rowStyle={styles.dropdown1RowStyle}
+                      rowTextStyle={styles.dropdown1RowTxtStyle}
+                    />
+                  </View>
+                </View>
+                {/*SPHERIES / POWER*/}
+                <View style={[wrapper.row, {marginTop: 5}]}>
+                  <View style={{flex: 0.5}}>
+                    <Typography style={styles.fontnya}>
+                      Spheries / Power
+                    </Typography>
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <SelectDropdown
+                      data={pilihanSpheries.sph?.map(item => {
+                        return item.ket
+                      })}
+                      onSelect={(selectedItem, index) => {
+                        console.log(selectedItem, index)
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item
+                      }}
+                      defaultButtonText={'Pilih Spheries'}
+                      buttonStyle={styles.dropdown1BtnStyle}
+                      buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                      renderDropdownIcon={isOpened => {
+                        return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
+                      }}
+                      dropdownIconPosition={'right'}
+                      dropdownStyle={styles.dropdown1DropdownStyle}
+                      rowStyle={styles.dropdown1RowStyle}
+                      rowTextStyle={styles.dropdown1RowTxtStyle}
+                    />
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <SelectDropdown
+                      data={pilihanSpheries.sph?.map(item => {
+                        return item.ket
+                      })}
+                      onSelect={(selectedItem, index) => {
+                        console.log(selectedItem, index)
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item
+                      }}
+                      defaultButtonText={'Pilih Spheries'}
+                      buttonStyle={styles.dropdown1BtnStyle}
+                      buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                      renderDropdownIcon={isOpened => {
+                        return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
+                      }}
+                      dropdownIconPosition={'right'}
+                      dropdownStyle={styles.dropdown1DropdownStyle}
+                      rowStyle={styles.dropdown1RowStyle}
+                      rowTextStyle={styles.dropdown1RowTxtStyle}
+                    />
+                  </View>
+                </View>
+                {/*BASE CURVE*/}
+                <View style={[wrapper.row, {marginTop: 5}]}>
+                  <View style={{flex: 0.5}}>
+                    <Typography style={styles.fontnya}>
+                      Base Curve
+                    </Typography>
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <SelectDropdown
+                      data={pilihanBaseCrv.basecrv?.map(item => {
+                        return item.id
+                      })}
+                      onSelect={(selectedItem, index) => {
+                        console.log(selectedItem, index)
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item
+                      }}
+                      defaultButtonText={'Pilih Base Curve'}
+                      buttonStyle={styles.dropdown1BtnStyle}
+                      buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                      renderDropdownIcon={isOpened => {
+                        return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
+                      }}
+                      dropdownIconPosition={'right'}
+                      dropdownStyle={styles.dropdown1DropdownStyle}
+                      rowStyle={styles.dropdown1RowStyle}
+                      rowTextStyle={styles.dropdown1RowTxtStyle}
+                    />
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <SelectDropdown
+                      data={pilihanBaseCrv.basecrv?.map(item => {
+                        return item.id
+                      })}
+                      onSelect={(selectedItem, index) => {
+                        console.log(selectedItem, index)
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item
+                      }}
+                      defaultButtonText={'Pilih Base Curve'}
+                      buttonStyle={styles.dropdown1BtnStyle}
+                      buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                      renderDropdownIcon={isOpened => {
+                        return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
+                      }}
+                      dropdownIconPosition={'right'}
+                      dropdownStyle={styles.dropdown1DropdownStyle}
+                      rowStyle={styles.dropdown1RowStyle}
+                      rowTextStyle={styles.dropdown1RowTxtStyle}
+                    />
+                  </View>
+                </View>
+                {/*Qty*/}
+                <View style={[wrapper.row, {marginTop: 5}]}>
+                  <View style={{flex: 0.5}}>
+                    <Typography style={styles.fontnya}>
+                      Qty
+                    </Typography>
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <SelectDropdown
+                      data={QTY}
+                      onSelect={(selectedItem, index) => {
+                        console.log(selectedItem, index)
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item
+                      }}
+                      defaultButtonText={'Qty'}
+                      buttonStyle={styles.dropdown1BtnStyle}
+                      buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                      renderDropdownIcon={isOpened => {
+                        return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
+                      }}
+                      dropdownIconPosition={'right'}
+                      dropdownStyle={styles.dropdown1DropdownStyle}
+                      rowStyle={styles.dropdown1RowStyle}
+                      rowTextStyle={styles.dropdown1RowTxtStyle}
+                    />
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <SelectDropdown
+                      data={QTY}
+                      onSelect={(selectedItem, index) => {
+                        console.log(selectedItem, index)
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item
+                      }}
+                      defaultButtonText={'Qty'}
+                      buttonStyle={styles.dropdown1BtnStyle}
+                      buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                      renderDropdownIcon={isOpened => {
+                        return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
+                      }}
+                      dropdownIconPosition={'right'}
+                      dropdownStyle={styles.dropdown1DropdownStyle}
+                      rowStyle={styles.dropdown1RowStyle}
+                      rowTextStyle={styles.dropdown1RowTxtStyle}
+                    />
+                  </View>
+                </View>
+              </>
+            ) : (route.params.product?.description == 'ACCS1' ? 
+              (
                 <>
-                  <Typography type="h4" color="red" style={{ textDecorationLine: 'line-through' }}>
-                    Rp. {productModel.harga}
+                  <Typography type="h5" style={{color: '#333333'}}>
+                    {productModel.prd_ds}
                   </Typography>
-                  <Typography type="h4" color="#0d674e">
-                    Rp {productModel.harga_promo}
+                  <Typography style={{color: '#333333', fontSize: 14}}>
+                    Brand : {productModel.merk}
                   </Typography>
+
+                  {productModel.harga_promo == 0 ? 
+                    (<>
+                      <Typography type="h4" color="#0d674e">
+                        Rp. {productModel.harga}
+                      </Typography>
+                    </>) : (
+                      <>
+                        <Typography type="h4" color="red" style={{ textDecorationLine: 'line-through' }}>
+                          Rp. {productModel.harga}
+                        </Typography>
+                        <Typography type="h4" color="#0d674e">
+                          Rp {productModel.harga_promo}
+                        </Typography>
+                      </>
+                  )}
+                  <View style={{height: 1, backgroundColor: "#ccc", marginVertical: 15}}></View>
+                  <View style={[wrapper.row, {marginTop: 5}]}>
+                    <View style={{flex: 1}}>
+                      <Typography style={styles.fontnya}>
+                        Color
+                      </Typography>
+                    </View>
+                    <View style={{width: 250}}>
+                      <SelectDropdown
+                        data={pilihan.colors?.map(item => {
+                          return item.kd_warna
+                        })}
+                        onSelect={(selectedItem, index) => {
+                          console.log(selectedItem, index)
+                        }}
+                        buttonTextAfterSelection={(selectedItem, index) => {
+                          return selectedItem
+                        }}
+                        rowTextForSelection={(item, index) => {
+                          return item
+                        }}
+                        defaultButtonText={'Pilih Warna'}
+                        buttonStyle={styles.dropdown2BtnStyle}
+                        buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                        renderDropdownIcon={isOpened => {
+                          return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
+                        }}
+                        dropdownIconPosition={'right'}
+                        dropdownStyle={styles.dropdown1DropdownStyle}
+                        rowTextStyle={styles.dropdown1RowTxtStyle}
+                      />
+                    </View>
+                  </View>
+                  <View style={[wrapper.row, {marginTop: 5}]}>
+                    <View style={{flex: 1}}>
+                      <Typography style={styles.fontnya}>
+                        Power
+                      </Typography>
+                    </View>
+                    <View style={{width: 250}}>
+                      <SelectDropdown
+                        data={pilihanSpheries.sph?.map(item => {
+                          return item.ket
+                        })}
+                        onSelect={(selectedItem, index) => {
+                          console.log(selectedItem, index)
+                        }}
+                        buttonTextAfterSelection={(selectedItem, index) => {
+                          return selectedItem
+                        }}
+                        rowTextForSelection={(item, index) => {
+                          return item
+                        }}
+                        defaultButtonText={'Pilih Spheries/Power'}
+                        buttonStyle={styles.dropdown2BtnStyle}
+                        buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                        renderDropdownIcon={isOpened => {
+                          return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
+                        }}
+                        dropdownIconPosition={'right'}
+                        dropdownStyle={styles.dropdown1DropdownStyle}
+                        rowTextStyle={styles.dropdown1RowTxtStyle}
+                      />
+                    </View>
+                  </View>
                 </>
-            )}            
-          </View> 
-          <Typography 
-            type="h5" 
-            style={{ marginTop: 20, marginBottom: 10, color: '#333333', 
-                     textAlign: 'center', }}>
-            {t('You might like these too')}
-          </Typography>
-          <View style={{ borderBottomColor: '#ccc', borderBottomWidth: 1, marginBottom: 10 }}></View>
-          {!product.models ? (
-            <View style={[styles.container, styles.wrapper]}>
-              <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
-              <Typography textAlign="center" style={{ marginVertical: 12 }}>
-              {t(`${t('Product Not Found')}`)}
-              </Typography>
-            </View>
-          ) : 
-          (
-            <ProductsSerupa
-              contentContainerStyle={[styles.container, styles.wrapper]}
-              refreshing={isLoading}
-              data={product.models}
-              LoadingView={(
-              <ProductsLoading />
-              )}
-            />
-          )}
+              )
+              :
+              <>
+                <Typography type="h5" style={{color: '#333333'}}>
+                  {productModel.prd_ds}
+                </Typography>
+                <Typography style={{color: '#333333', fontSize: 14}}>
+                  {productModel.merk}
+                </Typography>
+                <Typography style={{color: '#333333', fontSize: 14}}>
+                  {route.params.product_id}
+                </Typography>
+
+                {productModel.harga_promo == 0 ? 
+                  (<>
+                    <Typography type="h4" color="#0d674e">
+                      Rp. {productModel.harga}
+                    </Typography>
+                  </>) : (
+                    <>
+                      <Typography type="h4" color="red" style={{ textDecorationLine: 'line-through' }}>
+                        Rp. {productModel.harga}
+                      </Typography>
+                      <Typography type="h4" color="#0d674e">
+                        Rp {productModel.harga_promo}
+                      </Typography>
+                    </>
+                )} 
+
+                <PressableBox
+                  containerStyle={{ overflow: 'visible', borderRadius: 5, 
+                                    borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#0d674e', paddingVertical: 10, marginTop: 10, flex: 1}}
+                  opacity={1}
+                  onPress={() => navigation.navigatePath('Public', {
+                    screen: 'Vto',
+                  })}
+                >
+                  <Typography style={{fontWeight: '700', color: '#FEFEFE', textAlign: 'center'}}>
+                    Try Virtual
+                  </Typography>
+                </PressableBox>
+
+                {/* <View>
+                  <PressableBox
+                    containerStyle={{ overflow: 'visible', borderRadius: 5, 
+                                      borderWidth: 1, borderColor: '#0d674e', paddingVertical: 10, marginTop: 10, flex: 1}}
+                    opacity={1}
+                    onPress={() => PopupPilihan('desc', true)}
+                  >
+                    <Typography style={{fontWeight: '700', color: '#0d674e'}}>
+                      Description
+                      <Ionicons name="chevron-down" size={18} color={'#0d674e'} />
+                    </Typography>
+                  </PressableBox>
+                </View> */}
+                {/* {productModel.product_info == null ? null : (
+                  <View style={{ marginTop: 4 }}>
+                    <RenderHtml contentWidth={width - 60} source={{ html: productModel.product_info.replace(/\r\n/,' ') }} />
+                  </View>
+                )} */}
+              </>
+            )
+          }           
+          </View>
+          {route.params.product?.description == 'CL' || route.params.product?.description == 'ACCS1' || route.params.product?.description == 'SL' ? 
+            null :
+            (
+              <>
+                <Typography 
+                  type="h5" 
+                  style={{ marginTop: 20, marginBottom: 10, color: '#333333', 
+                          textAlign: 'center', }}>
+                  {t('You might like these too')}
+                </Typography>
+                <View style={{ borderBottomColor: '#ccc', borderBottomWidth: 1, marginBottom: 10 }}></View>
+                {!product.models ? (
+                  <View style={[styles.container, styles.wrapper]}>
+                    <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
+                    <Typography textAlign="center" style={{ marginVertical: 12 }}>
+                    {t(`${t('Product Not Found')}`)}
+                    </Typography>
+                  </View>
+                ) : 
+                (
+                  <ProductsSerupa
+                    contentContainerStyle={[styles.container, styles.wrapper]}
+                    refreshing={isLoading}
+                    data={product.models}
+                    LoadingView={(
+                    <ProductsLoading />
+                    )}
+                  />
+                )}
+              </>
+            )          
+          }
         </View>
       )}
 
@@ -382,6 +1003,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingBottom: 24,
     backgroundColor: colors.white,
+  },
+  modalContainer: {
+    paddingHorizontal: 15,
+    paddingTop: 12,
+    paddingBottom: 24
   },
   sorry: {
     width: 100,
@@ -438,7 +1064,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 2,
     borderRadius: 10
-  }
+  },
+  fontnya: {
+    textAlignVertical: 'center', 
+    paddingTop: 10, 
+    color: '#686868', 
+    fontSize: 10,
+  },
+  dropdown1BtnStyle: {
+    width: '80%',
+    height: 40,
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  dropdown2BtnStyle: {
+    width: '100%',
+    height: 40,
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  dropdown1BtnTxtStyle: {color: '#444', textAlign: 'left', fontSize: 11},
+  dropdown1DropdownStyle: {backgroundColor: '#EFEFEF'},
+  dropdown1RowStyle: {backgroundColor: '#EFEFEF', borderBottomColor: '#C5C5C5'},
+  dropdown1RowTxtStyle: {color: '#444', textAlign: 'left'},
 });
 
 export default ProductDetail;

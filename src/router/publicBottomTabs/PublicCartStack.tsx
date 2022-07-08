@@ -1,23 +1,23 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { colors } from '../../lib/styles';
-import { Katalog } from '../../ui-public/pages/otherpage';
+import { Cart } from '../../ui-public/pages/cart';
 import { getHeaderTitle } from '@react-navigation/elements';
 import { Header } from '../../ui-shared/components';
 import { routeOptions } from '../routerConfig';
-// import * as Katalog from '../../ui-public/pages/otherpage';
+// import * as Cart from '../../ui-public/pages/otherpage';
 
-export type PublicOtherStackParamList = {
- //Katalog: {};
+export type PublicCartStackParamList = {
+ //Cart: {};
   [key: string]: {};
 };
 
-const Stack = createStackNavigator<PublicOtherStackParamList>();
+const Stack = createStackNavigator<PublicCartStackParamList>();
 
-function PublicOtherStack() {
+function PublicCartStack() {
   return (
     <Stack.Navigator
-      initialRouteName="Katalog"
+      initialRouteName="Cart"
       screenOptions={{
         header: ({ navigation, route, options, back }) => {
           const title = getHeaderTitle(options, route.name);
@@ -35,17 +35,17 @@ function PublicOtherStack() {
         headerBackTitleVisible: false,
       }}
     >
-      <Stack.Screen name="Katalog" component={Katalog} options={routeOptions('Katalog')} />
+      <Stack.Screen name="Cart" component={Cart} options={routeOptions('Cart')} />
 
-      {/* Katalog */}
-      {(Object.keys(Katalog) as Array<keyof typeof Katalog>)
+      {/* Cart */}
+      {(Object.keys(Cart) as Array<keyof typeof Cart>)
         .filter((name: string) => [].indexOf(name as never) < 0) // Except
         .map((name) => (
-          <Stack.Screen key={name} name={name} component={Katalog[name]} options={routeOptions(name)} />
+          <Stack.Screen key={name} name={name} component={Cart[name]} options={routeOptions(name)} />
         ))}
 
     </Stack.Navigator>
   );
 }
 
-export default PublicOtherStack;
+export default PublicCartStack;

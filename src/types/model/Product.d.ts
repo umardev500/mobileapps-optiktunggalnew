@@ -21,7 +21,9 @@ export type ProductModel = {
 
   categories?: CategoryModel[];
   brands?: BrandModel[];
+  brandcl?: BrandCLModel[];
   warnas?: ColorModel[];
+  spheries?: SpheriesModel[];
   genders?: GenderModel[];
   modelkacamatas?: ModelKacamata[];
 
@@ -103,16 +105,36 @@ export type ModelKacamata = {
 
 export type BrandModel = {
   id?: string;
-  name?: string;
+  name?: any;
   fotobrand?: string;
-  codebrand?: string;
+  codebrand?: any;
   imgbrand?: any;
   imgbrandbg?: any;
 };
 
-export type ColorModel = {
+export type BrandCLModel = {
   id?: string;
-  name?: string;
+  nama?: any;
+  imagebrand?: string;
+  brandcode?: any;
+};
+
+export type ColorModel = {
+  id?: any;
+  kd_warna?: any;
+  nm_warna?: string;
+};
+
+export type SpheriesModel = {
+  id?: any;
+  kd_sph?: any;
+  ket?: any
+};
+
+export type BaseCurveModel = {
+  id?: any;
+  code?: any;
+  name?: any;
 };
 
 export type ReviewModel = {

@@ -56,7 +56,7 @@
     "react-native-render-html": "^6.3.0",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.8.0",
-    "react-native-select-dropdown": "^1.13.0",
+    "react-native-select-dropdown": "^2.0.3",
     "react-native-share": "^7.3.7",
     "react-native-simple-radio-button": "^2.7.4",
     "react-native-snap-carousel": "^3.9.1",

@@ -58,9 +58,9 @@ function ProductsByKategori({
 
   // Vars
   const handleGoToDetail = (product: ProductModel) => {
-    if (!product.prd_id || product.description == 'CL' || product.description == 'SL' || product.description == 'ACCS') {
-      return void(0);
-    }
+    // if (!product.prd_id || product.description == 'CL' || product.description == 'SL' || product.description == 'ACCS') {
+    //   return void(0);
+    // }
 
     navigation.navigatePath('Public', {
       screen: 'BottomTabs.HomeStack.ProductDetail',
@@ -129,12 +129,26 @@ function ProductsByKategori({
 
           <View style={styles.productCardContent}>
             <View style={{ height: 1, backgroundColor: '#f1f1f1', marginBottom: 10 }} />
-            <Typography style={{ fontSize: 11, fontWeight: 'bold', textAlign: 'center'}}>
-              {`${item.merk}`.toUpperCase()}
-            </Typography>
-            <Typography style={{ fontSize: 11, textAlign: 'center' }}>
+            <Typography style={{ fontSize: 11, fontWeight: 'bold', textAlign: 'center', color: '#333', height: 40}}>
+                  {`${item.prd_ds}`.toUpperCase()}
+                </Typography>
+            {/* {item.prd_ds?.length != 56 ? 
+              (
+                <>
+                  <Typography style={{ fontSize: 11, fontWeight: 'bold', textAlign: 'center', color: '#333'}} numberOfLines={2} ellipsizeMode='tail'>
+                    {`${item.prd_ds}`.toUpperCase()}
+                  </Typography>
+                </>
+              )
+              :
+              (
+                <Typography style={{ fontSize: 11, fontWeight: 'bold', textAlign: 'center', color: '#333'}} numberOfLines={2} ellipsizeMode='tail'>
+                  {`${item.prd_ds}`.toUpperCase()}
+                </Typography>
+            )}  */}
+            {/* <Typography style={{ fontSize: 11, textAlign: 'center' }}>
               {item.prd_no}
-            </Typography>
+            </Typography> */}
             {/* <Typography style={{ fontSize: 12, textAlign: 'center' }}>
               {item.prd_ds}
             </Typography> */}
@@ -201,9 +215,11 @@ const styles = StyleSheet.create({
   productCard: {
     flexDirection: 'column',
     paddingHorizontal: 0,
+    height: '100%'
   },
   productCardThumb: {
     position: 'relative',
+    overflow: 'hidden'
   },
   productCardImage: {
     width: '100%',
