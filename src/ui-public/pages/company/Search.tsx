@@ -94,7 +94,7 @@ function Search() {
 
   const handleSearch = () => {
     navigation.navigatePath('Public', {
-      screen: 'BottomTabs.HomeStack.Search',
+      screen: 'BottomTabs.HomeStack.SearchNew',
       params: [null, null, {
         search: search
       }]

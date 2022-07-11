@@ -23,6 +23,8 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { title: tHome('Cart') };
     case 'Search':
       return { headerShown: false };
+    case 'SearchNew':
+      return { headerShown: false };
     case 'Checkout':
       return { headerShown: false };
     case 'PaymentMethod':

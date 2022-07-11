@@ -114,7 +114,7 @@ export type BrandModel = {
 
 export type BrandCLModel = {
   id?: string;
-  nama?: any;
+  name?: any;
   imagebrand?: string;
   brandcode?: any;
 };

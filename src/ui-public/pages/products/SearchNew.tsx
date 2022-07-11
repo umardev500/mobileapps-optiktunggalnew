@@ -30,6 +30,13 @@ const SORTCLSLACS = [
   { label: `${''}Highest price`, value: 'highprice', icon: 'ios-arrow-up-circle-sharp' },
 ];
 
+const CATEGORY = [
+  { label: `${''}Frame`, value: 'isFrame' },
+  { label: `${''}Sunglass`, value: 'isSunglass' },
+  { label: `${''}Contact Lens`, value: 'isLens' },
+  { label: `${''}Solutions`, value: 'isSol' },
+  { label: `${''}Accessories`, value: 'isAccs' },
+];
 
 type Fields = {
   sort?: string;
@@ -49,7 +56,7 @@ type OptionsState = {
   catsort?: string;
 };
 
-function Search() {
+function SearchNew() {
   // Hooks
   const navigation = useAppNavigation();
   const route = useRoute<RouteProp<PublicHomeStackParamList, 'Search'>>();
@@ -102,6 +109,13 @@ function Search() {
     catsort: ''
   });
 
+  const [tampilBrandFrameSunglass, setTampilBrandFrameSunglass] = useState(false);
+  const [tampilBrandSolution, setTampilBrandSolution] = useState(false);
+  const [tampilGender, setTampilGender] = useState(false);
+  const [tampilPriceSol, setTampilPriceSol] = useState(false);
+  const [tampilPriceDefault, setTampilPriceDefault] = useState(false);
+  const [notifFilter, setNotifFilter] = useState(false);
+  const mode = false;
   // Effects
   useEffect(() => {
     setProduct(state => ({
@@ -109,12 +123,12 @@ function Search() {
       page: 1
     }));
 
-    retrieveBrands();
-    retrieveGenders();
+    changeState(mode);
     // if(route.params.keywords == 'contactlens'){
+    //   retrieveBrandCategory('contactlens');
     //   retrieveColors('contactlenscolor');
     // }else if(route.params.keywords == 'solutions'){
-    //   retrieveBrand('solutions');
+    //   retrieveBrandCategory('solutions');
     // }else if(route.params.keywords == 'accessories'){
     //   retrieveBrandCategory('accessories');
     // }
@@ -124,11 +138,11 @@ function Search() {
     const { search: routeSearch, category: routeCategory, brand: routeBrand } = route.params;
     routeSearch && setSearch(routeSearch);
     if (routeCategory) {
-      handleFieldChange('prdcat', routeCategory.id);
+      handleFieldChangeOld('prdcat', routeCategory.id);
 
       setOptions(state => ({ ...state, prdcat: routeCategory.id }));
     }else if (routeBrand) {
-      handleFieldChange('brand', routeBrand.id);
+        handleFieldChangeOld('brand', routeBrand.id);
 
       setOptions(state => ({ ...state, brand: routeBrand.id }));
     }
@@ -191,10 +205,10 @@ function Search() {
     });
   };
 
-  const retrieveColors = async (jenis: String) => {
+  const retrieveOtherBrand = async (jenis: String) => {
     return httpService('/api/brand/brand', {
       data: {
-        act: 'CategoryBrand',
+        act: 'SolutionsBrand',
         dt: JSON.stringify({ jns: jenis }),
       }
     }).then(({ status, data }) => {
@@ -256,22 +270,296 @@ function Search() {
     }
   };
 
-  const handleFieldChange = (field: keyof Fields, value: ValueOf<Fields>) => {
-    // Alert.alert( "Pemberitahuan", "Test : "+value,
-    //             [
-    //               { text: "GANTI DATA", onPress: () => console.log('test')}
-    //             ]
-    // );
+  const handleFieldChangeOld = (field: keyof Fields, value: ValueOf<Fields>) => {
     setFields(state => ({
-      ...state,
-      [field]: value
+    ...state,
+    [field]: value
     }));
   };
+
+  const handleFieldChangeNew = (field: keyof Fields, value: ValueOf<Fields>) => {
+    changeState(value);
+    setFields(state => ({
+    ...state,
+    [field]: value
+    }));
+  };
+
+  const NotifDiFilter = notifFilter?(
+    <View style={{marginTop: 30}}>
+        <Typography style={{textAlign: 'center'}}>
+            Maaf, Untuk Kategori ini tidak memiliki Filter
+        </Typography>
+    </View>
+  ) : null;
+
+  const BrandFilter = tampilBrandFrameSunglass? (
+    <View style={{ marginTop: 0 }}>
+        <ViewCollapse
+            style={styles.menuContainer}
+            pressableProps={{
+            containerStyle: styles.menuBtnContainer,
+            }}
+            header={t(`${''}Brand`)}
+            headerProps={{
+            type: 'h',
+            }}
+            collapse
+        >
+            {[
+            {
+                id: '',
+                name: t(`${t('All Brand')}`),
+            },
+            ...(brand.models || [])
+            ].map((item, index) => {
+                const selected = item?.id === fields.brand;
+                return (
+                <Button
+                    key={index}
+                    labelProps={{ type: 'p' }}
+                    containerStyle={{
+                    marginTop: index > 0 ? 4 : 0,
+                    backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
+                    }}
+                    style={{ justifyContent: 'space-between' }}
+                    onPress={() => handleFieldChangeOld('brand', item.id)}
+                    size="lg"
+                    right={(
+                    <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
+                        {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
+                    </Typography>
+                    )}
+                >
+                    <Typography style={{ marginLeft: 5}}>{item.name}</Typography>
+                </Button>
+                );
+            })
+            }
+        </ViewCollapse>
+    </View>
+  ) : null ;
+
+  const GenderFilter = tampilGender? (
+    <ViewCollapse
+        style={styles.menuContainer}
+        pressableProps={{
+            containerStyle: styles.menuBtnContainer,
+        }}
+        header={t(`${''}Gender`)}
+        headerProps={{
+            type: 'h',
+        }}
+        collapse
+        >
+        {!categories?.length ? (
+            <Typography>
+            {t(`${t('No Gender')}`)}
+            </Typography>
+        ) : (
+            [
+            {
+                id: '',
+                ds: t(`${t('All Gender')}`),
+            },
+            ...categories
+            ].map((item, index) => {
+            const selected = item?.id === options.prdcat;
+            // const selected = item?.id === fields.prdcat;
+
+            return (
+                <Button
+                key={index}
+                label={item.ds}
+                labelProps={{ type: 'p' }}
+                containerStyle={{
+                    marginTop: index > 0 ? 4 : 0,
+                    backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
+                }}
+                style={{ justifyContent: 'space-between' }}
+                onPress={() => setOptions(state => ({ ...state, prdcat: item.id }))}
+                size="lg"
+                right={(
+                    <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
+                    {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
+                    </Typography>
+                )}
+                />
+            );
+            })
+        )}
+    </ViewCollapse>
+  ) : null;
+
+  const BrandSolutionFilter = tampilBrandSolution? (
+    <View style={{ marginTop: 0 }}>
+        <ViewCollapse
+            style={styles.menuContainer}
+            pressableProps={{
+                containerStyle: styles.menuBtnContainer,
+            }}
+            header={t(`${''}Brand`)}
+            headerProps={{
+                type: 'h',
+            }}
+            collapse
+            >
+            {[
+                {
+                id: '',
+                name: t(`${t('All Brand')}`),
+                },
+                ...(brandCL.models || [])
+                ].map((item, index) => {
+                const selected = item?.id === fields.brand;
+                return (
+                    <Button
+                    key={index}
+                    labelProps={{ type: 'p' }}
+                    containerStyle={{
+                        marginTop: index > 0 ? 4 : 0,
+                        backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
+                    }}
+                    style={{ justifyContent: 'space-between' }}
+                    onPress={() => handleFieldChangeOld('brand', item.id)}
+                    size="lg"
+                    right={(
+                        <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
+                        {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
+                        </Typography>
+                    )}
+                    >
+                    <Typography style={{ marginLeft: 5}}>{item.name}</Typography>
+                    </Button>
+                );
+                })
+            }
+            </ViewCollapse>
+    </View>
+  ) : null;
+
+  const PriceDefault = tampilPriceDefault? (
+    <View>
+        <Typography type="h5" style={{ paddingBottom: 8 }}>
+            {`${t('Price')}`}
+        </Typography>
+
+        <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
+            {SORT.map((item, index) => (
+            <Button
+                key={index}
+                containerStyle={{
+                marginBottom: 8,
+                marginRight: 5,
+                borderColor: fields.sort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[400],
+                }}
+                border
+                onPress={() => handleFieldChangeOld('sort', item.value)}
+            >
+                <Typography
+                style={{
+                    color: fields.sort === item.value ? '#0d674e' : colors.gray[900],
+                    fontSize: 12,
+                    marginHorizontal: 5
+                }}
+                >
+                {t(`${''}${item.label}`)}
+                </Typography>
+            </Button>
+            ))}
+        </View>
+    </View>
+  ) : null;
+
+  const PriceSol = tampilPriceSol? (
+    <View>
+        <Typography type="h5" style={{ paddingBottom: 8 }}>
+            {`${t('Price')}`}
+        </Typography>
+
+        <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
+            {SORTCLSLACS.map((item, index) => (
+            <Button
+                key={index}
+                containerStyle={{
+                marginBottom: 8,
+                marginRight: 8,
+                borderColor: fields.sort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[400],
+                }}
+                labelProps={{ color: fields.sort === item.value ? '#0d674e' : colors.gray[900] }}
+                size="sm"
+                border
+                onPress={() => handleFieldChangeOld('sort', item.value)}
+            >
+                <Typography>
+                <Ionicons
+                    name={item.icon}
+                    size={18}
+                    color={'#333'}
+                /> {t(`${''}${item.label}`)}</Typography>
+            </Button>
+            ))}
+        </View>
+    </View>
+  ) : null;
+  
+  const changeState = (mode: any) => {
+    switch (mode) {
+        case 'isFrame':
+            setNotifFilter(false);
+            setTampilPriceDefault(true);
+            setTampilBrandFrameSunglass(true);
+            setTampilGender(true);
+            setTampilPriceSol(false);
+            retrieveBrands();
+            retrieveGenders();
+            break;
+        case 'isSunglass':
+            setNotifFilter(false);
+            setTampilPriceDefault(true);
+            setTampilBrandFrameSunglass(true);
+            setTampilGender(true);
+            setTampilPriceSol(false);
+            retrieveBrands();
+            retrieveGenders();
+            break;
+        case 'isLens':
+            setNotifFilter(true);
+            setTampilPriceDefault(false);
+            setTampilBrandFrameSunglass(false);
+            setTampilGender(false);
+            setTampilBrandSolution(false);
+            setTampilPriceSol(false);
+            break;
+        case 'isSol':
+            setNotifFilter(false);
+            setTampilPriceDefault(false);
+            setTampilBrandFrameSunglass(false);
+            setTampilBrandSolution(true);
+            setTampilPriceSol(true);
+            retrieveOtherBrand('solutions');
+            break;
+        case 'isAccs':
+            setNotifFilter(true);
+            setTampilPriceDefault(false);
+            setTampilBrandFrameSunglass(false);
+            setTampilGender(false);
+            setTampilBrandSolution(false);
+            setTampilPriceSol(false);
+            break;
+        default:
+            setTampilBrandFrameSunglass(false);
+            setTampilGender(false);
+            setTampilBrandSolution(false);
+            setTampilPriceSol(false);
+            break;
+    }
+  }
 
   const handleFilterApply = async () => {
     handleModalToggle('filter', false);
 
-    handleFieldChange('prdcat', options.prdcat);
+    handleFieldChangeOld('prdcat', options.prdcat);
     // handleFieldChange('brand', options.brand);
 
     setProduct(state => ({
@@ -296,6 +584,7 @@ function Search() {
   const categoryActive = categories?.find(item => item.id === fields.prdcat);
   const brandActive = brands?.find(item => item.id === fields.brand);
   const priceActive = SORT?.find(item => item.value === fields.sort);
+  const catActive = CATEGORY?.find(item => item.value === fields.catsort); // Frame, sunglass, contactlens, solution and accessories
 
   return (
     <View style={{ flex: 1 }}>
@@ -331,6 +620,14 @@ function Search() {
               )}
               onPress={() => handleModalToggle('filter', true)}
             />
+
+            {!catActive ? null : (
+              <Badge
+                style={[styles.filterItem, { marginLeft: 5}]}
+                label={catActive.label}
+                labelProps={{ size: 'sm' }}
+              />
+            )}
 
             {!priceActive ? null : (
               <Badge
@@ -426,224 +723,39 @@ function Search() {
             paddingBottom: 24
           }}
         >
-          {route.params.keywords == 'solutions' ? 
-            (
-              <>
-                <Typography type="h5" style={{ paddingBottom: 8 }}>
-                  {`${t('Price')}`}
-                </Typography>
+            <Typography type="h5" style={{ paddingBottom: 8 }}>
+                {`${t('Categories')}`}
+            </Typography>
 
-                <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
-                  {SORTCLSLACS.map((item, index) => (
-                    <Button
-                      key={index}
-                      containerStyle={{
-                        marginBottom: 8,
-                        marginRight: 8,
-                        borderColor: fields.sort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[400],
-                      }}
-                      labelProps={{ color: fields.sort === item.value ? '#0d674e' : colors.gray[900] }}
-                      size="sm"
-                      border
-                      onPress={() => handleFieldChange('sort', item.value)}
-                    >
-                      <Typography>
-                        <Ionicons
-                          name={item.icon}
-                          size={18}
-                          color={'#333'}
-                        /> {t(`${''}${item.label}`)}</Typography>
-                    </Button>
-                  ))}
-                </View>
-              </>
-            ) 
-            :
-            (
-              <>
-                <Typography type="h5" style={{ paddingBottom: 8 }}>
-                  {`${t('Price')}`}
-                </Typography>
-
-                <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
-                  {SORT.map((item, index) => (
-                    <Button
-                      key={index}
-                      containerStyle={{
-                        marginBottom: 8,
-                        marginRight: 5,
-                        borderColor: fields.sort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[400],
-                      }}
-                      border
-                      onPress={() => handleFieldChange('sort', item.value)}
-                    >
-                      <Typography
-                        style={{
-                          color: fields.sort === item.value ? '#0d674e' : colors.gray[900],
-                          fontSize: 12,
-                          marginHorizontal: 5
-                        }}
-                      >
-                        {t(`${''}${item.label}`)}
-                      </Typography>
-                    </Button>
-                  ))}
-                </View>
-              </>
-            )
-          }
-          
-          {route.params.keywords == 'solutions' ? 
-            (
-              <View style={{ marginTop: 0 }}>
-                <ViewCollapse
-                    style={styles.menuContainer}
-                    pressableProps={{
-                      containerStyle: styles.menuBtnContainer,
+            <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
+                {CATEGORY.map((item, index) => (
+                <Button
+                    key={index}
+                    containerStyle={{
+                    marginBottom: 8,
+                    marginRight: 8,
+                    borderColor: fields.catsort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[400],
                     }}
-                    header={t(`${''}Brand`)}
-                    headerProps={{
-                      type: 'h',
+                    border
+                    onPress={() => handleFieldChangeNew('catsort', item.value)}
+                >
+                    <Typography
+                    style={{
+                        color: fields.catsort === item.value ? '#0d674e' : colors.gray[900],
+                        fontSize: 12
                     }}
-                    collapse
-                  >
-                    {[
-                      {
-                        id: '',
-                        name: t(`${t('All Brand')}`),
-                      },
-                      ...(brandCL.models || [])
-                      ].map((item, index) => {
-                        const selected = item?.id === fields.brand;
-                        return (
-                          <Button
-                            key={index}
-                            labelProps={{ type: 'p' }}
-                            containerStyle={{
-                              marginTop: index > 0 ? 4 : 0,
-                              backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
-                            }}
-                            style={{ justifyContent: 'space-between' }}
-                            onPress={() => handleFieldChange('brand', item.id)}
-                            size="lg"
-                            right={(
-                              <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
-                                {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
-                              </Typography>
-                            )}
-                          >
-                            <Typography style={{ marginLeft: 5}}>{item.name}</Typography>
-                          </Button>
-                        );
-                      })
-                    }
-                  </ViewCollapse>
-              </View>
-            ) 
-            : 
-            (
-              route.params.keywords == 'frame' || route.params.keywords == 'sunglass' || route.params.keywords == null ? 
-              (
-                <View style={{ marginTop: 0 }}>
-                  <ViewCollapse
-                      style={styles.menuContainer}
-                      pressableProps={{
-                        containerStyle: styles.menuBtnContainer,
-                      }}
-                      header={t(`${''}Brand`)}
-                      headerProps={{
-                        type: 'h',
-                      }}
-                      collapse
                     >
-                      {[
-                        {
-                          id: '',
-                          name: t(`${t('All Brand')}`),
-                        },
-                        ...(brand.models || [])
-                        ].map((item, index) => {
-                          const selected = item?.id === fields.brand;
-                          return (
-                            <Button
-                              key={index}
-                              labelProps={{ type: 'p' }}
-                              containerStyle={{
-                                marginTop: index > 0 ? 4 : 0,
-                                backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
-                              }}
-                              style={{ justifyContent: 'space-between' }}
-                              onPress={() => handleFieldChange('brand', item.id)}
-                              size="lg"
-                              right={(
-                                <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
-                                  {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
-                                </Typography>
-                              )}
-                            >
-                              <Typography style={{ marginLeft: 5}}>{item.name}</Typography>
-                            </Button>
-                          );
-                        })
-                      }
-                    </ViewCollapse>
-                </View>
-              ) : null
-            )
-          }
-          {route.params.keywords == 'solutions' ? null 
-            :
-            (
-              <ViewCollapse
-                style={styles.menuContainer}
-                pressableProps={{
-                  containerStyle: styles.menuBtnContainer,
-                }}
-                header={t(`${''}Gender`)}
-                headerProps={{
-                  type: 'h',
-                }}
-                collapse
-              >
-                {!categories?.length ? (
-                  <Typography>
-                    {t(`${t('No Gender')}`)}
-                  </Typography>
-                ) : (
-                  [
-                    {
-                      id: '',
-                      ds: t(`${t('All Gender')}`),
-                    },
-                    ...categories
-                  ].map((item, index) => {
-                    const selected = item?.id === options.prdcat;
-                    // const selected = item?.id === fields.prdcat;
-
-                    return (
-                      <Button
-                        key={index}
-                        label={item.ds}
-                        labelProps={{ type: 'p' }}
-                        containerStyle={{
-                          marginTop: index > 0 ? 4 : 0,
-                          backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
-                        }}
-                        style={{ justifyContent: 'space-between' }}
-                        onPress={() => setOptions(state => ({ ...state, prdcat: item.id }))}
-                        size="lg"
-                        right={(
-                          <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
-                            {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
-                          </Typography>
-                        )}
-                      />
-                    );
-                  })
-                )}
-              </ViewCollapse>
-            )
-          }
+                    {t(`${''}${item.label}`)}
+                    </Typography>
+                </Button>
+                ))}
+            </View>
+            {NotifDiFilter}
+            {PriceDefault}
+            {PriceSol}
+            {BrandFilter}
+            {GenderFilter}
+            {BrandSolutionFilter}
         </ScrollView>
       </BottomDrawer>
     </View>
@@ -702,4 +814,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Search;
+export default SearchNew;
