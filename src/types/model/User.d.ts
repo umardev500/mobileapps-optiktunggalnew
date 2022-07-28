@@ -25,6 +25,7 @@ export type UserModel = null | {
   foto?: string;
   reseller?: string;
   gender?: string;
+  tgllahir?: string;
 
   [key: string]: any;
 };

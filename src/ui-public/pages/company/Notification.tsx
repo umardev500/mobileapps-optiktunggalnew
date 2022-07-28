@@ -41,7 +41,7 @@ function Notification() {
         />
       )}
     >
-      {!user ? null : (
+      {/* {!user ? null : (
         <Button
           containerStyle={styles.actionBtnContainer}
           label={t('Transaction', { count: 2 })}
@@ -56,7 +56,7 @@ function Notification() {
             screen: 'BottomTabs.MemberStack',
           })}
         />
-      )}
+      )} */}
 
       <Button
         containerStyle={[styles.actionBtnContainer, { marginTop: 0 }]}

@@ -31,12 +31,14 @@ type TransactionStatus = 'nklunas' | 'nplunas' | 'npfullpay' | 'npprogress' | 'o
 type TransactionPaymentStatus = 'pending' | 'unpaid' | 'paid' | 'reject';
 
 export type PaymentMethodType = {
+  id?: number, 
   label?: string;
-  method?: 'cod' | 'transfer';
-  image?: any;
+  image?: string;
   nama?: string;
   remark?: string;
-  foto1?: string;
+  payment_name?: string;
+  payment_type?: string;
+  howtobuy?: any;
 };
 
 export type TransactionLog = {

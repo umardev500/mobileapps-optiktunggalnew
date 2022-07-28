@@ -70,8 +70,24 @@ export const fetchBrand = createAsyncThunk('shop/fetchBrand', async () => {
   return brands;
 });
 
+export const fetchBrandHome = createAsyncThunk('shop/fetchBrandHome', async () => {
+  let brands: BrandModel[] = [];
+
+  await httpService('/api/brand/brand', {
+    data: {
+      act: 'BrandListHome',
+    },
+  }).then(({ status, data }) => {
+    if (status === 200) {
+      brands = data;
+    }
+  });
+
+  return brands;
+});
+
 export const fetchBrandClearCL = createAsyncThunk('shop/fetchBrandClearCL', async () => {
-  let brandclclear: BrandCLModel[] = [];
+  let clbrands: BrandCLModel[] = [];
 
   await httpService('/api/brand/brand', {
     data: {
@@ -79,15 +95,15 @@ export const fetchBrandClearCL = createAsyncThunk('shop/fetchBrandClearCL', asyn
     },
   }).then(({ status, data }) => {
     if (status === 200) {
-      brandclclear = data;
+      clbrands = data;
     }
   });
 
-  return brandclclear;
+  return clbrands;
 });
 
 export const fetchBrandColorCL = createAsyncThunk('shop/fetchBrandColorCL', async () => {
-  let brandclcolor: BrandCLModel[] = [];
+  let clbrands: BrandCLModel[] = [];
 
   await httpService('/api/brand/brand', {
     data: {
@@ -95,11 +111,11 @@ export const fetchBrandColorCL = createAsyncThunk('shop/fetchBrandColorCL', asyn
     },
   }).then(({ status, data }) => {
     if (status === 200) {
-      brandclcolor = data;
+      clbrands = data;
     }
   });
 
-  return brandclcolor;
+  return clbrands;
 });
 
 export const fetchWarna = createAsyncThunk('shop/fetchWarna', async () => {
@@ -120,7 +136,7 @@ export const fetchWarna = createAsyncThunk('shop/fetchWarna', async () => {
 
 export const setCartItems = createAsyncThunk('shop/setCartItems', async (items: CartModel[]) => {
   await Storage.storeData('cart_items', items);
-
+  
   return items;
 });
 
@@ -128,22 +144,9 @@ export const pushCartItem = createAsyncThunk('shop/pushCartItem', async (item: C
   const { shop, user: { user } } = getState() as RootStoreState;
   const { cart_items = [] } = shop;
   const { product } = item;
-
   let shouldPush = true;
-  item.harga = 0;
-
-  // switch (item.type) {
-  //   case 'reseller':
-  //     item.harga = product?.harga_reseller;
-  //     break;
-  //   case 'retail':
-  //     item.harga = product?.harga_retail;
-  //     break;
-  //   case 'refill':
-  //     item.harga = product?.harga_refill;
-  //     break;
-  // }
-
+  item.product?.harga;
+  
   const newCartItems: CartModel[] = [...cart_items].map((cartItem) => {
     if (cartItem.prd_id === product?.prd_id && item.type === cartItem.type) {
       const newItem = { ...cartItem };
@@ -166,6 +169,6 @@ export const pushCartItem = createAsyncThunk('shop/pushCartItem', async (item: C
   }
 
   await Storage.storeData('cart_items', newCartItems);
-
+  
   return newCartItems;
 });

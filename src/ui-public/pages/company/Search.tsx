@@ -64,24 +64,25 @@ function Search() {
     return (
       <>
       <PressableBox
-          containerStyle={{ paddingHorizontal: 10 }}
+          containerStyle={{ paddingHorizontal: 0, backgroundColor: '#fff' }}
           onPress={() => navigation.navigatePath('Public', {
             screen: 'BottomTabs.HomeStack.ProductDetail',
             params: [null, null, {
               product_id: item.kd_brg || 0,
               product_ds: item.nama_brg || 0,
-              merk: item.merk
+              merk: item.merk,
+              deskripsi: item.description
             }]
           })}
         >
-          <View style={[wrapper.row, { marginTop: 10, marginHorizontal: -15}]}>
+          <View style={[wrapper.row, { marginTop: 10}]}>
             <Image source={{ uri: item.prd_foto }} 
-                    style={{ width: width - 300, height: width - 320}} />
-            <View>
-              <Typography style={{ marginLeft: 15, marginTop: 0, width: width - 30, height: 16, fontSize: 10 }} >
+                   style={{ width: width * 0.2, resizeMode: 'stretch', height: height * 0.07, marginHorizontal: 5}} />
+            <View style={{marginHorizontal: 10, flex: 1}}>
+              <Typography style={{ marginTop: 0, fontSize: 10 }} numberOfLines={2}>
                 {item.nama_brg}
               </Typography>
-              <Typography style={{ marginLeft: 15, marginTop: 0, width: width - 30, height: 16, fontSize: 12, color: '#0d674e', fontWeight: 'bold' }} >
+              <Typography style={{ marginTop: 0, width: width - 30, height: 16, fontSize: 12, color: '#0d674e', fontWeight: 'bold' }} >
                 Rp. {item.price}
               </Typography>
             </View>
@@ -94,7 +95,7 @@ function Search() {
 
   const handleSearch = () => {
     navigation.navigatePath('Public', {
-      screen: 'BottomTabs.HomeStack.Search',
+      screen: 'BottomTabs.HomeStack.SearchNew',
       params: [null, null, {
         search: search
       }]

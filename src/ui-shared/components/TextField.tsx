@@ -84,10 +84,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 0,
     borderColor: colors.transparent('palettes.primary', 0.25),
-    backgroundColor: colors.gray[100],
     padding: 0,
     overflow: 'hidden',
-    borderRadius: 10,
+    borderRadius: 5,
     elevation: 4,
   },
   containerLg: {

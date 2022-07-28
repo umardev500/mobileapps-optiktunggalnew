@@ -14,6 +14,8 @@ import { BoxLoading } from '../../../ui-shared/loadings';
 import { useTranslation } from 'react-i18next';
 import { RegisterFields } from '..';
 import { useAppSelector } from '../../../redux/hooks';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 type Fields = {
@@ -36,6 +38,7 @@ type Fields = {
   hp?: string;
   kodepos?: string;
   nama_alamat?: string;
+  flaq: string;
 };
 
 type OptionsState = {
@@ -51,6 +54,9 @@ type OptionsState = {
   villages?: VillageModel[];
   villagesLoaded?: boolean;
   villageModalOpen?: boolean;
+  otp?: ProvinceModel[];
+  otpLoaded?: boolean;
+  otpModalOpen?: boolean;
 };
 
 function AddressEdit() {
@@ -83,6 +89,7 @@ function AddressEdit() {
     email: '',
     kodepos: '',
     nama_alamat: '',
+    flaq: ''
   });
   const [profile, setProfile] = useState<RegisterFields | null>(null);
   const [action, setAction] = useState('');
@@ -104,6 +111,9 @@ function AddressEdit() {
     villages: [],
     villagesLoaded: false,
     villageModalOpen: false,
+    otp: [],
+    otpLoaded: false,
+    otpModalOpen: false,
   });
 
   // Effects
@@ -310,13 +320,13 @@ function AddressEdit() {
         });
 
         return id;
-      } /*else if (status === 201) {
-        Alert.alert( "Pemberitahuan", "Email atau No. Handphone sudah terdaftar. silahkan ke menu login dan klik tombol lupa password untuk mendapatkan password anda. Terima Kasih.",
+      } else if (status === 201) {
+        Alert.alert( "Pemberitahuan", msg,
                 [
-                  { text: "GANTI DATA", onPress: () => navigation.navigatePath('Public', { screen: 'BottomTabs.AccountStack.Register'}) }
+                  { text: "LOGIN", onPress: () => navigation.navigatePath('Public', { screen: 'BottomTabs.AccountStack.Login'}) }
                 ]
         );
-      }*/
+      }
 
       return 0;
     }).catch((err) => {
@@ -324,7 +334,7 @@ function AddressEdit() {
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (flaq: string) => {
     if (!profile) {
       if (!fields.nama) {
         return handleErrorShow('nama', `${''}Mohon masukkan nama penerima.`);
@@ -385,6 +395,7 @@ function AddressEdit() {
       latitude: fields.lat,
       longitude: fields.lng,
       label: 'Rumah',
+      flaq: flaq
     };
     
     return httpService('/api/login/login', {
@@ -399,7 +410,11 @@ function AddressEdit() {
         navigation.navigatePath('Public', {
           // screen: 'PinEdit',
           screen: 'Verification',
-          params: [{ email }],
+          params: [{ 
+            email,
+            hp: route.params.profile?.hp,
+            flaq: flaq
+          }],
         });
       }
     }).catch(err => {
@@ -407,10 +422,17 @@ function AddressEdit() {
     });
   };
 
+  const handleCloseModalContactLens = async () => {
+    handleModalToggle('filterotp', false);
+  };
+
   const handleModalToggle = async (type: string, open: boolean | null = null) => {
     let newState: Partial<OptionsState> = {};
 
     switch (type) {
+      case 'filterotp':
+        newState.otpModalOpen = 'boolean' === typeof open ? open : !options.otpModalOpen;
+        break;
       case 'prop':
         newState.provinceModalOpen = 'boolean' === typeof open ? open : !options.provinceModalOpen;
         break;
@@ -657,14 +679,14 @@ function AddressEdit() {
             label={`${''}Simpan`.toUpperCase()}
             color="primary"
             shadow={3}
-            onPress={handleSubmit}
+            onPress={() => handleSubmit("simpan")}
             loading={isSaving}
           />
         ) : (
           <Button
             containerStyle={{ alignSelf: 'center' }}
             style={{ width: 300, backgroundColor: '#0d674e' }}
-            onPress={handleSubmit}
+            onPress={() => handleModalToggle('filterotp', true)}
             loading={isSaving}
           >
             <Typography style={{color: '#FEFEFE'}}>{`${''}Lanjut`.toUpperCase()}</Typography>
@@ -728,6 +750,51 @@ function AddressEdit() {
             )
           )
         )}
+      </BottomDrawer>
+
+      {/* Select Channel for Send OTP */}
+      <BottomDrawer
+        isVisible={options.otpModalOpen}
+        swipeDirection={null}
+        onBackButtonPress={() => handleModalToggle('filterotp', false)}
+        onBackdropPress={() => handleModalToggle('filterotp', false)}
+        style={{ maxHeight: height * 0.75 }}
+      >
+        <Button
+          containerStyle={{ alignItems: 'flex-end', marginBottom: 5, marginTop: -15 }}
+          onPress={handleCloseModalContactLens}
+        >
+          <Typography style={{ color: '#333' }}>Close</Typography>
+          <Ionicons name="ios-close" size={24} color={'#333'} />
+        </Button>
+        <Typography size='md' style={{ paddingVertical: 10, paddingHorizontal: 15, color: '#0d674e', fontSize: 13 }}>
+          {`Pilih salah satu untuk menerima kode verifikasi.`}
+        </Typography>
+        <View style={{borderColor: '#0d674e', borderWidth: 1, marginHorizontal: 15}}/>   
+        <PressableBox
+          onPress={() => handleSubmit("mail")}
+          containerStyle={{height: 'auto'}}
+          style={{ marginVertical: 10, marginHorizontal: 20, backgroundColor: '#fff', borderColor: '#0d674e', borderWidth: 1, borderRadius: 10}}
+        >
+          <View style={[wrapper.row]}>
+            <Ionicons name="ios-mail-outline" size={24} color={'#333'} style={{alignSelf: 'center', marginLeft: 10}}/>
+            <Typography style={{textAlign: 'center', paddingVertical: 10, flex: 1}}>
+              {`Kirim ke email : \n${route.params.profile?.email}`}
+            </Typography>
+          </View>
+        </PressableBox>
+        <PressableBox
+          onPress={() => handleSubmit("wa")}
+          containerStyle={{height: 'auto', marginBottom: 80}}
+          style={{ marginVertical: 10, marginHorizontal: 20, backgroundColor: '#0d674e', borderColor: '#0d674e', borderWidth: 1, borderRadius: 10}}
+        >
+          <View style={[wrapper.row]}>
+            <Ionicons name="ios-logo-whatsapp" size={24} color={'#fff'} style={{alignSelf: 'center', marginLeft: 10}}/>
+            <Typography style={{textAlign: 'center', paddingVertical: 10, flex: 1, color: '#fff'}}>
+              {`Kirim ke Whatsapp : \n${`+`+route.params.profile?.hp}`}
+            </Typography>
+          </View>
+        </PressableBox>
       </BottomDrawer>
     </ScrollView>
   );

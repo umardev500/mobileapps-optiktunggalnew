@@ -1,7 +1,7 @@
 import { RouteProp, useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
-import { colors, wrapper } from '../../../lib/styles';
+import { colors, shadows, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { PressableBox, Typography } from '../../../ui-shared/components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -50,7 +50,7 @@ function PaymentMethod() {
   };
 
   const retrieveMethods = async () => {
-    return httpService('/product/list', {
+    return httpService('/api/transaction/transaction', {
       data: {
         act: 'PaymentList',
         dt: JSON.stringify({ comp: '001' }),
@@ -72,6 +72,7 @@ function PaymentMethod() {
       params: [null, null, {
         address: route.params?.address,
         cart_items: route.params?.cart_items,
+        price_total: route.params?.price_total,
         payment_method,
       }],
     });
@@ -79,20 +80,20 @@ function PaymentMethod() {
 
   return (
     <View style={{ flex: 1 }}>
-      {true ? null : (
+      {/* {true ? null : ( */}
         <View style={[styles.header, { paddingTop: 8 }]}>
           <Typography
-            type="h5"
+            size="sm"
             style={{
               borderBottomWidth: 1,
               borderColor: colors.gray[700],
-              paddingVertical: 4,
+              paddingVertical: 10,
             }}
           >
-            {`${t('Metode Pembayaran')}`}
+            {`${t('Pilih Metode Pembayaran')}`}
           </Typography>
         </View>
-      )}
+      {/* )} */}
 
       <ScrollView contentContainerStyle={styles.container}>
         {!method.modelsLoaded ? (
@@ -105,18 +106,34 @@ function PaymentMethod() {
           ) : (
             [
               ...(method.models || []),
-              { nama: `${t('COD')}` }
+              // { nama: `${t('COD')}` }
             ].map((item, index) => {
-              let label = item.nama;
+              let nama = item.nama;
 
-              switch (item.nama) {
-                case 'COD':
-                  label = `${t('COD (Bayar di Tempat)')}`;
-                  item.method = 'cod';
-                break;
+              switch (item.payment_type) {
+                case 'CC':
+                  nama = `${item.nama}\n VISA, MASTER CARD, JCB, AMERICAN EXPRESS`;
+                  item.payment_type = 'CC';
+                  break;
+                case 'STR':
+                  nama = `${item.nama}\n (Alfamart, ALfamidi, Dan+Dan, Lawson)`;
+                  item.payment_type = 'STR';
+                  break;
+                case 'VA':
+                  nama = `${item.nama}\n${item.remark}`;
+                  item.payment_type = 'VA';
+                  break;
+                case 'EW':
+                  nama = `${item.nama}\n${item.remark}`;
+                  item.payment_type = 'EW';
+                  break;
+                case 'CLC':
+                  nama = `${item.nama}\n${item.remark}`;
+                  item.payment_type = 'CLC';
+                  break;
                 default:
-                  label = `Transfer Bank ${item.nama}`;
-                  item.method = 'transfer';
+                  nama = `${item.nama}\n Nomor Rekening :  ${item.label}`;
+                  item.payment_type = 'TRF';
               }
 
               return (
@@ -129,17 +146,17 @@ function PaymentMethod() {
                   style={styles.method}
                   onPress={() => handleMethodSelect(item)}
                 >
-                  {!item.foto1 ? (
+                  {!item.image ? (
                     <Image source={PAYMENT_IMAGES[item.nama || '']} style={styles.methodImage} />
                   ) : (
-                    <Image source={{ uri: item.foto1 }} style={styles.methodImage} />
+                    <Image source={{ uri: item.image }} style={styles.methodImage} />
                   )}
     
-                  <View style={{ flex: 1, paddingHorizontal: 15 }}>
-                    <Typography>{label}</Typography>
+                  <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                    <Typography style={{fontSize: 11}}>{nama}</Typography>
                   </View>
     
-                  <Ionicons name="chevron-forward" size={20} color={colors.palettes.primary} />
+                  {/* <Ionicons name="chevron-forward" size={20} color='#333' /> */}
                 </PressableBox>
               );
             })
@@ -168,18 +185,18 @@ const styles = StyleSheet.create({
   methodRow: {
     marginHorizontal: 0,
     backgroundColor: colors.white,
-    borderBottomWidth: 1,
-    borderColor: colors.transparent('palettes.primary', 1),
+    ...shadows[3],
+    marginBottom: 10
   },
   method: {
     ...wrapper.row,
     paddingHorizontal: 15,
-    paddingVertical: 12,
+    paddingVertical: 10,
     alignItems: 'center'
   },
   methodImage: {
-    width: 80,
-    height: 24,
+    width: 45,
+    height: 20,
     resizeMode: 'contain',
   },
 });

@@ -107,7 +107,7 @@ function AddressList() {
         screen: screenPath,
         params: paths.map((item, index) => {
           return index + 1 !== paths?.length ? null : {
-            address: addressItem,
+            address: addressItem,           
           };
         }),
       });
@@ -156,27 +156,29 @@ function AddressList() {
         title={t(`Alamat Pengiriman`)}
       />
 
-      {/* {!actionScreen.rootScreen ? null : ( */}
-        <View style={[styles.wrapper, { paddingVertical: 12 }]}>
-          <Typography type="h6" style={{ marginTop: 12 }}>
-            {t(`Pilih salah satu alamat`)}
-          </Typography>
+      {!actionScreen.rootScreen ? null : (
+        <View style={[styles.wrapper, { paddingVertical: 5 }]}>
+          <View style={[wrapper.row]}>
+            <Typography style={{fontSize: 12, flex: 1, paddingVertical: 10}}>Alamat akan digunakan untuk pengiriman pesanan.</Typography>
             <PressableBox
-              style={{ backgroundColor: '#6495ED', borderRadius: 5, marginTop: 10 }}
+              style={{ backgroundColor: '#0d674e', borderRadius: 5, marginTop: 10, width: 120, alignSelf: 'flex-end' }}
               onPress={() => navigation.navigatePath('Public', {
                 screen: 'BottomTabs.AccountStack.AddressEdit',
               })}
             >
               <Typography style={{
+                fontSize: 10,
                 color: 'white',
                 alignSelf: 'center',
                 paddingVertical: 10
               }}>
+                <Ionicons name="location" size={12} color="#fff" /> 
                 {t(`Tambah Alamat`)}
               </Typography>
             </PressableBox>
+          </View>
         </View>
-      {/* )} */}
+      )}
 
       <FlatList
         contentContainerStyle={[styles.container, styles.wrapper]}
@@ -202,18 +204,18 @@ function AddressList() {
               onPress={() => handleAddressSelect(item, index)}
             >
               {!item.title ? null : (
-                <Typography heading>{item.title}</Typography>
+                <Typography size='sm'>{item.title}</Typography>
               )}
 
-              <Typography heading style={{ marginTop: 4 }}>
+              <Typography size='sm' style={{ marginTop: 4, fontWeight: '700' }}>
                 {item.vch_nama || item.nama}
               </Typography>
 
-              <Typography style={{ marginTop: 4 }}>
+              <Typography size='sm' style={{ marginTop: 4 }}>
                 {showPhone(item.hp, '+62')}
               </Typography>
 
-              <Typography style={{ marginTop: 4 }}>
+              <Typography size='sm' style={{ marginTop: 4 }}>
                 {item.alamat}
               </Typography>
 
@@ -264,21 +266,21 @@ function AddressList() {
             {!actionScreen.rootScreen ? (
               <Button
                 containerStyle={styles.cardAction}
-                style={{ width: 150 }}
-                label={t(`Ubah Alamat`).toUpperCase()}
-                color="yellow"
+                style={{ width: 150, backgroundColor: '#0d674e' }}
                 rounded
                 onPress={() => handleEdit(item)}
-              />
+              >
+                <Typography style={{color: '#fff', fontSize: 11}}>Ubah Alamat</Typography>
+              </Button>
             ) : (
               <Button
                 containerStyle={styles.cardAction}
-                style={{ width: 150 }}
-                label={t(`Pilih Alamat`).toUpperCase()}
-                color="yellow"
+                style={{ width: 100, backgroundColor: '#0d674e' }}
                 rounded
                 onPress={() => handleSubmit(item)}
-              />
+                >
+                <Typography style={{color: '#fff', fontSize: 11}}>Pilih Alamat</Typography>
+              </Button>
             )}
           </View>
         )}
@@ -317,8 +319,8 @@ const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: colors.white,
     marginHorizontal: 0,
-    borderBottomWidth: 1,
-    borderColor: colors.palettes.primary
+    borderWidth: 1,
+    borderColor: '#0d674e'
   },
   card: {
     position: 'relative',
@@ -329,7 +331,7 @@ const styles = StyleSheet.create({
   cardAction: {
     elevation: 3,
     position: 'absolute',
-    alignSelf: 'center',
+    alignSelf: 'flex-end',
     top: '100%',
     marginTop: -16
   },

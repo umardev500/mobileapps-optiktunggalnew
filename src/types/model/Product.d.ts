@@ -87,6 +87,8 @@ export type CategoryModel = {
   ds?: string;
   image?: any;
   foto?: string;
+
+  keywords?: string;
 };
 
 export type GenderModel = {
@@ -104,7 +106,7 @@ export type ModelKacamata = {
 };
 
 export type BrandModel = {
-  id?: string;
+  id?: any;
   name?: any;
   fotobrand?: string;
   codebrand?: any;
@@ -113,10 +115,12 @@ export type BrandModel = {
 };
 
 export type BrandCLModel = {
-  id?: string;
-  nama?: any;
-  imagebrand?: string;
-  brandcode?: any;
+  id?: any;
+  name?: any;
+  fotobrand?: string;
+  codebrand?: any;
+  imgbrand?: any;
+  imgbrandbg?: any;
 };
 
 export type ColorModel = {

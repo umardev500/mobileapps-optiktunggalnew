@@ -14,6 +14,10 @@ import { fetchAddresses } from '../../../redux/actions';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { showPhone } from '../../../lib/utilities';
+import {
+  formatCurrency,
+  getSupportedCurrencies,
+} from "react-native-format-currency";
 
 function Checkout() {
   // Hooks
@@ -36,8 +40,9 @@ function Checkout() {
     modelLoaded: false,
   });
   const [price, setPrice] = useState({
-    original: 0,
+    harga: 0,
     total: 0,
+    itemqty: 0
   });
 
   // Effects
@@ -96,28 +101,32 @@ function Checkout() {
       params: [null, null, {
         cart_items: cart.models,
         address: address.model,
+        price_total: price.total
       }],
     });
   };
 
   const calculatePrice = () => {
-    let original = 0;
+    let harga = 0;
     let total = 0;
+    let itemqty = 0;
 
     cart.models?.forEach(({ qty = 1, ...item }, index) => {
       const { product: itemProduct } = item;
-      const discount = user?.reseller === '1' ? 0 : itemProduct?.diskon;
-      const subtotalOriginal = ((item.harga || 0) * 100 / (100 - parseFloat(discount || '0'))) * qty;
-      const subtotal = (item.harga || 0) * qty;
+      const discount = itemProduct?.diskon;
+      const subtotalOriginal = ((itemProduct?.harga || 0) * 100 / (100 - parseFloat(discount || '0'))) * qty;
+      const subtotal = (itemProduct?.harga || 0) * qty;
 
-      original += subtotalOriginal;
+      harga += subtotalOriginal;
       total += subtotal;
+      itemqty += qty;
     });
 
     setPrice(state => ({
       ...state,
-      original,
+      harga,
       total,
+      itemqty
     }));
   };
 
@@ -133,22 +142,7 @@ function Checkout() {
       <Header
         left
         title={[
-          `${t('Alamat Pengiriman')}`,
-          <PressableBox
-            onPress={() => navigation.navigatePath('Public', {
-              screen: 'BottomTabs.AccountStack.AddressList',
-              params: [null, null, {
-                action_screen: ['Public', 'BottomTabs.HomeStack.Checkout'],
-              }]
-            })}
-          >
-            <Typography style={{
-              textDecorationLine: 'underline',
-              textDecorationStyle: 'solid'
-            }}>
-              {`${t('Pilih Alamat Lain')}`}
-            </Typography>
-          </PressableBox>
+          `${t('Proses Checkout')}`,
         ]}
       />
 
@@ -161,17 +155,13 @@ function Checkout() {
           </View>
         ) : (
           !address.model ? (
-            <View style={{ paddingVertical: 12 }}>
-              <Typography type="h4">
+            <View style={[wrapper.row, { paddingVertical: 12 }]}>
+              <Typography size="sm" style={{paddingVertical: 3, paddingHorizontal: 5}}>
                 {t('Belum ada alamat')}
               </Typography>
 
-              <Typography style={{ marginVertical: 4 }}>
-                {`${t('Masukkan alamat rumah Anda untuk melanjutkan')}`}
-              </Typography>
-
               <PressableBox
-                containerStyle={{ alignSelf: 'flex-start' }}
+                containerStyle={{ alignSelf: 'flex-end', flex: 1 }}
                 onPress={() => navigation.navigatePath('Public', {
                   screen: 'BottomTabs.AccountStack.AddressEdit',
                   params: [null, null, {
@@ -179,16 +169,18 @@ function Checkout() {
                   }]
                 })}
               >
-                <View style={[wrapper.row, { alignItems: 'center' }]}>
-                  <Typography color="primary" style={{
-                    borderBottomWidth: 1,
-                    borderColor: colors.palettes.primary,
-                    paddingRight: 4
+                <View style={[wrapper.row, { alignSelf: 'flex-end' }]}>
+                  <Typography color="#0d674e" style={{
+                    borderWidth: 1,
+                    borderColor: "#0d674e",
+                    paddingVertical: 3,
+                    paddingHorizontal: 5,
+                    borderRadius: 5,
+                    fontSize: 12
                   }}>
-                    {`${t('Tambahkan Alamat Baru')}`}
+                    <Ionicons name="location" size={12} color="#0d674e" />
+                    {`${t('Tambah')}`}
                   </Typography>
-
-                  <Ionicons name="arrow-forward" size={16} color={colors.palettes.primary} />
                 </View>
               </PressableBox>
             </View>
@@ -199,18 +191,45 @@ function Checkout() {
                   {addressModel.title}
                 </Typography>
               )}
-
-              <Typography heading style={{ marginTop: 4 }}>
-                {addressModel?.nama || addressModel?.vch_nama}
-              </Typography>
-
-              <Typography style={{ marginTop: 4 }}>
-                {showPhone(addressModel?.hp, '+62')}
-              </Typography>
-
-              <Typography style={{ marginTop: 4 }}>
-                {addressModel?.alamat}
-              </Typography>
+              <View style={[wrapper.row]}>
+                <Typography size="sm" style={{ marginTop: 4, fontSize: 12 }}>
+                  Dikirim ke :
+                </Typography>
+              </View>
+              <View style={[wrapper.row, {flex: 1}]}>
+                <View style={{flex: 1}}>
+                  <Typography size="md" style={{ marginTop: 4, fontSize: 12, fontWeight: 'bold' }}>
+                    {addressModel?.nama || addressModel?.vch_nama}
+                  </Typography>
+                  <Typography size="sm" style={{ marginTop: 0, fontSize: 12 }}>
+                    {showPhone(addressModel?.hp, '0')+'\n'}
+                    {addressModel?.alamat}
+                  </Typography>
+                </View>
+                <View style={{marginRight: 10}}>
+                  <PressableBox
+                    containerStyle={{alignSelf: 'center', borderWidth: 1, borderColor: '#0d674e',}}
+                    style={{alignItems: 'center'}}
+                    onPress={() => navigation.navigatePath('Public', {
+                      screen: 'BottomTabs.AccountStack.AddressList',
+                      params: [null, null, {
+                        action_screen: ['Public', 'BottomTabs.HomeStack.Checkout'],
+                      }]
+                    })}
+                  >
+                    <Typography style={{
+                      textDecorationStyle: 'solid',
+                      fontSize: 12,
+                      paddingHorizontal: 5,
+                      paddingVertical: 5,
+                      color: '#0d674e'
+                    }}>
+                      <Ionicons name="location" size={12} color="#0d674e" />
+                      {`${t('Ganti')}`}
+                    </Typography>
+                  </PressableBox>
+                </View>
+              </View>
             </View>
           )
         )}
@@ -257,28 +276,27 @@ function Checkout() {
                       <Image source={{ uri: item.product.prd_foto }} style={styles.cartImage} />
                     )}
 
-                    <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                      <Typography>
-                        {item.product?.prd_ds}
-                      </Typography>
+                      <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                        <Typography size='sm'>
+                          {item.product?.prd_ds}
+                        </Typography>
+                        <View style={{ alignItems: 'flex-start' }}>
+                        {!item.qty ? null : (
+                          <Typography size="xs" color={700} style={{ marginBottom: 2 }}>
+                            {`${t('Qty')}: ${item.qty}`}
+                          </Typography>
+                        )}
 
+                        <Typography size='sm' style={{fontWeight: '700'}}>
+                          {/* Rp{item.product?.harga || 0 (item.qty || 1)} */}
+                          {formatCurrency({ amount: Number(item.product?.harga)*(item.qty || 1), code: 'IDR' })}
+                        </Typography>
+                      </View>
                       {!item.note ? null : (
                         <Typography size="sm" color={700} style={{ marginTop: 2 }}>
                           {`${t('Catatan')}: ${item.note}`}
                         </Typography>
                       )}
-                    </View>
-
-                    <View style={{ alignItems: 'flex-end' }}>
-                      {!item.qty ? null : (
-                        <Typography size="sm" color={700} style={{ marginBottom: 2 }}>
-                          {`${t('Qty')}: ${item.qty}`}
-                        </Typography>
-                      )}
-
-                      <Typography heading>
-                        {numeral((item.harga || 0) * (item.qty || 1)).format()}
-                      </Typography>
                     </View>
                   </View>
                 </View>
@@ -291,26 +309,55 @@ function Checkout() {
       {!cart.modelsLoaded ? null : (
         <View style={styles.action}>
           <View style={[wrapper.row, { alignItems: 'center' }]}>
-            <Typography type="h4" color="primary" style={{ flex: 1, paddingVertical: 4 }}>
+            <Typography size='sm' color="black" style={{ flex: 1, paddingVertical: 4 }}>
+              {`${t('Jumlah '+'('+price.itemqty+' item)')}`}
+            </Typography>
+
+            <Typography textAlign="right">
+              <Typography size='sm'>
+                {formatCurrency({ amount: Number(price.total), code: 'IDR' })}
+              </Typography>
+            </Typography>
+          </View>
+          <View style={[wrapper.row, { alignItems: 'center' }]}>
+            <Typography size='sm' color="black" style={{ flex: 1, paddingVertical: 4 }}>
+              {`${t('Ongkos Kirim')}`}              
+            </Typography>
+            <View style={styles.column}>
+              <Typography style={{textAlign: 'center', color: '#fff', fontSize: 12}}>
+                Free
+              </Typography>
+            </View>
+            <Typography textAlign="right">
+              <Typography size='sm'>
+                {formatCurrency({ amount: Number(0), code: 'IDR' })}
+              </Typography>
+            </Typography>
+          </View>
+          <View style={{borderBottomColor: '#333', borderWidth: 1, marginVertical: 5, borderRadius: 1}}></View>
+          <View style={[wrapper.row, { alignItems: 'center' }]}>
+            <Typography size='sm' color="black" style={{ flex: 1, paddingVertical: 4, fontWeight: '700' }}>
               {`${t('Total Harga')}`}
             </Typography>
 
             <Typography textAlign="right">
-              <Typography type="h4">
-                {numeral(price.total).format()}
+              <Typography size='sm' style={{fontWeight: '700'}}>
+                {formatCurrency({ amount: Number(price.total), code: 'IDR' })}
               </Typography>
             </Typography>
           </View>
 
           <Button
-            containerStyle={{ marginTop: 16, alignSelf: 'center' }}
-            label={`${t('Pilih Pembayaran')}`.toUpperCase()}
-            color="yellow"
-            shadow={3}
-            onPress={handlePay}
-            disabled={!canSubmit}
-            loading={isSaving}
-          />
+              containerStyle={{ marginTop: 16, alignSelf: 'center', marginVertical: 10, backgroundColor: '#0d674e', borderRadius: 5 }}
+              style={{ width: 300 }}
+              onPress={handlePay}
+              disabled={!canSubmit}
+              loading={isSaving}
+            >
+            <Typography size='sm' style={{textAlign: 'center', paddingVertical: 3, color: '#FEFEFE'}}>
+              {`${t('Pilih Metode Pembayaran')}`.toUpperCase()}
+            </Typography>
+          </Button>
         </View>
       )}
     </View>
@@ -331,9 +378,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cartImage: {
-    width: 56,
-    height: 56,
-    resizeMode: 'cover',
+    width: 45,
+    height: 30,
+    resizeMode: 'stretch',
     borderRadius: 8,
   },
   cartAction: {
@@ -341,7 +388,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 12,
   },
-
+  column:{
+    width: '15%', 
+    height: 20, 
+    backgroundColor: 'red',
+    justifyContent:"center",
+    marginHorizontal: 10,
+    borderRadius: 3
+  },
   action: {
     paddingTop: 8,
     paddingBottom: 16,

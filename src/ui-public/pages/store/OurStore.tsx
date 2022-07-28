@@ -229,7 +229,7 @@ function OurStore() {
     }));
   };
 
-  let locationField: keyof Fields = 'kel';
+  let locationField: keyof Fields = 'city';
   let locationStepRequired = '';
   let locationModalTitle = '';
   let locationModalList: RegionModel[] = [];
@@ -246,7 +246,7 @@ function OurStore() {
   const handleFieldChange = (field: keyof Fields, value: ValueOf<Fields>) => {
     // Alert.alert(
     //   `${t('Logout')}`,
-    //   fields.city,
+    //   value,
     //   [
     //     { text: `${t('Cancel')}`},
     //   ]
@@ -256,7 +256,8 @@ function OurStore() {
       ...state,
       [field]: value
     }));
-    handleSelectByCity(fields.city);
+    handleSelectByCity(value);
+    handleCloseModal();
   };
 
   const handleSelectByCity = (kota: any) => {
@@ -285,7 +286,7 @@ function OurStore() {
     handleModalToggle('city', false);
   };
 
-  const textPilih = t(`${''}Double Click`);
+  const textPilih = '';
 
   return (
     <View style={{ backgroundColor: '#FEFEFE' }}>
@@ -380,15 +381,10 @@ function OurStore() {
                       labelProps={{ type: 'p' }}
                       labelStyle={{ flex: 1, textAlign: 'left' }}
                       containerStyle={{
-                        backgroundColor: fields[locationField] === item.id ? colors.gray[300] : undefined,
+                        backgroundColor: fields[locationField] === item.id ? colors.transparent('#0d674e', 0.1) : undefined,
                       }}
                       style={{ paddingVertical: 15 }}
                       onPress={() => handleFieldChange(locationField, item.id)}
-                      right={(
-                        <Typography color="primary">
-                          {textPilih}
-                        </Typography>
-                      )}
                     />
                   )}
                 />

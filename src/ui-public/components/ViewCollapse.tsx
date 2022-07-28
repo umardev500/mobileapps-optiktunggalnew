@@ -56,7 +56,7 @@ function ViewCollapse({
             <Ionicons
               name={!collapse ? 'chevron-forward' : 'chevron-down'}
               size={18}
-              color={colors.palettes.primary}
+              color={'#0d674e'}
             />
           </View>
         ) : header}

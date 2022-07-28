@@ -41,6 +41,7 @@ const RenderHtml = ({
       marginTop: 0,
     },
     ol: {
+      ...paragraph,
       paddingLeft: 24,
       marginTop: 0,
     },

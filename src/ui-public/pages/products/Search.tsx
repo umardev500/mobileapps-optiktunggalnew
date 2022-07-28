@@ -26,17 +26,10 @@ const SORT = [
 ];
 
 const SORTCLSLACS = [
-  { label: `${''}Lowest price`, value: 'lowprice', icon: 'ios-arrow-down-circle-sharp' },
-  { label: `${''}Highest price`, value: 'highprice', icon: 'ios-arrow-up-circle-sharp' },
+  { label: `${''}Lowest price`, value: 'ASC', icon: 'ios-arrow-down-circle-sharp' },
+  { label: `${''}Highest price`, value: 'DESC', icon: 'ios-arrow-up-circle-sharp' },
 ];
 
-const CATEGORY = [
-  { label: `${''}Frame`, value: 'isFrame' },
-  { label: `${''}Sunglass`, value: 'isSunglass' },
-  { label: `${''}Contact Lens`, value: 'isLens' },
-  { label: `${''}Solutions`, value: 'isSol' },
-  { label: `${''}Accessories`, value: 'isAccs' },
-];
 
 type Fields = {
   sort?: string;
@@ -115,17 +108,8 @@ function Search() {
       ...state,
       page: 1
     }));
-
-    retrieveBrands();
+    retrieveBrands(route.params.keywords);
     retrieveGenders();
-    if(route.params.keywords == 'contactlens'){
-      retrieveBrandCategory('contactlens');
-      retrieveColors('contactlenscolor');
-    }else if(route.params.keywords == 'solutions'){
-      retrieveBrandCategory('solutions');
-    }else if(route.params.keywords == 'accessories'){
-      retrieveBrandCategory('accessories');
-    }
   }, []);
 
   useEffect(() => {
@@ -218,29 +202,14 @@ function Search() {
     });
   };
 
-  const retrieveBrandCategory = async (jenis: String) => {
-    return httpService('/api/brand/brand', {
-      data: {
-        act: 'CategoryBrand',
-        dt: JSON.stringify({ jns: jenis }),
-      }
-    }).then(({ status, data }) => {
-      if (200 === status) {
-        setBrandCL(state => ({
-          ...state,
-          models: data,
-          modelsLoaded: true
-        }));
-      }
-    }).catch((err) => {
-      // 
-    });
-  };
+  const retrieveBrands = async (jenis: String) => {
+    let parameter = jenis == '' ? null : JSON.stringify({ jns: jenis });
+    let action = jenis == '' ? 'BrandList' : 'SolutionsBrand';
 
-  const retrieveBrands = async () => {
     return httpService('/api/brand/brand', {
       data: {
-        act: 'BrandList',
+        act: action,
+        dt: parameter
       }
     }).then(({ status, data }) => {
       if (200 === status) {
@@ -284,6 +253,11 @@ function Search() {
   };
 
   const handleFieldChange = (field: keyof Fields, value: ValueOf<Fields>) => {
+    // Alert.alert( "Pemberitahuan", "Test : "+value,
+    //             [
+    //               { text: "GANTI DATA", onPress: () => console.log('test')}
+    //             ]
+    // );
     setFields(state => ({
       ...state,
       [field]: value
@@ -318,7 +292,6 @@ function Search() {
   const categoryActive = categories?.find(item => item.id === fields.prdcat);
   const brandActive = brands?.find(item => item.id === fields.brand);
   const priceActive = SORT?.find(item => item.value === fields.sort);
-  const catActive = CATEGORY?.find(item => item.value === fields.catsort); // Frame, sunglass, contactlens, solution and accessories
 
   return (
     <View style={{ flex: 1 }}>
@@ -354,14 +327,6 @@ function Search() {
               )}
               onPress={() => handleModalToggle('filter', true)}
             />
-
-            {!catActive ? null : (
-              <Badge
-                style={[styles.filterItem, { marginLeft: 5}]}
-                label={catActive.label}
-                labelProps={{ size: 'sm' }}
-              />
-            )}
 
             {!priceActive ? null : (
               <Badge
@@ -416,22 +381,20 @@ function Search() {
         }}
         data={product.models}
         ListEmptyComponent={!product.modelsLoaded ? ( 
+          <View style={{ marginHorizontal: 10 }}>
+            <ProductsLoading />
+            <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
+              {t(`${t('Sedang memuat data..')}`)}
+            </Typography>
+          </View>
+        ) : product.models?.length ? null : (
           <View style={[styles.container, styles.wrapper]}>
             <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
             <Typography textAlign="center" style={{ marginVertical: 12 }}>
               {t(`${t('Produk tidak ditemukan')}`)}
             </Typography>
           </View>
-        ) : product.models?.length ? null : (
-          <View style={{ marginHorizontal: 10 }}>
-            <ProductsLoading />
-          </View>
         )}
-        ListFooterComponent={!product.isPageEnd ? (
-          <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
-            {t(`${t('Sudah menampilkan semua produk')}`)}
-          </Typography>
-        ) : null}
       />
 
       {/* Popup Filter */}
@@ -493,33 +456,6 @@ function Search() {
             (
               <>
                 <Typography type="h5" style={{ paddingBottom: 8 }}>
-                  {`${t('Categories')}`}
-                </Typography>
-
-                <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
-                  {CATEGORY.map((item, index) => (
-                    <Button
-                      key={index}
-                      containerStyle={{
-                        marginBottom: 8,
-                        marginRight: 8,
-                        borderColor: fields.catsort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[400],
-                      }}
-                      border
-                      onPress={() => handleFieldChange('catsort', item.value)}
-                    >
-                      <Typography
-                        style={{
-                          color: fields.catsort === item.value ? '#0d674e' : colors.gray[900],
-                          fontSize: 12
-                        }}
-                      >
-                        {t(`${''}${item.label}`)}
-                      </Typography>
-                    </Button>
-                  ))}
-                </View>
-                <Typography type="h5" style={{ paddingBottom: 8 }}>
                   {`${t('Price')}`}
                 </Typography>
 
@@ -570,7 +506,7 @@ function Search() {
                         id: '',
                         name: t(`${t('All Brand')}`),
                       },
-                      ...(brandCL.models || [])
+                      ...(brand.models || [])
                       ].map((item, index) => {
                         const selected = item?.id === fields.brand;
                         return (
@@ -600,7 +536,7 @@ function Search() {
             ) 
             : 
             (
-              route.params.keywords == 'frame' || route.params.keywords == 'sunglass' || route.params.keywords == null ? 
+              route.params.keywords == 'frame' || route.params.keywords == 'sunglass' || route.params.keywords == 'searchbybrand' || route.params.keywords == null ? 
               (
                 <View style={{ marginTop: 0 }}>
                   <ViewCollapse

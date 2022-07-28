@@ -51,9 +51,9 @@ function ProductsSerupa({
 
   // Vars
   const handleGoToDetail = (product: ProductModel) => {
-    if (!product.prd_id) {
-      return void(0);
-    }
+    // if (!product.prd_id) {
+    //   return void(0);
+    // }
 
     navigation.navigatePath('Public', {
       screen: 'BottomTabs.HomeStack.ProductDetail',

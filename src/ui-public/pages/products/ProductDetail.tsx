@@ -28,7 +28,11 @@ import ProductsSerupa from '../../components/ProductsSerupa';
 import ProductsLoading from '../../loadings/ProductsLoading';
 import { WebView } from 'react-native-webview';
 import { ErrorState, ValueOf } from '../../../types/utilities';
-import SelectDropdown from 'react-native-select-dropdown'
+import SelectDropdown from 'react-native-select-dropdown';
+import {
+  formatCurrency,
+  getSupportedCurrencies,
+} from "react-native-format-currency";
 
 const QTY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -130,7 +134,7 @@ function ProductDetail() {
 
   // Effects
   useEffect(() => {
-    handleRefresh();
+    retrieveProductsList();
   }, []);
 
   useEffect(() => {
@@ -147,11 +151,7 @@ function ProductDetail() {
       retrieveBaseCurve();
     }
 
-    if(route.params.product?.description == 'ACCS' || route.params.product?.description == 'CL' || route.params.product?.description == 'SL'){
-      undefined !== product_id && retrieveProduct(product_id);
-    }else{
-      undefined !== product_id && retrieveProduct(product_id) && retrieveProductsList();
-    }
+    handleRefresh();
   }, [route.params]);
 
   useEffect(() => {
@@ -166,10 +166,16 @@ function ProductDetail() {
 
   // Vars
   const handleRefresh = async () => {
+    const { product_id, product } = route.params;
     setIsLoading(true);
 
+    if(route.params.product?.description == 'ACCS' || route.params.product?.description == 'CL' || route.params.product?.description == 'SL'){
+      undefined !== product_id && retrieveProduct(product_id);
+    }else{
+      undefined !== product_id && retrieveProduct(product_id);
+    }
+
     route.params?.product_id; 
-    retrieveProduct(route.params?.product_id);
     retrieveSpheries();
     retrieveColor();
     retrieveBaseCurve();
@@ -187,7 +193,10 @@ function ProductDetail() {
     return await httpService('/api/product/product', {
       data: {
         act: 'Color',
-        dt: JSON.stringify({ jenis : route.params.product?.description == 'ACCS' ? 'ACCS' : 'CL'})
+        dt: JSON.stringify({ 
+          jenis : route.params.product?.description == 'ACCS' ? 'ACCS' : 'CL',
+          prdid: route.params.product?.prd_id || route.params.product_id
+        })
       }
     }).then(({ status, data }) => {
       if (status === 200) {
@@ -211,7 +220,10 @@ function ProductDetail() {
     return await httpService('/api/product/product', {
       data: {
         act: 'Spheries',
-        dt: JSON.stringify({ jenis : route.params.product?.description == 'ACCS' ? 'ACCS' : 'CL'})
+        dt: JSON.stringify({ 
+          jenis : route.params.product?.description == 'ACCS' ? 'ACCS' : 'CL',
+          prdid: route.params.product?.prd_id || route.params.product_id
+        })
       }
     }).then(({ status, data }) => {
       if (status === 200) {
@@ -252,9 +264,11 @@ function ProductDetail() {
   };
 
   const retrieveProductsList = async (page: number = 1) => {
-    const reccnt = 4 * (page <= 1 ? 0 : page);
-    setProduct(state => ({ ...state, modelsLoaded: false }));
+    const reccnt = 10 * (page <= 1 ? 0 : page);
 
+    setIsLoading(true);
+    setProduct(state => ({ ...state, modelsLoaded: false }));
+    
     return httpService('/api/product/product', {
       data: {
         act: 'PrdSerupa',
@@ -262,7 +276,7 @@ function ProductDetail() {
           reccnt,
           pg: page,
           param: "serupa",
-          limit: 4,
+          limit: 10,
           brand: route.params.product?.merk || productModel.merk,
           prdid: route.params.product?.prd_id || route.params.product_id,
           prdcat: "",
@@ -286,7 +300,7 @@ function ProductDetail() {
   const retrieveProduct = async (product_id: string) => {
     return httpService('/api/product/product/', {
       data: {
-        dt: JSON.stringify({ prd_id: product_id, flaq: route.params.product?.description }),
+        dt: JSON.stringify({ prd_id: product_id, flaq: route.params.product?.description == undefined ? route.params.deskripsi : route.params.product?.description }),
         act: 'PrdInfo'
       },
     }).then(({ status, data: [data], foto }) => {
@@ -428,6 +442,18 @@ function ProductDetail() {
     );
   };
 
+  const handleCartAdd = async () => {
+
+
+    dispatch(pushCartItem({
+      product: _omit(product.model || undefined, 'product_info'),
+    }));
+
+    navigation.navigatePath('Public', {
+      screen: 'BottomTabs.HomeStack.Cart',
+    });
+  };
+
   const { ...productModel } = product.model || {};
   const productImages: ImageSource[] = [productModel.prd_foto, ...(productModel.images || [])]
     .filter((item) => ('string' === typeof item) || item?.prd_foto)
@@ -513,7 +539,7 @@ function ProductDetail() {
               </Button>
 
               <Typography
-                style={styles.totalImages}>{productModel.images.length} Images</Typography>
+                style={styles.totalImages}>{productModel.images.length+1} Images</Typography>
               
             </View>
           )}
@@ -530,19 +556,19 @@ function ProductDetail() {
 
                 {productModel.harga_promo == 0 ? 
                   (<>
-                    <Typography type="h4" color="#0d674e">
-                      Rp. {productModel.harga}
+                    <Typography color="#0d674e">
+                      {formatCurrency({ amount: productModel.harga, code: 'IDR' })}
                     </Typography>
                   </>) : (
                     <>
                       <Typography type="h4" color="red" style={{ textDecorationLine: 'line-through' }}>
-                        Rp. {productModel.harga}
+                      {formatCurrency({ amount: productModel.harga, code: 'IDR' })}
                       </Typography>
                       <Typography type="h4" color="#0d674e">
-                        Rp {productModel.harga_promo}
+                        {formatCurrency({ amount: productModel.harga_promo, code: 'IDR' })}
                       </Typography>
                     </>
-                )}
+                )} 
                 <View style={{height: 1, backgroundColor: "#ccc", marginVertical: 15}}></View>
                 <View style={[wrapper.row]}>
                   <View style={{flex: 0.7}}></View>
@@ -793,8 +819,25 @@ function ProductDetail() {
                     />
                   </View>
                 </View>
+
+                <View style={{marginHorizontal: 5, flex: 1, marginTop: 20}}>
+                  <Button
+                    containerStyle={{ overflow: 'visible', borderRadius: 5, 
+                                      borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#0d674e', 
+                                      paddingVertical: 10, marginTop: 10, flex: 1, ...shadows[3]}}
+                    opacity={1}
+                    onPress={() => 
+                      handleCartAdd()
+                      // Alert.alert( "Pemberitahuan", "Mohon maaf, fitur ini sedang proses pengembangan.")
+                    }
+                  >
+                    <Typography style={{fontWeight: '700', color: '#FEFEFE', textAlign: 'center', fontSize: 11}}>
+                    <Ionicons name="md-add" size={18} color={'#FFF'} /> Keranjang
+                    </Typography>
+                  </Button>
+                </View>
               </>
-            ) : (route.params.product?.description == 'ACCS1' ? 
+            ) : (route.params.product?.description == 'ACCS' ? 
               (
                 <>
                   <Typography type="h5" style={{color: '#333333'}}>
@@ -806,19 +849,51 @@ function ProductDetail() {
 
                   {productModel.harga_promo == 0 ? 
                     (<>
-                      <Typography type="h4" color="#0d674e">
-                        Rp. {productModel.harga}
+                      <Typography color="#0d674e">
+                        {formatCurrency({ amount: productModel.harga, code: 'IDR' })}
                       </Typography>
                     </>) : (
                       <>
                         <Typography type="h4" color="red" style={{ textDecorationLine: 'line-through' }}>
-                          Rp. {productModel.harga}
+                        {formatCurrency({ amount: productModel.harga, code: 'IDR' })}
                         </Typography>
                         <Typography type="h4" color="#0d674e">
-                          Rp {productModel.harga_promo}
+                          {formatCurrency({ amount: productModel.harga_promo, code: 'IDR' })}
                         </Typography>
                       </>
-                  )}
+                  )} 
+                  <View style={[wrapper.row]}>
+                    <View style={{marginHorizontal: 5, flex: 1}}>
+                      <PressableBox
+                        containerStyle={{ overflow: 'visible', borderRadius: 5, 
+                                          borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#0d674e', paddingVertical: 10, marginTop: 10, flex: 1}}
+                        opacity={1}
+                        onPress={() => 
+                          handleCartAdd()
+                          // Alert.alert( "Pemberitahuan", "Mohon maaf, fitur ini sedang proses pengembangan.")
+                        }
+                      >
+                        <Typography style={{fontWeight: '700', color: '#FEFEFE', textAlign: 'center', fontSize: 11}}>
+                        <Ionicons name="md-add" size={18} color={'#FFF'} /> Keranjang
+                        </Typography>
+                      </PressableBox>
+                    </View>
+                    <View style={{marginHorizontal: 5}}></View>
+                    <View style={{marginHorizontal: 5, flex: 1}}>
+                      <PressableBox
+                        containerStyle={{ overflow: 'visible', borderRadius: 5, 
+                                          borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#FEFEFE', paddingVertical: 10, marginTop: 10, flex: 1}}
+                        opacity={1}
+                        onPress={() => navigation.navigatePath('Public', {
+                          screen: 'Vto',
+                        })}
+                      >
+                        <Typography style={{fontWeight: '700', color: '#0d674e', textAlign: 'center', fontSize: 10}}>
+                          Coba Virtual
+                        </Typography>
+                      </PressableBox>
+                    </View>
+                  </View>
                   <View style={{height: 1, backgroundColor: "#ccc", marginVertical: 15}}></View>
                   <View style={[wrapper.row, {marginTop: 5}]}>
                     <View style={{flex: 1}}>
@@ -855,7 +930,7 @@ function ProductDetail() {
                   <View style={[wrapper.row, {marginTop: 5}]}>
                     <View style={{flex: 1}}>
                       <Typography style={styles.fontnya}>
-                        Power
+                        Addition
                       </Typography>
                     </View>
                     <View style={{width: 250}}>
@@ -872,7 +947,7 @@ function ProductDetail() {
                         rowTextForSelection={(item, index) => {
                           return item
                         }}
-                        defaultButtonText={'Pilih Spheries/Power'}
+                        defaultButtonText={'Pilih Addition'}
                         buttonStyle={styles.dropdown2BtnStyle}
                         buttonTextStyle={styles.dropdown1BtnTxtStyle}
                         renderDropdownIcon={isOpened => {
@@ -888,44 +963,64 @@ function ProductDetail() {
               )
               :
               <>
-                <Typography type="h5" style={{color: '#333333'}}>
+                <Typography style={{color: '#333333', fontSize: 13, fontWeight: '700'}}>
                   {productModel.prd_ds}
                 </Typography>
-                <Typography style={{color: '#333333', fontSize: 14}}>
+                <Typography style={{color: '#333333', fontSize: 13}}>
                   {productModel.merk}
                 </Typography>
-                <Typography style={{color: '#333333', fontSize: 14}}>
+                <Typography style={{color: '#333333', fontSize: 13}}>
                   {route.params.product_id}
                 </Typography>
 
                 {productModel.harga_promo == 0 ? 
                   (<>
-                    <Typography type="h4" color="#0d674e">
-                      Rp. {productModel.harga}
+                    <Typography color="#0d674e">
+                      {formatCurrency({ amount: productModel.harga, code: 'IDR' })}
                     </Typography>
                   </>) : (
                     <>
                       <Typography type="h4" color="red" style={{ textDecorationLine: 'line-through' }}>
-                        Rp. {productModel.harga}
+                      {formatCurrency({ amount: productModel.harga, code: 'IDR' })}
                       </Typography>
                       <Typography type="h4" color="#0d674e">
-                        Rp {productModel.harga_promo}
+                        {formatCurrency({ amount: productModel.harga_promo, code: 'IDR' })}
                       </Typography>
                     </>
                 )} 
 
-                <PressableBox
-                  containerStyle={{ overflow: 'visible', borderRadius: 5, 
-                                    borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#0d674e', paddingVertical: 10, marginTop: 10, flex: 1}}
-                  opacity={1}
-                  onPress={() => navigation.navigatePath('Public', {
-                    screen: 'Vto',
-                  })}
-                >
-                  <Typography style={{fontWeight: '700', color: '#FEFEFE', textAlign: 'center'}}>
-                    Try Virtual
-                  </Typography>
-                </PressableBox>
+                <View style={[wrapper.row]}>
+                  <View style={{marginHorizontal: 5, flex: 1}}>
+                    <PressableBox
+                      containerStyle={{ overflow: 'visible', borderRadius: 5, 
+                                        borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#0d674e', paddingVertical: 10, marginTop: 10, flex: 1}}
+                      opacity={1}
+                      onPress={() => 
+                        handleCartAdd()
+                        // Alert.alert( "Pemberitahuan", "Mohon maaf, fitur ini sedang proses pengembangan.")
+                      }
+                    >
+                      <Typography style={{fontWeight: '700', color: '#FEFEFE', textAlign: 'center', fontSize: 11}}>
+                      <Ionicons name="md-add" size={18} color={'#FFF'} /> Keranjang
+                      </Typography>
+                    </PressableBox>
+                  </View>
+                  <View style={{marginHorizontal: 5}}></View>
+                  <View style={{marginHorizontal: 5, flex: 1}}>
+                    <PressableBox
+                      containerStyle={{ overflow: 'visible', borderRadius: 5, 
+                                        borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#FEFEFE', paddingVertical: 10, marginTop: 10, flex: 1}}
+                      opacity={1}
+                      onPress={() => navigation.navigatePath('Public', {
+                        screen: 'Vto',
+                      })}
+                    >
+                      <Typography style={{fontWeight: '700', color: '#0d674e', textAlign: 'center', fontSize: 10}}>
+                        Coba Virtual
+                      </Typography>
+                    </PressableBox>
+                  </View>
+                </View>
 
                 {/* <View>
                   <PressableBox
@@ -949,36 +1044,40 @@ function ProductDetail() {
             )
           }           
           </View>
-          {route.params.product?.description == 'CL' || route.params.product?.description == 'ACCS1' || route.params.product?.description == 'SL' ? 
+          {route.params.product?.description == 'CL' || route.params.product?.description == 'ACCS' || route.params.product?.description == 'SL' ? 
             null :
             (
-              <>
-                <Typography 
-                  type="h5" 
-                  style={{ marginTop: 20, marginBottom: 10, color: '#333333', 
-                          textAlign: 'center', }}>
-                  {t('You might like these too')}
-                </Typography>
-                <View style={{ borderBottomColor: '#ccc', borderBottomWidth: 1, marginBottom: 10 }}></View>
-                {!product.models ? (
-                  <View style={[styles.container, styles.wrapper]}>
-                    <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
-                    <Typography textAlign="center" style={{ marginVertical: 12 }}>
-                    {t(`${t('Product Not Found')}`)}
-                    </Typography>
-                  </View>
-                ) : 
-                (
-                  <ProductsSerupa
-                    contentContainerStyle={[styles.container, styles.wrapper]}
-                    refreshing={isLoading}
-                    data={product.models}
-                    LoadingView={(
-                    <ProductsLoading />
-                    )}
-                  />
-                )}
-              </>
+              !product.models ? null :
+              (
+                <>
+                  <Typography 
+                    type="h5" 
+                    style={{ marginTop: 20, marginBottom: 10, color: '#333333', 
+                            textAlign: 'center', }}>
+                    {t('You might like these too')}
+                  </Typography>
+                  <View style={{ borderBottomColor: '#ccc', borderBottomWidth: 1, marginBottom: 10 }}></View>
+                  {!product.models ? (
+                    <View style={[styles.container, styles.wrapper]}>
+                      <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
+                      <Typography textAlign="center" style={{ marginVertical: 12 }}>
+                      {t(`${t('Product Not Found')}`)}
+                      </Typography>
+                    </View>
+                  ) : 
+                  (
+                    <ProductsSerupa
+                      contentContainerStyle={[styles.container, styles.wrapper]}
+                      refreshing={isLoading}
+                      loading={!product.modelsLoaded}
+                      data={product.models}
+                      LoadingView={(
+                        <ProductsLoading />
+                      )}
+                    />
+                  )}
+                </>
+              )
             )          
           }
         </View>

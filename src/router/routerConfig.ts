@@ -23,12 +23,14 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { title: tHome('Cart') };
     case 'Search':
       return { headerShown: false };
+    case 'SearchNew':
+      return { headerShown: false };
     case 'Checkout':
       return { headerShown: false };
     case 'PaymentMethod':
       return { title: [tHome('Payment'), tHome('Payment Method')] as any };
     case 'PaymentMerchant':
-      return { title: tHome('Payment') };
+      return { headerShown: false };
 
     // Notifications | Transaction
     case 'Notification':

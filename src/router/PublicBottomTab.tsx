@@ -98,7 +98,7 @@ function PublicBottomTab() {
           name="CartStack"
           component={PublicCartStack}
           options={{
-            tabBarLabel: t('Shop'),
+            tabBarLabel: t('Cart'),
             tabBarIcon: (iconParams) => (
               <FigmaIcon.FigmaCatalogue {...iconProps(iconParams)} />
             ),

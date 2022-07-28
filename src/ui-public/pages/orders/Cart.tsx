@@ -14,6 +14,10 @@ import { setCartItems } from '../../../redux/actions/shopActions';
 import { httpService } from '../../../lib/utilities';
 import { useTranslation } from 'react-i18next';
 import { default as startCase } from 'lodash/startCase';
+import {
+  formatCurrency,
+  getSupportedCurrencies,
+} from "react-native-format-currency";
 
 type OptionsState = {
   cartSelected?: number[];
@@ -75,33 +79,33 @@ function Cart() {
   const handleRefresh = async () => {
     setIsLoading(true);
 
-    await retrieveConfig();
+    // await retrieveConfig();
 
     setIsLoading(false);
   };
 
-  const retrieveConfig = async () => {
-    return httpService('/order/list', {
-      data: {
-        act: 'ConfigInfo',
-        dt: JSON.stringify({ comp: '001' }),
-      },
-    }).then(({ status, data }) => {
-      if (200 === status) {
-        setPrice(state => ({
-          ...state,
-          orderfirst: parseFloat(data.orderfirst || '0'),
-          ordernext: parseFloat(data.ordernext || '0'),
-          isLoaded: true
-        }));
-      }
-    }).catch((err) => {
-      setPrice(state => ({
-        ...state,
-        isLoaded: true
-      }));
-    });
-  }
+  // const retrieveConfig = async () => {
+  //   return httpService('/order/list', {
+  //     data: {
+  //       act: 'ConfigInfo',
+  //       dt: JSON.stringify({ comp: '001' }),
+  //     },
+  //   }).then(({ status, data }) => {
+  //     if (200 === status) {
+  //       setPrice(state => ({
+  //         ...state,
+  //         orderfirst: parseFloat(data.orderfirst || '0'),
+  //         ordernext: parseFloat(data.ordernext || '0'),
+  //         isLoaded: true
+  //       }));
+  //     }
+  //   }).catch((err) => {
+  //     setPrice(state => ({
+  //       ...state,
+  //       isLoaded: true
+  //     }));
+  //   });
+  // }
 
   const handleSelectAll = () => {
     const { cartSelected = [] } = options;
@@ -215,8 +219,8 @@ function Cart() {
 
     if (!cartSelected.length) {
       return Alert.alert(
-        `${t('Produk belum dipilih')}`,
-        `${t('Pilih dengan cara mencentang produk yang ingin Anda beli.')}`,
+        `${t('Pilih Produk.')}`,
+        `${t('Pilih dan checklist produk untuk melanjutkan.')}`,
       );
     }
 
@@ -248,15 +252,15 @@ function Cart() {
       if (cartSelected.indexOf(index) >= 0) {
         const { product: itemProduct } = item;
         const discount = user?.reseller === '1' ? 0 : itemProduct?.diskon;
-        const subtotalOriginal = ((item.harga || 0) * 100 / (100 - parseFloat(discount || '0'))) * qty;
-        const subtotal = (item.harga || 0) * qty;
+        const subtotalOriginal = ((item.product?.harga || 0) * 100 / (100 - parseFloat(discount || '0'))) * qty;
+        const subtotal = (item.product?.harga || 0) * qty;
 
         original += subtotalOriginal;
         total += subtotal;
 
-        if ('reseller' === item.type) {
-          totalReseller += subtotal;
-        }
+        // if ('reseller' === item.type) {
+        //   totalReseller += subtotal;
+        // }
       }
     });
 
@@ -284,18 +288,6 @@ function Cart() {
   const cartSelectedAll = cartSelected.length === cart.models?.length;
 
   let canCheckout = true;
-  const minimumTotal = !user?.orderfirst ? price.orderfirst : price.ordernext;
-  const hasResellerSelected = cart.models?.find((item, index) => {
-    if (!isCartSelected(item, index)) {
-      return false;
-    }
-
-    return item.type === 'reseller';
-  });
-
-  if (price.total < minimumTotal && hasResellerSelected) {
-    canCheckout = false;
-  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -327,9 +319,18 @@ function Cart() {
         ) : (
           <View style={{ flex: 1, paddingTop: 12 }}>
             {!cart.models?.length ? (
-              <Typography textAlign="center" style={{ marginVertical: 12 }}>
-                {`${t('Belum ada produk dalam keranjang')}`}
-              </Typography>
+              <>
+                <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
+                <Typography textAlign="center" style={{ marginVertical: 12 }}>
+                  {`${t('Belum ada produk dalam keranjang')}`}
+                </Typography>
+                {/* <PressableBox
+                  onPress={() => \}>
+                  <Typography style={{textAlign: 'center', color: 'blue', textDecorationLine: 'underline'}}>
+                    Belanja sekarang..
+                  </Typography>
+                </PressableBox> */}
+              </>
             ) : (
               <View>
                 <View style={[styles.cartContent, { paddingTop: 4 }]}>
@@ -338,18 +339,18 @@ function Cart() {
                       containerStyle={{ alignSelf: 'center' }}
                       border={'700'}
                       rounded={4}
-                      size={20}
+                      size={15}
                       onPress={() => handleSelectAll()}
                     >
                       <Ionicons
                         name="checkmark"
-                        size={20}
+                        size={15}
                         color={cartSelectedAll ? colors.gray[700] : 'transparent'}
                       />
                     </Button>
                   </View>
 
-                  <Typography style={{ flex: 1 }}>
+                  <Typography style={{ flex: 1, fontSize: 12 }}>
                     {`${t('Pilih Semua')}`}
                   </Typography>
                 </View>
@@ -362,12 +363,12 @@ function Cart() {
                           containerStyle={{ alignSelf: 'center' }}
                           border={'700'}
                           rounded={4}
-                          size={20}
+                          size={15}
                           onPress={() => handleSelect(item, index)}
                         >
                           <Ionicons
                             name="checkmark"
-                            size={20}
+                            size={15}
                             color={isCartSelected(item, index) ? colors.gray[700] : 'transparent'}
                           />
                         </Button>
@@ -385,26 +386,26 @@ function Cart() {
                         <Typography size="sm" style={{ marginTop: 2 }}>
                           {item.product?.prd_ds}
                         </Typography>
-                      </View>
 
-                      <Typography textAlign="right">
-                        {!item.price_original ? null : (
-                          <Typography color="secondary" style={{
-                            fontStyle: 'italic',
-                            textDecorationLine: 'line-through',
-                            textDecorationStyle: 'solid',
-                            lineHeight: 24
-                          }}>
-                            {numeral(item.price_original).format()}
+                        <Typography size="xs">
+                          {!item.product?.harga_promo ? null : (
+                            <Typography color="secondary" style={{
+                              fontStyle: 'italic',
+                              textDecorationLine: 'line-through',
+                              textDecorationStyle: 'solid',
+                              lineHeight: 24
+                            }}>
+                              {formatCurrency({ amount: item.product?.harga_promo, code: 'IDR' })}
 
-                            {'\n'}
+                              {'\n'}
+                            </Typography>
+                          )}
+
+                          <Typography heading size="xs">
+                            {formatCurrency({ amount: item.product?.harga, code: 'IDR' })}
                           </Typography>
-                        )}
-
-                        <Typography heading>
-                          {numeral(item.harga).format()}
                         </Typography>
-                      </Typography>
+                      </View>
                     </View>
 
                     <View style={styles.cartAction}>
@@ -415,7 +416,7 @@ function Cart() {
                           containerStyle={{ alignSelf: 'flex-start' }}
                           onPress={() => handleNoteShow(item, index)}
                         >
-                          <Typography color="primary" size="sm">
+                          <Typography color="#0d674e" size="xs">
                             {`${t('Tulis Catatan')}`}
                           </Typography>
                         </PressableBox>
@@ -482,50 +483,46 @@ function Cart() {
         )}
       </ScrollView>
 
-      {!cart.modelsLoaded || !price.isLoaded ? null : (
-        <View style={styles.action}>
-          <View style={[wrapper.row, { alignItems: 'center' }]}>
-            <Typography type="h4" color="primary" style={{ flex: 1, paddingVertical: 4 }}>
-              {`${t('Total Harga')}`}
-            </Typography>
-
-            <Typography textAlign="right">
-              {!price.original ? null : (
-                <Typography size="lg" color="secondary" style={{
-                  fontStyle: 'italic',
-                  textDecorationLine: 'line-through',
-                  textDecorationStyle: 'solid',
-                  lineHeight: 24
-                }}>
-                  {numeral(price.original).format()}
-
-                  {'\n'}
-                </Typography>
-              )}
-
-              <Typography type="h4">
-                {numeral(price.total).format()}
+      {!cart.modelsLoaded /*|| !price.isLoaded*/ ? null : (
+        !cart.models?.length ? null : (
+          <View style={styles.action}>
+            {/* <View style={[wrapper.row, { alignItems: 'center' }]}>
+              <Typography size='md' color="black" style={{ flex: 1, paddingVertical: 4 }}>
+                {`${t('Total Harga')}`}
               </Typography>
-            </Typography>
+
+              <Typography textAlign="right">
+                {!price.original ? null : (
+                  <Typography size="lg" color="secondary" style={{
+                    fontStyle: 'italic',
+                    textDecorationLine: 'line-through',
+                    textDecorationStyle: 'solid',
+                    lineHeight: 24
+                  }}>
+                    {numeral(price.original).format()}
+
+                    {'\n'}
+                  </Typography>
+                )}
+
+                <Typography type="h4">
+                  {numeral(price.total).format()}
+                </Typography>
+              </Typography>
+            </View> */}
+
+            <PressableBox
+              containerStyle={{ marginTop: 16, alignSelf: 'center', marginVertical: 15, backgroundColor: '#0d674e' }}
+              style={{ width: 300 }}
+              onPress={handleCheckout}
+              disabled={!canCheckout}
+            >
+              <Typography style={{textAlign: 'center', paddingVertical: 10, color: '#FEFEFE'}}>
+                {`${t('Proses Checkout')}`.toUpperCase()}
+              </Typography>
+            </PressableBox>
           </View>
-
-          {canCheckout || !cartSelected.length ? null : (
-            <Typography size="sm" color="red" textAlign="center" style={{ marginTop: 12 }}>
-              {`${t('Minimal total pembelian Reseller adalah')} ${numeral(!user?.orderfirst ? price.orderfirst : price.ordernext).format()
-                }`}
-            </Typography>
-          )}
-
-          <Button
-            containerStyle={{ marginTop: 16, alignSelf: 'center' }}
-            style={{ width: 150 }}
-            label={`${t('Beli')}`.toUpperCase()}
-            color="yellow"
-            shadow={3}
-            onPress={handleCheckout}
-            disabled={!canCheckout}
-          />
-        </View>
+        )
       )}
     </View>
   );
@@ -552,17 +549,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cartImage: {
-    width: 56,
-    height: 56,
-    resizeMode: 'cover',
-    borderRadius: 8,
+    width: 50,
+    height: 40,
+    resizeMode: 'stretch',
   },
   cartAction: {
     ...wrapper.row,
     alignItems: 'center',
     marginTop: 12,
   },
-
+  sorry: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginTop: 120
+  },
   action: {
     paddingTop: 8,
     paddingBottom: 16,

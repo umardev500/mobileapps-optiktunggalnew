@@ -16,6 +16,7 @@ import { useRoute } from '@react-navigation/core';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { setCartItems, setFavorites } from '../../redux/actions';
 import moment from 'moment';
+import TextTicker from 'react-native-text-ticker';
 
 function Account() {
   // Hooks
@@ -223,67 +224,82 @@ function Account() {
                       email: user.email,
                     }]
                   })}>
-                  {!user.foto ? <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw&usqp=CAU' }} style={styles.avatar} /> : (
-                    <Image source={{ uri: user.foto }} style={styles.avatar} />
-                  )}
-                  <View style={
-                    {  
-                      paddingVertical: 10,
-                    }}>
-                    <View style={{ flexGrow: 1 }}>
-                      <Typography textAlign="center" style={{ color: '#0d674e', fontSize: 14}} >
-                        {user?.nama || `${user?.namadepan} ${user?.namatengah} ${user?.namabelakang}`}{`\n`}
-                        {`${user?.id}`}
-                        {/* {showPhone(String(user.hp), '0')} */}
-                      </Typography>
-                      {user.verified || 1 ?
-                        <PressableBox
-                          containerStyle={{ marginTop: 1, backgroundColor: '#0d674e', height: 30, width: 150, alignSelf: 'center' }}
-                          onPress={() => navigation.navigatePath('Public', {
-                            screen: 'BottomTabs.AccountStack.ProfileEdit',
-                            params: [null, null, {
-                              email: user.email,
-                            }]
-                          })}>
-                          <Typography
-                            textAlign="center"
-                            style={{ textAlignVertical: 'center', height: 30 }}
-                            color="#fff">
-                            {t(`${''}Edit Profile`)}
-                            <Ionicons name="chevron-forward" size={12} color={'#fff'} />
-                          </Typography>
-                        </PressableBox>: (
-                        <PressableBox
-                          containerStyle={{ marginTop: 8 }}
-                          onPress={() => navigation.navigatePath('Public', {
-                            screen: 'BottomTabs.AccountStack.Verification',
-                            params: [null, null, {
-                              profile: user,
-                            }]
-                          })}
-                        >
-                          <Typography
-                            textAlign="center"
-                            color="primary"
-                            style={{
-                              borderBottomWidth: 1,
-                              borderColor: colors.palettes.primary
-                            }}
-                          >
-                            {t(`${''}Akun Belum terverifikasi`)}
-                          </Typography>
-                        </PressableBox>
+                  
+                  <View style={{marginTop: 20}}>
+                    <View style={[wrapper.row, { flexGrow: 1, borderColor: '#0d674e', borderWidth: 1, borderRadius: 5 }]}>
+                      {!user.foto ? <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw&usqp=CAU' }} style={styles.avatar} /> : (
+                        <Image source={{ uri: user.foto }} style={styles.avatar} />
                       )}
+                      <View style={{marginVertical: 10}}>
+                        <Typography style={{ color: '#0d674e', fontSize: 14}} >
+                          {user?.nama || `${user?.namadepan} ${user?.namatengah} ${user?.namabelakang}`}{`\n`}
+                          {`${user?.id}`}
+                          {/* {showPhone(String(user.hp), '0')} */}
+                        </Typography>
+                        {user.verified || 1 ?
+                          <PressableBox
+                            containerStyle={{ marginTop: 1, height: 30, width: 150}}
+                            onPress={() => navigation.navigatePath('Public', {
+                              screen: 'BottomTabs.AccountStack.ProfileEdit',
+                              params: [null, null, {
+                                email: user.email,
+                              }]
+                            })}>
+                            <Typography
+                              style={{ textAlignVertical: 'center', height: 30 }}
+                              color="#1126b7">
+                              {t(`${''}Edit Profile`)}
+                              <Ionicons name="chevron-forward" size={12} color={'#1126b7'} />
+                            </Typography>
+                          </PressableBox>: (
+                          <PressableBox
+                            containerStyle={{ marginTop: 8 }}
+                            onPress={() => navigation.navigatePath('Public', {
+                              screen: 'BottomTabs.AccountStack.Verification',
+                              params: [null, null, {
+                                profile: user,
+                              }]
+                            })}
+                          >
+                            <Typography
+                              textAlign="center"
+                              color="primary"
+                              style={{
+                                borderBottomWidth: 1,
+                                borderColor: colors.palettes.primary
+                              }}
+                            >
+                              {t(`${''}Akun Belum terverifikasi`)}
+                            </Typography>
+                          </PressableBox>
+                        )}
+                      </View>
                     </View>
                   </View>
                 </PressableBox>
+                {user?.namadepan == "" ? 
+                  (
+                    <View style={{ marginHorizontal: 0, borderColor: 'red', borderWidth: 1, borderRadius: 15}}>
+                      <TextTicker
+                        style={{ fontSize: 12, color: 'red', paddingHorizontal: 5, paddingVertical: 7 }}
+                        duration={3000}
+                        loop
+                        repeatSpacer={50}
+                        marqueeDelay={1000}
+                      >
+                        <Ionicons name='notifications-outline' size={12} color={'red'}/>
+                        Untuk mempermudah transaksi, Silahkan lengkapi profile anda.
+                      </TextTicker>
+                    </View>
+                  )
+                  : null }
                 <View style={{ marginTop: 5 }}>
                   <ViewCollapse
                     style={styles.menuContainer}
                     pressableProps={{
                       containerStyle: styles.menuBtnContainer,
                     }}
-                    header={t(`${''}Transactions`)}
+                    header={t(`${''}Orders`)}
                     headerProps={{
                       type: 'h',
                     }}
@@ -291,8 +307,8 @@ function Account() {
                   >
                     {[
                       {
-                        title: t(`${''}Your Transaction`),
-                        subtitle: t(`${''}Transactions that you have done.`),
+                        title: t(`${''}Transaksi`),
+                        subtitle: t(`${''}List transaksi anda.`),
                         Icon: FigmaIcon.FigmaDownload,
                         navigatePath: () => {
                           navigation.navigatePath('Public', {
@@ -305,7 +321,7 @@ function Account() {
                       },
                       {
                         title: t(`${''}Wishlist`),
-                        subtitle: t(`${''}Your wishlist product`),
+                        subtitle: t(`${''}Produk yang anda sukai.`),
                         Icon: FigmaIcon.Figmawishlist,
                         navigatePath: () => {
                           navigation.navigatePath('Public', {
@@ -318,7 +334,7 @@ function Account() {
                         key={index}
                         containerStyle={{
                           marginTop: index === 0 ? 8 : 4,
-                          borderRadius: 15,
+                          borderRadius: 5,
                           marginHorizontal: 0,
                         }}
                         style={styles.menuChildBtn}
@@ -333,33 +349,24 @@ function Account() {
                             });
                         })}
                       >
-                        <View style={styles.menuChildIcon}>
-                          {!item.Icon ? null : (
-                            <item.Icon width={24} height={24} color={colors.gray[900]} />
-                          )}
-                        </View>
-
-                        <View style={{ flex: 1, paddingLeft: 15 }}>
-                          <Typography heading>
+                        <View style={[wrapper.row, { flex: 1, marginVertical: 5 }]}>
+                          <Typography size='sm' style={{flex: 1}}>
                             {item.title}
                           </Typography>
-
-                          <Typography size="sm" color={800} style={{ marginTop: 4 }}>
-                            {item.subtitle}
-                          </Typography>
+                          <Ionicons name="chevron-forward" size={16} color={'#0d674e'} style={{alignSelf: 'flex-end'}}/>
                         </View>
                       </PressableBox>
                     ))}
                   </ViewCollapse>
                 </View>
 
-                <View style={{ marginTop: 5 }}>
+                <View style={{ marginTop: 2 }}>
                   <ViewCollapse
                     style={styles.menuContainer}
                     pressableProps={{
                       containerStyle: styles.menuBtnContainer,
                     }}
-                    header={t(`${''}Account Settings`)}
+                    header={t(`${''}Pengaturan akun`)}
                     headerProps={{
                       type: 'h',
                       // style: { paddingLeft: 24 + 15 }
@@ -399,23 +406,23 @@ function Account() {
                       //   Icon: FigmaIcon.FigmaDocument,
                       //   navigatePath: 'BottomTabs.AccountStack.ReviewList',
                       // },
-                      // {
-                      //   title: t(`${''}Alamat Pengiriman`),
-                      //   subtitle: t(`${''}Atur alamat pengiriman`),
-                      //   Icon: FigmaIcon.FigmaHomeFilled,
-                      //   navigatePath: 'BottomTabs.AccountStack.AddressList',
-                      // },
                       {
-                        title: t(`${''}Account Security`),
-                        subtitle: t(`${''}Don't share your password with anyone`),
+                        title: t(`${''}Alamat Pengiriman`),
+                        subtitle: t(`${''}Atur alamat pengiriman`),
+                        Icon: FigmaIcon.FigmaHomeFilled,
+                        navigatePath: 'BottomTabs.AccountStack.AddressList',
+                      },
+                      {
+                        title: t(`${''}Keamanan akun`),
+                        subtitle: t(`${''}Tingkatkan keamanan akun anda.`),
                         Icon: FigmaIcon.FigmaLock,
                         navigatePath: 'BottomTabs.AccountStack.PasswordReset',
                       },
 
                       {
-                        title: t(`${''}Contact Us`),
+                        title: t(`${''}Hubungi kami`),
                         Icon: FigmaIcon.FigmaContact,
-                        subtitle: t(`${''}We are happy to serve you, please ask questions.`),
+                        subtitle: t(`${''}Kami senang membantu anda.`),
                         navigatePath: 'Contact',
                       },
                     ].map((item, index) => (
@@ -440,16 +447,16 @@ function Account() {
                       >
                         <View style={styles.menuChildIcon}>
                           {!item.Icon ? null : (
-                            <item.Icon width={24} height={24} color={colors.gray[900]} />
+                            <item.Icon width={18} height={18} color={colors.gray[900]} />
                           )}
                         </View>
 
                         <View style={{ flex: 1, paddingLeft: 15 }}>
-                          <Typography heading>
+                          <Typography size='sm' style={{fontWeight: '700'}}>
                             {item.title}
                           </Typography>
 
-                          <Typography size="sm" color={800} style={{ marginTop: 4 }}>
+                          <Typography size="sm" color={800} style={{ marginTop: 2 }}>
                             {item.subtitle}
                           </Typography>
                         </View>
@@ -478,11 +485,11 @@ function Account() {
                         url: options.termsUrl,
                         Icon: FigmaIcon.FigmaHomeFilled,
                       },
-                      {
-                        title: t(`${''}FAQ`),
-                        navigatePath: 'FAQ',
-                        url: options.faqUrl,                    
-                      },
+                      // {
+                      //   title: t(`${''}FAQ`),
+                      //   navigatePath: 'FAQ',
+                      //   url: options.faqUrl,                    
+                      // },
                       {
                         title: t(`${''}Privacy Policy`),
                         navigatePath: 'PrivacyPolicy',
@@ -497,17 +504,15 @@ function Account() {
                       <PressableBox
                         key={index}
                         containerStyle={{
-                          marginTop: index === 0 ? 8 : 4,
-                          borderRadius: 15,
+                          marginTop: index === 0 ? 4 : 4,
+                          borderRadius: 5,
                           marginHorizontal: 0,
                         }}
-                        style={[styles.menuChildBtn, { paddingVertical: 8 }]}
+                        style={[styles.menuChildBtn, { paddingVertical: 5 }]}
                         onPress={!item.url ? undefined : () => Linking.openURL(item.url)}
                       >
-                        <View style={styles.menuChildIcon} />
-
-                        <View style={{ flex: 1, paddingLeft: 15 }}>
-                          <Typography heading>
+                        <View style={{ flex: 1, marginVertical: 5 }}>
+                          <Typography size='sm'>
                             {item.title}
                           </Typography>
                         </View>
@@ -516,26 +521,19 @@ function Account() {
                   </ViewCollapse>
                 </View>
 
-                <View style={{ marginTop: 0, paddingBottom: 15 }}>
+                <View style={{ marginTop: 40, paddingBottom: 15 }}>
                   <Button
                     containerStyle={[styles.menuBtnContainer, {
-                      alignSelf: 'flex-start',
+                      flex: 1,
                       borderBottomWidth: 0
                     }]}
-                    style={{ paddingHorizontal: 15, paddingVertical: 12 }}
+                    style={{ paddingHorizontal: 15, paddingVertical: 12, backgroundColor: '#a94442' }}
                     label={`${''}Logout`}
                     labelStyle={{
-                      paddingLeft: 15,
-                      minWidth: 128,
-                      textAlign: 'left',
-                      color: 'red'
+                      textAlign: 'center',
+                      color: 'white'
                     }}
                     rounded={4}
-                    left={(
-                      <View style={{ width: 24, alignItems: 'center' }}>
-                        <Ionicons name="arrow-up" size={18} color='red' />
-                      </View>
-                    )}
                     onPress={() => Alert.alert(
                       `${t('Logout')}`,
                       `${t('Close app?')}`,
@@ -591,7 +589,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   container: {
-    backgroundColor: colors.palettes.primary
+    backgroundColor: '#0d674e'
   },
 
   accountCard: {
@@ -608,13 +606,13 @@ const styles = StyleSheet.create({
   },
   avatar: {
     alignSelf: 'center',
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     borderRadius: 128,
     borderColor: '#0d674e',
     borderWidth: 1,
     resizeMode: 'cover',
-    marginTop: 15
+    marginHorizontal: 10
   },
   cardMember: {
     marginTop: 20, 
@@ -631,7 +629,7 @@ const styles = StyleSheet.create({
   menuBtnContainer: {
     backgroundColor: colors.white,
     borderBottomWidth: 1,
-    borderColor: colors.transparent('palettes.primary', 0.5),
+    borderColor: '#0d674e',
   },
   menuChildBtn: {
     ...wrapper.row,

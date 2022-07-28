@@ -86,7 +86,7 @@ function Register() {
     setDatePickerVisibility(false);
   };
 
-  const handleConfirm = (date) => {
+  const handleConfirm = (date: any) => {
     // const isDate = moment().format("DD/MM/YYYY");
     setDate(date);
     console.warn("A date has been picked: ", date);
@@ -201,6 +201,10 @@ function Register() {
         dt: JSON.stringify({
           email: fields.email,
           hp: phone.replace('+', ''),
+          nama: fields.namadepan+' '+fields.namatengah+' '+fields.namabelakang,
+          namadepan: fields.namadepan,
+          namatengah: fields.namatengah,
+          namabelakang: fields.namabelakang,
         }),
       }
     }).then(({ status, data }) => {
@@ -226,6 +230,7 @@ function Register() {
               ...fields,
               tgllahir: getDate(),
               gender: jk(),
+              email: fields.email,
               // hp: `62${fields.hp}`,
               hp: phone.replace('+', ''), //showPhone(fields.hp, '62'),
             },

@@ -160,15 +160,15 @@ function PromotionDetail() {
                   borderTopWidth: 1,
                   borderColor: '#ccc'
                 }} />
-                <Typography type="h4" style={{ marginTop: 15}}>
+                {/* <Typography type="h4" style={{ marginTop: 15}}>
                   Products
-                </Typography>
+                </Typography> */}
               </>
             )}
           </View>
         )
       )}
-      <Products
+      {/* <Products
         refreshing={isRefreshing}
         onRefresh={handleRefresh}
         style={{ marginTop: 15, marginHorizontal: -5 }}
@@ -198,7 +198,7 @@ function PromotionDetail() {
         //     {t(`Already showing all products`)}
         //   </Typography>
         // )}
-      />
+      /> */}
     </ScrollView>
   );
 };

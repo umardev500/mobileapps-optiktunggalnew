@@ -129,9 +129,9 @@ function ProductsByKategori({
 
           <View style={styles.productCardContent}>
             <View style={{ height: 1, backgroundColor: '#f1f1f1', marginBottom: 10 }} />
-            <Typography style={{ fontSize: 11, fontWeight: 'bold', textAlign: 'center', color: '#333', height: 40}}>
-                  {`${item.prd_ds}`.toUpperCase()}
-                </Typography>
+            <Typography style={{ fontSize: 10, fontWeight: 'bold', textAlign: 'center', color: '#333', height: 50}}>
+              {`${item.prd_ds}`.toUpperCase()}
+            </Typography>
             {/* {item.prd_ds?.length != 56 ? 
               (
                 <>
@@ -228,7 +228,8 @@ const styles = StyleSheet.create({
   productCardContent: {
     paddingTop: 12,
     paddingBottom: 15,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    width: 'auto'
   },
   user: {
     ...wrapper.row,

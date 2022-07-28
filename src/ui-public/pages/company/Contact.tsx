@@ -60,34 +60,22 @@ function Contact() {
           <Typography style={{ marginTop: 3, marginBottom: 20, textAlign: 'justify' }}>
             {`Jalan Pintu Air Raya No. 36 K-L, RT. 006, RW. 003, Pasar Baru, Sawah Besar, Kota Jakarta Pusat, DKI Jakarta. KODE POS. 10710`}
           </Typography>
-
-          <View style={[wrapper.row, { width: '100%', paddingHorizontal: 40, marginBottom: 10, marginTop: 20 }]}>
-            <View style={[wrapper.row]}>
-              <PressableBox
-                opacity
-                style={{ alignItems: 'center'}}
-                onPress={() => Linking.openURL('whatsapp://send?text=Halo Optik Tunggal&phone=6281113203000')}  >
-                  <Typography style={{ height: 40 }}><Ionicons name="logo-whatsapp" size={16} color={'green'} /> 0811-1320-3000</Typography>
-              </PressableBox>
-            </View>
-            <View style={{ width: '10%' }}></View>
-            <View style={[wrapper.row]}>
-              <PressableBox
-                  opacity
-                  style={{ alignItems: 'center', }}
-                  onPress={() => Linking.openURL('whatsapp://send?text=Halo Optik Tunggal&phone=6281113511000')}  >
-                  <Typography style={{ height: 40 }}><Ionicons name="logo-whatsapp" size={16} color={'green'} /> 0811-1351-1000</Typography>
-              </PressableBox>
-            </View>
-          </View>
-          
-          <Typography style={{ marginTop: -15, fontSize: 13, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, borderRadius: 10 }}>
+          <PressableBox
+              opacity
+              style={{ marginTop: 5, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, marginHorizontal: 5, borderRadius: 10 }}
+              onPress={() => Linking.openURL('whatsapp://send?text=Halo Optik Tunggal&phone=6281113203000')}  >
+              <Typography style={{ fontSize: 13 }}><Ionicons name="logo-whatsapp" size={16} color={'green'} /> Customer Service</Typography>
+          </PressableBox>
+          <Typography style={{ marginTop: 5, fontSize: 13, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, borderRadius: 10 }}>
             <Ionicons name="print-outline" size={16} color={'black'} /> {`021 - 351 8526 / 021 - 351 8527.`}
           </Typography>
-
-          <Typography style={{ marginTop: 5, fontSize: 13, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, borderRadius: 10 }}>
-            <Ionicons name="mail-outline" size={16} color={'black'} /> {`cs-ot@optiktunggal.com`}
-          </Typography>
+          
+          <PressableBox
+              opacity
+              style={{ marginTop: 5, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, marginHorizontal: 5, borderRadius: 10 }}
+              onPress={() => Linking.openURL('mailto:cs-ot@optiktunggal.com')}  >
+              <Typography style={{ fontSize: 13 }}><Ionicons name="mail-outline" size={16} color={'black'} /> cs-ot@optiktunggal.com</Typography>
+          </PressableBox>
 
           <PressableBox
               opacity
@@ -98,9 +86,21 @@ function Contact() {
 
           <PressableBox
               opacity
-              style={{ marginTop: 5, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, marginHorizontal: 5, borderRadius: 10, marginBottom: 20 }}
+              style={{ marginTop: 5, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, marginHorizontal: 5, borderRadius: 10 }}
               onPress={() => Linking.openURL('https://www.facebook.com/optiktunggalofficial/')}  >
               <Typography style={{ fontSize: 13 }}><Ionicons name="logo-facebook" size={16} color={'black'} /> optiktunggalofficial</Typography>
+          </PressableBox>
+
+          <PressableBox
+              opacity
+              style={{ marginTop: 5, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, marginHorizontal: 5, borderRadius: 10, marginBottom: 20 }}
+              onPress={() => Linking.openURL('https://vt.tiktok.com/ZSduAfsBR/')}  >
+              <View style={[wrapper.row]}>
+                <Image source={{uri: 'https://seeklogo.com/images/T/tiktok-share-icon-black-logo-29FFD062A0-seeklogo.com.png'}} style={{width: 18, height: 18}}/>
+                <Typography style={{ fontSize: 13, textAlignVertical: 'center', marginHorizontal: 5 }}>
+                  optiktunggalofficial
+                </Typography>
+              </View>
           </PressableBox>
         </View>
       </View>

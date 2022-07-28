@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, ToastAndroid, useWindowDimensions, View } from 'react-native';
 import { colors, shadows, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
-import { BottomDrawer, Button, ImageAuto, PressableBox, TextField, Typography } from '../../../ui-shared/components';
+import { BottomDrawer, Button, ImageAuto, PressableBox, TextField, Typography, RenderHtml } from '../../../ui-shared/components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { PublicHomeStackParamList } from '../../../router/publicBottomTabs';
 import { AddressModel, CartModel, Modelable, PaymentMethodType } from '../../../types/model';
@@ -17,11 +17,16 @@ import { setCartItems } from '../../../redux/actions';
 import { PAYMENT_IMAGES } from './PaymentMethod';
 import { useTranslation } from 'react-i18next';
 import Clipboard from '@react-native-clipboard/clipboard';
+import RenderHTML from 'react-native-render-html';
+import {
+  formatCurrency,
+  getSupportedCurrencies,
+} from "react-native-format-currency";
 
 export const PAYMENT_METHODS = [
   {
     method: 'transfer',
-    bankName: 'Mandiri',
+    bankName: 'BCA',
     bankNo: '123-456-789-0',
     bankAccount: 'PT OPTIK TUNGGAL SEMPURNA',
   }
@@ -71,7 +76,7 @@ function PaymentMerchant() {
   // Effects
   useEffect(() => {
     const { cart_items, address, payment_method } = route.params;
-
+    console.log('CART :'+cart_items);
     address && setAddress(state => ({
       ...state,
       model: address,
@@ -90,9 +95,7 @@ function PaymentMerchant() {
   }, [cart.models]);
 
   useEffect(() => {
-    if (paymentMethod?.method === 'cod') {
-      handleSubmit();
-    }
+    handleSubmit();
   }, [paymentMethod]);
 
   // Vars
@@ -141,53 +144,43 @@ function PaymentMerchant() {
   };
 
   const handleSubmit = async () => {
-    switch (paymentMethod?.method) {
-      case 'transfer':
-        if (!fields.price_total) {
-          return handleErrorShow('price_total', `${t('Terjadi kesalahan')}: ${t('Total harga belum terhitung.')}`);
-        } else if (!fields.bank_number) {
-          // return handleErrorShow('bank_number', `${t('Mohon masukkan nomor rekening.')}`);
-        } else if (!fields.bank_account_name) {
-          // return handleErrorShow('bank_account_name', `${t('Mohon masukkan nama pemilik rekening.')}`);
-        }
-        break;
-      case 'cod':
-        // COD Validations
-        break;
-    }
-
     const { model: addressModel } = address;
+    let today = new Date();
+    let date = today.getDate()+''+Number(today.getMonth()+1)+''+today.getFullYear();
+    let randomNumber = Math.floor(Math.random() * 100000) + 1;
 
     setIsSaving(true);
-
     return httpService('/order/save', {
       data: {
-        act: 'MPNew',
-        comp: '001',
-        dt: JSON.stringify({
+        act: 'OrderNew',
+        header: JSON.stringify({
           regid: user?.id,
-          payterm: 'cod' === paymentMethodType ? '2' : '1',
+          invnumber: 'OT-'+date+'-'+randomNumber,
+          paymethod: paymentMethod?.payment_name,
+          paytype: paymentMethodType,
+          paytoken: 'tokenpayfrom_midtrans',
+          accountnumber: 'Nomor pembayaran dari midtrans',
+          paystatus: 'pending',
           shipto: addressModel?.id || '',
+          shiptotal: Number(route.params?.price_total),
           lat: addressModel?.lat || '',
           lng: addressModel?.lng || '',
           ip: location.ip,
         }),
         item: JSON.stringify((cart.models || []).map((item) => ({
           id: item.prd_id,
+          basecurve: 'Base Curve',
+          spheries: 'Spheries',
+          color: 'Color',
           qty: item.qty,
-          harga: item.harga,
-          refill: item.refill || '0',
+          harga: item.product?.harga,
           remark: item.note,
         })))
       }
     }).then(({ status, id, nomor }) => {
       setIsSaving(false);
-
-      console.log("SAVE ORDER", status, id, nomor);
-
       if (id) {
         setTransactionId(id);
-
         handleModalToggle('info', true);
       }
     }).catch(() => {
@@ -235,7 +228,7 @@ function PaymentMerchant() {
 
   let title = `${t('Pembayaran')}`;
   let titleImage = null;
-  const paymentMethodType = paymentMethod?.method || '';
+  const paymentMethodType = paymentMethod?.payment_type || '';
 
   switch (paymentMethodType) {
     case 'transfer':
@@ -252,7 +245,7 @@ function PaymentMerchant() {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={[styles.header, { paddingTop: 12 }]}>
+      {/* <View style={[styles.header, { paddingTop: 12 }]}>
         <View style={styles.headerRow}>
           <Typography type="h5" style={{ flex: 1, paddingHorizontal: 8 }}>
             {title}
@@ -262,229 +255,165 @@ function PaymentMerchant() {
             <ImageAuto source={titleImage} height={24} />
           )}
         </View>
-      </View>
+      </View> */}
 
       <ScrollView contentContainerStyle={styles.container}>
-        {['transfer'].indexOf(paymentMethodType || '') < 0 ? null : (
-          <View>
-            <View style={styles.card}>
-              <Typography size="sm">
-                {`${t('Total Tagihan')}`}
-              </Typography>
+        <Typography size="sm" style={{textAlign: 'center', marginVertical: 30}}>
+          {`${t('Selamat!\nPesanan anda berhasil dibuat. silahkan lakukan pembayaran sebelum\n')}`}
+          <Typography style={{fontWeight: '700'}}>
+            (ambil tanggal dari payment gateway)
+          </Typography>
+        </Typography>
+        <View style={[wrapper.row, styles.card]}>
+          <Typography size="sm">
+            {`${t('Total Tagihan')}`}
+          </Typography>
 
-              <Typography type="h5" style={{ marginTop: 4 }}>
-                {numeral(fields.price_total).format()}
-              </Typography>
+          <View style={{flex: 1}}>
+            <Typography type="h5" style={{ alignSelf: 'flex-end' }}>
+              {/* {numeral(fields.price_total).format()} */}
+              {formatCurrency({ amount: Number(route.params?.price_total), code: 'IDR' })}        
+            </Typography>
+          </View>
 
-              {!getFieldError('price_total') ? null : (
-                <Typography size="sm" color="red" style={{ marginTop: 4 }}>
-                  {error.message}
-                </Typography>
-              )}
-            </View>
+          {!getFieldError('price_total') ? null : (
+            <Typography size="sm" color="red" style={{ marginTop: 4 }}>
+              {error.message}
+            </Typography>
+          )}
+        </View>
+        <Typography type="h5" style={{paddingVertical: 10}}>
+          {`${t('Cara Pembayaran')}`}
+        </Typography>
+        {paymentMethodType == "TRF" ?
+          (<View>
+            <View style={[wrapper.row, { marginTop: 12 }]}>
+              <Typography textAlign="right" size='sm' style={{ minWidth: 12 }}>1.</Typography>
 
-            <View style={[styles.card, { marginTop: 16, display: 'none' }]}>
-              <Typography size="sm">
-                {`${t('No. Rekening')}`}
-              </Typography>
-
-              <TextField
-                containerStyle={{ marginTop: 4, paddingHorizontal: 0 }}
-                placeholder={`${t('Contoh')}: 1234567`}
-                value={fields.bank_number}
-                keyboardType="number-pad"
-                onChangeText={(value) => handleFieldChange('bank_number', value)}
-                border="bottom"
-                size="sm"
-                error={!!getFieldError('bank_number')}
-                message={error.message}
-              />
-
-              <Typography size="sm" style={{ marginTop: 16 }}>
-                {`${t('Nama Pemilik Rekening')}`}
-              </Typography>
-
-              <TextField
-                containerStyle={{ marginTop: 4, paddingHorizontal: 0 }}
-                placeholder={`${t('Contoh: John Doe')}`}
-                value={fields.bank_account_name}
-                onChangeText={(value) => handleFieldChange('bank_account_name', value)}
-                border="bottom"
-                size="sm"
-                error={!!getFieldError('bank_account_name')}
-                message={error.message}
-              />
-
-              <View style={styles.cardInfo}>
-                {[
-                  `${t('Masukan info terkait diatas sesuai pada buku tabungan.')}`,
-                  `${t('Untuk pembayaran lewat teller isi “No Rekening”. Lalu isi “Nama Pemilik Rekening” dengan nama Anda.')}`,
-                ].map((item, index) => (
-                  <View key={index} style={[wrapper.row]}>
-                    <Ionicons
-                      name="ellipse"
-                      size={6}
-                      color={colors.palettes.primary}
-                      style={{ marginTop: 4 }}
-                    />
-
-                    <Typography
-                      style={{
-                        flex: 1,
-                        color: colors.palettes.primary,
-                        paddingLeft: 6,
-                      }}
-                      size="sm"
-                    >
-                      {item}
-                    </Typography>
-                  </View>
-                ))}
-              </View>
-            </View>
-
-            <View style={[styles.card, { marginTop: 16 }]}>
-              <Typography type="h5">
-                {`${t('Langkah Pembayaran')}`}
-              </Typography>
-
-              <View style={[wrapper.row, { marginTop: 12 }]}>
-                <Typography textAlign="right" style={{ minWidth: 12 }}>
-                  1.
+              <View style={{ flex: 1, paddingLeft: 8 }}>
+                <Typography size='sm'>
+                  {`${t('Silahkan transfer ke rekening yang tertera di bawah ini.')}`}
                 </Typography>
 
-                <View style={{ flex: 1, paddingLeft: 8 }}>
-                  <Typography>
-                    {`${t('Silahkan transfer ke rekening resmi OPTIK TUNGGAL yang tertera di bawah ini.')}`}
-                  </Typography>
+                <View style={[wrapper.row, { alignItems: 'center', marginTop: 4, borderWidth: 1, borderColor: '#0d674e', borderRadius: 10 }]}>
+                  {!titleImage ? null : (
+                    <ImageAuto source={titleImage} width={80} />
+                  )}
 
-                  <Typography heading style={{ marginTop: 8 }}>
-                    {`${t('Tujuan Transfer')}`} :
-                  </Typography>
-
-                  <View style={[wrapper.row, { alignItems: 'center', marginTop: 4 }]}>
-                    {!titleImage ? null : (
-                      <ImageAuto source={titleImage} width={80} />
-                    )}
-
-                    <View style={{ flex: 1, paddingLeft: 15 }}>
-                      <Typography heading>
-                        <Typography size="xs">
-                          {`${t('Nama Bank')}`}
-                        </Typography>
-                        {`\nBank ${paymentMethod?.nama}`}
-                      </Typography>
-
-                      <View style={{ marginTop: 4 }}>
-                        <Typography size="xs">
-                          {`${t('Nomor Rekening')}`}
-                        </Typography>
-
-                        <View style={[wrapper.row, { justifyContent: 'flex-start' }]}>
-                          <Typography heading>
-                            {`${transferInfo?.bankNo}`}
-                          </Typography>
-
-                          {!transferInfo ? null : (
-                            <Button
-                              containerStyle={{ marginLeft: 2 }}
-                              size={18}
-                              onPress={() => {
-                                const bankNo = transferInfo.bankNo;
-
-                                Clipboard.setString(bankNo.replace(/-/g, ''));
-
-                                ToastAndroid.show(`${''}Copied!`, ToastAndroid.SHORT);
-                              }}
-                            >
-                              <Ionicons name="copy" size={14} color={colors.gray[800]} />
-                            </Button>
-                          )}
-                        </View>
-                      </View>
-
-                      <Typography heading style={{ marginTop: 4 }}>
-                        <Typography size="xs">
-                          {`${t('Atas Nama')}`}
-                        </Typography>
-                        {`\n${transferInfo?.bankName}`}
-                      </Typography>
-                    </View>
-                  </View>
-                </View>
-              </View>
-
-              <View style={[wrapper.row, { marginTop: 12 }]}>
-                <Typography textAlign="right" style={{ minWidth: 12 }}>
-                  2.
-                </Typography>
-
-                <View style={{ flex: 1, paddingLeft: 8 }}>
-                  <Typography>
-                    {`${t('Nominal transfer adalah')} `}
-
+                  <View style={{ flex: 1, paddingHorizontal: 15, paddingVertical: 15 }}>
                     <Typography heading>
-                      {numeral(fields.price_total).format()}
+                      <Typography size="xs">
+                        {`${t('Nama Bank')}`}
+                      </Typography>
+                      {`\nBank ${paymentMethod?.payment_name}`}
                     </Typography>
 
-                    {`.`}
-                  </Typography>
+                    <View style={{ marginTop: 4 }}>
+                      <Typography size="xs">
+                        {`${t('Nomor Rekening')}`}
+                      </Typography>
+
+                      <View style={[wrapper.row, { justifyContent: 'flex-start', flex: 1 }]}>
+                        <Typography heading style={{flex: 1}}>
+                          {`${paymentMethod?.label}`}
+                        </Typography>
+
+                        <Button
+                          containerStyle={{ marginLeft: 2 }}
+                          size={18}
+                          onPress={() => {
+                            Clipboard.setString(paymentMethod?.label?.toString());
+
+                            ToastAndroid.show(`${''}Copied!`, ToastAndroid.SHORT);
+                          }}
+                        >
+                          <Ionicons name="copy-outline" size={14} color={colors.gray[800]} />
+                        </Button>
+                      </View>
+                    </View>
+
+                    <Typography heading style={{ marginTop: 4 }}>
+                      <Typography size="xs">
+                        {`${t('Atas Nama')}`}
+                      </Typography>
+                      {`\n${paymentMethod?.nama}`}
+                    </Typography>
+                  </View>
                 </View>
               </View>
+            </View>
 
-              <View style={[wrapper.row, { marginTop: 4 }]}>
-                <Typography textAlign="right" style={{ minWidth: 12 }}>
-                  3.
-                </Typography>
+            <View style={[wrapper.row, { marginTop: 12 }]}>
+              <Typography textAlign="right" style={{ minWidth: 12 }}>2.</Typography>
 
-                <View style={{ flex: 1, paddingLeft: 8 }}>
-                  <Typography>
-                    {`${t('Simpan bukti transfer untuk dikirim melalui aplikasi.')}`}
+              <View style={{ flex: 1, paddingLeft: 8 }}>
+                <Typography size='sm'>
+                  {`${t('Nominal transfer adalah')} `}
+
+                  <Typography heading>
+                    {formatCurrency({ amount: Number(route.params?.price_total), code: 'IDR' })}
                   </Typography>
-                </View>
-              </View>
-            </View>
-          </View>
-        )}
 
-        {['cod'].indexOf(paymentMethodType || '') < 0 ? null : (
-          <View>
-            <View style={styles.card}>
-              <Typography>
-                {`${t('Silahkan scan Barcode pada Driver yg mengantar pesanan Anda')} `}
-              </Typography>
-            </View>
-
-            <View style={[styles.header, { marginHorizontal: -15, marginTop: 24 }]}>
-              <View style={styles.headerRow}>
-                <Typography type="h5" style={{ flex: 1 }}>
-                  {`${t('COD')}`}
+                  {`.`}
                 </Typography>
-
-                <ImageAuto source={require('../../../assets/images/payments/cart-green.png')} height={24} />
               </View>
             </View>
 
-            <View style={[styles.card, { marginTop: 12 }]}>
-              <Typography>
-                {`${t('Silahkan scan Barcode pada Driver yg mengantar pesanan Anda')} `}
-              </Typography>
+            <View style={[wrapper.row, { marginTop: 4 }]}>
+              <Typography size='sm' textAlign="right" style={{ minWidth: 12 }}>3.</Typography>
+
+              <View style={{ flex: 1, paddingLeft: 8 }}>
+                <Typography size='sm'>
+                  {`${t('Simpan bukti transfer untuk dikirim melalui aplikasi.')}`}
+                </Typography>
+              </View>
             </View>
-          </View>
-        )}
+          </View>)
+          :
+          (
+            <View>
+              <View style={[wrapper.row, {flex: 1, marginBottom: 20, alignSelf: 'center'}]}>
+                <Image source={{ uri: route.params.payment_method?.image }} style={styles.methodImage} />
+                <Typography style={{paddingHorizontal: 5, textAlign: 'right'}}>
+                  {`${route.params.payment_method?.remark}`}
+                </Typography>
+              </View>
+              {paymentMethodType == "EW" ? null : (
+                <View style={{borderColor: '#333', borderWidth: 1, borderRadius: 5, marginBottom: 10}}>
+                  <Typography style={{paddingHorizontal: 5, paddingVertical: 5, textAlign: 'center'}}>
+                    {`Kode Pembayaran\n`}
+                    <Typography type='h4'>
+                      123456878945
+                    </Typography>
+                  </Typography>
+                  <PressableBox
+                    style={{borderColor: 'blue', borderWidth: 1, borderRadius: 5, marginBottom: 10, width: 120, alignSelf: 'center'}}
+                    onPress={() => {
+                      Clipboard.setString(paymentMethod?.label?.toString());
+
+                      ToastAndroid.show(`${''}Copied!`, ToastAndroid.SHORT);
+                    }}>
+                      <Typography style={{color: 'blue', textAlign: 'center', paddingVertical: 5}}>Salin Kode</Typography>
+                  </PressableBox>
+                </View>
+              )}
+              <RenderHtml contentWidth={width - 60} source={{ html: route.params.payment_method?.howtobuy }} />
+            </View>)
+        }
       </ScrollView>
 
       {!cart.modelsLoaded ? null : (
         <View style={styles.action}>
           <Button
-            containerStyle={{ alignSelf: 'center' }}
-            style={{ width: 150 }}
-            label={`${t('Bayar')}`.toUpperCase()}
-            color="yellow"
-            shadow={3}
-            onPress={handleSubmit}
-            loading={isSaving}
-          />
+              containerStyle={{ marginTop: 16, alignSelf: 'center', marginVertical: 10, borderWidth: 1, borderColor: '#0d674e', borderRadius: 5 }}
+              style={{ width: 300 }}
+              onPress={handleSubmit}
+              loading={isSaving}
+            >
+            <Typography style={{textAlign: 'center', paddingVertical: 5, color: '#0d674e', fontWeight: 'bold'}}>
+              {`${t('Bayar Sekarang')}`.toUpperCase()}
+            </Typography>
+          </Button>
         </View>
       )}
 
@@ -547,7 +476,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     paddingHorizontal: 15,
-    paddingTop: 16,
+    paddingTop: 15,
     paddingBottom: 24,
     backgroundColor: colors.white,
   },
@@ -564,10 +493,14 @@ const styles = StyleSheet.create({
     borderColor: colors.transparent('palettes.primary', 1),
     paddingVertical: 4,
   },
-
+  methodImage: {
+    width: 45,
+    height: 20,
+    resizeMode: 'contain',
+  },
   card: {
     paddingVertical: 8,
-    paddingHorizontal: 8,
+    paddingHorizontal: 0,
     backgroundColor: colors.white
   },
   cardInfo: {

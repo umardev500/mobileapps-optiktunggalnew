@@ -32,7 +32,7 @@ function Verification() {
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState<Fields>({
     otp_code: '',
-    email: '',
+    email: ''
   });
   const [error, setError] = useState<ErrorState<Fields>>({
     fields: [],
@@ -40,11 +40,10 @@ function Verification() {
   });
   const [inputLength, setInputLength] = useState(6);
   const [profile, setProfile] = useState<RegisterFields | null>(null);
-  const [timer, setTimer] = useState(120);
+  const [timer, setTimer] = useState(60);
 
   // Effects
   useEffect(() => {
-    console.log('Data email '+user?.email || fields.email);
     if (route.params?.profile) {
       setProfile(route.params.profile);
     }
@@ -54,7 +53,6 @@ function Verification() {
 
   useEffect(() => {
     clearTimeout(timerTO.current);
-
     beginTimer();
   }, []);
 
@@ -111,6 +109,7 @@ function Verification() {
         dt: JSON.stringify({
           email: route.params.email,
           otp: fields.otp_code,
+          hp: route.params.hp
         }),
       },
     }).then(({ status, data, msg }) => {
@@ -193,16 +192,23 @@ function Verification() {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={{ paddingTop: 24, alignSelf: 'center' }}>
         <Typography heading style={{ marginTop: 2, color: '#333', textAlign: 'center' }}>
-          {t(`${''}Enter Verification Code`)}
+          {t(`${''}Masukan Kode Verifikasi`)}
         </Typography>
-
-        <Typography style={{ marginTop: 2, color: '#333', textAlign: 'center' }}>
-          {t(`${''}Verification Code has been sent to your email.`)}
-        </Typography>
+        {route.params?.flaq === "mail" ? (
+          <Typography style={{ marginTop: 2, color: '#333', textAlign: 'center' }}>
+            {t(`${''}Kode verifikasi sudah kami kirimkan ke email anda. Silahkan cek inbox atau spam di email anda.`)}
+          </Typography>
+        )
+        :
+        (
+          <Typography style={{ marginTop: 2, color: '#333', textAlign: 'center' }}>
+            {t(`${''}Kode verifikasi kami kirimkan melalui whatsapp dengan nomor +`+route.params.hp+`.`)}
+          </Typography>
+        )}
       </View>
-      <Typography textAlign="center" style={{ paddingTop: 24 }}>
+      {/* <Typography textAlign="center" style={{ paddingTop: 24 }}>
         {moment().startOf('day').set('second', timer).format('mm:ss')}
-      </Typography>
+      </Typography> */}
 
       <View style={styles.inputsWrap}>
         <TextInput

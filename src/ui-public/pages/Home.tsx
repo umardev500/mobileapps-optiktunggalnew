@@ -11,7 +11,7 @@ import Products from '../components/Products';
 import ProductsLoading from '../loadings/ProductsLoading';
 import { httpService } from '../../lib/utilities';
 import { useTranslation } from 'react-i18next';
-import { fetchCategories, fetchBrand, fetchGender, fetchModelKacamata, fetchBrandColorCL, fetchBrandClearCL } from '../../redux/actions/shopActions';
+import { fetchCategories, fetchBrand, fetchGender, fetchModelKacamata, fetchBrandColorCL, fetchBrandClearCL, fetchBrandHome } from '../../redux/actions/shopActions';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import PopupPromoModal from '../components/PopupPromoModal';
 import moment from 'moment';
@@ -104,7 +104,7 @@ const Home = () => {
       setCategory(state => ({ ...state, modelsLoaded: true }));
     });
 
-    dispatch(fetchBrand()).unwrap().then((results) => {
+    dispatch(fetchBrandHome()).unwrap().then((results) => {
       setBrand(state => ({
         ...state,
         models: results,
@@ -253,7 +253,7 @@ const Home = () => {
   }
 
   const renderBrandCLClear = ({ item, index }: ListRenderItemInfo<BrandCLModel>) => {
-    const itemname = item.nama;
+    const itemname = item.name;
     return (
       <PressableBox
         key={index}
@@ -266,17 +266,17 @@ const Home = () => {
         }}
         style={{ alignItems: 'center', backgroundColor: '#FEFEFE' }}
         onPress={() => 
-                      toProductList(itemname, item.brandcode)
+                      toProductList(itemname, item.codebrand)
                       // Alert.alert( "Pemberitahuan", "Brand : "+item.codebrand)
                 }
       >
-        {!item.imagebrand ? (
+        {!item.name ? (
           <View style={[styles.brandImage, {
             backgroundColor: '#FEFEFE',
           }]} />
         ) : (
           <>
-            <Typography style={{paddingHorizontal: 10, paddingVertical: 15}}>{item.nama}</Typography>
+            <Typography style={{paddingHorizontal: 10, paddingVertical: 15}}>{item.name}</Typography>
             {/* <Image source={{ uri: item.imagebrand }} style={styles.brandImage} /> */}
           </>
         )}        
@@ -285,7 +285,7 @@ const Home = () => {
   };
 
   const renderBrandCLColor = ({ item, index }: ListRenderItemInfo<BrandCLModel>) => {
-    const itemname = item.nama;
+    const itemname = item.name;
     return (
       <PressableBox
         key={index}
@@ -297,15 +297,15 @@ const Home = () => {
           ...shadows[3]
         }}
         style={{ alignItems: 'center', backgroundColor: '#FEFEFE' }}
-        onPress={() => toProductList(itemname, item.brandcode)}
+        onPress={() => toProductList(itemname, item.codebrand)}
       >
-        {!item.imagebrand ? (
+        {!item.name ? (
           <View style={[styles.brandImage, {
             backgroundColor: '#FEFEFE',
           }]} />
         ) : (
           <>
-            <Typography style={{paddingHorizontal: 10, paddingVertical: 15}}>{item.nama}</Typography>
+            <Typography style={{paddingHorizontal: 10, paddingVertical: 15}}>{item.name}</Typography>
             {/* <Image source={{ uri: item.imagebrand }} style={styles.brandImage} /> */}
           </>
         )}        

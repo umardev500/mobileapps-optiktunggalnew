@@ -11,6 +11,7 @@
     "compile-android": "react-native bundle --dev false --platform android --entry-file index.js --bundle-output ./android/app/src/main/assets/index.android.bundle"
   },
   "dependencies": {
+    "@kichiyaki/react-native-barcode-generator": "^0.6.7",
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-async-storage/async-storage": "^1.15.9",
     "@react-native-clipboard/clipboard": "^1.9.0",
@@ -44,6 +45,7 @@
     "react-native-document-picker": "^7.1.1",
     "react-native-easy-toast": "^2.0.0",
     "react-native-fast-image": "^8.5.11",
+    "react-native-format-currency": "^0.0.1",
     "react-native-fs": "^2.18.0",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-image-picker": "^4.3.0",
@@ -61,7 +63,8 @@
     "react-native-simple-radio-button": "^2.7.4",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-splash-screen": "^3.2.0",
-    "react-native-svg": "^12.1.1",
+    "react-native-svg": "^12.4.0",
+    "react-native-text-ticker": "^1.14.0",
     "react-native-vector-icons": "^9.0.0",
     "react-native-webview": "^11.17.2",
     "react-phone-number-input": "^3.1.47",
