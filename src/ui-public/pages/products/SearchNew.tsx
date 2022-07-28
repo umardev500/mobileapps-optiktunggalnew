@@ -1,6 +1,5 @@
 import { RouteProp, useRoute } from '@react-navigation/core';
 import React, { useCallback, useEffect, useState } from 'react';
-<<<<<<< HEAD
 import { Image, ScrollView, StyleSheet, useWindowDimensions, Platform, Alert } from 'react-native';
 import { View } from 'react-native-animatable';
 import { colors, wrapper, shadows } from '../../../lib/styles';
@@ -8,31 +7,16 @@ import { PublicHomeStackParamList } from '../../../router/publicBottomTabs';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { Modelable, ModelablePaginate, ProductModel, BrandModel, ColorModel, GenderModel, BrandCLModel } from '../../../types/model';
 import { Badge, BottomDrawer, Button, Header, Typography, PressableBox, TextField } from '../../../ui-shared/components';
-=======
-import { Image, ScrollView, StyleSheet, useWindowDimensions, ToastAndroid, Alert } from 'react-native';
-import { View } from 'react-native-animatable';
-import { colors, wrapper } from '../../../lib/styles';
-import { PublicHomeStackParamList } from '../../../router/publicBottomTabs';
-import { useAppNavigation } from '../../../router/RootNavigation';
-import { Modelable, ModelablePaginate, ProductModel, BrandModel, ColorModel, GenderModel, BrandCLModel } from '../../../types/model';
-import { Badge, BottomDrawer, Button, Header, Typography } from '../../../ui-shared/components';
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ProductsLoading from '../../loadings/ProductsLoading';
 import Products from '../../components/Products';
 import { ValueOf } from '../../../types/utilities';
 import { httpService } from '../../../lib/utilities';
-<<<<<<< HEAD
 import { useTranslation } from 'react-i18next';
 import ViewCollapse from '../../components/ViewCollapse';
 import { BoxLoading } from '../../../ui-shared/loadings';
 import { fetchBrandColorCL, fetchBrandClearCL } from '../../../redux/actions/shopActions';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-=======
-import { useAppSelector } from '../../../redux/hooks';
-import { useTranslation } from 'react-i18next';
-import ViewCollapse from '../../components/ViewCollapse';
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
 
 const SORT = [
   { label: `${''}All Price`, value: '0' },
@@ -49,10 +33,7 @@ const SORTCLSLACS = [
 ];
 
 const CATEGORY = [
-<<<<<<< HEAD
   { label: `${''}All Categories`, value: 'isAll' },
-=======
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   { label: `${''}Frame`, value: 'isFrame' },
   { label: `${''}Sunglass`, value: 'isSunglass' },
   { label: `${''}Contact Lens`, value: 'isLens' },

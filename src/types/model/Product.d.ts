@@ -115,19 +115,12 @@ export type BrandModel = {
 };
 
 export type BrandCLModel = {
-<<<<<<< HEAD
   id?: any;
   name?: any;
   fotobrand?: string;
   codebrand?: any;
   imgbrand?: any;
   imgbrandbg?: any;
-=======
-  id?: string;
-  name?: any;
-  imagebrand?: string;
-  brandcode?: any;
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
 };
 
 export type ColorModel = {
