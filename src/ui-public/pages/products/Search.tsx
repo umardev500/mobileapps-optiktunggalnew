@@ -110,6 +110,16 @@ function Search() {
     }));
     retrieveBrands(route.params.keywords);
     retrieveGenders();
+<<<<<<< HEAD
+=======
+    // if(route.params.keywords == 'contactlens'){
+    //   retrieveColors('contactlenscolor');
+    // }else if(route.params.keywords == 'solutions'){
+    //   retrieveBrand('solutions');
+    // }else if(route.params.keywords == 'accessories'){
+    //   retrieveBrandCategory('accessories');
+    // }
+>>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   }, []);
 
   useEffect(() => {
@@ -202,10 +212,14 @@ function Search() {
     });
   };
 
+<<<<<<< HEAD
   const retrieveBrands = async (jenis: String) => {
     let parameter = jenis == '' ? null : JSON.stringify({ jns: jenis });
     let action = jenis == '' ? 'BrandList' : 'SolutionsBrand';
 
+=======
+  const retrieveBrands = async () => {
+>>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
     return httpService('/api/brand/brand', {
       data: {
         act: action,
