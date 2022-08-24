@@ -1,6 +1,6 @@
 import { RouteProp, useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View, ToastAndroid } from 'react-native';
 import { colors, shadows, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { PressableBox, Typography } from '../../../ui-shared/components';
@@ -67,15 +67,28 @@ function PaymentMethod() {
   };
 
   const handleMethodSelect = (payment_method: PaymentMethodType) => {
-    navigation.navigatePath('Public', {
-      screen: 'BottomTabs.HomeStack.PaymentMerchant',
-      params: [null, null, {
-        address: route.params?.address,
-        cart_items: route.params?.cart_items,
-        price_total: route.params?.price_total,
-        payment_method,
-      }],
-    });
+    if(payment_method.type == 'credit_card'){
+      ToastAndroid.show("Pembayaran dengan Kartu Kredit sedang dalam proses pengembangan.", ToastAndroid.LONG);
+      // navigation.navigatePath('Public', {
+      //   screen: 'BottomTabs.HomeStack.WebviewCC',
+      //   params: [null, null, {
+      //     address: route.params?.address,
+      //     cart_items: route.params?.cart_items,
+      //     price_total: route.params?.price_total,
+      //     payment_method,
+      //   }],
+      // });
+    }else{
+      navigation.navigatePath('Public', {
+        screen: 'BottomTabs.HomeStack.PaymentMerchant',
+        params: [null, null, {
+          address: route.params?.address,
+          cart_items: route.params?.cart_items,
+          price_total: route.params?.price_total,
+          payment_method,
+        }],
+      });
+    }
   };
 
   return (
@@ -83,7 +96,7 @@ function PaymentMethod() {
       {/* {true ? null : ( */}
         <View style={[styles.header, { paddingTop: 8 }]}>
           <Typography
-            size="sm"
+            size="xs"
             style={{
               borderBottomWidth: 1,
               borderColor: colors.gray[700],
@@ -97,7 +110,15 @@ function PaymentMethod() {
 
       <ScrollView contentContainerStyle={styles.container}>
         {!method.modelsLoaded ? (
-          <BoxLoading width={[140, 200]} height={20} style={{ marginVertical: 12 }} />
+          <>
+            <BoxLoading width={320} height={60} style={{ marginVertical: 5 }} />
+            <BoxLoading width={320} height={60} style={{ marginVertical: 5 }} />
+            <BoxLoading width={320} height={60} style={{ marginVertical: 5 }} />
+            <BoxLoading width={320} height={60} style={{ marginVertical: 5 }} />
+            <BoxLoading width={320} height={60} style={{ marginVertical: 5 }} />
+            <BoxLoading width={320} height={60} style={{ marginVertical: 5 }} />
+            <BoxLoading width={320} height={60} style={{ marginVertical: 5 }} />
+          </>
         ) : (
           !method.models?.length ? (
             <Typography style={{ marginVertical: 12 }}>
@@ -112,11 +133,11 @@ function PaymentMethod() {
 
               switch (item.payment_type) {
                 case 'CC':
-                  nama = `${item.nama}\n VISA, MASTER CARD, JCB, AMERICAN EXPRESS`;
+                  nama = `${item.nama}\nVISA, MASTER CARD, JCB, AMERICAN EXPRESS`;
                   item.payment_type = 'CC';
                   break;
                 case 'STR':
-                  nama = `${item.nama}\n (Alfamart, ALfamidi, Dan+Dan, Lawson)`;
+                  nama = `${item.nama}\n(Alfamart, ALfamidi, Dan+Dan, Lawson)`;
                   item.payment_type = 'STR';
                   break;
                 case 'VA':
@@ -132,7 +153,7 @@ function PaymentMethod() {
                   item.payment_type = 'CLC';
                   break;
                 default:
-                  nama = `${item.nama}\n Nomor Rekening :  ${item.label}`;
+                  nama = `${item.nama}\nNomor Rekening :  ${item.label}`;
                   item.payment_type = 'TRF';
               }
 

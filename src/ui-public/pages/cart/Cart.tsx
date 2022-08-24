@@ -46,7 +46,7 @@ function Cart() {
   const [price, setPrice] = useState({
     original: 0,
     total: 0,
-    totalReseller: 0,
+    totalBuyer: 0,
     orderfirst: 0,
     ordernext: 0,
     isLoaded: false,
@@ -246,12 +246,12 @@ function Cart() {
 
     let original = 0;
     let total = 0;
-    let totalReseller = 0;
+    let totalBuyer = 0;
 
     cart.models?.forEach(({ qty = 1, ...item }, index) => {
       if (cartSelected.indexOf(index) >= 0) {
         const { product: itemProduct } = item;
-        const discount = user?.reseller === '1' ? 0 : itemProduct?.diskon;
+        const discount = user?.buyer === '1' ? 0 : itemProduct?.diskon;
         const subtotalOriginal = ((item.product?.harga || 0) * 100 / (100 - parseFloat(discount || '0'))) * qty;
         const subtotal = (item.product?.harga || 0) * qty;
 
@@ -268,7 +268,7 @@ function Cart() {
       ...state,
       original,
       total,
-      totalReseller,
+      totalBuyer,
     }));
   };
 

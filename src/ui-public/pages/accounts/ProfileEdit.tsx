@@ -116,13 +116,13 @@ function ProfileEdit() {
   // Effects
   useEffect(() => {
     if (user) {
-      const [namadepan, namatengah, namabelakang] = user.nama?.split(' ') || '';
+      // const [namadepan, namatengah, namabelakang] = user.nama?.split(' ') || '';
       setFields(state => ({
         ...state,
         kodecust: user.id,
-        namadepan: user.namadepan || namadepan,
-        namatengah: user.namatengah || namatengah,
-        namabelakang: user.namabelakang || namabelakang,
+        namadepan: user.namadepan,
+        namatengah: user.namatengah,
+        namabelakang: user.namabelakang,
         gender: user.gender || fields.gender,
         tgllahir: user.tgllahir || fields.tgllahir,
         hp: showPhone(String(user.hp), ''), // Remove leading 62
@@ -150,6 +150,8 @@ function ProfileEdit() {
       fields: [],
       message: undefined,
     });
+
+    handleCloseModal();
   };
 
   
@@ -238,10 +240,7 @@ function ProfileEdit() {
         Alert.alert( "Success", "Profile changed successfully. Please login again",
           [
             { text: "OKE", onPress: () => 
-            handleLogout()
-              // navigation.navigatePath('Public', { 
-              //   screen: 'BottomTabs.AccountStack.Account'
-              // }) 
+              handleLogout()
             }
           ]
         );
@@ -390,7 +389,7 @@ function ProfileEdit() {
   };
 
   const textPilih = t(`${''}Select`);
-  const nmtngh = user?.namatengah == null ? null : fields.namatengah;
+  const nmtngh = user?.namatengah == '' ? null : fields.namatengah;
   
   return (
     <View>

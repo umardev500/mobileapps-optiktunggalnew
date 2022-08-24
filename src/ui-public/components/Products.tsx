@@ -89,7 +89,7 @@ function ProductsByKategori({
 
   const renderProducts = (item: ProductModel, index: number) => {
     const discount = parseFloat(item.diskon || '0');
-    const minHeight = (width - 30 - 12) / 3;
+    const minHeight = (width - 30 - 12) / 2.5;
     const favorite = favorites.find((productItem) => item.prd_id === productItem.prd_id);
 
     return (
@@ -122,14 +122,16 @@ function ProductsByKategori({
             {!item.prd_foto ? (
               <View style={[styles.productCardImage, { minHeight }]} />
             ) : (
-              <Image source={{ uri: item.prd_foto }} style={[styles.productCardImage, { minHeight }]} />
+              <Image source={{ uri: item.prd_foto }} style={[styles.productCardImage, { minHeight, resizeMode: 'contain', marginBottom: 10 }]} />
 
             )}
           </View>
 
           <View style={styles.productCardContent}>
-            <View style={{ height: 1, backgroundColor: '#f1f1f1', marginBottom: 10 }} />
-            <Typography style={{ fontSize: 10, fontWeight: 'bold', textAlign: 'center', color: '#333', height: 50}}>
+            <View style={{ height: 1, backgroundColor: '#f1f1f1' }} />
+            <Typography 
+              style={{ fontSize: 10, paddingHorizontal: 10, marginTop: 10, 
+                       fontWeight: 'bold', textAlign: 'center', color: '#333', height: 40}}>
               {`${item.prd_ds}`.toUpperCase()}
             </Typography>
             {/* {item.prd_ds?.length != 56 ? 
@@ -153,7 +155,7 @@ function ProductsByKategori({
               {item.prd_ds}
             </Typography> */}
             
-            <Typography size="sm" style={{ marginTop: 10, color: '#0d674e', textAlign: 'center' }}>
+            <Typography size="sm" style={{ color: '#0d674e', textAlign: 'center', marginBottom: 30, marginTop: 5 }}>
               {`Rp. ${item.harga}`}
             </Typography>
 
@@ -218,17 +220,14 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   productCardThumb: {
-    position: 'relative',
+    height: '65%',
     overflow: 'hidden'
   },
   productCardImage: {
     width: '100%',
-    marginTop: 35,
+    height: '80%'
   },
   productCardContent: {
-    paddingTop: 12,
-    paddingBottom: 15,
-    paddingHorizontal: 10,
     width: 'auto'
   },
   user: {

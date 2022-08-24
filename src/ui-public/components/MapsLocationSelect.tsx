@@ -4,7 +4,7 @@ import MapView, { Region } from 'react-native-maps';
 import { useAppSelector } from '../../redux/hooks';
 import { ValueOf } from '../../types/utilities';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Badge, Button } from '../../ui-shared/components';
+import { Badge, Button, Typography } from '../../ui-shared/components';
 import { colors } from '../../lib/styles';
 import { httpService } from '../../lib/utilities';
 import { getConfig } from '../../lib/config';
@@ -166,7 +166,7 @@ function MapsLocationSelect({
       {!isLoading ? null : (
         <Badge
           style={[styles.mapAction, {
-            bottom: 34,
+            bottom: 134,
             alignSelf: 'center',
             marginHorizontal: 'auto',
             paddingVertical: 4,
@@ -181,13 +181,13 @@ function MapsLocationSelect({
 
       {/* Map Action Buttons */}
       <Button
-        size={28}
+        size={34}
         rounded
         containerStyle={{
           ...styles.mapAction,
           ...styles.btnShadow,
-          bottom: 25,
-          right: 25,
+          bottom: 35,
+          right: 15,
         }}
         style={styles.mapActionBtn}
         onPress={() => {
@@ -202,15 +202,15 @@ function MapsLocationSelect({
 
       {!isEditing || fields.location ? null : (
         <Button
-          label={`${''}Konfirmasi`}
           labelProps={{ size: 'sm' }}
           size="sm"
           rounded={8}
-          color="primary"
-          containerStyle={[styles.mapAction, { bottom: 24, right: 66 }]}
-          style={{ paddingVertical: 6 }}
+          containerStyle={[styles.mapAction, { bottom: 35 }]}
+          style={{ paddingVertical: 6, width: 150, backgroundColor: '#0d674e' }}
           onPress={handleFetchAddress}
-        />
+        >
+          <Typography style={{color: '#fff'}}>Set Lokasi</Typography>
+        </Button>
       )}
     </View>
   );
@@ -219,7 +219,6 @@ function MapsLocationSelect({
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    borderRadius: 10,
     overflow: 'hidden',
     backgroundColor: colors.white,
   },
@@ -236,7 +235,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   mapAction: {
-    alignSelf: 'flex-start',
+    alignSelf: 'center',
     position: 'absolute',
     zIndex: 10,
   },

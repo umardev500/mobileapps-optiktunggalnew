@@ -246,16 +246,18 @@ function Members() {
                           textBody: 'Tunjukan kode barcode kepada petugas kami dan arahkan ke mesin scanner.',
                           icon: (
                             <Barcode
-                              format="CODE128B"
+                              format="CODE128"
                               value={user?.no_card.toString()}
                               text={user?.no_card}
-                              maxWidth={(Dimensions.get('window').width * 2) / 3}
+                              maxWidth={500}
                             />
                           ),
                         })
                       }
                     >
-                      <Ionicons name="barcode-outline" style={{marginVertical: 5, marginHorizontal: 10}} size={20} color={'#FFD700'} />
+                      <Typography size='xs' style={{marginVertical: 5, marginHorizontal: 10, color: '#FFD700'}}>
+                        Lihat Barcode
+                      </Typography>
                     </TouchableOpacity>
                   </View>
                   <View style={{position: 'absolute', top: 145, left: 0, right: 0, bottom: 0}}>

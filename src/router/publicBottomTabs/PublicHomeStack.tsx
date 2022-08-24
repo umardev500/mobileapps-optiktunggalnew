@@ -7,7 +7,7 @@ import Header from '../../ui-shared/components/Header';
 import * as Orders from '../../ui-public/pages/orders';
 import * as Products from '../../ui-public/pages/products';
 import { routeOptions } from '../routerConfig';
-import { AddressModel, CartModel, CategoryModel, PaymentMethodType, ProductModel, TransactionModel, BrandModel, ContactLensModel, ContactUsModel, LensModel, GenderModel } from '../../types/model';
+import { AddressModel, CartModel, CategoryModel, PaymentMethodType, ProductModel, TransactionModel, BrandModel } from '../../types/model';
 
 export type PublicHomeStackParamList = {
   Home: {};
@@ -38,6 +38,7 @@ export type PublicHomeStackParamList = {
     transaction?: TransactionModel;
     transaction_id?: number;
   };
+  WebviewCC: {}
   [key: string]: {};
 };
 

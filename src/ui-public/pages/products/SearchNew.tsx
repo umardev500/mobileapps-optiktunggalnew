@@ -66,7 +66,6 @@ function SearchNew() {
   const { width, height } = useWindowDimensions();
   const { categories } = useAppSelector(({ shop }) => shop);
   const { brands } = useAppSelector(({ shop }) => shop);
-<<<<<<< HEAD
   const { clbrands } = useAppSelector(({ shop }) => shop);
   // const { brandsOther } = useAppSelector(({ shop }) => shop);
   const { warnas } = useAppSelector(({ shop }) => shop);
@@ -81,11 +80,6 @@ function SearchNew() {
     models: [],
     modelsLoaded: false,
   });
-=======
-  const { warnas } = useAppSelector(({ shop }) => shop);
-  const { t } = useTranslation('home');
-
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   // States
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState<string | null>(null);
@@ -104,17 +98,10 @@ function SearchNew() {
     models: [],
     modelsLoaded: false,
   });
-<<<<<<< HEAD
   // const [brandLain, setBrandLain] = useState<Modelable<BrandCLModel>>({ // CL itu Contact Lens
   //   models: [],
   //   modelsLoaded: false,
   // });
-=======
-  const [brandCL, setBrandCL] = useState<Modelable<BrandCLModel>>({ // CL itu Contact Lens
-    models: [],
-    modelsLoaded: false,
-  });
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   const [gender, setGender] = useState<Modelable<GenderModel>>({
     models: [],
     modelsLoaded: false,
@@ -125,11 +112,7 @@ function SearchNew() {
     // prdgender: '',
     brand: '',
     warna: '',
-<<<<<<< HEAD
     catsort: ''
-=======
-    catsort: '',
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   });
   const [options, setOptions] = useState<OptionsState>({
     filterModalOpen: false,
@@ -140,21 +123,13 @@ function SearchNew() {
     catsort: ''
   });
 
-<<<<<<< HEAD
   const [tampilBrandFilter, setTampilBrandFilter] = useState(false);
   // const [tampilBrandSolution, setTampilBrandSolution] = useState(false);
-=======
-  const [tampilBrandFrameSunglass, setTampilBrandFrameSunglass] = useState(false);
-  const [tampilBrandSolution, setTampilBrandSolution] = useState(false);
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   const [tampilGender, setTampilGender] = useState(false);
   const [tampilPriceSol, setTampilPriceSol] = useState(false);
   const [tampilPriceDefault, setTampilPriceDefault] = useState(false);
   const [notifFilter, setNotifFilter] = useState(false);
-<<<<<<< HEAD
   const [contactLensView, setcontactLensView] = useState(false);
-=======
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   const mode = false;
   // Effects
   useEffect(() => {
@@ -162,21 +137,7 @@ function SearchNew() {
       ...state,
       page: 1
     }));
-<<<<<<< HEAD
-    handleRefresh(product.page);
     changeState(mode);
-=======
-
-    changeState(mode);
-    // if(route.params.keywords == 'contactlens'){
-    //   retrieveBrandCategory('contactlens');
-    //   retrieveColors('contactlenscolor');
-    // }else if(route.params.keywords == 'solutions'){
-    //   retrieveBrandCategory('solutions');
-    // }else if(route.params.keywords == 'accessories'){
-    //   retrieveBrandCategory('accessories');
-    // }
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   }, []);
 
   useEffect(() => {
@@ -192,22 +153,17 @@ function SearchNew() {
       setOptions(state => ({ ...state, brand: routeBrand.id }));
     }
 
-<<<<<<< HEAD
-    handleRefresh(product.page);
-
-=======
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
-  }, [route.params]);
-
-  useEffect(() => {
     if (!product.isPageEnd) {
-<<<<<<< HEAD
       retrieveProducts(product.page, '');
-=======
-      retrieveProducts(product.page);
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
     }
-  }, [product.page]);
+
+  }, [route.params, product.page]);
+
+  // useEffect(() => {
+  //   if (!product.isPageEnd) {
+  //     retrieveProducts(product.page, '');
+  //   }
+  // }, [product.page]);
 
   useEffect(() => {
     setProduct(state => ({
@@ -221,7 +177,6 @@ function SearchNew() {
     // product.page === 1 && retrieveProducts();
   }, [search]);
 
-<<<<<<< HEAD
   const handleRefresh = async (prdPage: number) => {
     setIsLoading(true);
     retrieveProducts(prdPage, '');
@@ -253,12 +208,6 @@ function SearchNew() {
     const reccnt = product.perPage * (page <= 1 ? 0 : page);
     const katakunci = keywords == '' ? route.params.keywords : keywords;
     
-=======
-  // Vars
-  const retrieveProducts = async (page: number = 1) => {
-    const reccnt = product.perPage * (page <= 1 ? 0 : page);
-
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
     setIsLoading(true);
     setProduct(state => ({ ...state, modelsLoaded: false }));
 
@@ -269,11 +218,7 @@ function SearchNew() {
           reccnt,
           pg: page,
           limit: product.perPage,
-<<<<<<< HEAD
           search: !katakunci ? route.params.search : katakunci,
-=======
-          search: !route.params.keywords ? route.params.search : route.params.keywords,
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
           keyword: !route.params.keywords ? null : route.params.keywords,
           color: !route.params.color ? null : route.params.color,
           merk: !route.params.merk ? null : route.params.merk,
@@ -290,6 +235,16 @@ function SearchNew() {
           modelsLoaded: true,
           isPageEnd: !data?.length,
         }));
+      }else{
+        Alert.alert( "Pemberitahuan", "Produk yang dicari tidak ditemukan.",
+          [
+            { text: "Cari lagi", onPress: () => { 
+              navigation.navigatePath('Public', { 
+                screen: 'Search',
+              }); 
+            }}
+          ]
+        );
       }
     }).catch(err => {
       setIsLoading(false);
@@ -305,11 +260,7 @@ function SearchNew() {
       }
     }).then(({ status, data }) => {
       if (200 === status) {
-<<<<<<< HEAD
         setBrand(state => ({
-=======
-        setWarna(state => ({
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
           ...state,
           models: data,
           modelsLoaded: true
@@ -320,7 +271,6 @@ function SearchNew() {
     });
   };
 
-<<<<<<< HEAD
   const retrieveBrands = async (jenis: String) => {
     let parameter = jenis == '' ? null : JSON.stringify({ jns: jenis });
     let action = jenis == '' ? 'BrandList' : 'SolutionsBrand';
@@ -329,12 +279,6 @@ function SearchNew() {
       data: {
         act: action,
         dt: parameter
-=======
-  const retrieveBrands = async () => {
-    return httpService('/api/brand/brand', {
-      data: {
-        act: 'BrandList',
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
       }
     }).then(({ status, data }) => {
       if (200 === status) {
@@ -378,16 +322,10 @@ function SearchNew() {
   };
 
   const handleFieldChangeOld = (field: keyof Fields, value: ValueOf<Fields>) => {
-<<<<<<< HEAD
     // Alert.alert( "Pemberitahuan", "Brand : "+value);
     setFields(state => ({
       ...state,
       [field]: value
-=======
-    setFields(state => ({
-    ...state,
-    [field]: value
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
     }));
   };
 
@@ -399,7 +337,6 @@ function SearchNew() {
     }));
   };
 
-<<<<<<< HEAD
   let filterCount = 0;
 
   fields.sort && filterCount++;
@@ -516,21 +453,11 @@ function SearchNew() {
     <View style={{marginTop: 30}}>
         <Typography style={{textAlign: 'center'}}>
             {`Klik Apply Filter untuk tetap melakukan pencarian`} "{catActive?.label}"
-=======
-  const NotifDiFilter = notifFilter?(
-    <View style={{marginTop: 30}}>
-        <Typography style={{textAlign: 'center'}}>
-            Maaf, Untuk Kategori ini tidak memiliki Filter
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
         </Typography>
     </View>
   ) : null;
 
-<<<<<<< HEAD
   const BrandFilter = tampilBrandFilter? (
-=======
-  const BrandFilter = tampilBrandFrameSunglass? (
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
     <View style={{ marginTop: 0 }}>
         <ViewCollapse
             style={styles.menuContainer}
@@ -601,11 +528,7 @@ function SearchNew() {
             },
             ...categories
             ].map((item, index) => {
-<<<<<<< HEAD
             const selected = item?.id === fields.prdcat;
-=======
-            const selected = item?.id === options.prdcat;
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
             // const selected = item?.id === fields.prdcat;
 
             return (
@@ -618,12 +541,8 @@ function SearchNew() {
                     backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
                 }}
                 style={{ justifyContent: 'space-between' }}
-<<<<<<< HEAD
                 // onPress={() => setOptions(state => ({ ...state, prdcat: item.id }))}
                 onPress={() => handleFieldChangeOld('prdcat', item.id)}
-=======
-                onPress={() => setOptions(state => ({ ...state, prdcat: item.id }))}
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
                 size="lg"
                 right={(
                     <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
@@ -637,56 +556,6 @@ function SearchNew() {
     </ViewCollapse>
   ) : null;
 
-<<<<<<< HEAD
-=======
-  const BrandSolutionFilter = tampilBrandSolution? (
-    <View style={{ marginTop: 0 }}>
-        <ViewCollapse
-            style={styles.menuContainer}
-            pressableProps={{
-                containerStyle: styles.menuBtnContainer,
-            }}
-            header={t(`${''}Brand`)}
-            headerProps={{
-                type: 'h',
-            }}
-            collapse
-            >
-            {[
-                {
-                id: '',
-                name: t(`${t('All Brand')}`),
-                },
-                ...(brandCL.models || [])
-                ].map((item, index) => {
-                const selected = item?.id === fields.brand;
-                return (
-                    <Button
-                    key={index}
-                    labelProps={{ type: 'p' }}
-                    containerStyle={{
-                        marginTop: index > 0 ? 4 : 0,
-                        backgroundColor: selected ? colors.transparent('#0d674e', 0.1) : undefined,
-                    }}
-                    style={{ justifyContent: 'space-between' }}
-                    onPress={() => handleFieldChangeOld('brand', item.id)}
-                    size="lg"
-                    right={(
-                        <Typography size="sm" color={selected ? '#0d674e' : 'primary'}>
-                        {selected ? <Ionicons name="md-checkbox" size={16} color={'#0d674e'} /> : null}
-                        </Typography>
-                    )}
-                    >
-                    <Typography style={{ marginLeft: 5}}>{item.name}</Typography>
-                    </Button>
-                );
-                })
-            }
-            </ViewCollapse>
-    </View>
-  ) : null;
-
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   const PriceDefault = tampilPriceDefault? (
     <View>
         <Typography type="h5" style={{ paddingBottom: 8 }}>
@@ -722,7 +591,6 @@ function SearchNew() {
 
   const PriceSol = tampilPriceSol? (
     <View>
-<<<<<<< HEAD
       <Typography type="h5" style={{ paddingBottom: 8 }}>
           {`${t('Price')}`}
       </Typography>
@@ -750,35 +618,6 @@ function SearchNew() {
           </Button>
           ))}
       </View>
-=======
-        <Typography type="h5" style={{ paddingBottom: 8 }}>
-            {`${t('Price')}`}
-        </Typography>
-
-        <View style={[wrapper.row, { flexWrap: 'wrap' }]}>
-            {SORTCLSLACS.map((item, index) => (
-            <Button
-                key={index}
-                containerStyle={{
-                marginBottom: 8,
-                marginRight: 8,
-                borderColor: fields.sort === item.value ? colors.transparent('#0d674e', 1) : colors.gray[400],
-                }}
-                labelProps={{ color: fields.sort === item.value ? '#0d674e' : colors.gray[900] }}
-                size="sm"
-                border
-                onPress={() => handleFieldChangeOld('sort', item.value)}
-            >
-                <Typography>
-                <Ionicons
-                    name={item.icon}
-                    size={18}
-                    color={'#333'}
-                /> {t(`${''}${item.label}`)}</Typography>
-            </Button>
-            ))}
-        </View>
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
     </View>
   ) : null;
   
@@ -787,7 +626,6 @@ function SearchNew() {
         case 'isFrame':
             setNotifFilter(false);
             setTampilPriceDefault(true);
-<<<<<<< HEAD
             setTampilBrandFilter(true);
             setTampilGender(true);
             setTampilPriceSol(false);
@@ -795,18 +633,10 @@ function SearchNew() {
             retrieveGenders();
             setcontactLensView(false);
             fields.sort = '';
-=======
-            setTampilBrandFrameSunglass(true);
-            setTampilGender(true);
-            setTampilPriceSol(false);
-            retrieveBrands();
-            retrieveGenders();
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
             break;
         case 'isSunglass':
             setNotifFilter(false);
             setTampilPriceDefault(true);
-<<<<<<< HEAD
             setTampilBrandFilter(true);
             setTampilGender(true);
             setTampilPriceSol(false);
@@ -826,26 +656,10 @@ function SearchNew() {
             fields.brand = '';
             fields.sort = '';
             fields.prdcat = '';
-=======
-            setTampilBrandFrameSunglass(true);
-            setTampilGender(true);
-            setTampilPriceSol(false);
-            retrieveBrands();
-            retrieveGenders();
-            break;
-        case 'isLens':
-            setNotifFilter(true);
-            setTampilPriceDefault(false);
-            setTampilBrandFrameSunglass(false);
-            setTampilGender(false);
-            setTampilBrandSolution(false);
-            setTampilPriceSol(false);
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
             break;
         case 'isSol':
             setNotifFilter(false);
             setTampilPriceDefault(false);
-<<<<<<< HEAD
             setTampilBrandFilter(true);
             setTampilPriceSol(true);
             setTampilGender(false);
@@ -854,17 +668,10 @@ function SearchNew() {
             fields.brand = '';
             fields.sort = '';
             fields.prdcat = '';
-=======
-            setTampilBrandFrameSunglass(false);
-            setTampilBrandSolution(true);
-            setTampilPriceSol(true);
-            retrieveOtherBrand('solutions');
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
             break;
         case 'isAccs':
             setNotifFilter(true);
             setTampilPriceDefault(false);
-<<<<<<< HEAD
             setTampilBrandFilter(false);
             setTampilGender(false);
             setTampilPriceSol(false);
@@ -890,18 +697,6 @@ function SearchNew() {
             setcontactLensView(false);
             fields.brand = '';
             fields.sort = '';
-=======
-            setTampilBrandFrameSunglass(false);
-            setTampilGender(false);
-            setTampilBrandSolution(false);
-            setTampilPriceSol(false);
-            break;
-        default:
-            setTampilBrandFrameSunglass(false);
-            setTampilGender(false);
-            setTampilBrandSolution(false);
-            setTampilPriceSol(false);
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
             break;
     }
   }
@@ -909,11 +704,7 @@ function SearchNew() {
   const handleFilterApply = async () => {
     handleModalToggle('filter', false);
 
-<<<<<<< HEAD
     handleFieldChangeOld('prdcat', fields.prdcat);
-=======
-    handleFieldChangeOld('prdcat', options.prdcat);
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
     // handleFieldChange('brand', options.brand);
 
     setProduct(state => ({
@@ -924,29 +715,10 @@ function SearchNew() {
       isPageEnd: false,
     }));
 
-<<<<<<< HEAD
     product.page === 1 && await retrieveProducts(product.page, '');
   };
 
   // Alert.alert( "Pemberitahuan", "Brand : "+product.modelsLoaded);
-=======
-    product.page === 1 && await retrieveProducts();
-  };
-
-  let filterCount = 0;
-
-  fields.sort && filterCount++;
-  fields.prdcat && filterCount++;
-  fields.brand && filterCount++;
-  fields.catsort && filterCount++;
-
-  const filterColor = filterCount ? colors.palettes.primary : colors.gray[700];
-  const categoryActive = categories?.find(item => item.id === fields.prdcat);
-  const brandActive = brands?.find(item => item.id === fields.brand);
-  const priceActive = SORT?.find(item => item.value === fields.sort);
-  const catActive = CATEGORY?.find(item => item.value === fields.catsort); // Frame, sunglass, contactlens, solution and accessories
-
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   return (
     <View style={{ flex: 1 }}>
       <Header
@@ -955,17 +727,6 @@ function SearchNew() {
       />
 
       <View style={[styles.wrapper, { paddingTop: 8, paddingBottom: 12 }]}>
-<<<<<<< HEAD
-=======
-        {!search ? null : (
-          <Typography type="h5" style={{ marginVertical: 10, marginLeft: -10 }}>
-            {!brandActive ? (t(`${t('Product keyword')} “${search}”`)) : (
-                t(`${t('Product keyword')} “${brandActive.name}”`)
-            )}
-          </Typography>
-        )}
-
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
         {route.params?.keywords == 'contactlens' || route.params.keywords == "accessories" ? null :
           (<View style={[wrapper.row, { alignItems: 'center' }]}>
             <Button
@@ -984,7 +745,6 @@ function SearchNew() {
               )}
               onPress={() => handleModalToggle('filter', true)}
             />
-<<<<<<< HEAD
             
             <ScrollView
               horizontal={true}
@@ -1029,50 +789,6 @@ function SearchNew() {
                 />
               )}
             </ScrollView>
-=======
-
-            {!catActive ? null : (
-              <Badge
-                style={[styles.filterItem, { marginLeft: 5}]}
-                label={catActive.label}
-                labelProps={{ size: 'sm' }}
-              />
-            )}
-
-            {!priceActive ? null : (
-              <Badge
-                style={[styles.filterItem, {marginLeft: 5}]}
-                label={priceActive.label}
-                labelProps={{ size: 'sm' }}
-              />
-            )}
-
-            {!categoryActive ? null : (
-              <Badge
-                style={[styles.filterItem, { marginLeft: 5 }]}
-                label={categoryActive.ds}
-                labelProps={{ size: 'sm' }}
-                // left={!categoryActive.foto ? false : (
-                //   <View style={{ marginRight: 4 }}>
-                //     <Image source={{ uri: categoryActive.foto }} style={styles.filterIcon} />
-                //   </View>
-                // )}
-              />
-            )}
-
-            {!brandActive ? null : (
-              <Badge
-                style={[styles.filterItem, { marginLeft: 5}]}
-                label={brandActive.name}
-                labelProps={{ size: 'sm' }}
-                // left={!brandActive.fotobrand ? false : (
-                //   <View>
-                //     <Image source={{ uri: brandActive.fotobrand }} style={styles.filterIconBrand} />
-                //   </View>
-                // )}
-              />
-            )}
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
           </View>)
         }
       </View>
@@ -1093,7 +809,6 @@ function SearchNew() {
         }}
         data={product.models}
         ListEmptyComponent={!product.modelsLoaded ? ( 
-<<<<<<< HEAD
           <View style={{ marginHorizontal: 10 }}>
             <ProductsLoading />
             <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
@@ -1101,15 +816,12 @@ function SearchNew() {
             </Typography>
           </View>
         ) : product.models?.length ? null : (
-=======
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
           <View style={[styles.container, styles.wrapper]}>
             <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
             <Typography textAlign="center" style={{ marginVertical: 12 }}>
               {t(`${t('Produk tidak ditemukan')}`)}
             </Typography>
           </View>
-<<<<<<< HEAD
         )}
         
         // ListEmptyComponent={product.models ? null :  
@@ -1125,18 +837,6 @@ function SearchNew() {
         //     {t(`${t('Sudah menampilkan semua produk')}`)}
         //   </Typography>
         // )}
-=======
-        ) : product.models?.length ? null : (
-          <View style={{ marginHorizontal: 10 }}>
-            <ProductsLoading />
-          </View>
-        )}
-        ListFooterComponent={!product.isPageEnd ? (
-          <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
-            {t(`${t('Sudah menampilkan semua produk')}`)}
-          </Typography>
-        ) : null}
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
       />
 
       {/* Popup Filter */}
@@ -1148,7 +848,6 @@ function SearchNew() {
         // title="Filter"
         style={{ maxHeight: height * 0.75 }}
       >
-<<<<<<< HEAD
         <PressableBox
           containerStyle={{ alignSelf: 'center', marginBottom: 20, backgroundColor: '#0d674e', marginHorizontal: 10 }}
           style={{ minWidth: 350 }}
@@ -1156,15 +855,6 @@ function SearchNew() {
         >
           <Typography style={{ color: '#fff', textAlign: 'center', paddingVertical: 10 }}>Apply Filter</Typography>
         </PressableBox>
-=======
-        <Button
-          containerStyle={{ alignSelf: 'center', marginBottom: 20, backgroundColor: '#0d674e' }}
-          style={{ minWidth: 350 }}
-          onPress={handleFilterApply}
-        >
-          <Typography style={{ color: '#fff' }}>Apply Filter</Typography>
-        </Button>
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
         <ScrollView
           contentContainerStyle={{
             paddingHorizontal: 24,
@@ -1199,19 +889,12 @@ function SearchNew() {
                 </Button>
                 ))}
             </View>
-<<<<<<< HEAD
             {contactLensFilter}
-=======
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
             {NotifDiFilter}
             {PriceDefault}
             {PriceSol}
             {BrandFilter}
             {GenderFilter}
-<<<<<<< HEAD
-=======
-            {BrandSolutionFilter}
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
         </ScrollView>
       </BottomDrawer>
     </View>
@@ -1231,7 +914,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 120
   },
-<<<<<<< HEAD
   refresh: {
     width: 50,
     height: 50,
@@ -1240,8 +922,6 @@ const styles = StyleSheet.create({
     marginTop: 120,
     marginVertical: 20
   },
-=======
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   wrapper: {
     backgroundColor: colors.white,
     paddingHorizontal: 25,
@@ -1273,14 +953,11 @@ const styles = StyleSheet.create({
     margin: -15,
     padding: 15,
   },
-<<<<<<< HEAD
   brandImage: {
     width: 60,
     height: 60,
     resizeMode: 'contain',
   },
-=======
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   menuBtnContainer: {
     backgroundColor: colors.white,
     borderBottomWidth: 1,

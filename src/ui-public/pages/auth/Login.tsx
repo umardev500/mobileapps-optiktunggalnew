@@ -190,6 +190,19 @@ function Login() {
         >
           <Typography style={{ color: '#FFF' }}>LOGIN</Typography>
         </Button>
+        {/* <Typography size='sm' style={{textAlign: 'center', marginVertical: 15}}> - OR WITH - </Typography>
+        <Button
+          containerStyle={{ alignSelf: 'center', borderRadius: 5, borderColor: '#0d674e', borderWidth: 1}}
+          style={{ width: 300, height: 40,  }}
+          shadow={3}
+          onPress={handleSubmit}
+          loading={isSaving}
+        >
+          <Typography style={{ color: '#333' }}>
+            <Image source={{ uri: 'https://www.fintechfutures.com/files/2016/03/google.png' }} style={styles.avatar} />
+            oogle
+          </Typography>
+        </Button> */}
 
         <View style={[wrapper.row, { alignItems: 'center', marginHorizontal: 10 }]}>
           <PressableBox
@@ -202,7 +215,7 @@ function Login() {
             }}
           >
             <Typography size="sm" color="#cd0505" style={{}}>
-              Forgot Password?
+              Lupa Password?
             </Typography>
           </PressableBox>
           <Typography style={{ paddingHorizontal: 10, marginTop: 40, color: '#0d674e'}}>
@@ -216,50 +229,10 @@ function Login() {
             })}
           >
             <Typography size="sm" color="#0d674e" style={{}}>
-              Dont't have an account?
+              Belum punya akun?
             </Typography>
           </PressableBox>
         </View>
-        {/*
-        <Typography style={{ textAlign: 'center', marginTop: 15 }}>
-          - OR -
-        </Typography>
-        <View style={[wrapper.row, { alignItems: 'center', marginTop: 15, }]}>
-          <PressableBox
-            containerStyle={{ alignSelf: 'center',
-                              backgroundColor: '#df5449', borderColor: '#ccc', 
-                              borderWidth: 1, borderRadius: 5, overflow: 'visible' }}
-            style={{ width: 160, height: 40, }}
-            opacity={1}
-            onPress={() => Alert.alert( "Halo", "Fitur Login Google ini sedang dikembangkan!",
-                                        [{text: "Cancel",onPress: () => console.log("Cancel Pressed"),style: "cancel"},
-                                          { text: "OK", onPress: () => console.log("OK Pressed") }
-                                        ]
-                          )}>
-            <Typography style={{ textAlign: 'center', marginTop: 10, color: 'white' }}>
-              <Ionicons name="logo-google" size={15} />
-              oogle
-            </Typography>
-          </PressableBox>
-          <View style={{ marginHorizontal: 25 }}></View>
-          <PressableBox
-            containerStyle={{ alignSelf: 'center', 
-                              backgroundColor: '#4867aa', borderColor: '#ccc', 
-                              borderWidth: 1, borderRadius: 5, overflow: 'visible' }}
-            style={{ width: 160, height: 40, }}
-            opacity={1}
-            onPress={() => Alert.alert( "Halo", "Fitur Login Facebook ini sedang dikembangkan!",
-                                        [{text: "Cancel",onPress: () => console.log("Cancel Pressed"),style: "cancel"},
-                                          { text: "OK", onPress: () => console.log("OK Pressed") }
-                                        ]
-                          )}>
-            <Typography style={{ textAlign: 'center', marginTop: 10, color: 'white' }}>
-              <Ionicons name="logo-facebook" size={15} style={{color: 'white'}} />          
-              acebook
-            </Typography>
-          </PressableBox>
-        </View>*/}
-      {/* </View> */}
     </ScrollView>
   );
 };
@@ -272,6 +245,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: -150
+  },
+  avatar: {
+    alignSelf: 'center',
+    width: 20,
+    height: 20,
   },
 });
 

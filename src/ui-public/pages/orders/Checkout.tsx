@@ -192,23 +192,11 @@ function Checkout() {
                 </Typography>
               )}
               <View style={[wrapper.row]}>
-                <Typography size="sm" style={{ marginTop: 4, fontSize: 12 }}>
+                <Typography size="xs" style={{ marginTop: 4, flex: 1 }}>
                   Dikirim ke :
                 </Typography>
-              </View>
-              <View style={[wrapper.row, {flex: 1}]}>
-                <View style={{flex: 1}}>
-                  <Typography size="md" style={{ marginTop: 4, fontSize: 12, fontWeight: 'bold' }}>
-                    {addressModel?.nama || addressModel?.vch_nama}
-                  </Typography>
-                  <Typography size="sm" style={{ marginTop: 0, fontSize: 12 }}>
-                    {showPhone(addressModel?.hp, '0')+'\n'}
-                    {addressModel?.alamat}
-                  </Typography>
-                </View>
-                <View style={{marginRight: 10}}>
-                  <PressableBox
-                    containerStyle={{alignSelf: 'center', borderWidth: 1, borderColor: '#0d674e',}}
+                <PressableBox
+                    containerStyle={{alignSelf: 'center'}}
                     style={{alignItems: 'center'}}
                     onPress={() => navigation.navigatePath('Public', {
                       screen: 'BottomTabs.AccountStack.AddressList',
@@ -217,17 +205,23 @@ function Checkout() {
                       }]
                     })}
                   >
-                    <Typography style={{
-                      textDecorationStyle: 'solid',
-                      fontSize: 12,
-                      paddingHorizontal: 5,
-                      paddingVertical: 5,
-                      color: '#0d674e'
-                    }}>
-                      <Ionicons name="location" size={12} color="#0d674e" />
-                      {`${t('Ganti')}`}
-                    </Typography>
-                  </PressableBox>
+                  <Typography size='xs' style={{
+                    color: '#0d674e'
+                  }}>
+                    <Ionicons name="location" size={12} color="#0d674e" />
+                    {`${t('Pilih alamat lain')}`}
+                  </Typography>
+                </PressableBox>
+              </View>
+              <View style={[wrapper.row, {flex: 1, marginRight: 10}]}>
+                <View style={{flex: 1}}>
+                  <Typography size="xs" style={{ marginTop: 4, fontWeight: 'bold' }}>
+                    {addressModel?.nama || addressModel?.vch_nama}
+                  </Typography>
+                  <Typography size="xs" style={{ marginTop: 0, }}>
+                    {showPhone(addressModel?.hp, '0')+'\n'}
+                    {addressModel?.alamat}
+                  </Typography>
                 </View>
               </View>
             </View>
@@ -272,31 +266,58 @@ function Checkout() {
                   ]}
                 >
                   <View style={styles.cartContent}>
-                    {!item.product?.prd_foto ? null : (
-                      <Image source={{ uri: item.product.prd_foto }} style={styles.cartImage} />
-                    )}
-
+                    <View style={[wrapper.row]}>
+                      {!item.product?.prd_foto ? null : (
+                        <Image source={{ uri: item.product.prd_foto }} style={styles.cartImage} />
+                      )}
                       <View style={{ flex: 1, paddingHorizontal: 10 }}>
                         <Typography size='sm'>
                           {item.product?.prd_ds}
                         </Typography>
                         <View style={{ alignItems: 'flex-start' }}>
-                        {!item.qty ? null : (
-                          <Typography size="xs" color={700} style={{ marginBottom: 2 }}>
-                            {`${t('Qty')}: ${item.qty}`}
+                          <View style={[wrapper.row, {marginTop: 5}]}>
+                            <Typography size='sm' style={{fontWeight: '700',flex: 1}}>
+                              {/* Rp{item.product?.harga || 0 (item.qty || 1)} */}
+                              {formatCurrency({ amount: Number(item.product?.harga)*(item.qty || 1), code: 'IDR' })}
+                            </Typography>
+                            {!item.qty ? null : (
+                              <Typography size="sm" color={700} style={{ marginBottom: 2, alignSelf: 'flex-end' }}>
+                                {`${t('Qty')}: ${item.qty}`}
+                              </Typography>
+                            )}
+                          </View>
+                          <View style={[wrapper.row, {marginTop: 5}]}>
+                            {item.atributColor == '' ? null :
+                              <Typography size="xs" 
+                                style={{ borderColor: '#ccc', borderWidth: 1, 
+                                        borderRadius: 10, paddingHorizontal: 5, paddingVertical: 3, 
+                                        marginRight: 5 }}>
+                                Warna : {item.atributColor}
+                              </Typography>
+                            }
+                            
+                            {item.atributSpheries == '' ? null :
+                              <Typography size="xs" 
+                                style={{ borderColor: '#ccc', borderWidth: 1, 
+                                        borderRadius: 10, paddingHorizontal: 5, paddingVertical: 3 }}>
+                                Ukuran : {item.atributSpheries}
+                              </Typography>
+                            }
+                          </View>
+                          {item.atributBcurve == '' ? null :
+                            <Typography size="xs" 
+                              style={{ borderColor: '#ccc', borderWidth: 1, 
+                                      borderRadius: 10, paddingHorizontal: 5, paddingVertical: 3, marginTop: 3 }}>
+                              Base Curve : {item.atributBcurve}
+                            </Typography>
+                          }
+                        </View>
+                        {!item.note ? null : (
+                          <Typography size="sm" color={700} style={{ marginTop: 2 }}>
+                            {`${t('Catatan')}: ${item.note}`}
                           </Typography>
                         )}
-
-                        <Typography size='sm' style={{fontWeight: '700'}}>
-                          {/* Rp{item.product?.harga || 0 (item.qty || 1)} */}
-                          {formatCurrency({ amount: Number(item.product?.harga)*(item.qty || 1), code: 'IDR' })}
-                        </Typography>
                       </View>
-                      {!item.note ? null : (
-                        <Typography size="sm" color={700} style={{ marginTop: 2 }}>
-                          {`${t('Catatan')}: ${item.note}`}
-                        </Typography>
-                      )}
                     </View>
                   </View>
                 </View>
@@ -378,8 +399,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cartImage: {
-    width: 45,
-    height: 30,
+    width: 60,
+    height: 40,
     resizeMode: 'stretch',
     borderRadius: 8,
   },

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { httpService, Storage } from "../../lib/utilities";
-import { CartModel, CategoryModel, BrandModel, ColorModel, GenderModel, ModelKacamata, BrandCLModel } from "../../types/model";
+import { CartModel, CategoryModel, BrandModel, ColorModel, GenderModel, ModelKacamata, BrandCLModel, CartAtribut } from "../../types/model";
 import { RootStoreState } from "../store";
 
 export const fetchCategories = createAsyncThunk('shop/fetchCategories', async () => {
@@ -146,6 +146,8 @@ export const pushCartItem = createAsyncThunk('shop/pushCartItem', async (item: C
   const { product } = item;
   let shouldPush = true;
   item.product?.harga;
+
+  console.log('DATA : '+JSON.stringify(item));
   
   const newCartItems: CartModel[] = [...cart_items].map((cartItem) => {
     if (cartItem.prd_id === product?.prd_id && item.type === cartItem.type) {
@@ -159,12 +161,12 @@ export const pushCartItem = createAsyncThunk('shop/pushCartItem', async (item: C
 
     return cartItem;
   });
-
+  
   if (shouldPush) {
     newCartItems.push({
       ...item,
       ...(!product?.prd_id ? null : { prd_id: product?.prd_id }),
-      qty: 1,
+      // qty: 1,
     });
   }
 

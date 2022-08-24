@@ -1,23 +1,17 @@
 {
-    // Navigation Titles
     "Keranjang": "Cart",
     "Metode Pembayaran": "Payment Method",
     "Pembayaran": "Payment",
     "Akun": "Account",
 
-    // Walkthrough
     "Pembaruan Aplikasi": "Application Update",
     "Versi terbaru telah tersedia.": "A new version is available.",
     "Update aplikasi Anda untuk melanjutkan.": "Update your application to continue.",
     "Update Sekarang": "Update Now",
 
-    // Homepage
     "Tidak ada produk": "No product at the moment",
     "Sudah menampilkan semua produk": "All products has been displayed",
-
-    // Product Detail
-    "Menjadi Reseller": "Become Reseller",
-    "Bergabung menjadi reseller kami untuk menambahkan produk ini ke keranjang": "Join and become our Reseller to add this product to cart",
+    
     "Batal": "Cancel",
     "Gabung Sekarang": "Join Now",
     "Diskon": "Discount",
@@ -27,7 +21,6 @@
     "Baru tersedia di wilayah Jakarta Timur": "Only available in Jakarta Timur",
     "Belum tersedia": "Not available",
 
-    // Search
     "Ulasan": "Review",
     "Ulasan_other": "Reviews",
     "Harga Tertinggi": "Highest Price",
@@ -53,7 +46,6 @@
     "Tulis Catatan": "Add a Note",
     "Total Harga": "Total Price",
     "Minimal total pembelian adalah": "Minimum purchase amount is",
-    "Minimal total pembelian Reseller adalah": "Minimum purchase amount for Reseller is",
     "Beli": "Buy",
     "Alamat Pengiriman": "Shipping Address",
     "Pilih Alamat Lain": "Select another address",
@@ -65,7 +57,6 @@
     "Terjual": "Sold",
     "Pilih Pembayaran": "Select Payment",
 
-    // Payment Merchant
     "Terjadi kesalahan": "There's an error",
     "Total harga belum terhitung.": "Total price is not calculated yet.",
     "Mohon masukkan nomor rekening.": "Please enter your account number.",
@@ -100,10 +91,8 @@
     "Terimakasih! Upload bukti pembayaranmu agar barang segera dikirim.": "Thank you! Upload your payment proof to continue.",
     "Terimakasih! Barang akan segera dikirim ke rumahmu!": "Thank you! Your order will be delivered soon!",
 
-    // Payment Method
     "Tidak ada metode pembayaran": "No payment methods",
     "COD (Bayar di Tempat)": "COD (Cash on Delivery)",
 
-    // Final
     "": ""
 }

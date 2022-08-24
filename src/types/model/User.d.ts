@@ -23,7 +23,7 @@ export type UserModel = null | {
   jl?: string;
 
   foto?: string;
-  reseller?: string;
+  buyer?: string;
   gender?: string;
   tgllahir?: string;
 
@@ -37,12 +37,19 @@ export type AddressModel = {
   phone?: string;
   address?: string;
   latlng?: string;
-
+  
   vch_nama?: string;
   nama?: string;
   alamat?: string;
   email?: string;
   hp?: string;
+  prop?: string;
+  kab?: string;
+  kec?: string;
+  kel?: string;
+  rt?: string;
+  rw?: string;
+  kodepos?: string;
   lat?: string;
   lng?: string;
 };

@@ -1,23 +1,17 @@
 {
-    // Navigation Titles
     "Keranjang": "Keranjang",
     "Metode Pembayaran": "Metode Pembayaran",
     "Pembayaran": "Pembayaran",
     "Akun": "Akun",
 
-    // Walkthrough
     "Pembaruan Aplikasi": "Pembaruan Aplikasi",
     "Versi terbaru telah tersedia.": "Versi terbaru telah tersedia.",
     "Update aplikasi Anda untuk melanjutkan.": "Update aplikasi Anda untuk melanjutkan.",
     "Update Sekarang": "Update Sekarang",
 
-    // Homepage
     "Tidak ada produk": "Tidak ada produk",
     "Sudah menampilkan semua produk": "Sudah menampilkan semua produk",
 
-    // Product Detail
-    "Menjadi Reseller": "Menjadi Reseller",
-    "Bergabung menjadi reseller kami untuk menambahkan produk ini ke keranjang": "Bergabung menjadi reseller kami untuk menambahkan produk ini ke keranjang",
     "Batal": "Batal",
     "Gabung Sekarang": "Gabung Sekarang",
     "Diskon": "Diskon",
@@ -28,7 +22,6 @@
     "Belum tersedia": "Belum tersedia",
     "Belum ada produk retail": "Belum ada produk retail",
 
-    // Search
     "Ulasan": "Ulasan",
     "Harga Tertinggi": "Harga Tertinggi",
     "Harga Terendah": "Harga Terendah",
@@ -52,7 +45,6 @@
     "Tulis Catatan": "Tulis Catatan",
     "Total Harga": "Total Harga",
     "Minimal total pembelian adalah": "Minimal total pembelian adalah",
-    "Minimal total pembelian Reseller adalah": "Minimal total pembelian produk Reseller adalah",
     "Beli": "Beli",
     "Alamat Pengiriman": "Alamat Pengiriman",
     "Pilih Alamat Lain": "Pilih Alamat Lain",
@@ -64,7 +56,6 @@
     "Terjual": "Terjual",
     "Pilih Pembayaran": "Pilih Pembayaran",
 
-    // Payment Merchant
     "Terjadi kesalahan": "Terjadi kesalahan",
     "Total harga belum terhitung.": "Total harga belum terhitung.",
     "Mohon masukkan nomor rekening.": "Mohon masukkan nomor rekening.",
@@ -99,13 +90,10 @@
     "Terimakasih! Upload bukti pembayaranmu agar barang segera dikirim.": "Terimakasih! Upload bukti pembayaranmu agar barang segera dikirim.",
     "Terimakasih! Barang akan segera dikirim ke rumahmu!": "Terimakasih! Barang akan segera dikirim ke rumahmu!",
 
-    // Payment Method
     "Tidak ada metode pembayaran": "Tidak ada metode pembayaran",
     "COD (Bayar di Tempat)": "COD (Bayar di Tempat)",
 
-    // Components - Products
     "Diskon {{val}}%": "Diskon {{val}}%",
 
-    // Final
     "": ""
 }

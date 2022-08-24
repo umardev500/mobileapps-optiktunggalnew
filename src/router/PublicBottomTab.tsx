@@ -98,7 +98,7 @@ function PublicBottomTab() {
           name="CartStack"
           component={PublicCartStack}
           options={{
-            tabBarLabel: t('Cart'),
+            tabBarLabel: t('Keranjang'),
             tabBarIcon: (iconParams) => (
               <FigmaIcon.FigmaCatalogue {...iconProps(iconParams)} />
             ),
@@ -108,7 +108,7 @@ function PublicBottomTab() {
           name="OurStoreStack"
           component={PublicOurStoreStack}
           options={{
-            tabBarLabel: t('Stores'),
+            tabBarLabel: t('Store'),
             tabBarIcon: (iconParams) => (
               <FigmaIcon.FigmaFavorite {...iconProps(iconParams)} />
             ),
@@ -129,7 +129,7 @@ function PublicBottomTab() {
           name="AccountStack"
           component={PublicAccountStack}
           options={{
-            tabBarLabel: t('Profile'),
+            tabBarLabel: t('Akun'),
             tabBarIcon: (iconParams) => (!user?.foto || true) ? (
               <FigmaIcon.FigmaAccount {...iconProps(iconParams)} />
             ) : (

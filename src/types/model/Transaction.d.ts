@@ -36,9 +36,23 @@ export type PaymentMethodType = {
   image?: string;
   nama?: string;
   remark?: string;
+  type?: string;
   payment_name?: string;
   payment_type?: string;
   howtobuy?: any;
+};
+
+export type MidtransModelVA = {
+  transaction_id?: string, 
+  order_id?: string;
+  merchant_id?: string;
+  gross_amount?: string;
+  currency?: string;
+  payment_type?: string;
+  transaction_time?: string;
+  transaction_status?: string;
+  va_number?: any;
+  bank?: string;
 };
 
 export type TransactionLog = {

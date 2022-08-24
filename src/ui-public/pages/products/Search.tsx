@@ -110,16 +110,6 @@ function Search() {
     }));
     retrieveBrands(route.params.keywords);
     retrieveGenders();
-<<<<<<< HEAD
-=======
-    // if(route.params.keywords == 'contactlens'){
-    //   retrieveColors('contactlenscolor');
-    // }else if(route.params.keywords == 'solutions'){
-    //   retrieveBrand('solutions');
-    // }else if(route.params.keywords == 'accessories'){
-    //   retrieveBrandCategory('accessories');
-    // }
->>>>>>> dcaf3c36a81a1109d466050ee5a65486814c6ca7
   }, []);
 
   useEffect(() => {

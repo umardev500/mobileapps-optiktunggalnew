@@ -98,7 +98,7 @@ function AddressList() {
   const handleEdit = (addressItem: AddressModel) => {
     const {
       rootScreen = 'Public',
-      screenPath = 'BottomTabs.AccountStack.AddressEdit'
+      screenPath = 'AddressForm'
     } = actionScreen;
     const paths = (screenPath)?.split('.') || [];
 
@@ -131,11 +131,11 @@ function AddressList() {
   };
 
   const handleDelete = async (addressItem: AddressModel) => {
-    return httpService('/register/save', {
+    return httpService('/api/login/login', {
       data: {
         act: 'DeleteShipList',
         dt: JSON.stringify({
-          regid: user?.id
+          addressid: addressItem.id
         }),
       }
     }).then(async ({ status, id = 1 }) => {
@@ -156,14 +156,15 @@ function AddressList() {
         title={t(`Alamat Pengiriman`)}
       />
 
-      {!actionScreen.rootScreen ? null : (
+      {/* {!actionScreen.rootScreen ? null : ( */}
         <View style={[styles.wrapper, { paddingVertical: 5 }]}>
           <View style={[wrapper.row]}>
-            <Typography style={{fontSize: 12, flex: 1, paddingVertical: 10}}>Alamat akan digunakan untuk pengiriman pesanan.</Typography>
+            <Typography style={{fontSize: 10, flex: 1, paddingVertical: 10, paddingRight: 15}}>Alamat akan digunakan untuk pengiriman pesanan.</Typography>
             <PressableBox
               style={{ backgroundColor: '#0d674e', borderRadius: 5, marginTop: 10, width: 120, alignSelf: 'flex-end' }}
               onPress={() => navigation.navigatePath('Public', {
-                screen: 'BottomTabs.AccountStack.AddressEdit',
+                // screen: 'BottomTabs.AccountStack.AddressEdit',
+                screen: 'AddressForm',
               })}
             >
               <Typography style={{
@@ -172,14 +173,21 @@ function AddressList() {
                 alignSelf: 'center',
                 paddingVertical: 10
               }}>
-                <Ionicons name="location" size={12} color="#fff" /> 
+                <Ionicons name="location" size={10} color="#fff" /> 
                 {t(`Tambah Alamat`)}
               </Typography>
             </PressableBox>
           </View>
         </View>
-      )}
-
+      {/* )} */}
+      <PressableBox
+        style={{backgroundColor: '#fff'}}
+        onPress={() => handleRefresh()}>
+          <Typography size='xxs' style={{textAlign: 'center', marginVertical: 10, color: 'blue'}}>
+            <Ionicons name="refresh" size={14} color="blue" /> 
+            Klik untuk refresh / tarik layar dari atas ke bawah
+          </Typography>
+      </PressableBox>
       <FlatList
         contentContainerStyle={[styles.container, styles.wrapper]}
         refreshControl={(
@@ -207,15 +215,15 @@ function AddressList() {
                 <Typography size='sm'>{item.title}</Typography>
               )}
 
-              <Typography size='sm' style={{ marginTop: 4, fontWeight: '700' }}>
+              <Typography size='xs' style={{ marginTop: 4, fontWeight: '700' }}>
                 {item.vch_nama || item.nama}
               </Typography>
 
-              <Typography size='sm' style={{ marginTop: 4 }}>
+              <Typography size='xs' style={{ marginTop: 4 }}>
                 {showPhone(item.hp, '+62')}
               </Typography>
 
-              <Typography size='sm' style={{ marginTop: 4 }}>
+              <Typography size='xs' style={{ marginTop: 4 }}>
                 {item.alamat}
               </Typography>
 
@@ -266,11 +274,11 @@ function AddressList() {
             {!actionScreen.rootScreen ? (
               <Button
                 containerStyle={styles.cardAction}
-                style={{ width: 150, backgroundColor: '#0d674e' }}
+                style={{ width: 120, backgroundColor: '#0d674e' }}
                 rounded
                 onPress={() => handleEdit(item)}
               >
-                <Typography style={{color: '#fff', fontSize: 11}}>Ubah Alamat</Typography>
+                <Typography size='xxs' style={{color: '#fff'}}>Ubah Alamat</Typography>
               </Button>
             ) : (
               <Button

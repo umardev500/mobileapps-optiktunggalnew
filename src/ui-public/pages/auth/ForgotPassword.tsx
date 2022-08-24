@@ -116,11 +116,11 @@ function ForgotPassword() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Typography type="h5" style={{ marginTop: 12 }}>
-        {`${''}Enter your e-mail address`}
+        {`${''}Masukan email anda.`}
       </Typography>
 
       <Typography size="sm" color={700} textAlign="center" style={{ marginTop: 4 }}>
-        {`${''}We will send a forgot password link to your email.`}
+        {`${''}Kami akan mengirimkan link untuk perubahan password ke email anda.`}
       </Typography>
 
       <TextField
@@ -143,7 +143,7 @@ function ForgotPassword() {
           loading={isSaving}
         >
           <Typography style={{ color: '#FEFEFE' }}>
-            {`${''}Send Request`.toUpperCase()}
+            {`${''}Kirim Permintaan`.toUpperCase()}
           </Typography>
         </Button>
       </View>

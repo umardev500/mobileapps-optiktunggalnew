@@ -16,6 +16,7 @@ export function routeOptions(fileName: string): StackNavigationOptions {
   const { t: tFav } = useTranslation('favorite');
   const { t: tAcc } = useTranslation('account');
   const { t: tKata } = useTranslation('katalog');
+  const { t: tPay } = useTranslation('payment');
 
   switch (fileName) {
     // Home | Product | Order | Payment
@@ -90,10 +91,12 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     //   return { title: `${''}Web View` };      
 
     // Account | Auth
+    case 'WebviewCC':
+      return { title: tPay('Otentikasi Pembayaran') };
     case 'Account':
       return { headerShown: false };
     case 'Login':
-      return { title: tAcc('Login') };
+      return { headerShown: false };
     case 'ForgotPassword':
       return { title: tAcc('Forgot Password') };
     case 'Register':

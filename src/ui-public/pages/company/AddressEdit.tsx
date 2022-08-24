@@ -39,6 +39,7 @@ type Fields = {
   kodepos?: string;
   nama_alamat?: string;
   flaq: string;
+  label: string;
 };
 
 type OptionsState = {
@@ -66,7 +67,7 @@ function AddressEdit() {
   const { width, height } = useWindowDimensions();
   const { t } = useTranslation('account');
   const { user, location } = useAppSelector(({ user }) => user);
-
+  const labelData = ['Rumah', 'Kantor'];
   // States
   const [isSaving, setIsSaving] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -89,7 +90,8 @@ function AddressEdit() {
     email: '',
     kodepos: '',
     nama_alamat: '',
-    flaq: ''
+    flaq: '',
+    label: ''
   });
   const [profile, setProfile] = useState<RegisterFields | null>(null);
   const [action, setAction] = useState('');
@@ -97,7 +99,7 @@ function AddressEdit() {
     fields: [],
     message: undefined,
   });
-
+  const [labelLokasi, setlabelLokasi] = useState(0);
   const [options, setOptions] = useState<OptionsState>({
     provinces: [],
     provincesLoaded: false,
@@ -119,7 +121,6 @@ function AddressEdit() {
   // Effects
   useEffect(() => {
     const { profile, address, action } = route.params;
-    console.log('PROFILE : '+ route.params.profile.gender);
     action && setAction(action);
 
     if (profile) {
@@ -138,7 +139,7 @@ function AddressEdit() {
         lat: address.lat,
         lng: address.lng,
         nama: address.nama || address.vch_nama,
-        hp: profile.hp // Remove leading 62
+        hp: address.hp
       }));
       setIsEdit(true);
     }
@@ -334,6 +335,14 @@ function AddressEdit() {
     });
   };
 
+  const getLabel = (tipelokasi: any) => {
+    setlabelLokasi(tipelokasi);
+  }
+
+  const label = () => {
+    return labelLokasi;
+  }
+
   const handleSubmit = async (flaq: string) => {
     if (!profile) {
       if (!fields.nama) {
@@ -378,7 +387,7 @@ function AddressEdit() {
     }
 
     const addressField = {
-      penerima: fields.nama,
+      penerima: name,
       email: email,
       shipto: isEdit ? fields.jl : `${fields.jl}. Kel. ${options.villages?.find(item => item.id === fields.kel)?.nama || '-'
         }, Kec. ${options.districts?.find(item => item.id === fields.kec)?.nama || '-'
@@ -389,12 +398,12 @@ function AddressEdit() {
       kota_kab: `${options.regencies?.find(item => item.id === fields.kab)?.id || '-'}`,
       kecamatan: `${options.districts?.find(item => item.id === fields.kec)?.id || '-'}`,
       kelurahan: `${options.villages?.find(item => item.id === fields.kel)?.id || '-'}`,
-      kodepos : `${options.villages?.find(item => item.id === fields.kodepos)?.kodepos || '-'}`,
+      kodepos : `${options.villages?.find(item => item.kodepos === fields.kel)?.kodepos || '-'}`,
       nama_alamat : `${options.villages?.find(item => item.id === fields.shipto)?.nama_alamat || '-'}`,
       handphone: profile.hp, //showPhone(phone, '62'),
       latitude: fields.lat,
       longitude: fields.lng,
-      label: 'Rumah',
+      label: label(),
       flaq: flaq
     };
     
@@ -436,9 +445,6 @@ function AddressEdit() {
       case 'prop':
         newState.provinceModalOpen = 'boolean' === typeof open ? open : !options.provinceModalOpen;
         break;
-      case 'prop':
-        newState.provinceModalOpen = 'boolean' === typeof open ? open : !options.provinceModalOpen;
-        break;
       case 'kab':
         newState.regencyModalOpen = 'boolean' === typeof open ? open : !options.regencyModalOpen;
         break;
@@ -471,51 +477,52 @@ function AddressEdit() {
 
   if (options.provinceModalOpen) {
     locationField = 'prop';
-    locationModalTitle = t(`${''}Select Province`);
+    locationModalTitle = t(`${''}Pilih Provinsi`);
     locationModalList = options.provinces || [];
     locationModalListLoaded = !!options.provincesLoaded;
   } else if (options.regencyModalOpen) {
     locationField = 'kab';
-    locationModalTitle = t(`${''}Select City`);
+    locationModalTitle = t(`${''}Pilih Kab/Kota`);
     locationModalList = options.regencies || [];
     locationModalListLoaded = !!options.regenciesLoaded;
 
     if (!fields.prop) {
-      locationStepRequired = t(`${''}Please Select Province.`);
+      locationStepRequired = t(`${''}Pilih Provinsi.`);
     }
   } else if (options.districtModalOpen) {
     locationField = 'kec';
-    locationModalTitle = t(`${''}Select District`);
+    locationModalTitle = t(`${''}Pilih Kecamatan`);
     locationModalList = options.districts || [];
     locationModalListLoaded = !!options.districtsLoaded;
 
     if (!fields.kab) {
-      locationStepRequired = t(`${''}Please select city.`);
+      locationStepRequired = t(`${''}Pilih Kab/Kota.`);
     }
   } else if (options.villageModalOpen) {
     locationField = 'kel';
-    locationModalTitle = t(`${''}Select Villages`);
+    locationModalTitle = t(`${''}Pilih Kelurahan`);
     locationModalList = options.villages || [];
     locationModalListLoaded = !!options.villagesLoaded;
 
     if (!fields.kec) {
-      locationStepRequired = t(`${''}Please select District.`);
+      locationStepRequired = t(`${''}Pilih Kecamatan.`);
     }
   }
 
   const textPilih = t(`${''}Select`);
   const { address: addressRoute } = route.params;
-
+  // console.log('PROP :'+route.params.);
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {profile ? null : (
         <View style={{ marginTop: 24 }}>
-          <Typography type="h4" style={{ marginBottom: 8 }}>
-            {`${''}Shipping Address Information`}
+          <Typography size='sm' style={{ marginBottom: 8, fontWeight: '700' }}>
+            {`${''}Informasi alamat pengririman`}
           </Typography>
 
           <TextField
-            placeholder={`${''}Recipient name`}
+            style={{fontSize: 12}}
+            placeholder={`${''}Nama Penerima`}
             value={fields.nama}
             onChangeText={(value) => handleFieldChange('nama', value)}
             error={!!getFieldError('nama')}
@@ -524,13 +531,14 @@ function AddressEdit() {
 
           <TextField
             containerStyle={{ marginTop: 12 }}
-            placeholder={t('Phone Number')}
-            value={fields.hp}
+            style={{fontSize: 12}}
+            placeholder={t('Nomor Handphone Penerima')}
+            value={showPhone(String(fields.hp), '')}
             onChangeText={(value) => handleFieldChange('hp', value)}
             keyboardType="phone-pad"
             left={(
               <View style={{ ...wrapper.row, alignItems: 'center' }}>
-                <Typography color={950} style={{ marginLeft: 6 }}>+62</Typography>
+                <Typography color={950} style={{ marginLeft: 6, fontSize: 12 }}>+62</Typography>
               </View>
             )}
             error={!!getFieldError('hp')}
@@ -540,12 +548,12 @@ function AddressEdit() {
       )}
 
       {profile ? null : (
-        <Typography type="h4" style={{ marginTop: 24 }}>
-          {`${''}Address Detail`}
+        <Typography size='sm' style={{ marginTop: 24, fontWeight: '700' }}>
+          {`${''}Detail Alamat`}
         </Typography>
       )}
 
-      {/* {isEdit ? null : ( */}
+      {isEdit ? null : (
         <>
           <PressableBox
             containerStyle={{ overflow: 'visible', marginTop: 12 }}
@@ -553,7 +561,8 @@ function AddressEdit() {
             onPress={() => handleModalToggle('prop', true)}
           >
             <TextField
-              placeholder={`${''}Select Province`}
+              style={{fontSize: 12}}
+              placeholder={`${''}Pilih Provinsi`}
               value={options.provinces?.find(({ id }) => id === fields.prop)?.nama}
               editable={false}
               pointerEvents="none"
@@ -566,7 +575,8 @@ function AddressEdit() {
             onPress={() => handleModalToggle('kab', true)}
           >
             <TextField
-              placeholder={`${''}Select City`}
+              style={{fontSize: 12}}
+              placeholder={`${''}Pilih Kab/Kota`}
               value={options.regencies?.find(({ id }) => id === fields.kab)?.nama}
               editable={false}
               pointerEvents="none"
@@ -579,7 +589,8 @@ function AddressEdit() {
             onPress={() => handleModalToggle('kec', true)}
           >
             <TextField
-              placeholder={`${''}Select District`}
+              style={{fontSize: 12}}
+              placeholder={`${''}Pilih Kecamatan`}
               value={options.districts?.find(({ id }) => id === fields.kec)?.nama}
               editable={false}
               pointerEvents="none"
@@ -592,13 +603,14 @@ function AddressEdit() {
             onPress={() => handleModalToggle('kel', true)}
           >
             <TextField
-              placeholder={`${''}Select Village`}
+              style={{fontSize: 12}}
+              placeholder={`${''}Pilih Kelurahan`}
               value={options.villages?.find(({ id }) => id === fields.kel)?.nama}
               editable={false}
               pointerEvents="none"
             />
           </PressableBox>
-
+          
           {!getFieldError('prop') ? null : (
             <Typography size="sm" color="red" style={{ marginTop: 6 }}>
               {error.message}
@@ -612,6 +624,7 @@ function AddressEdit() {
                 borderTopRightRadius: 0,
                 borderBottomRightRadius: 0
               }}
+              style={{fontSize: 12}}
               placeholder={`${''}RT/Blok`}
               value={fields.rt}
               onChangeText={(value) => handleFieldChange('rt', value)}
@@ -623,6 +636,7 @@ function AddressEdit() {
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0
               }}
+              style={{fontSize: 12}}
               placeholder={`${''}RW/No.`}
               value={fields.rw}
               onChangeText={(value) => handleFieldChange('rw', value)}
@@ -635,13 +649,14 @@ function AddressEdit() {
             </Typography>
           )}
         </>
-      {/* )} */}
+      )}
 
       <TextField
         containerStyle={{ marginTop: 12 }}
-        style={{ height: 120, paddingTop: 8 }}
+        style={{ height: 120, paddingTop: 8, fontSize: 12 }}
         placeholder={`${''}Alamat domisili`}
-        value={options.villages?.find(({ id }) => id === route.params.profile.alamat)?.nama_alamat}
+        value={fields.jl}
+        // value={options.villages?.find(({ id }) => id === route.params.address?.alamat)?.nama_alamat}
         onChangeText={(value) => handleFieldChange('jl', value)}
         multiline
         textAlignVertical="top"
@@ -649,21 +664,52 @@ function AddressEdit() {
         message={error.message}
       />
 
+      {labelData.map((labelData, key) => {
+        return (
+          <View key={labelData} style={{marginHorizontal: 15, marginVertical: 5}}>
+            <View style={[wrapper.row]}>
+              <View>
+                <Typography>Tandai Sebagai :</Typography>
+              </View>
+              <View>
+                {labelLokasi == key ? (
+                  <TouchableOpacity style={styles.radioCircle}>
+                    <View style={styles.selectedRb} />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setlabelLokasi(key);
+                      getLabel(key);
+                    }}
+                    style={styles.radioCircle}>
+                    
+                  </TouchableOpacity>
+                )}
+                <Typography style={{marginTop: 3, fontSize: 14, fontWeight: '600', marginHorizontal: 10}}>{labelData}</Typography>
+              </View>
+            </View>
+          </View>
+        );
+      })}
+
       {/* The Map */}
-      {/*<Typography color={getFieldError('lat') ? 'red' : 600} size="sm" textAlign="center" style={{ marginTop: 8 }}>
-        {`${''}Mohon letakan pin dengan akurat\nagar kami bisa mengantar ke alamat yg tepat`}
+      <Typography color={getFieldError('lat') ? 'red' : 600} size="xs" textAlign="center" style={{ backgroundColor: '#fff', paddingVertical: 10, marginTop: 15 }}>
+        {`${''}Cubit untuk perbesar / perkecil maps.\n Klik "Set Lokasi" untuk menentukan lokasi anda.`}
       </Typography>
       <MapsLocationSelect
         style={{
           width: width - 30,
           height: (width - 30) * 10/16,
-          marginTop: 12,
           ...shadows[3]
         }}
         onUpdate={handleLatLngChange}
         latitude={!addressRoute ? undefined : parseFloat(addressRoute?.lat || '')}
         longitude={!addressRoute ? undefined : parseFloat(addressRoute?.lng || '')}
-      />*/}
+      />
+      <Typography color={getFieldError('lat') ? 'red' : 600} size="xs" textAlign="center" style={{ backgroundColor: '#fff', paddingVertical: 10 }}>
+        {`${''}Geser dan Mohon letakan pin dengan akurat\nagar kami bisa mengantar ke alamat yg tepat`}
+      </Typography>
 
       {!getFieldError('response') ? null : (
         <Typography color="red" size="sm" textAlign="center" style={{ marginTop: 16 }}>
@@ -673,15 +719,13 @@ function AddressEdit() {
 
       <View style={{ marginTop: 'auto', paddingTop: 24 }}>
         {!profile ? (
-          <Button
+          <PressableBox
             containerStyle={{ alignSelf: 'center' }}
-            style={{ width: 300 }}
-            label={`${''}Simpan`.toUpperCase()}
-            color="primary"
-            shadow={3}
-            onPress={() => handleSubmit("simpan")}
-            loading={isSaving}
-          />
+            style={{ width: 300, backgroundColor: '#0d674e' }}
+            onPress={() => handleSubmit('simpan')}
+          >
+            <Typography style={{paddingVertical: 10, textAlign: 'center', color: '#fff'}}>Simpan Alamat</Typography>
+          </PressableBox>
         ) : (
           <Button
             containerStyle={{ alignSelf: 'center' }}
@@ -812,6 +856,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingTop: 12,
     paddingBottom: 24
+  },
+
+  radioCircle: {
+		height: 20,
+		width: 20,
+		borderRadius: 100,
+		borderWidth: 2,
+		borderColor: '#0d674e',
+		alignItems: 'center',
+		justifyContent: 'center',
+		padding: 10
+	},
+	selectedRb: {
+		width: 15,
+		height: 15,
+		borderRadius: 50,
+		backgroundColor: '#0d674e',
   },
 });
 

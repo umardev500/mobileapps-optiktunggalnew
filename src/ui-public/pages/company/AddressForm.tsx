@@ -14,6 +14,8 @@ import { BoxLoading } from '../../../ui-shared/loadings';
 import { useTranslation } from 'react-i18next';
 import { RegisterFields } from '..';
 import { useAppSelector } from '../../../redux/hooks';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 type Fields = {
@@ -36,6 +38,8 @@ type Fields = {
   hp?: string;
   kodepos?: string;
   nama_alamat?: string;
+  flaq: string;
+  label: string;
 };
 
 type OptionsState = {
@@ -51,19 +55,16 @@ type OptionsState = {
   villages?: VillageModel[];
   villagesLoaded?: boolean;
   villageModalOpen?: boolean;
-  postalcode?: VillageModel[];
-  postalcodesLoaded?: boolean;
-  postalcodeModalOpen?: boolean;
 };
 
-function AddressEdit() {
+function AddressForm() {
   // Hooks
   const navigation = useAppNavigation();
   const route = useRoute<RouteProp<PublicAccountStackParamList, 'AddressEdit'>>();
   const { width, height } = useWindowDimensions();
   const { t } = useTranslation('account');
   const { user, location } = useAppSelector(({ user }) => user);
-
+  const labelData = ['Rumah', 'Kantor'];
   // States
   const [isSaving, setIsSaving] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -86,6 +87,8 @@ function AddressEdit() {
     email: '',
     kodepos: '',
     nama_alamat: '',
+    flaq: '',
+    label: ''
   });
   const [profile, setProfile] = useState<RegisterFields | null>(null);
   const [action, setAction] = useState('');
@@ -93,7 +96,7 @@ function AddressEdit() {
     fields: [],
     message: undefined,
   });
-
+  const [labelLokasi, setlabelLokasi] = useState(0);
   const [options, setOptions] = useState<OptionsState>({
     provinces: [],
     provincesLoaded: false,
@@ -112,7 +115,6 @@ function AddressEdit() {
   // Effects
   useEffect(() => {
     const { profile, address, action } = route.params;
-
     action && setAction(action);
 
     if (profile) {
@@ -131,7 +133,7 @@ function AddressEdit() {
         lat: address.lat,
         lng: address.lng,
         nama: address.nama || address.vch_nama,
-        hp: address.hp // Remove leading 62
+        hp: address.hp
       }));
       setIsEdit(true);
     }
@@ -288,106 +290,39 @@ function AddressEdit() {
 
     return fields.indexOf(field) < 0 ? null : error.message;
   };
+  const idnya = isEdit ? 'id : route.params.address?.id' : '';
+  
+  const getLabel = (tipelokasi: any) => {
+    setlabelLokasi(tipelokasi);
+  }
 
-  const sendRegister = async () => {
-    const { ktp, foto, ...restProfile } = profile || {};    
-    return httpService('/api/login/login', {
-      data: {
-        act: 'Register',
-        dt: JSON.stringify({
-          ...restProfile,
-          ...fields,
-          email: fields.email || restProfile.email,
-          hp: profile.hp, //showPhone(profile.hp || profile?.hp, '62')
-        }),
-      }
-    }).then(async ({ status, msg, id = 1 }) => {
-      // console.log('STATUS_ '+status);
-      if (status === 200) {
-        await httpService.setUser({
-          ...(!id ? null : { id }),
-          ...restProfile,
-          foto,
-          ...fields,
-          hp: profile.hp, //showPhone(profile.hp || profile?.hp, '62'),
-        });
-
-        return id;
-      } /*else if (status === 201) {
-        Alert.alert( "Pemberitahuan", "Email atau No. Handphone sudah terdaftar. silahkan ke menu login dan klik tombol lupa password untuk mendapatkan password anda. Terima Kasih.",
-                [
-                  { text: "GANTI DATA", onPress: () => navigation.navigatePath('Public', { screen: 'BottomTabs.AccountStack.Register'}) }
-                ]
-        );
-      }*/
-
-      return 0;
-    }).catch((err) => {
-
-    });
-  };
+  const label = () => {
+    return labelLokasi;
+  }
 
   const handleSubmit = async () => {
-    if (!profile) {
-      if (!fields.nama) {
-        return handleErrorShow('nama', `${''}Mohon masukkan nama penerima.`);
-      } else if (!profile.hp) {
-        return handleErrorShow('hp', `${''}Mohon masukkan nomor telepon penerima.`);
-      }
-    }
-
-    if (!isEdit) {
-      if (!fields.prop || !fields.kab || !fields.kec || !fields.kel) {
-        return handleErrorShow(['prop', 'kab', 'kec', 'kel'], `${''}Mohon pilih daerah Anda secara lengkap.`);
-      } else if (!fields.rt || !fields.rw) {
-        return handleErrorShow(['rt', 'rw'], `${''}Mohon masukkan RT dan RW.`);
-      }
-    }
-
-    if (!fields.jl) {
-      return handleErrorShow('jl', `${''}Mohon masukkan alamat lengkap tujuan pengiriman.`);
-    } /*else if (!fields.lat || !fields.lng) {
-      return handleErrorShow(['lat', 'lng'], `${''}Mohon pilih posisi Anda pada peta.`);
-    }*/
-
     setIsSaving(true);
-
-    const userId = !profile ? user?.id : await sendRegister();
-    
-    if (!userId) {
-      handleErrorShow('response', t(`Registrasi akun bermasalah`));
-
-      return setIsSaving(false);
-    }
-
-    let name = fields.nama;
-    let phone = profile.hp;
-    let email = fields.email;
-
-    if (profile) {
-      name = fields.nama || `${profile.namadepan} ${profile.namabelakang}`;
-      phone = profile.hp || profile.hp;
-      email = fields.email || profile.email;
-    }
-
     const addressField = {
-      penerima: fields.nama,
-      email: email,
-      shipto: isEdit ? fields.jl : `${fields.jl}. Kel. ${options.villages?.find(item => item.id === fields.kel)?.nama || '-'
+      regid: user?.id,
+      idnya,
+      method: isEdit ? '2' : '1',
+      email: route.params.address?.email,
+      penerima: fields.nama || `${profile.namadepan} ${profile.namabelakang}`,
+      shipto: `${fields.jl} RT/Blok. ${fields.rt} RW/No. ${fields.rw}, Kel. ${options.villages?.find(item => item.id === fields.kel)?.nama || '-'
         }, Kec. ${options.districts?.find(item => item.id === fields.kec)?.nama || '-'
         }, ${options.regencies?.find(item => item.id === fields.kab)?.nama || '-'
         }, ${options.provinces?.find(item => item.id === fields.prop)?.nama || '-'
+        }, ${options.villages?.find(item => item.id === fields.kel)?.kodepos || '-'
         }`,
       provinsi: `${options.provinces?.find(item => item.id === fields.prop)?.id || '-'}`,
       kota_kab: `${options.regencies?.find(item => item.id === fields.kab)?.id || '-'}`,
       kecamatan: `${options.districts?.find(item => item.id === fields.kec)?.id || '-'}`,
       kelurahan: `${options.villages?.find(item => item.id === fields.kel)?.id || '-'}`,
-      kodepos : `${options.villages?.find(item => item.kodepos === fields.kodepos)?.kodepos || '-'}`,
-      // nama_alamat : `${options.villages?.find(item => item.id === fields.shipto)?.nama_alamat || '-'}`,
-      handphone: profile.hp, //showPhone(phone, '62'),
+      handphone: isEdit ? route.params.address?.hp : fields.hp, //showPhone(phone, '62'),
       latitude: fields.lat,
       longitude: fields.lng,
-      label: 'Rumah',
+      label: label(),
+      flaq: isEdit ? 'edit' : 'new'
     };
     
     return httpService('/api/login/login', {
@@ -399,30 +334,13 @@ function AddressEdit() {
       setIsSaving(false);
 
       if (status === 200) {
-        if (!profile) {
-          return action === 'checkout' ? (
-            navigation.navigatePath('Public', {
-              screen: 'BottomTabs.HomeStack.Checkout',
-              params: [null, null, {
-                address: { ...addressField, id },
-              }],
-            })
-          ) : navigation.navigatePath('Public', {
-            screen: 'BottomTabs.AccountStack.AddressList',
-            params: [null, null, {
-              refresh: true,
-            }],
-          });
-        }
-
+        ToastAndroid.show(`${''}Alamat berhasil diubah!.`, ToastAndroid.LONG);
         navigation.navigatePath('Public', {
-          screen: 'BottomTabs.AccountStack.Verification',
-          params: [null, null, {
-            email,
-          }],
+            screen: 'BottomTabs.AccountStack.AddressList',
         });
       }
     }).catch(err => {
+      console.error("Failed : ", err);
       setIsSaving(false);
     });
   };
@@ -431,9 +349,6 @@ function AddressEdit() {
     let newState: Partial<OptionsState> = {};
 
     switch (type) {
-      case 'prop':
-        newState.provinceModalOpen = 'boolean' === typeof open ? open : !options.provinceModalOpen;
-        break;
       case 'prop':
         newState.provinceModalOpen = 'boolean' === typeof open ? open : !options.provinceModalOpen;
         break;
@@ -474,12 +389,12 @@ function AddressEdit() {
     locationModalListLoaded = !!options.provincesLoaded;
   } else if (options.regencyModalOpen) {
     locationField = 'kab';
-    locationModalTitle = t(`${''}Pilih Kota/Kabupaten`);
+    locationModalTitle = t(`${''}Pilih Kab/Kota`);
     locationModalList = options.regencies || [];
     locationModalListLoaded = !!options.regenciesLoaded;
 
     if (!fields.prop) {
-      locationStepRequired = t(`${''}Mohon pilih Provinsi.`);
+      locationStepRequired = t(`${''}Pilih Provinsi.`);
     }
   } else if (options.districtModalOpen) {
     locationField = 'kec';
@@ -488,7 +403,7 @@ function AddressEdit() {
     locationModalListLoaded = !!options.districtsLoaded;
 
     if (!fields.kab) {
-      locationStepRequired = t(`${''}Mohon pilih Kota/Kabupaten.`);
+      locationStepRequired = t(`${''}Pilih Kab/Kota.`);
     }
   } else if (options.villageModalOpen) {
     locationField = 'kel';
@@ -497,39 +412,25 @@ function AddressEdit() {
     locationModalListLoaded = !!options.villagesLoaded;
 
     if (!fields.kec) {
-      locationStepRequired = t(`${''}Mohon pilih Kecamatan.`);
+      locationStepRequired = t(`${''}Pilih Kecamatan.`);
     }
   }
 
-  const textPilih = t(`${''}Pilih`);
+  const textPilih = t(`${''}Select`);
   const { address: addressRoute } = route.params;
-
+  // console.log('PROP :'+route.params.);
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* The Map */}
-      <MapsLocationSelect
-        style={{
-          height: (width - 0) * 10/10,
-          // ...shadows[3],
-          marginHorizontal: -15 
-        }}
-        onUpdate={handleLatLngChange}
-        latitude={!addressRoute ? undefined : parseFloat(addressRoute?.lat || '')}
-        longitude={!addressRoute ? undefined : parseFloat(addressRoute?.lng || '')}
-      />
-      <Typography color={getFieldError('lat') ? 'red' : 600} size="xs" textAlign="center" style={{ backgroundColor: '#fff', paddingVertical: 10 }}>
-        {`${''}Mohon letakan pin dengan akurat\nagar kami bisa mengantar ke alamat yg tepat`}
-      </Typography>
       {profile ? null : (
         <View style={{ marginTop: 24 }}>
           <Typography size='sm' style={{ marginBottom: 8, fontWeight: '700' }}>
-            {`${''}Informasi Alamat pengiriman`}
+            {`${''}Informasi alamat pengririman`}
           </Typography>
 
           <TextField
+            style={{fontSize: 12}}
             placeholder={`${''}Nama Penerima`}
             value={fields.nama}
-            style={{fontSize: 12}}
             onChangeText={(value) => handleFieldChange('nama', value)}
             error={!!getFieldError('nama')}
             message={error.message}
@@ -538,7 +439,7 @@ function AddressEdit() {
           <TextField
             containerStyle={{ marginTop: 12 }}
             style={{fontSize: 12}}
-            placeholder={t('Nomor Telepon')}
+            placeholder={t('Nomor Handphone Penerima')}
             value={showPhone(String(fields.hp), '')}
             onChangeText={(value) => handleFieldChange('hp', value)}
             keyboardType="phone-pad"
@@ -554,7 +455,7 @@ function AddressEdit() {
       )}
 
       {profile ? null : (
-        <Typography size="sm" style={{ marginTop: 24, fontWeight: '700' }}>
+        <Typography size='sm' style={{ marginTop: 24, fontWeight: '700' }}>
           {`${''}Detail Alamat`}
         </Typography>
       )}
@@ -582,7 +483,7 @@ function AddressEdit() {
           >
             <TextField
               style={{fontSize: 12}}
-              placeholder={`${''}Pilih Kota/Kabupaten`}
+              placeholder={`${''}Pilih Kab/Kota`}
               value={options.regencies?.find(({ id }) => id === fields.kab)?.nama}
               editable={false}
               pointerEvents="none"
@@ -616,7 +517,7 @@ function AddressEdit() {
               pointerEvents="none"
             />
           </PressableBox>
-
+          
           {!getFieldError('prop') ? null : (
             <Typography size="sm" color="red" style={{ marginTop: 6 }}>
               {error.message}
@@ -631,7 +532,7 @@ function AddressEdit() {
                 borderBottomRightRadius: 0
               }}
               style={{fontSize: 12}}
-              placeholder={`${''}RT`}
+              placeholder={`${''}RT/Blok`}
               value={fields.rt}
               onChangeText={(value) => handleFieldChange('rt', value)}
             />
@@ -643,7 +544,7 @@ function AddressEdit() {
                 borderBottomLeftRadius: 0
               }}
               style={{fontSize: 12}}
-              placeholder={`${''}RW`}
+              placeholder={`${''}RW/No.`}
               value={fields.rw}
               onChangeText={(value) => handleFieldChange('rw', value)}
             />
@@ -660,14 +561,64 @@ function AddressEdit() {
       <TextField
         containerStyle={{ marginTop: 12 }}
         style={{ height: 120, paddingTop: 8, fontSize: 12 }}
-        placeholder={`${''}Alamat Lengkap (Beserta patokan alamat)`}
-        value={options.villages?.find(({ id }) => id === fields.nama_alamat)?.nama_alamat}
+        placeholder={`${''}Alamat domisili`}
+        value={fields.jl}
+        // value={options.villages?.find(({ id }) => id === route.params.address?.alamat)?.nama_alamat}
         onChangeText={(value) => handleFieldChange('jl', value)}
         multiline
         textAlignVertical="top"
         error={!!getFieldError('jl')}
         message={error.message}
       />
+
+      <View style={[wrapper.row, {marginTop: 20}]}>
+        <View>
+            <Typography size='xs'>Tanda Sebagai :</Typography>
+        </View>
+        {labelData.map((labelData, key) => {
+            return (
+            <View key={labelData} style={{marginHorizontal: 15, alignSelf: 'flex-end'}}>
+                <View style={[wrapper.row, {flex: 1}]}>
+                    {labelLokasi == key ? (
+                        <TouchableOpacity style={styles.radioCircle}>
+                        <View style={styles.selectedRb} />
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity
+                        onPress={() => {
+                            setlabelLokasi(key);
+                            getLabel(key);
+                        }}
+                        style={styles.radioCircle}>
+                        
+                        </TouchableOpacity>
+                    )}
+                    <Typography style={{fontSize: 10, fontWeight: '600', marginHorizontal: 10}}>{labelData}</Typography>
+                </View>
+            </View>
+            );
+        })}
+      </View>
+    
+
+      {/* The Map */}
+      <Typography color={getFieldError('lat') ? 'red' : 600} size="xs" textAlign="center" style={{ backgroundColor: '#fff', paddingVertical: 10, marginTop: 15 }}>
+        {`${''}Cubit untuk perbesar / perkecil maps.\n Klik "Set Lokasi" untuk menentukan lokasi anda.`}
+      </Typography>
+      <MapsLocationSelect
+        style={{
+          width: width - 30,
+          height: (width - 30) * 10/16,
+          ...shadows[3]
+        }}
+        onUpdate={handleLatLngChange}
+        latitude={!addressRoute ? undefined : parseFloat(addressRoute?.lat || '')}
+        longitude={!addressRoute ? undefined : parseFloat(addressRoute?.lng || '')}
+      />
+      <Typography color={getFieldError('lat') ? 'red' : 600} size="xs" textAlign="center" style={{ backgroundColor: '#fff', paddingVertical: 10 }}>
+        {`${''}Geser dan Mohon letakan pin dengan akurat\nagar kami bisa mengantar ke alamat yg tepat`}
+      </Typography>
+
       {!getFieldError('response') ? null : (
         <Typography color="red" size="sm" textAlign="center" style={{ marginTop: 16 }}>
           {error.message}
@@ -675,26 +626,12 @@ function AddressEdit() {
       )}
 
       <View style={{ marginTop: 'auto', paddingTop: 24 }}>
-        {!profile ? (
-          <Button
+        <Button
             containerStyle={{ alignSelf: 'center' }}
-            style={{ width: 300 }}
-            label={`${''}Simpan Alamat`}
-            color="primary"
-            shadow={3}
-            onPress={handleSubmit}
-            loading={isSaving}
-          />
-        ) : (
-          <Button
-            containerStyle={{ alignSelf: 'center' }}
-            style={{ width: 300 }}
-            label={`${''}Lanjut`.toUpperCase()}
-            color="primary"
-            onPress={handleSubmit}
-            loading={isSaving}
-          />
-        )}
+            style={{ width: 300, backgroundColor: '#0d674e' }}
+            onPress={() => handleSubmit()}>
+            <Typography style={{paddingVertical: 5, textAlign: 'center', color: '#fff'}}>Simpan Alamat</Typography>
+        </Button>
       </View>
 
       {/* Popup Provinces */}
@@ -771,8 +708,23 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 24
   },
+  radioCircle: {
+    height: 15,
+    width: 15,
+    borderRadius: 100,
+    borderWidth: 2,
+    borderColor: '#0d674e',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectedRb: {
+    width: 15,
+    height: 15,
+    borderRadius: 50,
+    backgroundColor: '#0d674e',
+  },
 });
 
-export type { Fields as AddressEditFields };
+export type { Fields as AddressFormFields };
 
-export default AddressEdit;
+export default AddressForm;

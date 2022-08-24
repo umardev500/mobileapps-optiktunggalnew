@@ -10,6 +10,7 @@ export {default as BannerDetail} from './BannerDetail';
 export {default as SelectUsers} from './SelectUsers';
 export {default as Register} from './Register';
 export {default as AddressEdit} from './AddressEdit';
+export {default as AddressForm} from './AddressForm';
 export {default as Verification} from './Verification';
 export {default as PinEdit} from './PinEdit';
 export {default as ReviewAll} from './ReviewAll';

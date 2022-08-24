@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { setCartItems, setFavorites } from '../../redux/actions';
 import moment from 'moment';
 import TextTicker from 'react-native-text-ticker';
+import DeviceInfo from 'react-native-device-info';
 
 function Account() {
   // Hooks
@@ -215,71 +216,57 @@ function Account() {
             )}
           >
             
-              <View style={styles.accountCard}>
-                <PressableBox
-                  containerStyle={{ marginTop: 1 }}
-                  onPress={() => navigation.navigatePath('Public', {
-                    screen: 'BottomTabs.AccountStack.ProfileEdit',
-                    params: [null, null, {
-                      email: user.email,
-                    }]
-                  })}>
-                  
-                  <View style={{marginTop: 20}}>
-                    <View style={[wrapper.row, { flexGrow: 1, borderColor: '#0d674e', borderWidth: 1, borderRadius: 5 }]}>
+              <View style={styles.accountCard}>                 
+                <View style={{marginTop: 20}}>
+                  <View style={[wrapper.row]}>
+                    <View style={styles.avatar}>
                       {!user.foto ? <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw&usqp=CAU' }} style={styles.avatar} /> : (
-                        <Image source={{ uri: user.foto }} style={styles.avatar} />
+                        <Image source={{ uri: user.foto }} style={styles.avatar}/>
                       )}
-                      <View style={{marginVertical: 10}}>
-                        <Typography style={{ color: '#0d674e', fontSize: 14}} >
-                          {user?.nama || `${user?.namadepan} ${user?.namatengah} ${user?.namabelakang}`}{`\n`}
-                          {`${user?.id}`}
-                          {/* {showPhone(String(user.hp), '0')} */}
+                    </View>
+                    <View style={{marginVertical: 10, flex: 1}}>
+                      <Typography style={{ color: '#0d674e', fontSize: 14}} >
+                        {`${user?.namadepan} ${user?.namatengah == null ? "" : user?.namatengah} ${user?.namabelakang}`}{`\n`}
+                        {`${user?.id}`}
+                        {/* {showPhone(String(user.hp), '0')} */}
+                      </Typography>
+                      {user?.no_card == null ? 
+                      (
+                        <Typography 
+                          style={{
+                              backgroundColor: 'gray', color: '#fff', 
+                              paddingHorizontal: 10, fontSize: 13,
+                              width: 115, borderRadius: 10, textAlignVertical: 'center'}}>
+                          {`Not a Member`}
                         </Typography>
-                        {user.verified || 1 ?
-                          <PressableBox
-                            containerStyle={{ marginTop: 1, height: 30, width: 150}}
-                            onPress={() => navigation.navigatePath('Public', {
-                              screen: 'BottomTabs.AccountStack.ProfileEdit',
-                              params: [null, null, {
-                                email: user.email,
-                              }]
-                            })}>
-                            <Typography
-                              style={{ textAlignVertical: 'center', height: 30 }}
-                              color="#1126b7">
-                              {t(`${''}Edit Profile`)}
-                              <Ionicons name="chevron-forward" size={12} color={'#1126b7'} />
-                            </Typography>
-                          </PressableBox>: (
-                          <PressableBox
-                            containerStyle={{ marginTop: 8 }}
-                            onPress={() => navigation.navigatePath('Public', {
-                              screen: 'BottomTabs.AccountStack.Verification',
-                              params: [null, null, {
-                                profile: user,
-                              }]
-                            })}
-                          >
-                            <Typography
-                              textAlign="center"
-                              color="primary"
-                              style={{
-                                borderBottomWidth: 1,
-                                borderColor: colors.palettes.primary
-                              }}
-                            >
-                              {t(`${''}Akun Belum terverifikasi`)}
-                            </Typography>
-                          </PressableBox>
-                        )}
-                      </View>
+                      ) : (
+                        <Typography 
+                          style={{
+                              backgroundColor: '#0d674e', color: '#fff', 
+                              paddingHorizontal: 10, fontSize: 13,
+                              width: 85, borderRadius: 10, textAlignVertical: 'center'}}>
+                          {`Member`}
+                        </Typography>
+                      )}
+                    </View>
+                    <View style={{alignContent: 'flex-end', marginHorizontal: 10, marginVertical: 5}}>
+                      <PressableBox
+                        containerStyle={{ marginTop: 1, height: 50}}
+                        onPress={() => navigation.navigatePath('Public', {
+                          screen: 'BottomTabs.AccountStack.ProfileEdit',
+                          params: [null, null, {
+                            email: user.email,
+                          }]
+                        })}>
+                        <Ionicons name="settings-outline" size={24} color={'#0d674e'} />
+                      </PressableBox>
                     </View>
                   </View>
-                </PressableBox>
-                {user?.namadepan == "" ? 
+                </View>
+                {user?.tgllahir == null ? 
                   (
-                    <View style={{ marginHorizontal: 0, borderColor: 'red', borderWidth: 1, borderRadius: 15}}>
+                    <View style={[wrapper.row, { marginTop: 10}]}>
+                      <Ionicons name='notifications-outline' size={12} color={'red'} style={{alignSelf: 'center', marginHorizontal: 5}}/>
                       <TextTicker
                         style={{ fontSize: 12, color: 'red', paddingHorizontal: 5, paddingVertical: 7 }}
                         duration={3000}
@@ -287,7 +274,6 @@ function Account() {
                         repeatSpacer={50}
                         marqueeDelay={1000}
                       >
-                        <Ionicons name='notifications-outline' size={12} color={'red'}/>
                         Untuk mempermudah transaksi, Silahkan lengkapi profile anda.
                       </TextTicker>
                     </View>
@@ -299,7 +285,7 @@ function Account() {
                     pressableProps={{
                       containerStyle: styles.menuBtnContainer,
                     }}
-                    header={t(`${''}Orders`)}
+                    header={t(`${''}Transaksi`)}
                     headerProps={{
                       type: 'h',
                     }}
@@ -307,7 +293,7 @@ function Account() {
                   >
                     {[
                       {
-                        title: t(`${''}Transaksi`),
+                        title: t(`${''}Transaksi Saya`),
                         subtitle: t(`${''}List transaksi anda.`),
                         Icon: FigmaIcon.FigmaDownload,
                         navigatePath: () => {
@@ -320,7 +306,7 @@ function Account() {
                         },
                       },
                       {
-                        title: t(`${''}Wishlist`),
+                        title: t(`${''}Favorit Saya`),
                         subtitle: t(`${''}Produk yang anda sukai.`),
                         Icon: FigmaIcon.Figmawishlist,
                         navigatePath: () => {
@@ -471,7 +457,7 @@ function Account() {
                     pressableProps={{
                       containerStyle: styles.menuBtnContainer,
                     }}
-                    header={t(`${''}Other Information `)}
+                    header={t(`${''}Informasi lain `)}
                     headerProps={{
                       type: 'h',
                       // style: { paddingLeft: 24 + 15 }
@@ -480,7 +466,7 @@ function Account() {
                   >
                     {[
                       {
-                        title: t(`${''}Terms & Condition`),
+                        title: t(`${''}Syarat & Ketentuan`),
                         navigatePath: 'Terms',
                         url: options.termsUrl,
                         Icon: FigmaIcon.FigmaHomeFilled,
@@ -491,12 +477,12 @@ function Account() {
                       //   url: options.faqUrl,                    
                       // },
                       {
-                        title: t(`${''}Privacy Policy`),
+                        title: t(`${''}Kebijakan Privasi`),
                         navigatePath: 'PrivacyPolicy',
                         url: options.privacyUrl,
                       },
                       {
-                        title: t(`${''}Review this app`),
+                        title: t(`${''}Beri Kami Penilaian`),
                         navigatePath: 'BottomTabs.AccountStack.Account',
                         url: options.versionUrl,
                       },
@@ -520,14 +506,14 @@ function Account() {
                     ))}
                   </ViewCollapse>
                 </View>
-
-                <View style={{ marginTop: 40, paddingBottom: 15 }}>
+                <Typography size='xs' style={{marginVertical: 30, textAlign: 'center'}}>Versi {DeviceInfo.getVersion()}</Typography>
+                <View style={{ paddingBottom: 15 }}>
                   <Button
                     containerStyle={[styles.menuBtnContainer, {
                       flex: 1,
                       borderBottomWidth: 0
                     }]}
-                    style={{ paddingHorizontal: 15, paddingVertical: 12, backgroundColor: '#a94442' }}
+                    style={{ paddingHorizontal: 15, paddingVertical: 10, backgroundColor: '#a94442' }}
                     label={`${''}Logout`}
                     labelStyle={{
                       textAlign: 'center',

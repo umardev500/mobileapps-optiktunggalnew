@@ -1,11 +1,11 @@
 import numeral from 'numeral';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Image, Linking, ListRenderItemInfo, RefreshControl, ScrollView, 
-         StyleSheet, Text, useWindowDimensions, View, FlatList } from 'react-native';
+         StyleSheet, Text, useWindowDimensions, View, FlatList, ToastAndroid } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { colors, ColorVariant, shadows, wrapper } from '../../../lib/styles';
 import { CartItemType, Modelable, ProductModel, ProductPhoto, 
-         ProductRetail, ColorModel, SpheriesModel, BaseCurveModel, ReviewModel } from '../../../types/model';
+         ProductRetail, ColorModel, SpheriesModel, BaseCurveModel, ReviewModel, CartAtribut } from '../../../types/model';
 import { BadgeDiscount, BottomDrawer, Button, ButtonCart, TextField,
          ImageAuto, PressableBox, ProgressBar, RenderHtml, Typography } from '../../../ui-shared/components';
 import { BoxLoading } from '../../../ui-shared/loadings';
@@ -33,16 +33,24 @@ import {
   formatCurrency,
   getSupportedCurrencies,
 } from "react-native-format-currency";
+import { StringMap } from 'i18next';
+import { indexOf } from 'lodash';
 
 const QTY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const QTY2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 type Fields = {
   sort?: string;
   prdcat?: string;
   brand?: string;
-  color?: string;
-  spheries?: string;
+  color?: any;
+  color2?: any;
+  spheries?: any;
+  spheries2?: any;
   basecurve?: any;
+  basecurve2?: any;
+  jumlah?: number;
+  jumlah2?: number;
 };
 
 type OptionsState = {
@@ -63,10 +71,22 @@ type OptionsStateSpheries = {
   sphModalOpen?: boolean;
 };
 
+type OptionsStateSpheries2 = {
+  sph2?: SpheriesModel[];
+  sph2Loaded?: boolean;
+  sph2ModalOpen?: boolean;
+};
+
 type OptionsStateBaseCurve = {
   basecrv?: BaseCurveModel[];
   basecrvLoaded?: boolean;
   basecrvModalOpen?: boolean;
+};
+
+type OptionsStateBaseCurve2 = {
+  basecrv2?: BaseCurveModel[];
+  basecrv2Loaded?: boolean;
+  basecrv2ModalOpen?: boolean;
 };
 
 
@@ -85,6 +105,10 @@ function ProductDetail() {
   // States
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [product, setProduct] = useState<Modelable<ProductModel>>({
+    model: null,
+    modelsLoaded: false,
+  });
+  const [atributColor, setAtributColor] = useState<Modelable<CartAtribut>>({
     model: null,
     modelsLoaded: false,
   });
@@ -112,10 +136,20 @@ function ProductDetail() {
     sphLoaded: false,
     sphModalOpen: false,
   });
+  const [pilihanSpheries2, setPilihanSpheries2] = useState<OptionsStateSpheries2>({
+    sph2: [],
+    sph2Loaded: false,
+    sph2ModalOpen: false,
+  });
   const [pilihanBaseCrv, setPilihanBaseCrv] = useState<OptionsStateBaseCurve>({
     basecrv: [],
     basecrvLoaded: false,
     basecrvModalOpen: false,
+  });
+  const [pilihanBaseCrv2, setPilihanBaseCrv2] = useState<OptionsStateBaseCurve2>({
+    basecrv2: [],
+    basecrv2Loaded: false,
+    basecrv2ModalOpen: false,
   });
 
   const [fields, setFields] = useState<Fields>({
@@ -123,13 +157,23 @@ function ProductDetail() {
     prdcat: '',
     brand: '',
     color: '',
+    color2: '',
     spheries: '',
+    spheries2: '',
     basecurve: '',
+    basecurve2: '',
+    jumlah: 0,
+    jumlah2: 0,
   });
 
   const [error, setError] = useState<ErrorState<Fields>>({
     fields: [],
     message: undefined,
+  });
+
+  const [getProduct, setGetProduct] = useState<Modelable<ProductModel>>({
+    model: null,
+    modelsLoaded: false,
   });
 
   // Effects
@@ -205,6 +249,12 @@ function ProductDetail() {
           colors: data,
           colorsLoaded: true,
         }));
+
+        setPilihan2(state => ({
+          ...state,
+          colors2: data,
+          colors2Loaded: true,
+        }));
       }
     });
   };
@@ -232,6 +282,12 @@ function ProductDetail() {
           sph: data,
           sphLoaded: true,
         }));
+
+        setPilihanSpheries2(state => ({
+          ...state,
+          sph2: data,
+          sph2Loaded: true,
+        }));
       }
     });
   };
@@ -258,6 +314,12 @@ function ProductDetail() {
           ...state,
           basecrv: data,
           basecrvLoaded: true,
+        }));
+
+        setPilihanBaseCrv2(state => ({
+          ...state,
+          basecrv2: [],
+          basecrv2Loaded: true,
         }));
       }
     });
@@ -323,6 +385,28 @@ function ProductDetail() {
     });
   };
 
+  const retrieveProductCart = async () => {
+    return httpService('/api/product/product/', {
+      data: {
+        dt: JSON.stringify({ 
+          prd_id: product.model
+        }),
+        act: 'PrdInfoCart'
+      },
+    }).then(({ status, data: [data], foto }) => {
+      if (status === 200) {
+        setGetProduct(state => ({
+          ...state,
+          model: {
+            ...data,
+            images: foto
+          },
+          modelLoaded: true
+        }));        
+      }
+    });
+  };
+
   const retrieveReviews = async (product_id: string) => {
     return httpService('/api/review/review/', {
       data: {
@@ -351,52 +435,9 @@ function ProductDetail() {
     }
   };
 
-  const PopupPilihan = async (type: string, open: boolean | null = null) => {
-    // Alert.alert( "Pemberitahuan", "Brand : "+type);
-    switch (type) {
-      case 'color1':
-        let newState1: Partial<OptionsState> = {};
-        newState1.colorsModalOpen = 'boolean' === typeof open ? open : !pilihan.colorsModalOpen;
-        setPilihan(state => ({
-          ...state,
-          ...newState1,
-        }));
-        break;
-      case 'color2':
-        let newState2: Partial<OptionsState2> = {};
-        newState2.colors2ModalOpen = 'boolean' === typeof open ? open : !pilihan2.colors2ModalOpen;
-        setPilihan2(state => ({
-          ...state,
-          ...newState2,
-        }));
-        break;
-      case 'spheries':
-        let newStateSph: Partial<OptionsStateSpheries> = {};
-        newStateSph.sphModalOpen = 'boolean' === typeof open ? open : !pilihanSpheries.sphModalOpen;
-        setPilihanSpheries(state => ({
-          ...state,
-          ...newStateSph,
-        }));
-        break;
-      case 'basecurve':
-        let newState: Partial<OptionsStateBaseCurve> = {};
-        newState.basecrvModalOpen = 'boolean' === typeof open ? open : !pilihanBaseCrv.basecrvModalOpen;
-        setPilihanBaseCrv(state => ({
-          ...state,
-          ...newState,
-        }));
-        break;
-    }
-  };
-
-  const handleCloseModal = async (type: string, open: boolean | null = null) => {
-    // Alert.alert( "Pemberitahuan", "Brand : "+type);
-    PopupPilihan(type, false);
-  };
-
   const handleFieldChange = (field: keyof Fields, value: ValueOf<Fields>) => {
     const { fields = [] } = error;
-    // Alert.alert( "Pemberitahuan", "Brand : "+field);
+    // Alert.alert( "Pemberitahuan", "Jumlah : "+value);
     setFields(state => ({
       ...state,
       [field]: value
@@ -407,7 +448,7 @@ function ProductDetail() {
       message: undefined,
     });
 
-    handleCloseModal(field, false);
+    // handleCloseModal(field, false);
   };
 
   const handleFavoriteToggle = async () => {
@@ -442,20 +483,95 @@ function ProductDetail() {
     );
   };
 
-  const handleCartAdd = async () => {
+  const handleCartAdd = async (tipe: string) => {
+    let warna = fields.color === '- Pilih -' ? fields.color : 'warna';
+    let warna2 = fields.color2 === '- Pilih -' ? fields.color2 : 'warna2';
 
+    if(tipe == 'contactlens'){
+      if(warna != '- Pilih -' || warna2 != '- Pilih -'){
+        ToastAndroid.show(warna2, ToastAndroid.SHORT);
+        toCartCL()
+      }else if(warna != '- Pilih -' && warna2 != '- Pilih -'){
+        // ToastAndroid.show(warna+' - '+warna2, ToastAndroid.SHORT);
+        toCartCL()
+      }
+    }else if(tipe == 'solutions'){
+      toCart();
+    }else if(tipe == 'accessories'){
+      if(warna == ''){
+        ToastAndroid.show(`${''}Warna belum dipilih!`, ToastAndroid.SHORT);
+      }else if(fields.spheries == ''){
+        ToastAndroid.show(`${''}Addition belum dipilih!`, ToastAndroid.SHORT);
+      }else{
+        toCart();
+      }
+    }
+  };
 
+  const toCart = async() => {
     dispatch(pushCartItem({
       product: _omit(product.model || undefined, 'product_info'),
+      atributColor: fields.color,
+      atributSpheries: fields.spheries,
+      atributBcurve: fields.basecurve,
+      qty: 1
     }));
 
     navigation.navigatePath('Public', {
       screen: 'BottomTabs.HomeStack.Cart',
     });
-  };
+  }
+
+  const toCartCL = async() => {
+    setIsLoading(true);
+    dispatch(pushCartItem({
+      product: _omit(product.model || undefined, 'product_info'),
+      atributColor: fields.color,
+      atributSpheries: fields.spheries,
+      atributBcurve: fields.basecurve,
+      atributColor2: fields.color2,
+      atributSpheries2: fields.spheries2,
+      atributBcurve2: fields.basecurve2,
+      matakiri: fields.color == '' ? '' : 'matakiri',
+      matakanan: fields.color2 == '' ? '' : 'matakanan',
+      qty: Number(fields.jumlah)+Number(fields.jumlah2)
+    }));
+    setIsLoading(false);
+    navigation.navigatePath('Public', {
+      screen: 'BottomTabs.HomeStack.Cart',
+    });
+    // if(fields.color2 == '- Pilih -'){
+    //   toCartCL2()
+    // }else{
+    //   navigation.navigatePath('Public', {
+    //     screen: 'BottomTabs.HomeStack.Cart',
+    //   });
+    // }
+  }
+
+  const toCartCL2 = async() => {
+    setIsLoading(true);
+    dispatch(pushCartItem({
+      product: _omit(product.model || undefined, 'product_info'),
+      atributColor: '',
+      atributSpheries: '',
+      atributBcurve: '',
+      atributColor2: fields.color2,
+      atributSpheries2: fields.spheries2,
+      atributBcurve2: fields.basecurve2,
+      mata: 'matakanan',
+      qty2: fields.jumlah2
+    }));
+    setIsLoading(false);
+    navigation.navigatePath('Public', {
+      screen: 'BottomTabs.HomeStack.Cart',
+    });
+  }
+  
 
   const { ...productModel } = product.model || {};
-  const productImages: ImageSource[] = [productModel.prd_foto, ...(productModel.images || [])]
+  // const productImages: ImageSource[] = [productModel.prd_foto, ...(productModel.images || [])]
+  const productImages: ImageSource[] = [...(productModel.images || [])]
     .filter((item) => ('string' === typeof item) || item?.prd_foto)
     .map((item) => ({
       uri: 'string' === typeof item ? item : item?.prd_foto,
@@ -466,6 +582,97 @@ function ProductDetail() {
   const favorite = favorites.find((item) => item.prd_id === product.model?.prd_id);
   // let retails: ProductRetail[] = [];
   const textPilih = t(`${''}Select`);
+
+  const renderElement = () => {
+    if(route.params.product?.description == 'CL'){
+      return <View style={[wrapper.row]}>
+                <View style={{flex: 1}}>
+                  <PressableBox
+                    containerStyle={{ overflow: 'visible', borderRadius: 5, 
+                                      borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#0d674e', paddingVertical: 10, marginTop: 10, flex: 1}}
+                    opacity={1}
+                    onPress={() => 
+                      handleCartAdd('contactlens')
+                      // Alert.alert( "Pemberitahuan", "Mohon maaf, fitur ini sedang proses pengembangan.")
+                    }
+                  >
+                    <Typography style={{fontWeight: '700', color: '#FEFEFE', textAlign: 'center', fontSize: 14}}>
+                      Beli
+                    </Typography>
+                  </PressableBox>
+                </View>
+              </View>;
+    }else if (route.params.product?.description == 'ACCS'){
+      return <View style={[wrapper.row]}>
+                <View style={{flex: 1}}>
+                  <PressableBox
+                    containerStyle={{ overflow: 'visible', borderRadius: 5, 
+                                      borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#0d674e', paddingVertical: 10, marginTop: 10, flex: 1}}
+                    opacity={1}
+                    onPress={() => 
+                      handleCartAdd('accessories')
+                      // Alert.alert( "Pemberitahuan", "Mohon maaf, fitur ini sedang proses pengembangan.")
+                    }
+                  >
+                    <Typography style={{fontWeight: '700', color: '#FEFEFE', textAlign: 'center', fontSize: 14}}>
+                      Beli
+                    </Typography>
+                  </PressableBox>
+                </View>
+              </View>;
+    }else if (route.params.product?.description == 'SOL'){
+      return <View style={[wrapper.row]}>
+                <View style={{flex: 1}}>
+                  <PressableBox
+                    containerStyle={{ overflow: 'visible', borderRadius: 5, 
+                                      borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#0d674e', paddingVertical: 10, marginTop: 10, flex: 1}}
+                    opacity={1}
+                    onPress={() => 
+                      handleCartAdd('solutions')
+                      // Alert.alert( "Pemberitahuan", "Mohon maaf, fitur ini sedang proses pengembangan.")
+                    }
+                  >
+                    <Typography style={{fontWeight: '700', color: '#FEFEFE', textAlign: 'center', fontSize: 14}}>
+                      Beli
+                    </Typography>
+                  </PressableBox>
+                </View>
+              </View>;
+    }else{
+      return <View style={[wrapper.row]}>
+                  <View style={{flex: 1}}>
+                    <PressableBox
+                      containerStyle={{ overflow: 'visible', borderRadius: 5, 
+                                        borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#0d674e', paddingVertical: 10, marginTop: 10, flex: 1}}
+                      opacity={1}
+                      onPress={() => 
+                        handleCartAdd('solutions')
+                        // Alert.alert( "Pemberitahuan", "Mohon maaf, fitur ini sedang proses pengembangan.")
+                      }
+                    >
+                      <Typography style={{fontWeight: '700', color: '#FEFEFE', textAlign: 'center', fontSize: 14}}>
+                        Beli
+                      </Typography>
+                    </PressableBox>
+                  </View>
+                  <View style={{marginHorizontal: 5}}></View>
+                    <View style={{marginHorizontal: 5, flex: 1}}>
+                      <PressableBox
+                        containerStyle={{ overflow: 'visible', borderRadius: 5, 
+                                          borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#FEFEFE', paddingVertical: 10, marginTop: 10, flex: 1}}
+                        opacity={1}
+                        onPress={() => navigation.navigatePath('Public', {
+                          screen: 'Vto',
+                        })}
+                      >
+                        <Typography style={{fontWeight: '700', color: '#0d674e', textAlign: 'center', fontSize: 10}}>
+                          Coba Virtual
+                        </Typography>
+                      </PressableBox>
+                    </View>
+                </View>;
+    }
+  }
   
   return (
     <ScrollView
@@ -539,8 +746,35 @@ function ProductDetail() {
               </Button>
 
               <Typography
-                style={styles.totalImages}>{productModel.images.length+1} Images</Typography>
-              
+                style={styles.totalImages}>{productModel.images.length} Images</Typography>
+              <ScrollView
+                horizontal={true}
+                style={{marginHorizontal: 15}}
+              >
+                {productImages.map((item, index) => (
+                  <PressableBox
+                    key={index}
+                    containerStyle={{marginVertical: 10}}
+                    style={{
+                      marginHorizontal: 3
+                    }}
+                    opacity={1}
+                    onPress={() => {
+                      setOptions(state => ({
+                        ...state,
+                        imageModalOpen: true,
+                        imageIndex: index,
+                      }));
+                    }}
+                  >
+                    <View style={{borderColor: '#ccc', borderWidth: 1, borderRadius: 5, paddingHorizontal: 3, paddingVertical: 3}}>
+                      <Image 
+                        source={item} 
+                        style={{width: 60, height: 50, paddingVertical: 10, resizeMode: 'stretch'}} />
+                    </View>
+                  </PressableBox>
+                ))}
+              </ScrollView>
             </View>
           )}
           <View style={{ paddingTop: -20, paddingHorizontal: 5 }}>
@@ -550,10 +784,6 @@ function ProductDetail() {
                 <Typography type="h5" style={{color: '#333333'}}>
                   {productModel.prd_ds}
                 </Typography>
-                {/* <Typography style={{color: '#333333', fontSize: 14}}>
-                  Brand : {productModel.merk}
-                </Typography> */}
-
                 {productModel.harga_promo == 0 ? 
                   (<>
                     <Typography color="#0d674e">
@@ -595,16 +825,16 @@ function ProductDetail() {
                       data={pilihan.colors?.map(item => {
                         return item.nm_warna
                       })}
-                      onSelect={(selectedItem, index) => {
-                        console.log('color : '+selectedItem, index)
+                      onSelect={(colors, index) => {
+                        handleFieldChange('color', colors)
                       }}
-                      buttonTextAfterSelection={(selectedItem, index) => {
-                        return selectedItem
+                      buttonTextAfterSelection={(colors, index) => {
+                        return colors
                       }}
                       rowTextForSelection={(item, index) => {
                         return item
                       }}
-                      defaultButtonText={'Pilih Warna'}
+                      defaultValue={'- Pilih -'}
                       buttonStyle={styles.dropdown1BtnStyle}
                       buttonTextStyle={styles.dropdown1BtnTxtStyle}
                       renderDropdownIcon={isOpened => {
@@ -618,11 +848,11 @@ function ProductDetail() {
                   </View>
                   <View style={{flex: 1, alignItems: 'center'}}>
                   <SelectDropdown
-                      data={pilihan.colors?.map(item => {
+                      data={pilihan2.colors2?.map(item => {
                         return item.nm_warna
                       })}
                       onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
+                        handleFieldChange('color2', selectedItem)
                       }}
                       buttonTextAfterSelection={(selectedItem, index) => {
                         return selectedItem
@@ -630,7 +860,7 @@ function ProductDetail() {
                       rowTextForSelection={(item, index) => {
                         return item
                       }}
-                      defaultButtonText={'Pilih Warna'}
+                      defaultValue={'- Pilih -'}
                       buttonStyle={styles.dropdown1BtnStyle}
                       buttonTextStyle={styles.dropdown1BtnTxtStyle}
                       renderDropdownIcon={isOpened => {
@@ -656,7 +886,7 @@ function ProductDetail() {
                         return item.ket
                       })}
                       onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
+                        handleFieldChange('spheries', selectedItem)
                       }}
                       buttonTextAfterSelection={(selectedItem, index) => {
                         return selectedItem
@@ -664,6 +894,7 @@ function ProductDetail() {
                       rowTextForSelection={(item, index) => {
                         return item
                       }}
+                      // defaultValue={'- Pilih -'}
                       defaultButtonText={'Pilih Spheries'}
                       buttonStyle={styles.dropdown1BtnStyle}
                       buttonTextStyle={styles.dropdown1BtnTxtStyle}
@@ -678,11 +909,11 @@ function ProductDetail() {
                   </View>
                   <View style={{flex: 1, alignItems: 'center'}}>
                     <SelectDropdown
-                      data={pilihanSpheries.sph?.map(item => {
+                      data={pilihanSpheries2.sph2?.map(item => {
                         return item.ket
                       })}
                       onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
+                        handleFieldChange('spheries2', selectedItem)
                       }}
                       buttonTextAfterSelection={(selectedItem, index) => {
                         return selectedItem
@@ -690,6 +921,7 @@ function ProductDetail() {
                       rowTextForSelection={(item, index) => {
                         return item
                       }}
+                      // defaultValue={'- Pilih -'}
                       defaultButtonText={'Pilih Spheries'}
                       buttonStyle={styles.dropdown1BtnStyle}
                       buttonTextStyle={styles.dropdown1BtnTxtStyle}
@@ -716,7 +948,7 @@ function ProductDetail() {
                         return item.id
                       })}
                       onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
+                        handleFieldChange('basecurve', selectedItem)
                       }}
                       buttonTextAfterSelection={(selectedItem, index) => {
                         return selectedItem
@@ -724,6 +956,7 @@ function ProductDetail() {
                       rowTextForSelection={(item, index) => {
                         return item
                       }}
+                      // defaultValue={'- Pilih -'}
                       defaultButtonText={'Pilih Base Curve'}
                       buttonStyle={styles.dropdown1BtnStyle}
                       buttonTextStyle={styles.dropdown1BtnTxtStyle}
@@ -742,7 +975,7 @@ function ProductDetail() {
                         return item.id
                       })}
                       onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
+                        handleFieldChange('basecurve2', selectedItem)
                       }}
                       buttonTextAfterSelection={(selectedItem, index) => {
                         return selectedItem
@@ -750,6 +983,7 @@ function ProductDetail() {
                       rowTextForSelection={(item, index) => {
                         return item
                       }}
+                      // defaultValue={'- Pilih -'}
                       defaultButtonText={'Pilih Base Curve'}
                       buttonStyle={styles.dropdown1BtnStyle}
                       buttonTextStyle={styles.dropdown1BtnTxtStyle}
@@ -763,18 +997,18 @@ function ProductDetail() {
                     />
                   </View>
                 </View>
-                {/*Qty*/}
+                {/*QTY*/}
                 <View style={[wrapper.row, {marginTop: 5}]}>
                   <View style={{flex: 0.5}}>
                     <Typography style={styles.fontnya}>
-                      Qty
+                      QTY
                     </Typography>
                   </View>
                   <View style={{flex: 1, alignItems: 'center'}}>
                     <SelectDropdown
                       data={QTY}
                       onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
+                        handleFieldChange('jumlah', selectedItem)
                       }}
                       buttonTextAfterSelection={(selectedItem, index) => {
                         return selectedItem
@@ -782,7 +1016,8 @@ function ProductDetail() {
                       rowTextForSelection={(item, index) => {
                         return item
                       }}
-                      defaultButtonText={'Qty'}
+                      // defaultValue={'- Pilih -'}
+                      defaultButtonText={'Pilih Qty'}
                       buttonStyle={styles.dropdown1BtnStyle}
                       buttonTextStyle={styles.dropdown1BtnTxtStyle}
                       renderDropdownIcon={isOpened => {
@@ -796,9 +1031,9 @@ function ProductDetail() {
                   </View>
                   <View style={{flex: 1, alignItems: 'center'}}>
                     <SelectDropdown
-                      data={QTY}
+                      data={QTY2}
                       onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
+                        handleFieldChange('jumlah2', selectedItem)
                       }}
                       buttonTextAfterSelection={(selectedItem, index) => {
                         return selectedItem
@@ -806,7 +1041,8 @@ function ProductDetail() {
                       rowTextForSelection={(item, index) => {
                         return item
                       }}
-                      defaultButtonText={'Qty'}
+                      // defaultValue={'- Pilih -'}
+                      defaultButtonText={'Pilih Qty'}
                       buttonStyle={styles.dropdown1BtnStyle}
                       buttonTextStyle={styles.dropdown1BtnTxtStyle}
                       renderDropdownIcon={isOpened => {
@@ -819,23 +1055,7 @@ function ProductDetail() {
                     />
                   </View>
                 </View>
-
-                <View style={{marginHorizontal: 5, flex: 1, marginTop: 20}}>
-                  <Button
-                    containerStyle={{ overflow: 'visible', borderRadius: 5, 
-                                      borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#0d674e', 
-                                      paddingVertical: 10, marginTop: 10, flex: 1, ...shadows[3]}}
-                    opacity={1}
-                    onPress={() => 
-                      handleCartAdd()
-                      // Alert.alert( "Pemberitahuan", "Mohon maaf, fitur ini sedang proses pengembangan.")
-                    }
-                  >
-                    <Typography style={{fontWeight: '700', color: '#FEFEFE', textAlign: 'center', fontSize: 11}}>
-                    <Ionicons name="md-add" size={18} color={'#FFF'} /> Keranjang
-                    </Typography>
-                  </Button>
-                </View>
+                {renderElement()}
               </>
             ) : (route.params.product?.description == 'ACCS' ? 
               (
@@ -862,106 +1082,107 @@ function ProductDetail() {
                         </Typography>
                       </>
                   )} 
-                  <View style={[wrapper.row]}>
-                    <View style={{marginHorizontal: 5, flex: 1}}>
-                      <PressableBox
-                        containerStyle={{ overflow: 'visible', borderRadius: 5, 
-                                          borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#0d674e', paddingVertical: 10, marginTop: 10, flex: 1}}
-                        opacity={1}
-                        onPress={() => 
-                          handleCartAdd()
-                          // Alert.alert( "Pemberitahuan", "Mohon maaf, fitur ini sedang proses pengembangan.")
-                        }
+                  <View style={{height: 1, backgroundColor: "#ccc", marginVertical: 10}}></View>
+                  <View style={{flex: 1, marginTop: 10 }}>
+                    <SelectDropdown
+                      data={pilihan.colors?.map(item => {
+                        return item.nm_warna
+                      })}
+                      onSelect={(colors, index) => {
+                        handleFieldChange('color', colors)
+                      }}
+                      buttonTextAfterSelection={(colors, index) => {
+                        return colors
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item
+                      }}
+                      defaultButtonText={'Pilih Warna'}
+                      buttonStyle={styles.dropdown1BtnStyleNew}
+                      buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                      renderDropdownIcon={isOpened => {
+                        return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
+                      }}
+                      dropdownIconPosition={'right'}
+                      dropdownStyle={styles.dropdown1BtnStyleNew}
+                      rowStyle={styles.dropdown1RowStyle}
+                      rowTextStyle={styles.dropdown1RowTxtStyle}
+                    />
+                    {/* {pilihan.colors?.map((item, index) => (
+                      <Button
+                        key={index}
+                        containerStyle={{
+                          marginBottom: 8,
+                          marginRight: 10,
+                          borderColor: fields.color === item.kd_warna ? colors.transparent('#0d674e', 1) : colors.gray[400],
+                          backgroundColor: fields.color === item.kd_warna ? colors.transparent('#0d674e', 1) : 'white'
+                        }}
+                        labelProps={{ color: fields.color === item.kd_warna ? '#0d674e' : colors.gray[900] }}
+                        size="sm"
+                        border
+                        onPress={() => handleFieldChange('color', item.kd_warna)}
                       >
-                        <Typography style={{fontWeight: '700', color: '#FEFEFE', textAlign: 'center', fontSize: 11}}>
-                        <Ionicons name="md-add" size={18} color={'#FFF'} /> Keranjang
-                        </Typography>
-                      </PressableBox>
-                    </View>
-                    <View style={{marginHorizontal: 5}}></View>
-                    <View style={{marginHorizontal: 5, flex: 1}}>
-                      <PressableBox
-                        containerStyle={{ overflow: 'visible', borderRadius: 5, 
-                                          borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#FEFEFE', paddingVertical: 10, marginTop: 10, flex: 1}}
-                        opacity={1}
-                        onPress={() => navigation.navigatePath('Public', {
-                          screen: 'Vto',
-                        })}
-                      >
-                        <Typography style={{fontWeight: '700', color: '#0d674e', textAlign: 'center', fontSize: 10}}>
-                          Coba Virtual
-                        </Typography>
-                      </PressableBox>
-                    </View>
+                        <Typography 
+                          size='xs'
+                          style={{
+                            color: fields.color === item.kd_warna ? 'white' : 'black'
+                          }}>{t(`${''}${item.kd_warna}`)}</Typography>
+                      </Button>
+                    ))} */}
                   </View>
-                  <View style={{height: 1, backgroundColor: "#ccc", marginVertical: 15}}></View>
-                  <View style={[wrapper.row, {marginTop: 5}]}>
-                    <View style={{flex: 1}}>
-                      <Typography style={styles.fontnya}>
-                        Color
-                      </Typography>
-                    </View>
-                    <View style={{width: 250}}>
-                      <SelectDropdown
-                        data={pilihan.colors?.map(item => {
-                          return item.kd_warna
-                        })}
-                        onSelect={(selectedItem, index) => {
-                          console.log(selectedItem, index)
-                        }}
-                        buttonTextAfterSelection={(selectedItem, index) => {
-                          return selectedItem
-                        }}
-                        rowTextForSelection={(item, index) => {
-                          return item
-                        }}
-                        defaultButtonText={'Pilih Warna'}
-                        buttonStyle={styles.dropdown2BtnStyle}
-                        buttonTextStyle={styles.dropdown1BtnTxtStyle}
-                        renderDropdownIcon={isOpened => {
-                          return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
-                        }}
-                        dropdownIconPosition={'right'}
-                        dropdownStyle={styles.dropdown1DropdownStyle}
-                        rowTextStyle={styles.dropdown1RowTxtStyle}
-                      />
-                    </View>
+                  <View style={{ flex: 1, marginTop: 10 }}>
+                    <SelectDropdown
+                      data={pilihanSpheries.sph?.map(item => {
+                        return item.ket
+                      })}
+                      onSelect={(spheries, index) => {
+                        handleFieldChange('spheries', spheries)
+                      }}
+                      buttonTextAfterSelection={(spheries, index) => {
+                        return spheries
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item
+                      }}
+                      defaultButtonText={'Pilih Addition'}
+                      buttonStyle={styles.dropdown1BtnStyleNew}
+                      buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                      renderDropdownIcon={isOpened => {
+                        return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
+                      }}
+                      dropdownIconPosition={'right'}
+                      dropdownStyle={styles.dropdown1BtnStyleNew}
+                      rowStyle={styles.dropdown1RowStyle}
+                      rowTextStyle={styles.dropdown1RowTxtStyle}
+                    />
+                    {/* <View style={[wrapper.row, { flexWrap: 'wrap', marginTop: 10 }]}>
+                      {pilihanSpheries.sph?.map((item, index) => (
+                        <Button
+                          key={index}
+                          containerStyle={{
+                            marginBottom: 8,
+                            marginRight: 10,
+                            borderColor: fields.spheries === item.ket ? colors.transparent('#0d674e', 1) : colors.gray[400],
+                            backgroundColor: fields.spheries === item.ket ? colors.transparent('#0d674e', 1) : 'white'
+                          }}
+                          labelProps={{ color: fields.spheries === item.ket ? '#0d674e' : colors.gray[900] }}
+                          size="sm"
+                          border
+                          onPress={() => handleFieldChange('spheries', item.ket)}
+                        >
+                          <Typography 
+                            size='xs'
+                            style={{
+                              color: fields.spheries === item.ket ? 'white' : 'black'
+                            }}>{t(`${''}${item.ket}`)}</Typography>
+                        </Button>
+                      ))}
+                    </View> */}
                   </View>
-                  <View style={[wrapper.row, {marginTop: 5}]}>
-                    <View style={{flex: 1}}>
-                      <Typography style={styles.fontnya}>
-                        Addition
-                      </Typography>
-                    </View>
-                    <View style={{width: 250}}>
-                      <SelectDropdown
-                        data={pilihanSpheries.sph?.map(item => {
-                          return item.ket
-                        })}
-                        onSelect={(selectedItem, index) => {
-                          console.log(selectedItem, index)
-                        }}
-                        buttonTextAfterSelection={(selectedItem, index) => {
-                          return selectedItem
-                        }}
-                        rowTextForSelection={(item, index) => {
-                          return item
-                        }}
-                        defaultButtonText={'Pilih Addition'}
-                        buttonStyle={styles.dropdown2BtnStyle}
-                        buttonTextStyle={styles.dropdown1BtnTxtStyle}
-                        renderDropdownIcon={isOpened => {
-                          return <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} size={12} color={'#ccc'} />;
-                        }}
-                        dropdownIconPosition={'right'}
-                        dropdownStyle={styles.dropdown1DropdownStyle}
-                        rowTextStyle={styles.dropdown1RowTxtStyle}
-                      />
-                    </View>
-                  </View>
+                  {renderElement()}
                 </>
               )
-              :
+              : 
               <>
                 <Typography style={{color: '#333333', fontSize: 13, fontWeight: '700'}}>
                   {productModel.prd_ds}
@@ -988,58 +1209,7 @@ function ProductDetail() {
                       </Typography>
                     </>
                 )} 
-
-                <View style={[wrapper.row]}>
-                  <View style={{marginHorizontal: 5, flex: 1}}>
-                    <PressableBox
-                      containerStyle={{ overflow: 'visible', borderRadius: 5, 
-                                        borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#0d674e', paddingVertical: 10, marginTop: 10, flex: 1}}
-                      opacity={1}
-                      onPress={() => 
-                        handleCartAdd()
-                        // Alert.alert( "Pemberitahuan", "Mohon maaf, fitur ini sedang proses pengembangan.")
-                      }
-                    >
-                      <Typography style={{fontWeight: '700', color: '#FEFEFE', textAlign: 'center', fontSize: 11}}>
-                      <Ionicons name="md-add" size={18} color={'#FFF'} /> Keranjang
-                      </Typography>
-                    </PressableBox>
-                  </View>
-                  <View style={{marginHorizontal: 5}}></View>
-                  <View style={{marginHorizontal: 5, flex: 1}}>
-                    <PressableBox
-                      containerStyle={{ overflow: 'visible', borderRadius: 5, 
-                                        borderWidth: 1, borderColor: '#0d674e', backgroundColor: '#FEFEFE', paddingVertical: 10, marginTop: 10, flex: 1}}
-                      opacity={1}
-                      onPress={() => navigation.navigatePath('Public', {
-                        screen: 'Vto',
-                      })}
-                    >
-                      <Typography style={{fontWeight: '700', color: '#0d674e', textAlign: 'center', fontSize: 10}}>
-                        Coba Virtual
-                      </Typography>
-                    </PressableBox>
-                  </View>
-                </View>
-
-                {/* <View>
-                  <PressableBox
-                    containerStyle={{ overflow: 'visible', borderRadius: 5, 
-                                      borderWidth: 1, borderColor: '#0d674e', paddingVertical: 10, marginTop: 10, flex: 1}}
-                    opacity={1}
-                    onPress={() => PopupPilihan('desc', true)}
-                  >
-                    <Typography style={{fontWeight: '700', color: '#0d674e'}}>
-                      Description
-                      <Ionicons name="chevron-down" size={18} color={'#0d674e'} />
-                    </Typography>
-                  </PressableBox>
-                </View> */}
-                {/* {productModel.product_info == null ? null : (
-                  <View style={{ marginTop: 4 }}>
-                    <RenderHtml contentWidth={width - 60} source={{ html: productModel.product_info.replace(/\r\n/,' ') }} />
-                  </View>
-                )} */}
+                {renderElement()}
               </>
             )
           }           
@@ -1171,12 +1341,24 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   dropdown1BtnStyle: {
-    width: '80%',
+    width: '85%',
     height: 40,
     backgroundColor: '#FFF',
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ccc',
+  },
+  dropdown1BtnStyleNew: {
+    width: '100%',
+    height: 40,
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  imageFlat: {
+    width: 150,
+    height: 150
   },
   dropdown2BtnStyle: {
     width: '100%',

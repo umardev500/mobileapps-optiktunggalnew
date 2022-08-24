@@ -162,15 +162,25 @@ export type CartModel = {
   id?: number;
   product_id?: number;
   product?: ProductModel;
+  atributColor?: string;
+  atributColor2?: string;
+  atributSpheries?: string;
+  atributSpheries2?: string;
+  atributBcurve?: string;
+  atributBcurve2?: string;
+  jenisproduk?: string;
+  matakiri?: any;
+  matakanan?: any;
   price_original?: number;
   price?: number;
   qty?: number;
+  qty2?: number;
   note?: string;
-
   prd_id?: string;
   harga?: number;
-  refill?: '1' | '0';
+  buyer?: '1' | '0';
   type?: CartItemType;
 };
 
-export type CartItemType = 'reseller' | 'retail' | 'refill';
+
+export type CartItemType = 'buyer';
