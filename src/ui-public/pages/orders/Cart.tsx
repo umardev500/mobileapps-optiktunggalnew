@@ -313,7 +313,7 @@ function Cart() {
                     {`${t('Pilih Semua')}`}
                   </Typography>
                 </View>
-
+                
                 {cart.models.map((item, index) => (
                   <View key={index} style={[styles.cartRow, { borderTopWidth: index === 0 ? 1 : 0 }]}>
                     <View style={styles.cartContent}>
@@ -365,40 +365,18 @@ function Cart() {
                           </Typography>
                         </Typography>
 
-                        {item.atributColor == '' || item.atributColor == null ? null :
-                          <Typography size="xs" style={{ marginTop: 2 }}>
-                            Warna : {item.atributColor}
-                          </Typography>
-                        }
-
-                        {item.atributColor2 == '' || item.atributColor2 == null ? null :
-                          <Typography size="xs" style={{ marginTop: 2 }}>
-                            Warna : {item.atributColor2}
-                          </Typography>
-                        }
-
                         {item.atributSpheries == '' ? <View></View> :
-                          <Typography size="xs" style={{ marginTop: 2 }}>
-                            Ukuran : {item.atributSpheries?.toString()}
-                          </Typography>
-                        }
-
-                        {item.atributSpheries2 == '' ? <View></View> :
-                          <Typography size="xs" style={{ marginTop: 2 }}>
-                            Ukuran : {item.atributSpheries2?.toString()}
-                          </Typography>
-                        }
-                        
-                        {item.atributBcurve == '' ? null :
-                          <Typography size="xs" style={{ marginTop: 2 }}>
-                            Base Curve : {item.atributBcurve == '' ? '-' : item.atributBcurve}
-                          </Typography>
-                        }
-
-                        {item.atributBcurve2 == '' ? null :
-                          <Typography size="xs" style={{ marginTop: 2 }}>
-                            Base Curve : {item.atributBcurve2 == '' ? '-' : item.atributBcurve2}
-                          </Typography>
+                          <View>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Warna : {item.atributColor}
+                            </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Ukuran : {item.atributSpheries}
+                            </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Base Curve : {item.atributBcurve == '' ? '-' : item.atributBcurve}
+                            </Typography>
+                          </View>
                         }
                       </View>
                     </View>
@@ -472,6 +450,7 @@ function Cart() {
                     </View>
                   </View>
                 ))}
+
               </View>
             )}
           </View>

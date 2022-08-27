@@ -46,7 +46,7 @@ function AddressList() {
 
   // Effects
   useEffect(() => {
-    handleRefresh();
+    retrieveAddresses();
   }, []);
 
   useEffect(() => {
@@ -211,9 +211,9 @@ function AddressList() {
               style={styles.card}
               onPress={() => handleAddressSelect(item, index)}
             >
-              {!item.title ? null : (
+              {/* {!item.title ? null : (
                 <Typography size='sm'>{item.title}</Typography>
-              )}
+              )} */}
 
               <Typography size='xs' style={{ marginTop: 4, fontWeight: '700' }}>
                 {item.vch_nama || item.nama}
@@ -222,6 +222,16 @@ function AddressList() {
               <Typography size='xs' style={{ marginTop: 4 }}>
                 {showPhone(item.hp, '+62')}
               </Typography>
+
+              {item.title == '0' ? 
+                <Typography size='xs' style={{color: 'green'}}>
+                  <Ionicons name="location-outline" size={12} color={'green'} /> Rumah
+                </Typography> 
+               : 
+                <Typography size='xs' style={{color: 'red'}}>
+                  <Ionicons name="location-outline" size={12} color={'red'} /> Kantor
+                </Typography>
+              }
 
               <Typography size='xs' style={{ marginTop: 4 }}>
                 {item.alamat}

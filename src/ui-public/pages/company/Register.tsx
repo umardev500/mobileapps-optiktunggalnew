@@ -184,9 +184,9 @@ function Register() {
     }else if (!fields.namabelakang) {
       return handleErrorShow('namabelakang', t('Please enter last name!'));
     }else if (!fields.email) {
-      return handleErrorShow('email', t('Please enter your email address!'));
+      return handleErrorShow('email', t('Format email salah!'));
     } else if (!validator.isEmail(fields.email)) {
-      return handleErrorShow('email', t('Please enter your email address!'));
+      return handleErrorShow('email', t('Format email salah!'));
     } else if (!fields.foto) {
       // return handleErrorShow('namafoto', t('Mohon pilih file untuk foto profil Anda.'));
     } else if (!fields.ktp) {
@@ -237,12 +237,11 @@ function Register() {
           }],
         });
       }else if(status === 202){
-        Alert.alert( "Alert", "Sorry, the email has been registered.",
+        Alert.alert( "Alert", "Maaf, sudah terdaftar. silahkan menggunakan email lain.",
           [
-            { text: "Oke", onPress: () => navigation.navigatePath('Public', {screen: 'BottomTabs.HomeStack.Home'}) }
+            { text: "Ubah email", onPress: () => console.log('OKE') }
           ]
-        );
-        
+        );        
       }
     }).catch((err) => {
       setIsSaving(false);
@@ -255,7 +254,7 @@ function Register() {
       {/*<Typography style={{ textAlign: 'center', marginTop: 10 }}>
         Please fill in your personal data.
       </Typography>*/}
-      <Typography style={{ marginTop: 20, marginBottom: 10 }}>Nama Depan</Typography>
+      {/* <Typography size='xs' style={{ marginTop: 20, marginBottom: 10 }}>Nama Depan</Typography> */}
       <TextField
         placeholder={t('Masukan Nama Depan')}
         value={fields.namadepan}
@@ -263,7 +262,7 @@ function Register() {
         error={!!getFieldError('namadepan')}
         message={error.message}
       />
-      <Typography style={{ marginVertical: 10 }}>Nama Tengah (Jika ada)</Typography>
+      {/* <Typography size='xs' style={{ marginVertical: 10 }}>Nama Tengah (Jika ada)</Typography> */}
       <TextField
         placeholder={t('Masukan Nama Tengah (Jika ada)')}
         value={fields.namatengah}
@@ -271,7 +270,7 @@ function Register() {
         error={!!getFieldError('namatengah')}
         message={error.message}
       />
-      <Typography style={{ marginVertical: 10 }}>Nama Belakang</Typography>
+      {/* <Typography size='xs' style={{ marginVertical: 10 }}>Nama Belakang</Typography> */}
       <TextField
         placeholder={t('Masukan Nama Belakang')}
         value={fields.namabelakang}
@@ -279,7 +278,7 @@ function Register() {
         error={!!getFieldError('namabelakang')}
         message={error.message}
       />
-      <Typography style={{ marginVertical: 10 }}>Tanggal lahir</Typography>
+      <Typography size='xs' style={{ marginVertical: 10 }}>Tanggal lahir</Typography>
       <PressableBox onPress={showDatePicker}>
         <TextField
           containerStyle={{ marginTop: 12 }}
@@ -301,7 +300,7 @@ function Register() {
         onCancel={hideDatePicker}
       />
 
-      <Typography style={{ marginTop: 15 }}>Pilih Jenis Kelamin</Typography>
+      <Typography size='xs' style={{ marginTop: 15 }}>Pilih Jenis Kelamin</Typography>
       <View style={[wrapper.row]}>
         {genderData.map((genderData, key) => {
           return (
@@ -328,12 +327,12 @@ function Register() {
         })}
       </View>
       
-      <Typography style={{ marginVertical: 10 }}>Nomor Handphone</Typography>
+      <Typography size='xs' style={{ marginVertical: 10 }}>Nomor Handphone</Typography>
       <PhoneInput
-        containerStyle={{ width: 330 }}
+        containerStyle={{ width: '100%' }}
         textContainerStyle={{ height: 50, borderColor: '#f1f1f1', borderWidth: 1, borderRadius: 5, backgroundColor: '#FEFEFE' }}
-        textInputStyle={{ height: 50, fontSize: 16, paddingTop: 15, fontWeight: '600' }}
-        codeTextStyle={{ fontSize: 16 }}
+        textInputStyle={{ height: 50, fontSize: 14, paddingTop: 12, fontWeight: '600' }}
+        codeTextStyle={{ fontSize: 12 }}
         ref={phoneInput}
         defaultValue={phone}
         defaultCode="ID"
@@ -345,10 +344,10 @@ function Register() {
           setPhone(text);
         }}
         autoFocus/>
-      <Typography style={{ marginVertical: 10 }}>Email</Typography>
+      {/* <Typography size='sm' style={{ marginVertical: 5 }}>Email</Typography> */}
       <TextField
         containerStyle={{ marginTop: 12 }}
-        placeholder={t('Email')}
+        placeholder={t('Masukan email')}
         value={fields.email}
         onChangeText={(value) => handleFieldChange('email', value)}
         keyboardType="email-address"

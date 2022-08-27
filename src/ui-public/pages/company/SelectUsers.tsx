@@ -95,9 +95,7 @@ function SelectUsers() {
   return (
     <View style={{ flex: 1, backgroundColor: '#FEFEFE' }}>
         <Typography style={{ marginVertical: 10, marginHorizontal: 15, fontSize: 12, textAlign: 'justify' }}>
-          {/* {t(`${t('PencariPilih User Produk')} “${search}”`)} */}
-          Your email address is already a subscriber at Optik Tunggal.
-          Please select a user below to continue the account registration process.
+          {t(`${t('Email anda sudah terdaftar sebagai pelanggan OPTIK TUNGGAL.\nmohon untuk memilih salah satu pengguna dibawah ini dan data-data pengisian anda akan mengikuti yang sudah ada.')}`)}
         </Typography>
         <ScrollView
           contentContainerStyle={{
@@ -111,7 +109,7 @@ function SelectUsers() {
               ...(userExist.models || [])
               ].map((item, index) => {
                 // const selected = item?.id === fields.custExist;
-                const dataList = item?.nm_lengkap+'\n'+item?.email+'\n0'+item?.hp;
+                const dataList = item?.nm_lengkap+'\n'+item?.email+'\n'+item?.hp;
                 // const dataList = 'NAMA LENGKAP'+'\n'+'EMAIL'+'\n'+'No. Handphone';
                 return (
                   <View style={styles.cardSelected}>
@@ -129,11 +127,17 @@ function SelectUsers() {
                           { text: "Tidak", onPress: () => console.log("OK Pressed") },
                           { text: "Ya", onPress: () => 
                             navigation.navigatePath('Public', {
-                              screen: 'PinEdit',
-                              params: [{
-                                nama: item?.nm_lengkap,
-                                email: item?.email,
+                              screen: 'Verification',
+                              params: [{ 
+                                email : '',
+                                hp: item?.hp,
+                                flaq: 'wa'
                               }],
+                              // screen: 'PinEdit',
+                              // params: [{
+                              //   nama: item?.nm_lengkap,
+                              //   email: item?.email,
+                              // }],
                             })
                           }
                         ]

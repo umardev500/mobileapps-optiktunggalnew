@@ -69,9 +69,9 @@ function ForgotPassword() {
 
   const handleSubmit = async () => {
     if (!fields.email) {
-      return handleErrorShow('email', `${''}Please enter your email address.`);
+      return handleErrorShow('email', `${''}Format email salah.`);
     } else if (!validator.isEmail(fields.email)) {
-      return handleErrorShow('email', `${''}Please enter a valid email address.`);
+      return handleErrorShow('email', `${''}Format email salah.`);
     }
 
     setIsSaving(true);

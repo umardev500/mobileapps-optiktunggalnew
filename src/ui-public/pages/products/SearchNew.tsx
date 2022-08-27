@@ -235,7 +235,7 @@ function SearchNew() {
           modelsLoaded: true,
           isPageEnd: !data?.length,
         }));
-      }else{
+      }/*else if(201 === status){
         Alert.alert( "Pemberitahuan", "Produk yang dicari tidak ditemukan.",
           [
             { text: "Cari lagi", onPress: () => { 
@@ -245,7 +245,7 @@ function SearchNew() {
             }}
           ]
         );
-      }
+      }*/
     }).catch(err => {
       setIsLoading(false);
       setProduct(state => ({ ...state, modelsLoaded: true }));
@@ -815,7 +815,7 @@ function SearchNew() {
               {t(`${t('Sedang memuat data..')}`)}
             </Typography>
           </View>
-        ) : product.models?.length ? null : (
+        ) : !product.models?.length ? null : (
           <View style={[styles.container, styles.wrapper]}>
             <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
             <Typography textAlign="center" style={{ marginVertical: 12 }}>

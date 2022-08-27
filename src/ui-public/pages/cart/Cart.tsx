@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/core';
+import { useRoute, RouteProp } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, RefreshControl, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { colors, wrapper } from '../../../lib/styles';
@@ -19,6 +19,8 @@ import {
   getSupportedCurrencies,
 } from "react-native-format-currency";
 
+import { PublicHomeStackParamList } from '../../../router/publicBottomTabs';
+
 type OptionsState = {
   cartSelected?: number[];
   notes?: number[];
@@ -27,7 +29,7 @@ type OptionsState = {
 function Cart() {
   // Hooks
   const navigation = useAppNavigation();
-  const route = useRoute();
+  const route = useRoute<RouteProp<PublicHomeStackParamList, 'ProductDetail'>>();
   const { width } = useWindowDimensions();
   const { user: { user }, shop: { cart_items } } = useAppSelector((state) => state);
   const dispatch = useDispatch();
@@ -52,12 +54,8 @@ function Cart() {
     isLoaded: false,
   });
 
-  // Effects
   useEffect(() => {
-    handleRefresh();
-  }, []);
-
-  useEffect(() => {
+    // const { cart } = route.params;
     setCart(state => ({
       ...state,
       models: (cart_items || []).filter((item) => !!item.prd_id),
@@ -74,38 +72,6 @@ function Cart() {
       handleSelectAll();
     }
   }, [cart.modelsLoaded]);
-
-  // Vars
-  const handleRefresh = async () => {
-    setIsLoading(true);
-
-    // await retrieveConfig();
-
-    setIsLoading(false);
-  };
-
-  // const retrieveConfig = async () => {
-  //   return httpService('/order/list', {
-  //     data: {
-  //       act: 'ConfigInfo',
-  //       dt: JSON.stringify({ comp: '001' }),
-  //     },
-  //   }).then(({ status, data }) => {
-  //     if (200 === status) {
-  //       setPrice(state => ({
-  //         ...state,
-  //         orderfirst: parseFloat(data.orderfirst || '0'),
-  //         ordernext: parseFloat(data.ordernext || '0'),
-  //         isLoaded: true
-  //       }));
-  //     }
-  //   }).catch((err) => {
-  //     setPrice(state => ({
-  //       ...state,
-  //       isLoaded: true
-  //     }));
-  //   });
-  // }
 
   const handleSelectAll = () => {
     const { cartSelected = [] } = options;
@@ -293,16 +259,9 @@ function Cart() {
     <View style={{ flex: 1 }}>
       <ScrollView
         contentContainerStyle={styles.container}
-        refreshControl={(
-          <RefreshControl
-            refreshing={isLoading}
-            onRefresh={handleRefresh}
-            colors={[colors.palettes.primary]}
-          />
-        )}
       >
         {!cart.modelsLoaded ? (
-          <View style={{ paddingTop: 12 }}>
+          <View style={{ paddingTop: 5 }}>
             {[1, 2].map((item) => (
               <View key={item} style={[wrapper.row, { alignItems: 'center', marginTop: 24 }]}>
                 <BoxLoading width={20} height={20} style={{ marginRight: 24 }} />
@@ -317,7 +276,7 @@ function Cart() {
             ))}
           </View>
         ) : (
-          <View style={{ flex: 1, paddingTop: 12 }}>
+          <View style={{ flex: 1, paddingTop: 5 }}>
             {!cart.models?.length ? (
               <>
                 <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
@@ -379,9 +338,9 @@ function Cart() {
                       )}
 
                       <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                        <Typography size="xs" color={500}>
+                        {/* <Typography size="xs" color={500}>
                           {startCase(item.type)}
-                        </Typography>
+                        </Typography> */}
 
                         <Typography size="sm" style={{ marginTop: 2 }}>
                           {item.product?.prd_ds}
@@ -397,14 +356,48 @@ function Cart() {
                             }}>
                               {formatCurrency({ amount: item.product?.harga_promo, code: 'IDR' })}
 
-                            {'\n'}
+                              {'\n'}
                             </Typography>
-                            )}
+                          )}
 
-                            <Typography heading size="xs">
-                              {formatCurrency({ amount: item.product?.harga, code: 'IDR' })}
-                            </Typography>
+                          <Typography heading size="xs">
+                            {formatCurrency({ amount: item.product?.harga, code: 'IDR' })}
+                          </Typography>
                         </Typography>
+
+                        {item.atributSpheries == '' ? <View></View> :
+                          <View>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Warnas : {item.atributColor?.toString()}
+                            </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Ukuran : {item.atributSpheries?.toString()}
+                            </Typography>
+                          </View>
+                        }
+
+                        {item.atributSpheries2 == '' ? <View></View> :
+                          <View>
+                          <Typography size="xs" style={{ marginTop: 2 }}>
+                            Warnaz : {item.atributColor2}
+                          </Typography>
+                          <Typography size="xs" style={{ marginTop: 2 }}>
+                            Ukuran : {item.atributSpheries2?.toString()}
+                          </Typography>
+                        </View>
+                        }
+                        
+                        {item.atributBcurve == '' ? null :
+                          <Typography size="xs" style={{ marginTop: 2 }}>
+                            Base Curve : {item.atributBcurve == '' ? '-' : item.atributBcurve}
+                          </Typography>
+                        }
+
+                        {item.atributBcurve2 == '' ? null :
+                          <Typography size="xs" style={{ marginTop: 2 }}>
+                            Base Curve : {item.atributBcurve2 == '' ? '-' : item.atributBcurve2}
+                          </Typography>
+                        }
                       </View>
                     </View>
 
@@ -464,7 +457,7 @@ function Cart() {
                         <TextFieldNumber
                           containerStyle={{ width: 86, paddingHorizontal: 4 }}
                           placeholder="0"
-                          value={item.qty?.toString()}
+                          value={item.qty?.toString() == '' ? '1' : item.qty?.toString() || item.qty2?.toString()}
                           border
                           size="sm"
                           buttonProps={{ size: 24 }}

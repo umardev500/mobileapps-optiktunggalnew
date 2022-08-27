@@ -196,6 +196,11 @@ function ProfileEdit() {
   };
 
   const handleSubmit = () => {
+    // Alert.alert( "Success", fields.tgllahir,
+    //   [
+    //     { text: "OKE", onPress: () => console.log('OKE') }
+    //   ]
+    // );
     if (!fields.hp) {
       return handleErrorShow('hp', t('Please enter your phone number!'));
     }else if (!fields.namadepan) {
@@ -221,7 +226,7 @@ function ProfileEdit() {
           regid: user?.id,
           ip: location.ip,
           gender: jk(),
-          tgllahir: fields.tgllahir,
+          tgllahir: fields.tgllahir || getDate(),
         }),
         // ktp,
         foto
@@ -296,7 +301,7 @@ function ProfileEdit() {
     setDatePickerVisibility(false);
   };
 
-  const handleConfirm = (date) => {
+  const handleConfirm = (date: string) => {
     // const isDate = moment().format("DD/MM/YYYY");
     setDate(date);
     console.warn("A date has been picked: ", date);
@@ -354,7 +359,7 @@ function ProfileEdit() {
     }));
   };
 
-  const getGender = (gender) => {
+  const getGender = (gender: any) => {
     setGender(gender);
   }
 

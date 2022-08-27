@@ -404,7 +404,8 @@ function AddressEdit() {
       latitude: fields.lat,
       longitude: fields.lng,
       label: label(),
-      flaq: flaq
+      flaq: flaq,
+      method: isEdit ? 1 : 2
     };
     
     return httpService('/api/login/login', {
@@ -664,14 +665,14 @@ function AddressEdit() {
         message={error.message}
       />
 
-      {labelData.map((labelData, key) => {
-        return (
-          <View key={labelData} style={{marginHorizontal: 15, marginVertical: 5}}>
-            <View style={[wrapper.row]}>
-              <View>
-                <Typography>Tandai Sebagai :</Typography>
-              </View>
-              <View>
+      <View style={{marginHorizontal: 5, marginTop: 30}}>
+        <View style={[wrapper.row]}>
+          <View>
+            <Typography size='xs' style={{marginRight: 10, paddingTop: 5}}>Tandai Sebagai :</Typography>
+          </View>
+          {labelData.map((labelData, key) => {
+            return (
+              <View key={labelData} style={[wrapper.row, {width: '30%'}]}>
                 {labelLokasi == key ? (
                   <TouchableOpacity style={styles.radioCircle}>
                     <View style={styles.selectedRb} />
@@ -686,12 +687,12 @@ function AddressEdit() {
                     
                   </TouchableOpacity>
                 )}
-                <Typography style={{marginTop: 3, fontSize: 14, fontWeight: '600', marginHorizontal: 10}}>{labelData}</Typography>
+                <Typography size='sm' style={{marginTop: 3, fontWeight: '600', marginHorizontal: 10}}>{labelData}</Typography>
               </View>
-            </View>
-          </View>
-        );
-      })}
+            )
+          })}
+        </View>
+      </View>
 
       {/* The Map */}
       <Typography color={getFieldError('lat') ? 'red' : 600} size="xs" textAlign="center" style={{ backgroundColor: '#fff', paddingVertical: 10, marginTop: 15 }}>
@@ -727,14 +728,16 @@ function AddressEdit() {
             <Typography style={{paddingVertical: 10, textAlign: 'center', color: '#fff'}}>Simpan Alamat</Typography>
           </PressableBox>
         ) : (
-          <Button
-            containerStyle={{ alignSelf: 'center' }}
-            style={{ width: 300, backgroundColor: '#0d674e' }}
-            onPress={() => handleModalToggle('filterotp', true)}
-            loading={isSaving}
-          >
-            <Typography style={{color: '#FEFEFE'}}>{`${''}Lanjut`.toUpperCase()}</Typography>
-          </Button>
+          <View style={{marginTop: 50}}>
+            <Button
+              containerStyle={{ alignSelf: 'center' }}
+              style={{ width: 350, height: 50, backgroundColor: '#0d674e' }}
+              onPress={() => handleModalToggle('filterotp', true)}
+              loading={isSaving}
+            >
+              <Typography style={{color: '#FEFEFE'}}>{`${''}Lanjut`.toUpperCase()}</Typography>
+            </Button>
+          </View>
         )}
       </View>
 

@@ -37,7 +37,7 @@
     // Register
     "Mohon masukkan nama Anda secara lengkap.": "Please enter you first name and last name.",
     "Mohon masukkan nomor telepon Anda.": "Please enter your phone number.",
-    "Mohon masukkan alamat email Anda.": "Please enter your email address.",
+    "Mohon masukkan alamat email Anda.": "Format email salah.",
     "Mohon masukkan alamat email yang valid.": "Please enter a valid email address.",
     "Mohon pilih file foto KTP/NPWP Anda.": "Please select your KTP/NPWP file.",
     "Mohon pilih file untuk foto profil Anda.": "Please select photo file.",

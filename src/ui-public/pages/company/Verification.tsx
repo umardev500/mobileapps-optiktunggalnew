@@ -146,20 +146,6 @@ function Verification() {
   };
 
   const handleVerificationResend = () => {
-    // Alert.alert( "Pemberitahuan", "Sedang dalam pengembangan.",
-    //           [
-    //             {text: "Cancel",onPress: () => console.log("Cancel Pressed"),style: "cancel"},
-    //             { text: "OK", onPress: () => console.log("OK Pressed") }
-    //           ]
-    // );
-    const email = !profile ? fields.email : profile.email;
-
-    if (!email) {
-      return handleErrorShow('otp_code', t(`Please enter your email address.`));
-    } else if (!validator.isEmail(email)) {
-      return handleErrorShow('otp_code', t(`Please enter a valid email address.`));
-    }
-
     setIsSaving(true);
 
     return httpService('/api/login/login', {
@@ -167,7 +153,8 @@ function Verification() {
         act: 'KirimUlangOTP',
         dt: JSON.stringify({
           comp: '001',
-          email: fields.email,
+          email: fields.email || route.params.hp,
+          type: fields.email === '' ? 'wa' : 'mail', 
           lat: location.lat,
           lng: location.lng,
           ip: location.ip,
@@ -267,7 +254,7 @@ function Verification() {
             <Typography heading size="sm" color={!profile ? '#0d674e' : 900} style={{
               textDecorationLine: 'underline',
             }}>
-              {`${''}Resend verification code`.toUpperCase()}
+              {`${''}Kirim Ulang Kode OTP`.toUpperCase()}
             </Typography>
           </PressableBox>
         </View>

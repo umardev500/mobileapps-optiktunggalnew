@@ -306,7 +306,7 @@ function AddressForm() {
       regid: user?.id,
       idnya,
       method: isEdit ? '2' : '1',
-      email: route.params.address?.email,
+      email: user?.email,
       penerima: fields.nama || `${profile.namadepan} ${profile.namabelakang}`,
       shipto: `${fields.jl} RT/Blok. ${fields.rt} RW/No. ${fields.rw}, Kel. ${options.villages?.find(item => item.id === fields.kel)?.nama || '-'
         }, Kec. ${options.districts?.find(item => item.id === fields.kec)?.nama || '-'
