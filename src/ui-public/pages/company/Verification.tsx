@@ -10,13 +10,22 @@ import { useAppSelector } from '../../../redux/hooks';
 import { PublicAccountStackParamList } from '../../../router/publicBottomTabs';
 import { useAppNavigation } from '../../../router/RootNavigation';
 import { ErrorState, ValueOf } from '../../../types/utilities';
-import { Button, PressableBox, TextField, Typography } from '../../../ui-shared/components';
+import { Button, PressableBox, TextField, Typography, BottomDrawer } from '../../../ui-shared/components';
 import validator from 'validator';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 
 type Fields = {
   otp_code?: string;
   email?: string;
+  nomorhp?: string;
 };
+
+type OptionsState = {
+  otp?: [];
+  otpLoaded?: boolean;
+  otpModalOpen?: boolean;
+}
 
 function Verification() {
   // Hooks
@@ -24,7 +33,7 @@ function Verification() {
   const route = useRoute<RouteProp<PublicAccountStackParamList, 'Verification'>>();
   const { user, location } = useAppSelector(({ user }) => user);
   const { t } = useTranslation('account');
-
+  const { width, height } = useWindowDimensions();
   const inputRef = useRef<TextInput>();
   const timerTO = useRef<any>();
 
@@ -32,7 +41,8 @@ function Verification() {
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState<Fields>({
     otp_code: '',
-    email: ''
+    email: '',
+    nomorhp: ''
   });
   const [error, setError] = useState<ErrorState<Fields>>({
     fields: [],
@@ -42,6 +52,11 @@ function Verification() {
   const [profile, setProfile] = useState<RegisterFields | null>(null);
   const [timer, setTimer] = useState(60);
 
+  const [options, setOptions] = useState<OptionsState>({
+    otp: [],
+    otpLoaded: false,
+    otpModalOpen: false,
+  });
   // Effects
   useEffect(() => {
     if (route.params?.profile) {
@@ -96,6 +111,25 @@ function Verification() {
     return fields.indexOf(field) < 0 ? null : error.message;
   };
 
+  const handleCloseModal = async () => {
+    handleModalToggle('filterotp', false);
+  };
+
+  const handleModalToggle = async (type: string, open: boolean | null = null) => {
+    let newState: Partial<OptionsState> = {};
+
+    switch (type) {
+      case 'filterotp':
+        newState.otpModalOpen = 'boolean' === typeof open ? open : !options.otpModalOpen;
+        break;
+    }
+
+    setOptions(state => ({
+      ...state,
+      ...newState,
+    }));
+  };
+
   const handleSubmit = async () => {
     if (!fields.otp_code) {
       return handleErrorShow('otp_code', t(`OTP code is not complete.`));
@@ -130,7 +164,7 @@ function Verification() {
           });
         });
       }else{
-        Alert.alert( "Notification", "The OTP code you entered is wrong.",[{ text: "Oke", onPress: () => console.log("OK Pressed") }]);
+        Alert.alert( "Notifikasi", "Kode OTP yang anda masukan salah.",[{ text: "Oke", onPress: () => console.log("OK Pressed") }]);
       }
     }).catch(({ msg }) => {
       setIsSaving(false);
@@ -142,6 +176,19 @@ function Verification() {
             break;
         }
       }
+    });
+  };
+
+  const kirimOTP = async (email: string, nohp: string, flaq: any) => {
+    return httpService(`/api/login/login`, {
+      data: {
+        act: 'kirimOTPforuserExist',
+        dt: JSON.stringify({ email, nohp: nohp, flaq: flaq }),
+      },
+    }).then(({ status, data }) => {
+      handleCloseModal()
+    }).catch(() => {
+      setIsSaving(false);
     });
   };
 
@@ -235,7 +282,7 @@ function Verification() {
           </Typography>
         )}
 
-        <View style={{ marginTop: 50, paddingTop: 24 }}>
+        <View style={{ marginTop: 30, paddingTop: 24 }}>
           <Button
             containerStyle={{ alignSelf: 'center', backgroundColor: '#0d674e' }}
             style={{ width: 320, height: 40 }}
@@ -246,19 +293,73 @@ function Verification() {
             <Typography style={{color: '#FFFFFF'}}>SUBMIT</Typography>
           </Button>
 
-          <PressableBox
-            containerStyle={{ marginTop: 30, alignSelf: 'center' }}
-            opacity
-            onPress={handleVerificationResend}
-          >
-            <Typography heading size="sm" color={!profile ? '#0d674e' : 900} style={{
-              textDecorationLine: 'underline',
-            }}>
-              {`${''}Kirim Ulang Kode OTP`.toUpperCase()}
-            </Typography>
-          </PressableBox>
+          <View style={[wrapper.row]}>
+            <PressableBox
+              containerStyle={{ marginTop: 30, flex: 1, alignSelf: 'center' }}
+              opacity
+              onPress={() => handleModalToggle('filterotp', true)}
+            >
+              <Typography heading size="xs" style={{textAlign: 'left'}} color={!profile ? 'red' : 900}>
+                {`${''}Ubah nomor handphone?`}
+              </Typography>
+            </PressableBox>
+
+            <PressableBox
+              containerStyle={{ marginTop: 30, flex: 1, alignSelf: 'center' }}
+              opacity
+              onPress={handleVerificationResend}
+            >
+              <Typography heading size="xs" color={!profile ? '#0d674e' : 900} style={{
+                textDecorationLine: 'underline', textAlign: 'right'
+              }}>
+                {`${''}Kirim Ulang Kode OTP`}
+              </Typography>
+            </PressableBox>
+          </View>
         </View>
-      </View>      
+      </View>
+
+      <BottomDrawer
+        isVisible={options.otpModalOpen}
+        swipeDirection={null}
+        onBackButtonPress={() => handleModalToggle('filterotp', false)}
+        onBackdropPress={() => handleModalToggle('filterotp', false)}
+        style={{ maxHeight: height * 0.75 }}
+      >
+        <Button
+          containerStyle={{ alignItems: 'flex-end', marginBottom: 5, marginTop: -15 }}
+          onPress={handleCloseModal}
+        >
+          <Typography style={{ color: '#333' }}>Close</Typography>
+          <Ionicons name="ios-close" size={24} color={'#333'} />
+        </Button>
+        <Typography size='sm' style={{ paddingVertical: 10, paddingHorizontal: 15, color: '#0d674e', textAlign: 'justify' }}>
+          {`Masukan nomor handphone yang terhubung dengan whatsapp untuk menerima kode OTP.`}
+        </Typography>
+        <View style={{borderColor: '#0d674e', borderWidth: 1, marginHorizontal: 15}}/> 
+        <View style={{marginHorizontal: 15, marginVertical: 20}}>
+          <TextField
+            placeholder={t('contoh : 8123456789')}
+            value={fields.nomorhp}
+            style={{marginVertical: 10}}
+            onChangeText={(value) => handleFieldChange('nomorhp', value)}
+            error={!!getFieldError('nomorhp')}
+            keyboardType={'number-pad'}
+            message={error.message}
+          />
+        </View>
+        <PressableBox
+          onPress={() => kirimOTP(route.params.email, fields.nomorhp, 'ubahnowa')}
+          containerStyle={{height: 'auto', marginBottom: 80}}
+          style={{ marginVertical: 10, marginHorizontal: 20, backgroundColor: '#0d674e', borderColor: '#0d674e', borderWidth: 1, borderRadius: 10}}
+        >
+          <View style={[wrapper.row]}>
+            <Typography style={{textAlign: 'center', paddingVertical: 10, flex: 1, color: '#fff'}}>
+              {`Dapatkan Kode OTP`}
+            </Typography>
+          </View>
+        </PressableBox>
+      </BottomDrawer>
     </ScrollView>
   );
 };

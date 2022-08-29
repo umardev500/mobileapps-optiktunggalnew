@@ -83,6 +83,28 @@ function SelectUsers() {
     });
   };
 
+  const kirimOTP = async (email: string, nohp: string, flaq: any) => {
+    return httpService(`/api/login/login`, {
+      data: {
+        act: 'kirimOTPforuserExist',
+        dt: JSON.stringify({ email, nohp: nohp, flaq: flaq }),
+      },
+    }).then(({ status, data }) => {
+      if(200 === status){
+        navigation.navigatePath('Public', {
+          screen: 'Verification',
+          params: [{ 
+            email : email,
+            hp: nohp,
+            flaq: flaq
+          }],
+        })
+      }
+    }).catch(() => {
+      setuserExist(state => ({ ...state, modelsLoaded: true }));
+    });
+  };
+
   const handleFieldChange = (field: keyof Fields, value: ValueOf<Fields>) => {
     setFields(state => ({
       ...state,
@@ -125,21 +147,7 @@ function SelectUsers() {
                       onPress={() => Alert.alert( "Pemberitahuan", 'Apakah anda ingin memilih nama '+item?.nm_lengkap+' ini?',
                         [
                           { text: "Tidak", onPress: () => console.log("OK Pressed") },
-                          { text: "Ya", onPress: () => 
-                            navigation.navigatePath('Public', {
-                              screen: 'Verification',
-                              params: [{ 
-                                email : '',
-                                hp: item?.hp,
-                                flaq: 'wa'
-                              }],
-                              // screen: 'PinEdit',
-                              // params: [{
-                              //   nama: item?.nm_lengkap,
-                              //   email: item?.email,
-                              // }],
-                            })
-                          }
+                          { text: "Ya", onPress: () => kirimOTP(item?.email, item?.hp, 'wa')}
                         ]
                       )}
                       size="lg"

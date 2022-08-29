@@ -258,6 +258,7 @@ function Register() {
       <TextField
         placeholder={t('Masukan Nama Depan')}
         value={fields.namadepan}
+        style={{marginVertical: 5}}
         onChangeText={(value) => handleFieldChange('namadepan', value)}
         error={!!getFieldError('namadepan')}
         message={error.message}
@@ -266,6 +267,7 @@ function Register() {
       <TextField
         placeholder={t('Masukan Nama Tengah (Jika ada)')}
         value={fields.namatengah}
+        style={{marginVertical: 5}}
         onChangeText={(value) => handleFieldChange('namatengah', value)}
         error={!!getFieldError('namatengah')}
         message={error.message}
@@ -274,6 +276,7 @@ function Register() {
       <TextField
         placeholder={t('Masukan Nama Belakang')}
         value={fields.namabelakang}
+        style={{marginVertical: 5}}
         onChangeText={(value) => handleFieldChange('namabelakang', value)}
         error={!!getFieldError('namabelakang')}
         message={error.message}
@@ -331,14 +334,14 @@ function Register() {
       <PhoneInput
         containerStyle={{ width: '100%' }}
         textContainerStyle={{ height: 50, borderColor: '#f1f1f1', borderWidth: 1, borderRadius: 5, backgroundColor: '#FEFEFE' }}
-        textInputStyle={{ height: 50, fontSize: 14, paddingTop: 12, fontWeight: '600' }}
+        textInputStyle={{ height: 50, fontSize: 13, paddingTop: 12, fontWeight: '600' }}
         codeTextStyle={{ fontSize: 12 }}
         ref={phoneInput}
         defaultValue={phone}
         defaultCode="ID"
         layout="first"
         value={fields.hp}
-        placeholder="8123456789"
+        placeholder="contoh : 8123456789"
         onChangeText={(value) => handleFieldChange('hp', value)}
         onChangeFormattedText={text => {
           setPhone(text);
@@ -355,6 +358,10 @@ function Register() {
         error={!!getFieldError('email')}
         message={error.message}
       />
+
+      <Typography size='xs' style={{ marginVertical: 10, color: 'red' }}>
+        * Pastikan nomor handphone dan email yang anda masukan benar. kami akan mengirimkan kode OTP melalui Whatsapp atau email.
+      </Typography>
 
       <View style={{ marginTop: 60, paddingTop: 24 }}> 
         <Button 
