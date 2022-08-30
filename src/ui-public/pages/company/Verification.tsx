@@ -2,7 +2,7 @@ import { RouteProp, useRoute } from '@react-navigation/core';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, TextInput, ToastAndroid, useWindowDimensions, View, Alert } from 'react-native';
+import { ScrollView, StyleSheet, TextInput, ToastAndroid, useWindowDimensions, View, Alert, BackHandler } from 'react-native';
 import { RegisterFields } from '.';
 import { colors, typography, wrapper } from '../../../lib/styles';
 import { httpService } from '../../../lib/utilities';
@@ -65,6 +65,11 @@ function Verification() {
 
     route.params.email && handleFieldChange('email', route.params.email);
   }, [route.params]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     clearTimeout(timerTO.current);
@@ -187,6 +192,14 @@ function Verification() {
       },
     }).then(({ status, data }) => {
       handleCloseModal()
+      if(status === 203){
+        Alert.alert( "Notifikasi", "Permintaan kode OTP melebihi batas, kami akan kirimkan kode ke email "+email,
+        [{ 
+          text: "Oke", onPress: () => kirimOTP(email, "", "email"),
+        }]);
+      }else if (status === 200) {
+        ToastAndroid.show(t(`Kode verifikasi sudah dikirmkan ke email anda.`), ToastAndroid.SHORT);
+      }
     }).catch(() => {
       setIsSaving(false);
     });
@@ -200,8 +213,9 @@ function Verification() {
         act: 'KirimUlangOTP',
         dt: JSON.stringify({
           comp: '001',
-          email: fields.email || route.params.hp,
-          type: fields.email === '' ? 'wa' : 'mail', 
+          nohp: route.params.hp || fields.nomorhp,
+          email: fields.email,
+          flaq: route.params.flaq === 'wa' ? 'wa' : 'mail', 
           lat: location.lat,
           lng: location.lng,
           ip: location.ip,
@@ -213,7 +227,7 @@ function Verification() {
       if (200 === status) {
         setTimer(120);
 
-        ToastAndroid.show(t(`Verification code sent to your email.`), ToastAndroid.SHORT);
+        ToastAndroid.show(t(`Kode verifikasi sudah terkirim.`), ToastAndroid.SHORT);
       }
     }).catch((err) => {
       setIsSaving(false);

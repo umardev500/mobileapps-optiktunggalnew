@@ -93,7 +93,7 @@ function Contact() {
 
           <PressableBox
               opacity
-              style={{ marginTop: 5, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, marginHorizontal: 5, borderRadius: 10, marginBottom: 20 }}
+              style={{ marginTop: 5, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, marginHorizontal: 5, borderRadius: 10 }}
               onPress={() => Linking.openURL('https://vt.tiktok.com/ZSduAfsBR/')}  >
               <View style={[wrapper.row]}>
                 <Image source={{uri: 'https://seeklogo.com/images/T/tiktok-share-icon-black-logo-29FFD062A0-seeklogo.com.png'}} style={{width: 18, height: 18}}/>
@@ -101,6 +101,13 @@ function Contact() {
                   optiktunggalofficial
                 </Typography>
               </View>
+          </PressableBox>
+
+          <PressableBox
+              opacity
+              style={{ marginTop: 5, backgroundColor: '#f1f1f1', paddingVertical: 15, paddingHorizontal: 15, marginHorizontal: 5, borderRadius: 10 }}
+              onPress={() => Linking.openURL('https://twitter.com/optik_tunggal')}  >
+              <Typography style={{ fontSize: 13 }}><Ionicons name="logo-twitter" size={16} color={'black'} /> @Optik_Tunggal</Typography>
           </PressableBox>
         </View>
       </View>

@@ -222,7 +222,7 @@ function Register() {
             email : fields.email
           }],
         });
-      }else if(status === 201){
+      }else if(status === 201 || status === 203){
         navigation.navigatePath('Public', {
           screen: 'AddressEdit',
           params: [{

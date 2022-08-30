@@ -104,13 +104,11 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     case 'SelectUsers':
         return { title: tAcc('Create Akun') };  
     case 'Verification':
-      return {
-        title: tAcc(`${''}Account Verification`)
-      };
+      return { headerShown: false };
+    case 'PinEdit':
+      return { headerShown: false };
     case 'AddressEdit':
-      return {
-        title: [tAcc('Address Information'), tAcc('as recipient address.')] as any
-      };
+      return { headerShown: false };
     case 'AddressList':
       return { headerShown: false };
     case 'PinEdit':

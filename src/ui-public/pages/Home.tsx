@@ -730,6 +730,11 @@ const Home = () => {
               >
                 <Image source={require('../../assets/icons/figma/tiktok.png')} style={{width: 24, height: 24, marginHorizontal: 5, marginTop: 2}}/>
               </PressableBox>
+              <PressableBox
+                onPress={() => Linking.openURL('https://twitter.com/optik_tunggal')}
+              >
+                <Image source={require('../../assets/icons/figma/twitter.png')} style={{width: 24, height: 24, marginHorizontal: 5, marginTop: 2}}/>
+              </PressableBox>
             </View>
           </View>
         </View>
