@@ -337,7 +337,7 @@ const Home = () => {
       //   opacity
       //   onPress={() => handleGoToDetailBanner(item)}
       // >
-        <Image source={{ uri: item.banner_foto }} style={{ height }} />
+        <Image source={{ uri: item.banner_foto, cache: 'only-if-cached' }} style={{ height }} />
       // </PressableBox>
     );
   };

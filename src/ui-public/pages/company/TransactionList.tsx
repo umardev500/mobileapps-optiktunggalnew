@@ -142,11 +142,6 @@ function TransactionList() {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ backgroundColor: '#FEFEFE', paddingVertical: 15, paddingHorizontal: 15 }}>
-        <Typography style={{borderBottomWidth: 1}}>
-          {t(`Transaction List`)}
-        </Typography>
-      </View>
       <ScrollView
         contentContainerStyle={styles.container}
         refreshControl={(
@@ -178,7 +173,7 @@ function TransactionList() {
                   null
                 )} */}
                 <Typography textAlign="center" style={{ marginVertical: 12 }}>
-                  {t(`${t('Empty Transaction List.')}`)}
+                  {t(`${t('Tidak ada transaksi.')}`)}
                 </Typography>
               </View>
             ) : transaction.models.map((item, index) => (
@@ -214,7 +209,7 @@ const styles = StyleSheet.create({
     height: 150,
     resizeMode: 'contain',
     alignSelf: 'center',
-    marginTop: -10
+    marginTop: 100
   },
   wrapper: {
     backgroundColor: colors.white,

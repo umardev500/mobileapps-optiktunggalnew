@@ -55,10 +55,10 @@ function Cart() {
   });
 
   useEffect(() => {
-    // const { cart } = route.params;
+    console.log('aa',cart_items);
     setCart(state => ({
       ...state,
-      models: (cart_items || []).filter((item) => !!item.prd_id),
+      models: (cart_items || []).filter((item) => !!item.pid),
       modelsLoaded: true,
     }));
   }, [cart_items]);
@@ -313,7 +313,7 @@ function Cart() {
                     {`${t('Pilih Semua')}`}
                   </Typography>
                 </View>
-
+                
                 {cart.models.map((item, index) => (
                   <View key={index} style={[styles.cartRow, { borderTopWidth: index === 0 ? 1 : 0 }]}>
                     <View style={styles.cartContent}>
@@ -365,38 +365,32 @@ function Cart() {
                           </Typography>
                         </Typography>
 
-                        {item.atributSpheries == '' ? <View></View> :
+                        {item.atributSpheries == '' ? null :
                           <View>
                             <Typography size="xs" style={{ marginTop: 2 }}>
-                              Warnas : {item.atributColor?.toString()}
+                              Warna : {item.atributColor}
                             </Typography>
                             <Typography size="xs" style={{ marginTop: 2 }}>
-                              Ukuran : {item.atributSpheries?.toString()}
+                              Ukuran : {item.atributSpheries}
+                            </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Base Curve : {item.atributBcurve == '' ? '-' : item.atributBcurve}
                             </Typography>
                           </View>
                         }
 
-                        {item.atributSpheries2 == '' ? <View></View> :
+                        {item.atributSpheries2 == '' ? null :
                           <View>
-                          <Typography size="xs" style={{ marginTop: 2 }}>
-                            Warnaz : {item.atributColor2}
-                          </Typography>
-                          <Typography size="xs" style={{ marginTop: 2 }}>
-                            Ukuran : {item.atributSpheries2?.toString()}
-                          </Typography>
-                        </View>
-                        }
-                        
-                        {item.atributBcurve == '' ? null :
-                          <Typography size="xs" style={{ marginTop: 2 }}>
-                            Base Curve : {item.atributBcurve == '' ? '-' : item.atributBcurve}
-                          </Typography>
-                        }
-
-                        {item.atributBcurve2 == '' ? null :
-                          <Typography size="xs" style={{ marginTop: 2 }}>
-                            Base Curve : {item.atributBcurve2 == '' ? '-' : item.atributBcurve2}
-                          </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Warna : {item.atributColor2}
+                            </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Ukuran : {item.atributSpheries2}
+                            </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Base Curve : {item.atributBcurve2 == '' ? '-' : item.atributBcurve2}
+                            </Typography>
+                          </View>
                         }
                       </View>
                     </View>
@@ -457,7 +451,7 @@ function Cart() {
                         <TextFieldNumber
                           containerStyle={{ width: 86, paddingHorizontal: 4 }}
                           placeholder="0"
-                          value={item.qty?.toString() == '' ? '1' : item.qty?.toString() || item.qty2?.toString()}
+                          value={item.qty?.toString() == '' ? '1' : item.qty?.toString()}
                           border
                           size="sm"
                           buttonProps={{ size: 24 }}
@@ -470,6 +464,7 @@ function Cart() {
                     </View>
                   </View>
                 ))}
+
               </View>
             )}
           </View>

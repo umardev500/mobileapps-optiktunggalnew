@@ -808,18 +808,18 @@ function SearchNew() {
           }
         }}
         data={product.models}
-        ListEmptyComponent={!product.modelsLoaded ? ( 
-          <View style={{ marginHorizontal: 10 }}>
-            <ProductsLoading />
-            <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
-              {t(`${t('Sedang memuat data..')}`)}
-            </Typography>
-          </View>
-        ) : !product.models?.length ? null : (
+        ListEmptyComponent={product.models?.length === 0 ? ( 
           <View style={[styles.container, styles.wrapper]}>
             <Image source={{ uri: 'https://www.callkirana.in/bootstrp/images/no-product.png' }} style={styles.sorry} />
             <Typography textAlign="center" style={{ marginVertical: 12 }}>
               {t(`${t('Produk tidak ditemukan')}`)}
+            </Typography>
+          </View>
+        ) : (
+          <View style={{ marginHorizontal: 10 }}>
+            <ProductsLoading />
+            <Typography size="sm" textAlign="center" color={700} style={{ marginTop: 16 }}>
+              {t(`${t('Sedang memuat data..')}`)}
             </Typography>
           </View>
         )}

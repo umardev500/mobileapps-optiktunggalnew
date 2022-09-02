@@ -55,7 +55,7 @@ function Cart() {
   });
 
   useEffect(() => {
-    // const { cart } = route.params;
+    console.log('aa',cart_items);
     setCart(state => ({
       ...state,
       models: (cart_items || []).filter((item) => !!item.prd_id),
@@ -365,7 +365,7 @@ function Cart() {
                           </Typography>
                         </Typography>
 
-                        {item.atributSpheries == '' ? <View></View> :
+                        {/* {item.atributSpheries == '' ? null :
                           <View>
                             <Typography size="xs" style={{ marginTop: 2 }}>
                               Warna : {item.atributColor}
@@ -378,6 +378,34 @@ function Cart() {
                             </Typography>
                           </View>
                         }
+
+                        {item.atributSpheries2 == '' ? null :
+                          <View>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Warna : {item.atributColor2}
+                            </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Ukuran : {item.atributSpheries2}
+                            </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Base Curve : {item.atributBcurve2 == '' ? '-' : item.atributBcurve2}
+                            </Typography>
+                          </View>
+                        }
+
+                        {item.atributSpheries3 == '' ? null :
+                          <View>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Warna : {item.atributColor3}
+                            </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Ukuran : {item.atributSpheries3}
+                            </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Base Curve : {item.atributBcurve3 == '' ? '-' : item.atributBcurve3}
+                            </Typography>
+                          </View>
+                        } */}
                       </View>
                     </View>
 
@@ -437,7 +465,7 @@ function Cart() {
                         <TextFieldNumber
                           containerStyle={{ width: 86, paddingHorizontal: 4 }}
                           placeholder="0"
-                          value={item.qty?.toString() == '' ? '1' : item.qty?.toString() || item.qty2?.toString()}
+                          value={item.qty?.toString() == '' ? '1' : item.qty?.toString()}
                           border
                           size="sm"
                           buttonProps={{ size: 24 }}

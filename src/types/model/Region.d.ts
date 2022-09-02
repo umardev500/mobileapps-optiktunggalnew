@@ -3,6 +3,18 @@ export type RegionModel = {
   nama?: string;
 }
 
+export type ShippingModel = {
+  id?: string;
+  ekspedisi_name?: string;
+  origin?: string;
+  destination?: string;
+  keterangan?: string;
+  shipcost?: number;
+  estimasi?: string;
+  kodepos?: any;
+  image?: string;
+}
+
 export type ProvinceModel = RegionModel & {
   // 
 };

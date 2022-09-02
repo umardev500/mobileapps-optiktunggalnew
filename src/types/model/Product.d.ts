@@ -77,7 +77,10 @@ export type ProductRetail = {
 
 export type ProductPhoto = {
   id?: string;
+  kd_brg?: string;
+  nama_brg?: string;
   prd_foto?: string;
+  prdname?: string;
   tgl?: string;
 };
 
@@ -124,8 +127,8 @@ export type BrandCLModel = {
 };
 
 export type ColorModel = {
-  id?: any;
-  kd_warna?: any;
+  id?: string;
+  kd_warna?: string;
   nm_warna?: string;
 };
 
@@ -162,19 +165,24 @@ export type CartModel = {
   id?: number;
   product_id?: number;
   product?: ProductModel;
+  productname?: string;
+  pid?: string;
+  pid2?: string;
   atributColor?: string;
   atributColor2?: string;
+  atributColor3?: string;
   atributSpheries?: string;
   atributSpheries2?: string;
+  atributSpheries3?: string;
   atributBcurve?: string;
   atributBcurve2?: string;
+  atributBcurve3?: string;
   jenisproduk?: string;
   matakiri?: any;
   matakanan?: any;
   price_original?: number;
   price?: number;
   qty?: number;
-  qty2?: number;
   note?: string;
   prd_id?: string;
   harga?: number;

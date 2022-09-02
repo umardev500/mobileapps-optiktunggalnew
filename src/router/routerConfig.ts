@@ -21,7 +21,7 @@ export function routeOptions(fileName: string): StackNavigationOptions {
   switch (fileName) {
     // Home | Product | Order | Payment
     case 'Cart':
-      return { title: tHome('Cart') };
+      return { title: tHome('Keranjang') };
     case 'Search':
       return { headerShown: false };
     case 'SearchNew':
@@ -29,25 +29,25 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     case 'Checkout':
       return { headerShown: false };
     case 'PaymentMethod':
-      return { title: [tHome('Payment'), tHome('Payment Method')] as any };
+      return { title: [tHome('Pembayaran'), tHome('Metode Pembayaran')] as any };
     case 'PaymentMerchant':
       return { headerShown: false };
 
     // Notifications | Transaction
     case 'Notification':
-      return { title: tNotif('Notification') };
+      return { title: tNotif('Notifikasi') };
     case 'TransactionUsers':
       return { headerShown: false };
     case 'TransactionList':
-      return { title: tNotif('Your Transaction') };
+      return { title: tNotif('Transaksi') };
     case 'Vto':
         return { title: tNotif('Virtual Try On') };
     case 'TransactionDetail':
-      return { title: tNotif('Transaction Details') };
+      return { title: tNotif('Detail Transaksi') };
     case 'PromotionList':
-      return { title: tNotif('Promotion') };
+      return { title: tNotif('Promosi') };
     case 'PromotionDetail':
-      return { title: tNotif(`${''}Promotion Details`) };
+      return { title: tNotif(`${''}Detail Promosi`) };
 
     // Contact | About
     case 'Contact':
@@ -57,7 +57,7 @@ export function routeOptions(fileName: string): StackNavigationOptions {
     case 'StoreDetail':
       return { headerShown: false };
     case 'OurContact':
-      return { title: `${''}Contact Us` };
+      return { title: `${''}Hubungi Kami` };
     case 'FAQ':
       return { title: `${''}FAQ` };
     case 'Brand':
@@ -82,7 +82,7 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { title: `${''}News` };
 
     case 'ArticleDetail':
-      return { title: `${''}Article Details` };
+      return { title: `${''}Detail Artikel` };
       
     // case 'ContactLens':
     //   return { title: `${''}Contact Lens` };
@@ -92,17 +92,17 @@ export function routeOptions(fileName: string): StackNavigationOptions {
 
     // Account | Auth
     case 'WebviewCC':
-      return { title: tPay('Otentikasi Pembayaran') };
+      return { title: tPay('Authentikasi Pembayaran') };
     case 'Account':
       return { headerShown: false };
     case 'Login':
       return { headerShown: false };
     case 'ForgotPassword':
-      return { title: tAcc('Forgot Password') };
+      return { title: tAcc('Lupa Password') };
     case 'Register':
-      return { title: tAcc('Create Akun') };
+      return { title: tAcc('Buat Akun') };
     case 'SelectUsers':
-        return { title: tAcc('Create Akun') };  
+        return { title: tAcc('Buat Akun') };  
     case 'Verification':
       return { headerShown: false };
     case 'PinEdit':
@@ -113,12 +113,12 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { headerShown: false };
     case 'PinEdit':
       return {
-        title: [tAcc('Enter Password')] as any
+        title: [tAcc('Masukan Password')] as any
       };
     case 'PasswordReset':
-      return { title: tAcc(`${''}Account Security`) };
+      return { title: tAcc(`${''}Keamanan akun`) };
     case 'ReviewList':
-      return { title: tAcc(`${''}Reviews`) };
+      return { title: tAcc(`${''}Nilai kami`) };
     case 'ProfileEdit':
       return { title: tAcc(`${'Profile'}`) };
     case 'Members':
@@ -127,9 +127,9 @@ export function routeOptions(fileName: string): StackNavigationOptions {
       return { title: tAcc(`${'Stores'}`) };
     // Company
     case 'Terms':
-      return { title: `${''}Terms & Condition` };
+      return { title: `${''}Syarat & Ketentuan` };
     case 'PrivacyPolicy':
-      return { title: `${''}Privacy Policy` };
+      return { title: `${''}Kebijakan Privasi` };
   }
 
   return { title: '' };

@@ -1,10 +1,10 @@
 import { RouteProp, useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, useWindowDimensions, View, FlatList, Alert, ToastAndroid } from 'react-native';
 import { colors, wrapper } from '../../../lib/styles';
 import { useAppNavigation } from '../../../router/RootNavigation';
-import { AddressModel, CartModel, Modelable } from '../../../types/model';
-import { Button, Header, PressableBox, Typography } from '../../../ui-shared/components';
+import { AddressModel, CartModel, Modelable, ShippingModel } from '../../../types/model';
+import { Button, Header, PressableBox, Typography, BottomDrawer } from '../../../ui-shared/components';
 import { BoxLoading } from '../../../ui-shared/loadings';
 import numeral from 'numeral';
 import { PublicHomeStackParamList } from '../../../router/publicBottomTabs';
@@ -13,17 +13,28 @@ import { useDispatch } from 'react-redux';
 import { fetchAddresses } from '../../../redux/actions';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
-import { showPhone } from '../../../lib/utilities';
+import { httpService, showPhone } from '../../../lib/utilities';
+import { ErrorState, ValueOf } from '../../../types/utilities';
 import {
   formatCurrency,
   getSupportedCurrencies,
 } from "react-native-format-currency";
 
+type Fields = {
+  shipping?: string;
+};
+
+type OptionsState = {
+  shipping?: ShippingModel[];
+  shippingLoaded?: boolean;
+  shippingModalOpen?: boolean;
+};
+
 function Checkout() {
   // Hooks
   const navigation = useAppNavigation();
   const route = useRoute<RouteProp<PublicHomeStackParamList, 'Checkout'>>();
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const { user: { user, location, address: addressState } } = useAppSelector((state) => state);
   const dispatch = useDispatch();
   const { t } = useTranslation('home');
@@ -31,6 +42,7 @@ function Checkout() {
   // States
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [jasaOngkir, setJasaOngkir] = useState({})
   const [cart, setCart] = useState<Modelable<CartModel>>({
     models: [],
     modelsLoaded: false,
@@ -43,6 +55,14 @@ function Checkout() {
     harga: 0,
     total: 0,
     itemqty: 0
+  });
+  const [options, setOptions] = useState<OptionsState>({
+    shipping: [],
+    shippingLoaded: false,
+    shippingModalOpen: false,
+  });
+  const [fields, setFields] = useState<Fields>({
+    shipping: '',
   });
 
   // Effects
@@ -85,14 +105,50 @@ function Checkout() {
   // Vars
   const handleRefresh = async () => {
     setIsLoading(true);
-
     await retrieveAddress();
-
     setIsLoading(false);
   };
 
+  const { model: addressModel } = address;
+  let canSubmit = true;
+  let shippingField: keyof Fields = 'shipping';
+  let shippingStepRequired = '';
+  let shippingModalListLoaded: boolean = false;
+  let shippingModalList: ShippingModel[] = [];
+  let shipModalOpen = options.shippingModalOpen;
+
+
+  if (options.shippingModalOpen) {
+    shippingField = 'shipping';
+    shippingModalList = options.shipping || [];
+    shippingModalListLoaded = !!options.shippingModalOpen;
+  } 
+
   const retrieveAddress = async () => {
     dispatch(fetchAddresses());
+  };
+
+  const retrieveOngkir = async (kodepos: any) => {
+    setOptions(state => ({
+      ...state,
+      shipping: [],
+      shippingLoaded: false,
+    }));
+
+    return await httpService('/api/zonasi/zonasi', {
+      data: {
+        act: 'GetOngkir',
+        dt: JSON.stringify({kodepos: kodepos})
+      }
+    }).then(({ status, data }) => {
+      if (status === 200) {
+        setOptions(state => ({
+          ...state,
+          shipping: data,
+          shippingLoaded: true,
+        }));
+      }
+    });
   };
 
   const handlePay = async () => {
@@ -130,8 +186,49 @@ function Checkout() {
     }));
   };
 
-  const { model: addressModel } = address;
-  let canSubmit = true;
+  const handleModalToggle = async (type: string, open: boolean | null = null, kodepos: number) => {
+    if(kodepos === 0){
+      Alert.alert( "", "Alamat pengiriman tidak lengkap, silahkan lengkapi alamat pengiriman untuk proses pesanan.",
+        [
+          { text: "Lengkapi Sekarang", onPress: () => navigation.navigatePath('Public', {
+            screen: 'BottomTabs.AccountStack.AddressList',
+          })
+          }
+        ]
+      );
+    }else{
+      let newState: Partial<OptionsState> = {};
+      switch (type) {
+        case 'shipping':
+          newState.shippingModalOpen = 'boolean' === typeof open ? open : !options.shippingModalOpen;
+          break;
+      }
+
+      retrieveOngkir(kodepos);
+      setOptions(state => ({
+        ...state,
+        ...newState,
+      }));
+    }
+  };
+
+  const handleCloseModal = async () => {
+    handleModalToggle('shipping', false);
+  };
+
+  const handleFieldChange = (field: keyof Fields, value: ValueOf<Fields>) => {
+    const _isShipCost = options.shipping?.find(item => item.id === value);
+    OngkosKirim(_isShipCost?.shipcost)
+    setFields(state => ({
+      ...state,
+      [field]: value,
+    }));
+    handleCloseModal();
+  };
+
+  const OngkosKirim = (ongkir: any) =>{
+    setJasaOngkir(ongkir);
+  }
 
   if (!address.model) {
     canSubmit = false;
@@ -186,48 +283,74 @@ function Checkout() {
             </View>
           ) : (
             <View style={{ paddingVertical: 12 }}>
-              {!addressModel?.title ? null : (
-                <Typography heading>
-                  {addressModel.title}
-                </Typography>
-              )}
               <View style={[wrapper.row]}>
                 <Typography size="xs" style={{ marginTop: 4, flex: 1 }}>
-                  Dikirim ke :
+                  Dikirim ke : 
+                  {!addressModel?.title ? null : (
+                    <Typography size='xs' style={{fontWeight: 'bold'}}>
+                      {' '+addressModel.title}
+                    </Typography>
+                  )}
                 </Typography>
-                <PressableBox
-                    containerStyle={{alignSelf: 'center'}}
-                    style={{alignItems: 'center'}}
-                    onPress={() => navigation.navigatePath('Public', {
-                      screen: 'BottomTabs.AccountStack.AddressList',
-                      params: [null, null, {
-                        action_screen: ['Public', 'BottomTabs.HomeStack.Checkout'],
-                      }]
-                    })}
-                  >
-                  <Typography size='xs' style={{
-                    color: '#0d674e'
-                  }}>
-                    <Ionicons name="location" size={12} color="#0d674e" />
-                    {`${t('Pilih alamat lain')}`}
-                  </Typography>
-                </PressableBox>
+                {Number(addressModel?.kodepos) === 0 ? 
+                  (
+                    <PressableBox
+                        containerStyle={{alignSelf: 'center'}}
+                        style={{alignItems: 'center'}}
+                        onPress={() => navigation.navigatePath('Public', {
+                          screen: 'BottomTabs.AccountStack.AddressList',
+                        })}
+                      >
+                      <Typography size='xs' style={{
+                        color: '#0d674e'
+                      }}>
+                        <Ionicons name="location" size={12} color="#0d674e" />
+                        {`${t('Ubah alamat')}`}
+                      </Typography>
+                    </PressableBox>
+                  )
+                  :
+                  (
+                    <PressableBox
+                        containerStyle={{alignSelf: 'center'}}
+                        style={{alignItems: 'center'}}
+                        onPress={() => navigation.navigatePath('Public', {
+                          screen: 'BottomTabs.AccountStack.AddressList',
+                          params: [null, null, {
+                            action_screen: ['Public', 'BottomTabs.HomeStack.Checkout'],
+                          }]
+                        })}
+                      >
+                      <Typography size='xs' style={{
+                        color: '#0d674e'
+                      }}>
+                        <Ionicons name="location" size={12} color="#0d674e" />
+                        {`${t('Pilih alamat lain')}`}
+                      </Typography>
+                    </PressableBox>
+                  )
+                }
               </View>
               <View style={[wrapper.row, {flex: 1, marginRight: 10}]}>
                 <View style={{flex: 1}}>
                   <Typography size="xs" style={{ marginTop: 4, fontWeight: 'bold' }}>
                     {addressModel?.nama || addressModel?.vch_nama}
                   </Typography>
-                  <Typography size="xs" style={{ marginTop: 0, }}>
+                  <Typography size="xs" style={{ marginTop: 0, textAlign: 'justify'}}>
                     {showPhone(addressModel?.hp, '0')+'\n'}
                     {addressModel?.alamat}
                   </Typography>
+                  {Number(addressModel?.kodepos) === 0 ? 
+                    (
+                      <Typography size="xxs" style={{ marginTop: 4, color: 'red', textAlign: 'justify' }}>
+                        Warning : Alamat tidak lengkap, silahkan ubah alamat pengiriman.
+                      </Typography>
+                    ) : null}
                 </View>
               </View>
             </View>
           )
         )}
-
         {!cart.modelsLoaded ? (
           <View style={{
             paddingTop: 12,
@@ -271,46 +394,66 @@ function Checkout() {
                         <Image source={{ uri: item.product.prd_foto }} style={styles.cartImage} />
                       )}
                       <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                        <Typography size='sm'>
-                          {item.product?.prd_ds}
+                        <Typography size='xs'>
+                          {item.product?.prd_ds+`\n`+item.pid+'0000'}
                         </Typography>
                         <View style={{ alignItems: 'flex-start' }}>
                           <View style={[wrapper.row, {marginTop: 5}]}>
-                            <Typography size='sm' style={{fontWeight: '700',flex: 1}}>
+                            <Typography size='xs' style={{fontWeight: '700',flex: 1}}>
                               {/* Rp{item.product?.harga || 0 (item.qty || 1)} */}
                               {formatCurrency({ amount: Number(item.product?.harga)*(item.qty || 1), code: 'IDR' })}
                             </Typography>
                             {!item.qty ? null : (
-                              <Typography size="sm" color={700} style={{ marginBottom: 2, alignSelf: 'flex-end' }}>
+                              <Typography size="xs" color={700} style={{ marginBottom: 2, alignSelf: 'flex-end' }}>
                                 {`${t('Qty')}: ${item.qty}`}
                               </Typography>
                             )}
                           </View>
-                          <View style={[wrapper.row, {marginTop: 5}]}>
-                            {item.atributColor == '' ? null :
+                          {item.atributColor != '' ? (
+                            <>
+                              <View style={[wrapper.row, {marginTop: 5}]}>
+                                <Typography size="xs" 
+                                    style={{ borderColor: '#ccc', borderWidth: 1, 
+                                            borderRadius: 10, paddingHorizontal: 5, paddingVertical: 3, 
+                                            marginRight: 5 }}>
+                                    Warna : {item.atributColor}
+                                  </Typography>
+
+                                  <Typography size="xs" 
+                                    style={{ borderColor: '#ccc', borderWidth: 1, 
+                                            borderRadius: 10, paddingHorizontal: 5, paddingVertical: 3 }}>
+                                    Ukuran : {item.atributSpheries}
+                                  </Typography>
+                              </View>
                               <Typography size="xs" 
                                 style={{ borderColor: '#ccc', borderWidth: 1, 
-                                        borderRadius: 10, paddingHorizontal: 5, paddingVertical: 3, 
-                                        marginRight: 5 }}>
-                                Warna : {item.atributColor}
+                                        borderRadius: 10, paddingHorizontal: 5, paddingVertical: 3, marginTop: 3 }}>
+                                Base Curve : {item.atributBcurve}
                               </Typography>
-                            }
-                            
-                            {item.atributSpheries == '' ? null :
+                            </>
+                          ) : item.atributColor2 != '' ? (
+                            <>
+                              <View style={[wrapper.row, {marginTop: 5}]}>
+                                <Typography size="xs" 
+                                  style={{ borderColor: '#ccc', borderWidth: 1, 
+                                          borderRadius: 10, paddingHorizontal: 5, paddingVertical: 3, 
+                                          marginRight: 5 }}>
+                                  Warna : {item.atributColor2}
+                                </Typography>
+                                
+                                <Typography size="xs" 
+                                  style={{ borderColor: '#ccc', borderWidth: 1, 
+                                          borderRadius: 10, paddingHorizontal: 5, paddingVertical: 3 }}>
+                                  Ukuran : {item.atributSpheries2}
+                                </Typography>
+                              </View>
                               <Typography size="xs" 
                                 style={{ borderColor: '#ccc', borderWidth: 1, 
-                                        borderRadius: 10, paddingHorizontal: 5, paddingVertical: 3 }}>
-                                Ukuran : {item.atributSpheries}
+                                        borderRadius: 10, paddingHorizontal: 5, paddingVertical: 3, marginTop: 3 }}>
+                                Base Curve : {item.atributBcurve2}
                               </Typography>
-                            }
-                          </View>
-                          {item.atributBcurve == '' ? null :
-                            <Typography size="xs" 
-                              style={{ borderColor: '#ccc', borderWidth: 1, 
-                                      borderRadius: 10, paddingHorizontal: 5, paddingVertical: 3, marginTop: 3 }}>
-                              Base Curve : {item.atributBcurve}
-                            </Typography>
-                          }
+                            </>
+                          ) : null }
                         </View>
                         {!item.note ? null : (
                           <Typography size="sm" color={700} style={{ marginTop: 2 }}>
@@ -326,32 +469,49 @@ function Checkout() {
           </View>
         )}
       </ScrollView>
-
+      
+      <View>
+        <PressableBox
+            onPress={() => handleModalToggle('shipping', true, addressModel?.kodepos)}
+          >
+            <View style={[wrapper.row]}>
+              <Typography size='xs' style={{
+                color: '#0d674e',
+                paddingHorizontal: 15,
+                paddingVertical: 15,
+                flex: 1
+              }}>
+                <Image source={require('../../../assets/icons/figma/shippingtruck.png')} style={{width: 24, height: 24}}/>
+                {`${t('   Pilih Pengiriman')}`}
+              </Typography>
+              <Ionicons name="chevron-forward" size={16} color="#0d674e" style={{paddingHorizontal: 15,paddingVertical: 15, alignSelf: 'flex-end'}}/>
+            </View>
+        </PressableBox>
+      </View>
       {!cart.modelsLoaded ? null : (
         <View style={styles.action}>
           <View style={[wrapper.row, { alignItems: 'center' }]}>
-            <Typography size='sm' color="black" style={{ flex: 1, paddingVertical: 4 }}>
+            <Typography size='xs' color="black" style={{ flex: 1, paddingVertical: 4 }}>
               {`${t('Jumlah '+'('+price.itemqty+' item)')}`}
             </Typography>
 
             <Typography textAlign="right">
-              <Typography size='sm'>
+              <Typography size='xs'>
                 {formatCurrency({ amount: Number(price.total), code: 'IDR' })}
               </Typography>
             </Typography>
           </View>
           <View style={[wrapper.row, { alignItems: 'center' }]}>
-            <Typography size='sm' color="black" style={{ flex: 1, paddingVertical: 4 }}>
+            <Typography size='xs' color="black" style={{ flex: 1, paddingVertical: 4 }}>
               {`${t('Ongkos Kirim')}`}              
             </Typography>
-            <View style={styles.column}>
-              <Typography style={{textAlign: 'center', color: '#fff', fontSize: 12}}>
-                Free
-              </Typography>
-            </View>
             <Typography textAlign="right">
-              <Typography size='sm'>
-                {formatCurrency({ amount: Number(0), code: 'IDR' })}
+              <Typography size='xs'>
+                {jasaOngkir > 0 ? (
+                  formatCurrency({ amount: Number(jasaOngkir), code: 'IDR' })
+                ) : (
+                  formatCurrency({ amount: Number(0), code: 'IDR' })
+                )}
               </Typography>
             </Typography>
           </View>
@@ -363,7 +523,11 @@ function Checkout() {
 
             <Typography textAlign="right">
               <Typography size='sm' style={{fontWeight: '700'}}>
-                {formatCurrency({ amount: Number(price.total), code: 'IDR' })}
+                {jasaOngkir > 0 ? (
+                  formatCurrency({ amount: Number(price.total)+Number(jasaOngkir), code: 'IDR' })
+                ) : (
+                  formatCurrency({ amount: Number(price.total), code: 'IDR' })
+                )}
               </Typography>
             </Typography>
           </View>
@@ -372,15 +536,89 @@ function Checkout() {
               containerStyle={{ marginTop: 16, alignSelf: 'center', marginVertical: 10, backgroundColor: '#0d674e', borderRadius: 5 }}
               style={{ width: 300 }}
               onPress={handlePay}
-              disabled={!canSubmit}
+              disabled={Number(addressModel?.kodepos) === 0 ? true : !canSubmit}
               loading={isSaving}
             >
-            <Typography size='sm' style={{textAlign: 'center', paddingVertical: 3, color: '#FEFEFE'}}>
+            <Typography size='xs' style={{textAlign: 'center', paddingVertical: 3, color: '#FEFEFE'}}>
               {`${t('Pilih Metode Pembayaran')}`.toUpperCase()}
             </Typography>
           </Button>
         </View>
       )}
+      <BottomDrawer
+        isVisible={shipModalOpen}
+        swipeDirection={null}
+        onBackButtonPress={() => handleModalToggle('shipping', false, addressModel.kodepos)}
+        onBackdropPress={() => handleModalToggle('shipping', false, addressModel.kodepos)}
+        style={{ height: shippingModalList.length == 0 ? 200 : 400, }}
+      >
+        <View style={[wrapper.row]}>
+          <Typography style={{ flex: 1, fontWeight: 'bold', fontSize: 16, marginLeft: 30 }}>Pilih Pengiriman</Typography>
+        </View>
+        <View style={{ borderColor: '#ccc', borderWidth: 1, marginHorizontal: 30 }}></View>
+        {!shipModalOpen ? null : (
+          shippingStepRequired ? (
+            // Required to select parent location
+            <View style={styles.modalContainer}>
+              <Typography>{shippingStepRequired}</Typography>
+            </View>
+          ) : (
+            !shippingModalListLoaded ? (
+              // Show loading
+              <View style={styles.modalContainer}>
+                {[1, 2, 3, 4, 5].map((item, index) => (
+                  <BoxLoading
+                    key={index}
+                    width={[190, 240]}
+                    height={20}
+                    style={{ marginTop: index === 0 ? 0 : 10, marginLeft: 15 }}
+                  />
+                ))}
+              </View>
+            ) : (
+              // Shipping List
+              shippingModalList.length == 0 ?
+              (
+                <Typography size='sm' style={{paddingHorizontal: 30, paddingVertical: 50, textAlign: 'center'}}>Sedang memuat data pengiriman..</Typography>
+              ) 
+              :
+              (
+                <FlatList
+                  data={shippingModalList}
+                  style={{ maxHeight: height * 0.66, backgroundColor: '#FEFEFE' }}
+                  contentContainerStyle={styles.modalContainer}
+                  renderItem={({ item, index }) => (
+                    <PressableBox
+                      key={index}
+                      containerStyle={{
+                        backgroundColor: fields['shipping'] === item.id ? colors.transparent('#eeeeee', 0.1) : undefined,
+                        marginHorizontal: 10
+                      }}
+                      style={{ paddingVertical: 15 }}
+                      onPress={() => handleFieldChange('shipping', item.id)}
+                    >
+                      <View style={[wrapper.row]}>
+                        <Image source={{uri: item.image}} style={{width: 50, height: 24, resizeMode: 'stretch'}}/>
+                        <View style={{flex: 1}}>
+                          <Typography size='sm' style={{paddingHorizontal: 5}}>
+                            {item.keterangan+`\n`}
+                            <Typography size='xxs' style={{fontStyle: 'italic'}}>{`Pesananmu akan tiba : `+item.estimasi+' lagi'}</Typography>
+                          </Typography>
+                        </View>
+                        <View>
+                          <Typography size='sm' style={{alignSelf: 'flex-end', color: '#0d674e'}}>
+                            {formatCurrency({ amount: Number(item.shipcost), code: 'IDR' })}
+                          </Typography>
+                        </View>
+                      </View>
+                    </PressableBox>
+                  )}
+                />
+              )
+            )
+          )
+        )}
+      </BottomDrawer>
     </View>
   );
 };
@@ -424,7 +662,12 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: colors.gray[400],
     backgroundColor: colors.white
-  }
+  },
+  modalContainer: {
+    paddingHorizontal: 15,
+    paddingTop: 12,
+    paddingBottom: 24
+  },
 });
 
 export default Checkout;

@@ -202,7 +202,7 @@ function Account() {
       {!user ? renderUnauthenticated() : (
         <View style={{ flex: 1 }}>
           <Header
-            title={t(`${''}Settings`)}
+            title={t(`${''}Pengaturan`)}
           />
 
           <ScrollView

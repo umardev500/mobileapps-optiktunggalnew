@@ -228,14 +228,21 @@ function AddressList() {
                   <Ionicons name="location-outline" size={12} color={'green'} /> Rumah
                 </Typography> 
                : 
-                <Typography size='xs' style={{color: 'red'}}>
-                  <Ionicons name="location-outline" size={12} color={'red'} /> Kantor
+                <Typography size='xs' style={{color: 'blue'}}>
+                  <Ionicons name="location-outline" size={12} color={'blue'} /> Kantor
                 </Typography>
               }
 
               <Typography size='xs' style={{ marginTop: 4 }}>
                 {item.alamat}
               </Typography>
+
+              {Number(item.kodepos) == 0 ? (
+                <Typography size='xs' style={{ marginTop: 4, color: 'red' }}>
+                  Alamat pengiriman anda belum lengkap. silahkan ubah alamat untuk melengkapi.
+                </Typography>
+              )
+              : null}
 
               {!item.lat || !item.lng ? null : (
                 <View style={[wrapper.row, { marginTop: 8, alignItems: 'center' }]}>

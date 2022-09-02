@@ -5,7 +5,7 @@ import { Alert, Image, Linking, ListRenderItemInfo, RefreshControl, ScrollView,
 import Carousel from 'react-native-snap-carousel';
 import { colors, ColorVariant, shadows, wrapper } from '../../../lib/styles';
 import { CartItemType, Modelable, ProductModel, ProductPhoto, 
-         ProductRetail, ColorModel, SpheriesModel, BaseCurveModel, ReviewModel, CartAtribut } from '../../../types/model';
+         ProductRetail, ColorModel, SpheriesModel, BaseCurveModel, ReviewModel, CartAtribut, CartModel } from '../../../types/model';
 import { BadgeDiscount, BottomDrawer, Button, ButtonCart, TextField,
          ImageAuto, PressableBox, ProgressBar, RenderHtml, Typography } from '../../../ui-shared/components';
 import { BoxLoading } from '../../../ui-shared/loadings';
@@ -35,6 +35,7 @@ import {
 } from "react-native-format-currency";
 import { StringMap } from 'i18next';
 import { indexOf } from 'lodash';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const QTY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const QTY2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -43,12 +44,15 @@ type Fields = {
   sort?: string;
   prdcat?: string;
   brand?: string;
-  color?: any;
-  color2?: any;
-  spheries?: any;
-  spheries2?: any;
-  basecurve?: any;
-  basecurve2?: any;
+  color?: string;
+  color2?: string;
+  color3?: string;
+  spheries?: string;
+  spheries2?: string;
+  spheries3?: string;
+  basecurve?: string;
+  basecurve2?: string;
+  basecurve3?: string;
   jumlah?: number;
   jumlah2?: number;
 };
@@ -65,6 +69,12 @@ type OptionsState2 = {
   colors2ModalOpen?: boolean;
 };
 
+type OptionsState3 = {
+  colors3?: ColorModel[];
+  colors3Loaded?: boolean;
+  colors3ModalOpen?: boolean;
+};
+
 type OptionsStateSpheries = {
   sph?: SpheriesModel[];
   sphLoaded?: boolean;
@@ -77,6 +87,12 @@ type OptionsStateSpheries2 = {
   sph2ModalOpen?: boolean;
 };
 
+type OptionsStateSpheries3 = {
+  sph3?: SpheriesModel[];
+  sph3Loaded?: boolean;
+  sph3ModalOpen?: boolean;
+};
+
 type OptionsStateBaseCurve = {
   basecrv?: BaseCurveModel[];
   basecrvLoaded?: boolean;
@@ -87,6 +103,12 @@ type OptionsStateBaseCurve2 = {
   basecrv2?: BaseCurveModel[];
   basecrv2Loaded?: boolean;
   basecrv2ModalOpen?: boolean;
+};
+
+type OptionsStateBaseCurve3 = {
+  basecrv3?: BaseCurveModel[];
+  basecrv3Loaded?: boolean;
+  basecrv3ModalOpen?: boolean;
 };
 
 
@@ -135,6 +157,11 @@ function ProductDetail() {
     colors2Loaded: false,
     colors2ModalOpen: false,
   });
+  const [pilihan3, setPilihan3] = useState<OptionsState3>({
+    colors3: [],
+    colors3Loaded: false,
+    colors3ModalOpen: false,
+  });
   const [pilihanSpheries, setPilihanSpheries] = useState<OptionsStateSpheries>({
     sph: [],
     sphLoaded: false,
@@ -144,6 +171,11 @@ function ProductDetail() {
     sph2: [],
     sph2Loaded: false,
     sph2ModalOpen: false,
+  });
+  const [pilihanSpheries3, setPilihanSpheries3] = useState<OptionsStateSpheries3>({
+    sph3: [],
+    sph3Loaded: false,
+    sph3ModalOpen: false,
   });
   const [pilihanBaseCrv, setPilihanBaseCrv] = useState<OptionsStateBaseCurve>({
     basecrv: [],
@@ -155,6 +187,11 @@ function ProductDetail() {
     basecrv2Loaded: false,
     basecrv2ModalOpen: false,
   });
+  const [pilihanBaseCrv3, setPilihanBaseCrv3] = useState<OptionsStateBaseCurve3>({
+    basecrv3: [],
+    basecrv3Loaded: false,
+    basecrv3ModalOpen: false,
+  });
 
   const [fields, setFields] = useState<Fields>({
     sort: '',
@@ -162,10 +199,13 @@ function ProductDetail() {
     brand: '',
     color: '',
     color2: '',
+    color3: '',
     spheries: '',
     spheries2: '',
+    spheries3: '',
     basecurve: '',
     basecurve2: '',
+    basecurve3: '',
     jumlah: 0,
     jumlah2: 0,
   });
@@ -233,6 +273,18 @@ function ProductDetail() {
       colorsLoaded: false,
     }));
 
+    setPilihan2(state => ({
+      ...state,
+      colors2: [],
+      colors2Loaded: false,
+    }));
+
+    setPilihan3(state => ({
+      ...state,
+      colors3: [],
+      colors3Loaded: false,
+    }));
+
     return await httpService('/api/product/product', {
       data: {
         act: 'Color',
@@ -254,6 +306,12 @@ function ProductDetail() {
           colors2: data,
           colors2Loaded: true,
         }));
+
+        setPilihan3(state => ({
+          ...state,
+          colors3: data,
+          colors3Loaded: true,
+        }));
       }
     });
   };
@@ -264,6 +322,18 @@ function ProductDetail() {
       ...state,
       sph: [],
       sphLoaded: false,
+    }));
+
+    setPilihanSpheries2(state => ({
+      ...state,
+      sph2: [],
+      sph2Loaded: false,
+    }));
+
+    setPilihanSpheries2(state => ({
+      ...state,
+      sph2: [],
+      sph2Loaded: false,
     }));
 
     return await httpService('/api/product/product', {
@@ -286,6 +356,12 @@ function ProductDetail() {
           ...state,
           sph2: data,
           sph2Loaded: true,
+        }));
+
+        setPilihanSpheries3(state => ({
+          ...state,
+          sph3: data,
+          sph3Loaded: true,
         }));
       }
     });
@@ -317,8 +393,14 @@ function ProductDetail() {
 
         setPilihanBaseCrv2(state => ({
           ...state,
-          basecrv2: [],
+          basecrv2: data,
           basecrv2Loaded: true,
+        }));
+
+        setPilihanBaseCrv3(state => ({
+          ...state,
+          basecrv3: data,
+          basecrv3Loaded: true,
         }));
       }
     });
@@ -361,7 +443,7 @@ function ProductDetail() {
   const retrieveProduct = async (product_id: string) => {
     return httpService('/api/product/product/', {
       data: {
-        dt: JSON.stringify({ prd_id: product_id, flaq: route.params.product?.description == undefined ? route.params.deskripsi : route.params.product?.description }),
+        dt: JSON.stringify({ prd_id: product_id, flaq: route.params.deskripsi || route.params.product?.description }),
         act: 'PrdInfo'
       },
     }).then(({ status, data: [data], foto }) => {
@@ -444,7 +526,6 @@ function ProductDetail() {
 
   const handleFieldChange = (field: keyof Fields, value: ValueOf<Fields>) => {
     const { fields = [] } = error;
-    // Alert.alert( "Pemberitahuan", "Jumlah : "+value);
     setFields(state => ({
       ...state,
       [field]: value
@@ -490,28 +571,28 @@ function ProductDetail() {
     );
   };
 
-  const handleCartAdd = async (tipe: string) => {
-    let warna = fields.color === '- Pilih -' ? fields.color : 'warna';
-    let warna2 = fields.color2 === '- Pilih -' ? fields.color2 : 'warna2';
+  const _isColor      = pilihan.colors?.find(item => item.nm_warna === fields.color);
+  const _isColor2     = pilihan2.colors2?.find(item => item.nm_warna === fields.color2);
+  const _isSpheries   = pilihanSpheries.sph?.find(item => item.ket === fields.spheries);
+  const _isSpheries2  = pilihanSpheries2.sph2?.find(item => item.ket === fields.spheries2);
+  const _isBCurve     = pilihanBaseCrv.basecrv?.find(item => item.code === fields.basecurve);
+  const _isBCurve2    = pilihanBaseCrv2.basecrv2?.find(item => item.code === fields.basecurve2);
 
+  const handleCartAdd = async (tipe: string) => {
     if(tipe == 'contactlens'){
-      if(warna != '' || warna2 != ''){
-        toCartCL()
-      }else if(warna != '' && warna2 != ''){
-        toCartCL()
-      }
+      toCart()
     }else if(tipe == 'solutions'){
-      toCart();
+      toCart()
     }else if(tipe == 'accessories'){
-      if(warna == ''){
+      if(fields.color3 == ''){
         ToastAndroid.show(`${''}Warna belum dipilih!`, ToastAndroid.SHORT);
-      }else if(fields.spheries == ''){
+      }else if(fields.spheries3 == ''){
         ToastAndroid.show(`${''}Addition belum dipilih!`, ToastAndroid.SHORT);
       }else{
-        toCart();
+        toCart()
       }
     }
-  };
+  };  
 
   const toCart = async() => {
     dispatch(pushCartItem({
@@ -522,33 +603,6 @@ function ProductDetail() {
       qty: 1
     }));
 
-    navigation.navigatePath('Public', {
-      screen: 'BottomTabs.HomeStack.Cart',
-    });
-  }
-
-  const toCartCL = async() => {
-    setIsLoading(true);
-    var kuantitas = 0;
-
-    if(fields.color != ''){
-      var kuantitas = Number(fields.jumlah);
-    }else if(fields.color2 != ''){
-      var kuantitas = Number(fields.jumlah2);
-    }else if(fields.color != '' && fields.color2 != ''){
-      var kuantitas = Number(fields.jumlah)+Number(fields.jumlah2);
-    }
-    dispatch(pushCartItem({
-      product: _omit(product.model || undefined, 'product_info'),
-      atributColor: fields.color,
-      atributSpheries: fields.spheries,
-      atributBcurve: fields.basecurve,
-      atributColor2: fields.color2 == '' || fields.color2 == '- Pilih -' ? '' : fields.color2,
-      atributSpheries2: fields.spheries2 == '' ? '' : fields.spheries2,
-      atributBcurve2: fields.basecurve2 == '' ? '' : fields.basecurve2,
-      qty: kuantitas
-    }));
-    setIsLoading(false);
     navigation.navigatePath('Public', {
       screen: 'BottomTabs.HomeStack.Cart',
     });
@@ -807,8 +861,8 @@ function ProductDetail() {
                       data={pilihan.colors?.map(item => {
                         return item.nm_warna
                       })}
-                      onSelect={(colors, index) => {
-                        handleFieldChange('color', colors)
+                      onSelect={item => {
+                        handleFieldChange('color', item)
                       }}
                       buttonTextAfterSelection={(colors, index) => {
                         return colors
@@ -953,7 +1007,7 @@ function ProductDetail() {
                   </View>
                   <View style={{flex: 1, alignItems: 'center'}}>
                     <SelectDropdown
-                      data={pilihanBaseCrv.basecrv?.map(item => {
+                      data={pilihanBaseCrv2.basecrv2?.map(item => {
                         return item.id
                       })}
                       onSelect={(selectedItem, index) => {
@@ -1067,11 +1121,11 @@ function ProductDetail() {
                   <View style={{height: 1, backgroundColor: "#ccc", marginVertical: 10}}></View>
                   <View style={{flex: 1, marginTop: 10 }}>
                     <SelectDropdown
-                      data={pilihan.colors?.map(item => {
+                      data={pilihan3.colors3?.map(item => {
                         return item.nm_warna
                       })}
                       onSelect={(colors, index) => {
-                        handleFieldChange('color', colors)
+                        handleFieldChange('color3', colors)
                       }}
                       buttonTextAfterSelection={(colors, index) => {
                         return colors
@@ -1090,35 +1144,14 @@ function ProductDetail() {
                       rowStyle={styles.dropdown1RowStyle}
                       rowTextStyle={styles.dropdown1RowTxtStyle}
                     />
-                    {/* {pilihan.colors?.map((item, index) => (
-                      <Button
-                        key={index}
-                        containerStyle={{
-                          marginBottom: 8,
-                          marginRight: 10,
-                          borderColor: fields.color === item.kd_warna ? colors.transparent('#0d674e', 1) : colors.gray[400],
-                          backgroundColor: fields.color === item.kd_warna ? colors.transparent('#0d674e', 1) : 'white'
-                        }}
-                        labelProps={{ color: fields.color === item.kd_warna ? '#0d674e' : colors.gray[900] }}
-                        size="sm"
-                        border
-                        onPress={() => handleFieldChange('color', item.kd_warna)}
-                      >
-                        <Typography 
-                          size='xs'
-                          style={{
-                            color: fields.color === item.kd_warna ? 'white' : 'black'
-                          }}>{t(`${''}${item.kd_warna}`)}</Typography>
-                      </Button>
-                    ))} */}
                   </View>
                   <View style={{ flex: 1, marginTop: 10 }}>
                     <SelectDropdown
-                      data={pilihanSpheries.sph?.map(item => {
+                      data={pilihanSpheries3.sph3?.map(item => {
                         return item.ket
                       })}
                       onSelect={(spheries, index) => {
-                        handleFieldChange('spheries', spheries)
+                        handleFieldChange('spheries3', spheries)
                       }}
                       buttonTextAfterSelection={(spheries, index) => {
                         return spheries
@@ -1137,29 +1170,6 @@ function ProductDetail() {
                       rowStyle={styles.dropdown1RowStyle}
                       rowTextStyle={styles.dropdown1RowTxtStyle}
                     />
-                    {/* <View style={[wrapper.row, { flexWrap: 'wrap', marginTop: 10 }]}>
-                      {pilihanSpheries.sph?.map((item, index) => (
-                        <Button
-                          key={index}
-                          containerStyle={{
-                            marginBottom: 8,
-                            marginRight: 10,
-                            borderColor: fields.spheries === item.ket ? colors.transparent('#0d674e', 1) : colors.gray[400],
-                            backgroundColor: fields.spheries === item.ket ? colors.transparent('#0d674e', 1) : 'white'
-                          }}
-                          labelProps={{ color: fields.spheries === item.ket ? '#0d674e' : colors.gray[900] }}
-                          size="sm"
-                          border
-                          onPress={() => handleFieldChange('spheries', item.ket)}
-                        >
-                          <Typography 
-                            size='xs'
-                            style={{
-                              color: fields.spheries === item.ket ? 'white' : 'black'
-                            }}>{t(`${''}${item.ket}`)}</Typography>
-                        </Button>
-                      ))}
-                    </View> */}
                   </View>
                   {renderElement()}
                 </>

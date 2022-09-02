@@ -144,12 +144,6 @@ function Verification() {
   };
 
   const handleVerificationResend = () => {
-    Alert.alert( "Alert", "Under development.",
-              [
-                {text: "Cancel",onPress: () => console.log("Cancel Pressed"),style: "cancel"},
-                { text: "OK", onPress: () => console.log("OK Pressed") }
-              ]
-    );
     const email = !profile ? fields.email : profile.email;
 
     if (!email) {
