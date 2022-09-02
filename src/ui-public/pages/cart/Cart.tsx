@@ -58,7 +58,7 @@ function Cart() {
     console.log('aa',cart_items);
     setCart(state => ({
       ...state,
-      models: (cart_items || []).filter((item) => !!item.pid),
+      models: (cart_items || []).filter((item) => !!item.prd_id),
       modelsLoaded: true,
     }));
   }, [cart_items]);
@@ -365,7 +365,7 @@ function Cart() {
                           </Typography>
                         </Typography>
 
-                        {item.atributSpheries == '' ? null :
+                        {/* {item.atributSpheries == '' ? null :
                           <View>
                             <Typography size="xs" style={{ marginTop: 2 }}>
                               Warna : {item.atributColor}
@@ -392,6 +392,20 @@ function Cart() {
                             </Typography>
                           </View>
                         }
+
+                        {item.atributSpheries3 == '' ? null :
+                          <View>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Warna : {item.atributColor3}
+                            </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Ukuran : {item.atributSpheries3}
+                            </Typography>
+                            <Typography size="xs" style={{ marginTop: 2 }}>
+                              Base Curve : {item.atributBcurve3 == '' ? '-' : item.atributBcurve3}
+                            </Typography>
+                          </View>
+                        } */}
                       </View>
                     </View>
 
