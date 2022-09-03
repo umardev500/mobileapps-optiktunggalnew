@@ -19,7 +19,7 @@ jobs:
       - name: "Upload artifact"
         uses: actions/upload-artifact@v1
         with:
-          name: app-debug.apk
+          name: app-release.apk
           path: android/app/build/outputs/apk/release/
 
       
