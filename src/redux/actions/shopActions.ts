@@ -1,5 +1,5 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
-import {httpService, Storage} from '../../lib/utilities';
+import { createAsyncThunk } from '@reduxjs/toolkit'
+import { httpService, Storage } from '../../lib/utilities'
 import {
   CartModel,
   CategoryModel,
@@ -8,163 +8,163 @@ import {
   GenderModel,
   ModelKacamata,
   BrandCLModel,
-} from '../../types/model';
-import {RootStoreState} from '../store';
+} from '../../types/model'
+import { RootStoreState } from '../store'
 
 export const fetchCategories = createAsyncThunk(
   'shop/fetchCategories',
   async () => {
-    let categories: CategoryModel[] = [];
+    let categories: CategoryModel[] = []
 
     await httpService('/api/category', {
       data: {
         act: 'PrdGenderList',
-        dt: JSON.stringify({comp: '001'}),
+        dt: JSON.stringify({ comp: '001' }),
       },
-    }).then(({status, data}) => {
+    }).then(({ status, data }) => {
       if (status === 200) {
-        categories = data;
+        categories = data
       }
-    });
+    })
 
-    return categories;
-  },
-);
+    return categories
+  }
+)
 
 export const fetchGender = createAsyncThunk('shop/fetchGender', async () => {
-  let genders: GenderModel[] = [];
+  let genders: GenderModel[] = []
 
   await httpService('/api/category', {
     data: {
       act: 'PrdGenderList',
-      dt: JSON.stringify({comp: '001'}),
+      dt: JSON.stringify({ comp: '001' }),
     },
-  }).then(({status, data}) => {
+  }).then(({ status, data }) => {
     if (status === 200) {
-      genders = data;
+      genders = data
     }
-  });
+  })
 
-  return genders;
-});
+  return genders
+})
 
 export const fetchModelKacamata = createAsyncThunk(
   'shop/fetchModelKacamata',
   async () => {
-    let modelkacamatas: ModelKacamata[] = [];
+    let modelkacamatas: ModelKacamata[] = []
 
     await httpService('/api/category', {
       data: {
         act: 'PrdModelKacamataList',
-        dt: JSON.stringify({comp: '001'}),
+        dt: JSON.stringify({ comp: '001' }),
       },
-    }).then(({status, data}) => {
+    }).then(({ status, data }) => {
       if (status === 200) {
-        modelkacamatas = data;
+        modelkacamatas = data
       }
-    });
+    })
 
-    return modelkacamatas;
-  },
-);
+    return modelkacamatas
+  }
+)
 
 export const fetchBrand = createAsyncThunk('shop/fetchBrand', async () => {
-  let brands: BrandModel[] = [];
+  let brands: BrandModel[] = []
 
   await httpService('/api/brand/brand', {
     data: {
       act: 'BrandList',
     },
-  }).then(({status, data}) => {
+  }).then(({ status, data }) => {
     if (status === 200) {
-      brands = data;
+      brands = data
     }
-  });
+  })
 
-  return brands;
-});
+  return brands
+})
 
 export const fetchBrandHome = createAsyncThunk(
   'shop/fetchBrandHome',
   async () => {
-    let brands: BrandModel[] = [];
+    let brands: BrandModel[] = []
 
     await httpService('/api/brand/brand', {
       data: {
         act: 'BrandListHome',
       },
-    }).then(({status, data}) => {
+    }).then(({ status, data }) => {
       if (status === 200) {
-        brands = data;
+        brands = data
       }
-    });
+    })
 
-    return brands;
-  },
-);
+    return brands
+  }
+)
 
 export const fetchBrandClearCL = createAsyncThunk(
   'shop/fetchBrandClearCL',
   async () => {
-    let clbrands: BrandCLModel[] = [];
+    let clbrands: BrandCLModel[] = []
 
     await httpService('/api/brand/brand', {
       data: {
         act: 'BrandClearCL',
       },
-    }).then(({status, data}) => {
+    }).then(({ status, data }) => {
       if (status === 200) {
-        clbrands = data;
+        clbrands = data
       }
-    });
+    })
 
-    return clbrands;
-  },
-);
+    return clbrands
+  }
+)
 
 export const fetchBrandColorCL = createAsyncThunk(
   'shop/fetchBrandColorCL',
   async () => {
-    let clbrands: BrandCLModel[] = [];
+    let clbrands: BrandCLModel[] = []
 
     await httpService('/api/brand/brand', {
       data: {
         act: 'BrandColorCL',
       },
-    }).then(({status, data}) => {
+    }).then(({ status, data }) => {
       if (status === 200) {
-        clbrands = data;
+        clbrands = data
       }
-    });
+    })
 
-    return clbrands;
-  },
-);
+    return clbrands
+  }
+)
 
 export const fetchWarna = createAsyncThunk('shop/fetchWarna', async () => {
-  let warnas: ColorModel[] = [];
+  let warnas: ColorModel[] = []
 
   await httpService('/api/brand/brand', {
     data: {
       act: 'BrandList',
     },
-  }).then(({status, data}) => {
+  }).then(({ status, data }) => {
     if (status === 200) {
-      warnas = data;
+      warnas = data
     }
-  });
+  })
 
-  return warnas;
-});
+  return warnas
+})
 
 export const setCartItems = createAsyncThunk(
   'shop/setCartItems',
   async (items: CartModel[]) => {
-    await Storage.storeData('cart_items', items);
+    await Storage.storeData('cart_items', items)
 
-    return items;
-  },
-);
+    return items
+  }
+)
 
 // export const pushCartItem = createAsyncThunk('shop/pushCartItem', async (items: CartModel[], { getState }) => {
 //   const { shop, user: { user } } = getState() as RootStoreState;
@@ -211,55 +211,149 @@ export const setCartItems = createAsyncThunk(
 
 export const pushCartItem = createAsyncThunk(
   'shop/pushCartItem',
-  async (items: CartModel[], {getState}) => {
+  async (items: CartModel[], { getState }) => {
     const {
       shop,
-      user: {user},
-    } = getState() as RootStoreState;
-    const {cart_items = []} = shop;
+      user: { user },
+    } = getState() as RootStoreState
+    const { cart_items = [] } = shop
 
-    let shouldPush = true;
-    items[0].harga = 0;
+    let shouldPush = true
+    items[0].harga = 0
 
-    // var newCartItems: CartModel[] = [...cart_items].map(cartItem => {
-    //   return cartItem;
-    // });
+    let useCartItems: CartModel[] = [...cart_items]
 
-    let useCartItems: CartModel[] = [];
+    let sameQtyTemp: number = 0
 
-    items.map(item => {
-      useCartItems = [...cart_items].map(cartItem => {
-        if (
-          cartItem.prd_id === item.product?.prd_id &&
-          item.type === cartItem.type
-        ) {
-          const newItem = {...cartItem};
-          newItem.qty = (newItem.qty || 0) + (item.qty || 0);
-          shouldPush = false;
+    for (let index = 0; index < items.length; index++) {
+      console.log('diff value', items[index].diff)
 
-          console.log('sarua euy');
-          return newItem;
+      if (items[index].diff === false) {
+        console.log('false state')
+        // push data with same value
+        // and make once assign
+        sameQtyTemp += items[index].qty || 0
+
+        // get prev data
+        const prevData = useCartItems.filter(
+          filterItem =>
+            filterItem.prd_id === items[index].product?.prd_id &&
+            filterItem.atributColor === items[index].atributColor
+        )
+        console.log('prev data avaiable', prevData.length)
+        // if prev data is exists
+        // we didn't push to cart
+        if (prevData.length > 0) {
+          useCartItems = useCartItems.map(mapItem => {
+            if (
+              mapItem.prd_id === items[index].product?.prd_id &&
+              mapItem.atributColor === items[index].atributColor
+            ) {
+              var newItem = { ...mapItem }
+              newItem.qty = (newItem.qty || 0) + (items[index].qty || 0)
+
+              return newItem
+            }
+
+            return mapItem
+          })
+        } else {
+          useCartItems = [
+            ...useCartItems,
+            {
+              ...items[index],
+              ...(!items[index].product?.prd_id
+                ? null
+                : { prd_id: items[index].product?.prd_id }),
+              qty: sameQtyTemp,
+            },
+          ]
         }
+      } else if (items[index].diff === true) {
+        console.log('true state')
 
-        return cartItem;
-      });
-    });
+        // get prev data
+        const prevData = useCartItems.filter(
+          filterItem =>
+            filterItem.prd_id === items[index].product?.prd_id &&
+            filterItem.atributColor === items[index].atributColor
+        )
+        console.log('prev data avaiable', prevData.length)
+        // if prev data is exists
+        // we didn't push to cart
+        if (prevData.length > 0) {
+          // solving here
+          useCartItems = useCartItems.map(mapItem => {
+            if (mapItem.prd_id === items[index].product?.prd_id) {
+              var newItem = { ...mapItem }
 
-    if (shouldPush) {
-      items.map(item => {
-        useCartItems = [
-          ...useCartItems,
-          {
-            ...item,
-            ...(!item.product?.prd_id ? null : {prd_id: item.product.prd_id}),
-            qty: 1,
-          },
-        ];
-      });
+              if (mapItem.atributColor === items[index].atributColor) {
+                newItem.qty = (newItem.qty || 0) + (items[index].qty || 0)
+                console.log('the qty', items[index].qty)
+              }
+
+              return newItem
+            }
+
+            console.log('default item', mapItem)
+
+            return mapItem
+          })
+          // end of solving target
+        } else {
+          useCartItems = [
+            ...useCartItems,
+            {
+              ...items[index],
+              ...(!items[index].product?.prd_id
+                ? null
+                : { prd_id: items[index].product?.prd_id }),
+              qty: items[index].qty,
+            },
+          ]
+        }
+      } else {
+        // push data to cart
+        console.log('undefined state')
+
+        // get prev data
+        const prevData = useCartItems.filter(
+          filterItem => filterItem.prd_id === items[index].product?.prd_id
+        )
+        console.log('prev data avaiable', prevData.length)
+
+        // if prev data is exists
+        // we didn't push to cart
+        if (prevData.length > 0) {
+          useCartItems = useCartItems.map(mapItem => {
+            if (mapItem.prd_id === items[index].product?.prd_id) {
+              var newItem = { ...mapItem }
+              newItem.qty = (newItem.qty || 0) + (items[index].qty || 0)
+
+              return newItem
+            }
+
+            return mapItem
+          })
+        } else {
+          useCartItems = [
+            ...useCartItems,
+            {
+              ...items[index],
+              ...(!items[index].product?.prd_id
+                ? null
+                : { prd_id: items[index].product?.prd_id }),
+              qty: items[index].qty,
+            },
+          ]
+        }
+      }
     }
 
-    await Storage.storeData('cart_items', useCartItems);
+    await Storage.storeData('cart_items', useCartItems)
 
-    return useCartItems;
-  },
-);
+    console.log('lagi', useCartItems.length)
+
+    return useCartItems
+  }
+)
