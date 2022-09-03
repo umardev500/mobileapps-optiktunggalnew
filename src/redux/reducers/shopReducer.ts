@@ -1,9 +1,19 @@
-import { createSlice, PayloadAction, SliceCaseReducers } from '@reduxjs/toolkit'
-import { CartModel, CategoryModel, BrandModel, GenderModel, ModelKacamata } from '../../types/model';
-import { ShopRootState } from '../../types/redux/ShopReducer';
-import { fetchCategories, fetchBrand, pushCartItem, setCartItems, fetchModelKacamata } from '../actions/shopActions';
+import {createSlice, PayloadAction, SliceCaseReducers} from '@reduxjs/toolkit';
+import {BrandModel, CartModel, CategoryModel} from '../../types/model';
+import {ShopRootState} from '../../types/redux/ShopReducer';
+import {
+  fetchBrand,
+  fetchCategories,
+  fetchModelKacamata,
+  pushCartItem,
+  setCartItems,
+} from '../actions/shopActions';
 
-export const shopSlice = createSlice<ShopRootState, SliceCaseReducers<ShopRootState>, 'shop'>({
+export const shopSlice = createSlice<
+  ShopRootState,
+  SliceCaseReducers<ShopRootState>,
+  'shop'
+>({
   name: 'shop',
   initialState: {
     cart_items: [],
@@ -13,6 +23,7 @@ export const shopSlice = createSlice<ShopRootState, SliceCaseReducers<ShopRootSt
   },
   reducers: {
     setCartItems: (state, action: PayloadAction<CartModel[]>) => {
+      console.log('setted');
       return {
         ...state,
         cart_items: action.payload,
@@ -37,7 +48,7 @@ export const shopSlice = createSlice<ShopRootState, SliceCaseReducers<ShopRootSt
       };
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(fetchCategories.fulfilled, (state, action) => {
         return {
@@ -70,13 +81,14 @@ export const shopSlice = createSlice<ShopRootState, SliceCaseReducers<ShopRootSt
         };
       })
       .addCase(pushCartItem.fulfilled, (state, action) => {
+        console.log('adding to cart', action.payload);
         return {
           ...state,
           cart_items: action.payload,
         };
       });
-  }
-})
+  },
+});
 
 // Action creators are generated for each case reducer function
 export const {

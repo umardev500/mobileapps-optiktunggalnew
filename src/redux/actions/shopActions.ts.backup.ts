@@ -211,55 +211,52 @@ export const setCartItems = createAsyncThunk(
 
 export const pushCartItem = createAsyncThunk(
   'shop/pushCartItem',
-  async (items: CartModel[], {getState}) => {
+  async (item: CartModel, {getState}) => {
     const {
       shop,
       user: {user},
     } = getState() as RootStoreState;
     const {cart_items = []} = shop;
+    const {product} = item;
 
     let shouldPush = true;
-    items[0].harga = 0;
+    item.harga = 0;
 
-    // var newCartItems: CartModel[] = [...cart_items].map(cartItem => {
-    //   return cartItem;
-    // });
+    // switch (item.type) {
+    //   case 'reseller':
+    //     item.harga = product?.harga_reseller;
+    //     break;
+    //   case 'retail':
+    //     item.harga = product?.harga_retail;
+    //     break;
+    //   case 'refill':
+    //     item.harga = product?.harga_refill;
+    //     break;
+    // }
 
-    let useCartItems: CartModel[] = [];
+    const newCartItems: CartModel[] = [...cart_items].map(cartItem => {
+      if (cartItem.prd_id === product?.prd_id && item.type === cartItem.type) {
+        const newItem = {...cartItem};
 
-    items.map(item => {
-      useCartItems = [...cart_items].map(cartItem => {
-        if (
-          cartItem.prd_id === item.product?.prd_id &&
-          item.type === cartItem.type
-        ) {
-          const newItem = {...cartItem};
-          newItem.qty = (newItem.qty || 0) + (item.qty || 0);
-          shouldPush = false;
+        newItem.qty = (newItem.qty || 0) + 1;
+        shouldPush = false;
 
-          console.log('sarua euy');
-          return newItem;
-        }
+        return newItem;
+      }
 
-        return cartItem;
-      });
+      return cartItem;
     });
 
     if (shouldPush) {
-      items.map(item => {
-        useCartItems = [
-          ...useCartItems,
-          {
-            ...item,
-            ...(!item.product?.prd_id ? null : {prd_id: item.product.prd_id}),
-            qty: 1,
-          },
-        ];
+      newCartItems.push({
+        ...item,
+        ...(!product?.prd_id ? null : {prd_id: product?.prd_id}),
+        qty: 1,
       });
     }
 
-    await Storage.storeData('cart_items', useCartItems);
+    await Storage.storeData('cart_items', newCartItems);
 
-    return useCartItems;
+    return newCartItems;
   },
 );
