@@ -223,7 +223,7 @@ export const pushCartItem = createAsyncThunk(
 
     let useCartItems: CartModel[] = [...cart_items]
 
-    let sameQtyTemp: number = 0
+    let sameQtyTemp: number = 0 // temporary qty
 
     for (let index = 0; index < items.length; index++) {
       console.log('diff value', items[index].diff)
@@ -247,7 +247,9 @@ export const pushCartItem = createAsyncThunk(
           useCartItems = useCartItems.map(mapItem => {
             if (
               mapItem.prd_id === items[index].product?.prd_id &&
-              mapItem.atributColor === items[index].atributColor
+              mapItem.atributColor === items[index].atributColor &&
+              mapItem.atributBcurve === items[index].atributBcurve &&
+              mapItem.atributSpheries === items[index].atributSpheries
             ) {
               var newItem = { ...mapItem }
               newItem.qty = (newItem.qty || 0) + (items[index].qty || 0)
@@ -258,6 +260,8 @@ export const pushCartItem = createAsyncThunk(
             return mapItem
           })
         } else {
+          // if the prev data not exist
+          // the do push to cart
           useCartItems = [
             ...useCartItems,
             {
@@ -276,7 +280,9 @@ export const pushCartItem = createAsyncThunk(
         const prevData = useCartItems.filter(
           filterItem =>
             filterItem.prd_id === items[index].product?.prd_id &&
-            filterItem.atributColor === items[index].atributColor
+            filterItem.atributColor === items[index].atributColor &&
+            filterItem.atributBcurve === items[index].atributBcurve &&
+            filterItem.atributSpheries === items[index].atributSpheries
         )
         console.log('prev data avaiable', prevData.length)
         // if prev data is exists
@@ -287,7 +293,11 @@ export const pushCartItem = createAsyncThunk(
             if (mapItem.prd_id === items[index].product?.prd_id) {
               var newItem = { ...mapItem }
 
-              if (mapItem.atributColor === items[index].atributColor) {
+              if (
+                mapItem.atributColor === items[index].atributColor &&
+                mapItem.atributBcurve === items[index].atributBcurve &&
+                mapItem.atributSpheries === items[index].atributSpheries
+              ) {
                 newItem.qty = (newItem.qty || 0) + (items[index].qty || 0)
                 console.log('the qty', items[index].qty)
               }
@@ -301,6 +311,7 @@ export const pushCartItem = createAsyncThunk(
           })
           // end of solving target
         } else {
+          // push to cart when no prev data exist
           useCartItems = [
             ...useCartItems,
             {
