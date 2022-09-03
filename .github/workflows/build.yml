@@ -1,0 +1,25 @@
+name: react-native-android-build-apk
+
+on:
+  push:
+    branches:
+      - Develop
+
+jobs:
+  install-packages-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "install packages"
+        run: |
+          yarn install
+      - name: "Build apk"
+        run: |
+          cd android && ./gradlew assembleDebug
+      - name: "Upload artifact"
+        uses: actions/upload-artifact@v1
+        with:
+          name: app-debug.apk
+          path: android/app/build/outputs/apk/debug/
+
+      
