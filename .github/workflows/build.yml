@@ -15,11 +15,11 @@ jobs:
           yarn install
       - name: "Build apk"
         run: |
-          cd android && ./gradlew assembleDebug
+          cd android && ./gradlew assembleRelease
       - name: "Upload artifact"
         uses: actions/upload-artifact@v1
         with:
           name: app-debug.apk
-          path: android/app/build/outputs/apk/debug/
+          path: android/app/build/outputs/apk/release/
 
       
