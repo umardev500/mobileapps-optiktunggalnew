@@ -662,7 +662,7 @@ function ProductDetail() {
       } else if (fields.spheries3 == '') {
         ToastAndroid.show(`${''}Addition belum dipilih!`, ToastAndroid.SHORT)
       } else {
-        toCart()
+        toCartAccessories()
       }
     }
   }
@@ -700,6 +700,26 @@ function ProductDetail() {
     ])
 
     dispatch(payload)
+
+    navigation.navigatePath('Public', {
+      screen: 'BottomTabs.HomeStack.Cart',
+    })
+  }
+
+  const toCartAccessories = async () => {
+    console.log('fields', fields)
+
+    dispatch(
+      pushCartItem([
+        {
+          product: _omit(product.model || undefined, 'product_info'),
+          atributColor3: fields.color3,
+          atributSpheries3: fields.spheries3,
+          atributBcurve3: fields.basecurve3,
+          qty: 1,
+        },
+      ])
+    )
 
     navigation.navigatePath('Public', {
       screen: 'BottomTabs.HomeStack.Cart',

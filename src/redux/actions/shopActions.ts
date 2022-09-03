@@ -327,10 +327,29 @@ export const pushCartItem = createAsyncThunk(
         // push data to cart
         console.log('undefined state')
 
-        // get prev data
-        const prevData = useCartItems.filter(
-          filterItem => filterItem.prd_id === items[index].product?.prd_id
-        )
+        // get accessories status
+        const isAccessories =
+          items[index].atributColor3 !== undefined &&
+          items[index].atributColor3 !== ''
+
+        console.log(items[index].atributColor3)
+        let prevData: CartModel[] = []
+
+        if (isAccessories) {
+          console.log('is accessories')
+          // get prev data
+          prevData = useCartItems.filter(
+            filterItem =>
+              filterItem.prd_id === items[index].product?.prd_id &&
+              filterItem.atributColor3 === items[index].atributColor3 &&
+              filterItem.atributSpheries3 === items[index].atributSpheries3
+          )
+        } else {
+          // get prev data
+          prevData = useCartItems.filter(
+            filterItem => filterItem.prd_id === items[index].product?.prd_id
+          )
+        }
         console.log('prev data avaiable', prevData.length)
 
         // if prev data is exists
@@ -339,7 +358,22 @@ export const pushCartItem = createAsyncThunk(
           useCartItems = useCartItems.map(mapItem => {
             if (mapItem.prd_id === items[index].product?.prd_id) {
               var newItem = { ...mapItem }
-              newItem.qty = (newItem.qty || 0) + (items[index].qty || 0)
+
+              // if accessories
+              // then check if have same validated data
+              // and then update the qty
+              if (isAccessories) {
+                console.log('acc detected')
+                if (
+                  mapItem.atributColor3 === items[index].atributColor3 &&
+                  mapItem.atributSpheries3 === items[index].atributSpheries3
+                ) {
+                  newItem.qty = (newItem.qty || 0) + (items[index].qty || 0)
+                }
+              } else {
+                console.log('not accessories qty')
+                newItem.qty = (newItem.qty || 0) + (items[index].qty || 0)
+              }
 
               return newItem
             }
