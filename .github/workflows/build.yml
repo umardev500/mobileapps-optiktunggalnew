@@ -3,7 +3,7 @@ name: react-native-android-build-apk
 on:
   push:
     branches:
-      - Develop
+      - another
 
 jobs:
   install-packages-and-build:
