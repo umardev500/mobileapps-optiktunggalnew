@@ -680,14 +680,16 @@ function ProductDetail() {
   }
 
   const toCartLens = async () => {
-    const payload = pushCartItem([
+    const isLeftExists = fields.jumlah !== undefined && fields.jumlah !== 0
+
+    const payload = [
       {
         product: _omit(product.model || undefined, 'product_info'),
         atributColor: fields.color,
         atributSpheries: fields.spheries,
         atributBcurve: fields.basecurve,
         qty: fields.jumlah,
-        diff: isDiffLens()
+        diff: isDiffLens(),
       },
       {
         product: _omit(product.model || undefined, 'product_info'),
@@ -695,11 +697,11 @@ function ProductDetail() {
         atributSpheries: fields.spheries2,
         atributBcurve: fields.basecurve2,
         qty: fields.jumlah2,
-        diff: isDiffLens()
+        diff: isDiffLens(),
       },
-    ])
+    ].filter(filterItem => filterItem.qty !== undefined && filterItem.qty !== 0)
 
-    dispatch(payload)
+    dispatch(pushCartItem(payload))
 
     navigation.navigatePath('Public', {
       screen: 'BottomTabs.HomeStack.Cart',

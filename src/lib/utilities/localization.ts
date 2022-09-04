@@ -7,7 +7,7 @@ const localization = i18n.use(initReactI18next);
 
 if (!localization.isInitialized) {
   localization.init({
-    debug: isDev,
+    debug: false,
 
     lng: 'id',
     fallbackLng: 'id',

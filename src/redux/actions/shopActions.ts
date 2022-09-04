@@ -238,7 +238,9 @@ export const pushCartItem = createAsyncThunk(
         const prevData = useCartItems.filter(
           filterItem =>
             filterItem.prd_id === items[index].product?.prd_id &&
-            filterItem.atributColor === items[index].atributColor
+            filterItem.atributColor === items[index].atributColor &&
+            filterItem.atributBcurve === items[index].atributBcurve &&
+            filterItem.atributSpheries === items[index].atributSpheries
         )
         console.log('prev data avaiable', prevData.length)
         // if prev data is exists
