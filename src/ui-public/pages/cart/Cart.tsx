@@ -55,7 +55,7 @@ function Cart() {
   });
 
   useEffect(() => {
-    console.log('aa',cart_items);
+    // console.log('aa',cart_items);
     setCart(state => ({
       ...state,
       models: (cart_items || []).filter((item) => !!item.prd_id),

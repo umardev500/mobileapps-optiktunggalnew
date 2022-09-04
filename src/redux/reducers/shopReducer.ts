@@ -81,7 +81,6 @@ export const shopSlice = createSlice<
         };
       })
       .addCase(pushCartItem.fulfilled, (state, action) => {
-        console.log('adding to cart', action.payload);
         return {
           ...state,
           cart_items: action.payload,
